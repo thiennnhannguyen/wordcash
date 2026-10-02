@@ -1,0 +1,161 @@
+/*
+ * Biến màu, font, bo góc: nền kem #FFF8EC, tím điện #6C4DFF, xanh chanh #B8F53A, hồng #FF4D8D.
+ *
+ * Nguồn màu duy nhất của giao diện (bản sáng, neo-brutalism). Khối @theme của Tailwind v4 vừa sinh
+ * biến CSS (--color-*, --radius-*...) vừa sinh utility tương ứng (bg-bg, text-primary, rounded-card...).
+ * Component chỉ dùng các tên ở đây, không hard-code mã màu.
+ */
+
+/* static: luôn xuất mọi biến, kể cả biến chỉ được ghép tên động trong JS (vd. --color-level-*) */
+@theme static {
+  /* Xóa bảng màu mặc định của Tailwind để chỉ dùng màu của WORDCLASH */
+  --color-*: initial;
+
+  /* Nền và bề mặt */
+  --color-bg: #fff8ec; /* kem */
+  --color-surface: #ffffff;
+  --color-raised: #f3eeff; /* bề mặt phụ, tím rất nhạt */
+  --color-white: #ffffff;
+
+  /* Viền, bóng đổ và chữ chính dùng chung một màu mực */
+  --color-line: #1b1535;
+  --color-text: #1b1535;
+  --color-ink: #1b1535;
+  --color-muted: #5b5480;
+
+  /* Màu kẹo */
+  --color-primary: #6c4dff; /* tím điện, thương hiệu, nút chính */
+  --color-accent: #b8f53a; /* xanh chanh: đúng, phần thưởng, tiến độ */
+  --color-danger: #ff4d8d; /* hồng: sát thương, sai, năng lượng */
+  --color-gold: #ffd43b; /* vàng: streak, thưởng, highlight */
+  --color-sky: #3dc7ff; /* xanh trời: thông tin, Học Viện */
+  --color-orange: #ff8a3d; /* cam: Đấu Trường, hành động nóng */
+
+  /* Xám trung tính cho trạng thái "chưa học" */
+  --color-neutral: #d6d2e3;
+
+  /* Nền tối cho Trận Boss: tím sẫm, vẫn đi với màu kẹo neon */
+  --color-night: #1a1040;
+  --color-night-raised: #2b1a66;
+
+  /* Bản đậm hơn, chỉ dùng cho CHỮ màu đặt trên nền sáng để đủ tương phản */
+  --color-accent-deep: #3f7a00;
+  --color-danger-deep: #d0145a;
+
+  /* Màu rank */
+  --color-rank-tan-binh: #b9b4d0;
+  --color-rank-dong: #e08a4f;
+  --color-rank-bac: #d5dae6;
+  --color-rank-vang: #ffd43b;
+  --color-rank-bach-kim: #4fe3c4;
+  --color-rank-kim-cuong: #3dc7ff;
+  --color-rank-cao-thu: #a45cff;
+  --color-rank-huyen-thoai: #ff4d8d; /* nền thật dùng gradient cầu vồng bên dưới */
+
+  /* Màu độ hiếm linh vật */
+  --color-rarity-common: #c9c4dd; /* dải nhãn xám; nền thẻ Thường dùng kem --color-bg */
+  --color-rarity-rare: #3dc7ff;
+  --color-rarity-epic: #6c4dff;
+  --color-rarity-legendary: #ffd43b;
+
+  /* Màu cấp độ CEFR, đi từ nhạt đến đậm */
+  --color-level-a1: #e4fbb0;
+  --color-level-a2: #b8f53a;
+  --color-level-b1: #5ee0c0;
+  --color-level-b2: #3dc7ff;
+  --color-level-c1: #6c4dff;
+  --color-level-c2: #3a1fb0;
+
+  /* Bản đồ lộ trình (tranh minh họa): màu trang trí nhạt, độ bão hòa thấp hơn trạm để trạm luôn nổi bật */
+  --color-map-grass: #e3f7b8; /* đồng cỏ xanh chanh nhạt */
+  --color-map-grass-deep: #cbee8e; /* đồi, mảng cỏ đậm */
+  --color-map-grass-shade: #b4de72; /* sườn đồi khuất sáng */
+  --color-map-pine: #8fcb6a; /* cây thông */
+  --color-map-field: #f6ebbd; /* ruộng lúa mì */
+  --color-map-field-deep: #eadb97;
+  --color-map-water: #aee6fb; /* sông */
+  --color-map-water-deep: #7fd6f7; /* hồ */
+  --color-map-road: #f1d9a7; /* đường đất kem đậm */
+  --color-map-road-edge: #dcbc7e;
+  --color-map-wood: #c98a4b;
+  --color-map-wood-light: #e3ad6f;
+  --color-map-stone: #efe2c4; /* đá sa thạch */
+  --color-map-stone-deep: #d9c395;
+  --color-map-rock: #c4bfd4; /* đá xám tím */
+  --color-map-rock-deep: #9f99b5;
+  --color-map-slate: #8f8ab0; /* mái đá phiến */
+  --color-map-brick: #e98a6c; /* gạch */
+  --color-map-roof: #d86f5a;
+  --color-map-heather: #c7a6e6; /* thạch nam Scotland */
+  --color-map-snow: #ffffff;
+  --color-map-fog: #fbf9ff; /* sương mù */
+  --color-map-runway: #cfcbe0;
+  --color-map-island-top: #ddf5a8; /* mặt cỏ bệ đảo địa danh */
+  --color-map-island-side: #d9a96e; /* thành đất bệ đảo */
+  /* Màu phụ cho địa danh Việt Nam */
+  --color-vn-tile: #e0524a; /* đỏ ngói */
+  --color-vn-wood: #a0673a; /* nâu gỗ */
+  --color-vn-stone: #b8b3c9; /* xám đá */
+  --color-vn-water: #7fd8e8; /* xanh nước */
+  --color-vn-salmon: #f6b59b; /* hồng cam nhạt (tháp Phước Duyên) */
+  --color-vn-river: #c9b77c; /* sông nước nâu (sông Hồng, Cái Răng) */
+  --color-liberty: #74d6b8; /* Tượng Nữ thần Tự do (đồng xanh) */
+  --color-nessie: #3fd8bf; /* quái vật hồ Loch Ness, xanh ngọc */
+  --color-uk-red: #e8405a; /* xe buýt, hộp thư, bốt điện thoại, cờ */
+  --color-flag-blue: #2c3f9e; /* lá cờ vẽ phẳng */
+  --color-flag-red: #e23b3b;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Font: tiêu đề lớn dùng Be Vietnam Pro 800–900; số, nhãn game, nút dùng Chakra Petch */
+  --font-heading: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+
+  /* Cỡ chữ (desktop; mobile giảm ở chỗ dùng bằng tiền tố md:) */
+  --text-h1: 56px;
+  --text-h1--line-height: 1.05;
+  --text-h2: 36px;
+  --text-h2--line-height: 1.1;
+  --text-h3: 24px;
+  --text-h3--line-height: 1.2;
+  --text-body: 16px;
+  --text-body--line-height: 1.6;
+  --text-caption: 14px;
+  --text-caption--line-height: 1.5;
+  --text-stat: 72px;
+  --text-stat--line-height: 1;
+
+  /* Bo góc lớn 20–28px */
+  --radius-btn: 20px;
+  --radius-card: 24px;
+  --radius-panel: 28px;
+  --radius-pill: 999px;
+
+  /* Bóng đổ cứng màu mực, lệch xuống dưới-phải, không làm mờ */
+  --shadow-hard: 4px 4px 0 0 var(--color-line);
+  --shadow-hard-sm: 2px 2px 0 0 var(--color-line);
+  --shadow-hard-lg: 6px 6px 0 0 var(--color-line);
+
+  /* Vòng focus tím cho ô nhập liệu */
+  --shadow-focus: 4px 4px 0 0 var(--color-line), 0 0 0 5px color-mix(in srgb, var(--color-primary) 35%, transparent);
+
+  /* Ánh sáng khung thẻ theo độ hiếm (giữ bóng cứng, thêm quầng màu) */
+  --shadow-glow-epic: 4px 4px 0 0 var(--color-line), 0 0 22px 2px color-mix(in srgb, var(--color-rarity-epic) 55%, transparent);
+  --shadow-glow-legendary: 4px 4px 0 0 var(--color-line), 0 0 18px 6px color-mix(in srgb, var(--color-rarity-legendary) 80%, transparent),
+    0 0 48px 8px color-mix(in srgb, var(--color-rarity-legendary) 45%, transparent);
+}
+
+:root {
+  --border-w: 2.5px;
+  --press-offset: 4px;
+  --gradient-legend: linear-gradient(
+    120deg,
+    #ff4d8d 0%,
+    #ffd43b 25%,
+    #b8f53a 50%,
+    #3dc7ff 75%,
+    #a45cff 100%
+  );
+}

@@ -1,0 +1,7 @@
+Migration Alembic dạng async cho WORDCLASH.
+
+    alembic revision --autogenerate -m "mô tả"   # sinh migration từ app/models
+    alembic upgrade head                        # áp dụng
+    alembic downgrade -1                        # lùi một bước
+
+URL kết nối lấy từ DATABASE_URL (app/core/config.py), không ghi trong alembic.ini.

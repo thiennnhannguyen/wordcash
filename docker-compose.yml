@@ -1,0 +1,40 @@
+# PostgreSQL + Redis cho môi trường dev. Backend FastAPI chạy ngoài Docker: uvicorn app.main:asgi_app --reload
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: wordclash_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: wordclash
+      POSTGRES_PASSWORD: wordclash_password
+      POSTGRES_DB: wordclash_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wordclash -d wordclash_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Database test riêng (wordclash_test) tạo một lần: docker exec wordclash_postgres createdb -U wordclash wordclash_test
+
+  redis:
+    image: redis:7-alpine
+    container_name: wordclash_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+

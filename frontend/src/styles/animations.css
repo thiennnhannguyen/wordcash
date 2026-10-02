@@ -1,0 +1,436 @@
+/*
+ * Keyframes: rung màn hình, nảy nút, nhấp nháy khi trúng đòn.
+ */
+
+@keyframes wc-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 2px); }
+  40% { transform: translate(5px, -3px); }
+  60% { transform: translate(-4px, 3px); }
+  80% { transform: translate(3px, -2px); }
+}
+
+@keyframes wc-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wc-hit-flash {
+  0%, 100% { filter: none; }
+  30% { filter: brightness(1.4) saturate(1.4); }
+}
+
+/* Huy hiệu "lung lay" khi đang ở vùng đệm tụt rank */
+@keyframes wc-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* Sticker lắc nhẹ quanh góc nghiêng gốc (--tilt) */
+@keyframes wc-wiggle {
+  0%, 100% { transform: rotate(var(--tilt, 0deg)); }
+  50% { transform: rotate(calc(var(--tilt, 0deg) + 3deg)); }
+}
+
+/* Hạt lấp lánh trên khung thẻ Huyền Thoại */
+@keyframes wc-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(45deg); }
+}
+
+/* Ánh sáng thở nhẹ cho thẻ Sử Thi, Huyền Thoại */
+@keyframes wc-glow-pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.06); }
+}
+
+.anim-shake { animation: wc-shake 0.4s ease-in-out; }
+.anim-pop { animation: wc-pop 0.3s ease-out; }
+.anim-hit { animation: wc-hit-flash 0.3s ease-out; }
+.anim-wobble { animation: wc-wobble 0.6s ease-in-out infinite; }
+.anim-sparkle { animation: wc-sparkle 1.8s ease-in-out infinite; }
+.anim-glow { animation: wc-glow-pulse 2.4s ease-in-out infinite; }
+.anim-wiggle { animation: wc-wiggle 2.8s ease-in-out infinite; }
+.anim-alert { animation: wc-alert-ring 1.2s ease-in-out infinite; }
+.anim-float { animation: wc-float 4s ease-in-out infinite; }
+.anim-beacon { animation: wc-beacon 1.8s ease-out infinite; }
+
+/* Vòng sáng tím lan ra quanh trạm đang học */
+@keyframes wc-beacon {
+  0% { box-shadow: 4px 4px 0 0 var(--color-line), 0 0 0 0 color-mix(in srgb, var(--color-primary) 55%, transparent); }
+  100% { box-shadow: 4px 4px 0 0 var(--color-line), 0 0 0 18px color-mix(in srgb, var(--color-primary) 0%, transparent); }
+}
+
+/* Lơ lửng nhẹ lên xuống, giữ góc nghiêng gốc (--tilt) */
+@keyframes wc-float {
+  0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--tilt, 0deg)); }
+}
+
+/* Viền hồng nhấp nháy cho cảnh báo (rank lung lay) */
+@keyframes wc-alert-ring {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-danger) 0%, transparent); border-color: var(--color-danger); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-danger) 45%, transparent); border-color: var(--color-danger-deep); }
+}
+
+/* Boss trúng đòn: rung mạnh hơn và lóe sáng */
+@keyframes wc-boss-hit {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); filter: none; }
+  15% { transform: translate(-10px, 3px) rotate(-4deg); filter: brightness(1.5) saturate(1.3); }
+  35% { transform: translate(9px, -4px) rotate(4deg); }
+  55% { transform: translate(-7px, 2px) rotate(-2deg); }
+  75% { transform: translate(4px, -1px) rotate(1deg); }
+}
+
+/* Huy hiệu lên cấp xoay nhẹ qua lại */
+@keyframes wc-sway {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50% { transform: rotate(4deg) scale(1.03); }
+}
+
+.anim-boss-hit { animation: wc-boss-hit 0.5s ease-out; }
+.anim-sway { animation: wc-sway 3.2s ease-in-out infinite; }
+
+/* Ánh sáng quét ngang qua nút chính mỗi 3 giây */
+@keyframes wc-shine {
+  0% { transform: translateX(-160%) skewX(-20deg); }
+  28%, 100% { transform: translateX(420%) skewX(-20deg); }
+}
+
+/* Linh vật đứng chờ: thở nhẹ, nhún lên xuống (gốc biến đổi ở chân) */
+@keyframes wc-idle {
+  0%, 100% { transform: translateY(0) scale(1.03, 0.97); }
+  50% { transform: translateY(-10px) scale(0.98, 1.02); }
+}
+
+/* Bóng dưới chân co lại khi linh vật nhún lên */
+@keyframes wc-idle-shadow {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(0.82); opacity: 0.18; }
+}
+
+/* Cờ trên khán đài phấp phới */
+@keyframes wc-flag {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  50% { transform: skewY(7deg) scaleX(0.9); }
+}
+
+/* Mây trôi chậm */
+@keyframes wc-drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(40px); }
+}
+
+/* Bệ đứng phát sáng tím */
+@keyframes wc-pedestal-glow {
+  0%, 100% { box-shadow: 0 8px 0 0 var(--color-line), 0 0 30px 6px color-mix(in srgb, var(--color-primary) 45%, transparent); }
+  50% { box-shadow: 0 8px 0 0 var(--color-line), 0 0 54px 14px color-mix(in srgb, var(--color-primary) 60%, transparent); }
+}
+
+.anim-shine { animation: wc-shine 3s ease-in-out infinite; }
+.anim-idle { animation: wc-idle 1.8s ease-in-out infinite; transform-origin: 50% 100%; }
+.anim-idle-shadow { animation: wc-idle-shadow 1.8s ease-in-out infinite; }
+.anim-flag { animation: wc-flag 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 0% 50%; }
+.anim-drift { animation: wc-drift 14s ease-in-out infinite; }
+.anim-pedestal { animation: wc-pedestal-glow 2.4s ease-in-out infinite; }
+
+/* Vòng radar tỏa ra từ giữa */
+@keyframes wc-radar {
+  0% { transform: scale(0.15); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* Rung nhẹ liên tục (chữ VS) */
+@keyframes wc-jitter {
+  0%, 100% { transform: translate(0, 0) rotate(-4deg); }
+  25% { transform: translate(-2px, 1px) rotate(-5deg); }
+  50% { transform: translate(2px, -1px) rotate(-3deg); }
+  75% { transform: translate(-1px, -2px) rotate(-4deg); }
+}
+
+/* Nhấp nháy chậm cho trạng thái chờ */
+@keyframes wc-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Tia sét lóe sáng */
+@keyframes wc-flicker {
+  0%, 100% { opacity: 1; }
+  40% { opacity: 0.4; }
+  60% { opacity: 1; }
+  70% { opacity: 0.6; }
+}
+
+.anim-radar { animation: wc-radar 2.4s ease-out infinite; }
+.anim-jitter { animation: wc-jitter 0.18s linear infinite; }
+.anim-blink { animation: wc-blink 1.4s ease-in-out infinite; }
+.anim-flicker { animation: wc-flicker 0.9s steps(1) infinite; }
+
+/* Thanh máu dưới 30 HP nhấp nháy hồng (--fill là màu phe) */
+@keyframes wc-low-hp {
+  0%, 100% { background-color: var(--fill); }
+  50% { background-color: var(--color-danger); }
+}
+
+/* Sóng ăng-ten khi mất mạng */
+@keyframes wc-signal {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.anim-lowhp { animation: wc-low-hp 0.6s steps(1) infinite; }
+.anim-signal { animation: wc-signal 1.2s ease-in-out infinite; }
+
+/* Hit-stop: đứng hình ngắn khi trúng đòn, dừng mọi animation CSS đang chạy */
+.hitstop,
+.hitstop * {
+  animation-play-state: paused !important;
+}
+
+/* Thẻ linh vật: nghiêng 3D theo con trỏ. JS đặt --rx, --ry (góc) và --mx, --my (vị trí con trỏ, %) */
+.card-tilt {
+  transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.4s ease-out;
+}
+.card-tilt[data-tilting] { transition: transform 0.08s linear; }
+
+/* Ánh kim Huyền Thoại: dải cầu vồng chéo trượt theo con trỏ, thêm đốm lóe trắng tại con trỏ */
+.card-holo {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background:
+    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--color-white) 80%, transparent) 0%, transparent 38%),
+    linear-gradient(
+      115deg,
+      transparent 18%,
+      color-mix(in srgb, var(--color-danger) 75%, transparent) 30%,
+      color-mix(in srgb, var(--color-gold) 75%, transparent) 40%,
+      color-mix(in srgb, var(--color-accent) 75%, transparent) 50%,
+      color-mix(in srgb, var(--color-sky) 75%, transparent) 60%,
+      color-mix(in srgb, var(--color-primary) 75%, transparent) 70%,
+      transparent 82%
+    );
+  background-size: 100% 100%, 260% 260%;
+  background-position: center, var(--mx, 50%) var(--my, 50%);
+  mix-blend-mode: hard-light;
+}
+.card-tilt:hover .card-holo,
+.card-tilt[data-tilting] .card-holo,
+.card-holo[data-on] { opacity: 0.45; }
+
+/* Thẻ trưng bày trong trang chi tiết: xoay qua lại chậm trên bệ */
+@keyframes wc-showcase {
+  0%, 100% { transform: rotateY(-14deg) translateY(0); }
+  50% { transform: rotateY(14deg) translateY(-8px); }
+}
+.anim-showcase { animation: wc-showcase 6s ease-in-out infinite; }
+
+/* Nền cầu vồng chuyển động (lên rank Huyền Thoại) */
+@keyframes wc-rainbow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+.anim-rainbow { background-image: var(--gradient-legend); background-size: 300% 300%; animation: wc-rainbow 6s linear infinite; }
+
+
+/* ---------- Bản đồ hành trình (Học Viện) ---------- */
+
+/* Cừu thỉnh thoảng cúi đầu gặm cỏ */
+@keyframes wc-sheep {
+  0%, 68%, 100% { transform: rotate(0deg); }
+  76%, 84% { transform: rotate(-18deg); }
+  80% { transform: rotate(-12deg); }
+}
+/* Xe buýt chạy qua lại trên đường nhỏ, quay đầu ở hai đầu đường */
+@keyframes wc-bus {
+  0% { transform: translateX(0) scaleX(-1); }
+  46% { transform: translateX(var(--run)) scaleX(-1); }
+  50% { transform: translateX(var(--run)) scaleX(1); }
+  96% { transform: translateX(0) scaleX(1); }
+  100% { transform: translateX(0) scaleX(-1); }
+}
+@keyframes wc-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(3px) rotate(3deg); }
+}
+@keyframes wc-flap {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.35); }
+}
+@keyframes wc-gull {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 90px -24px; }
+}
+@keyframes wc-shimmer {
+  to { stroke-dashoffset: -120; }
+}
+/* Quái vật hồ thò lên rồi lặn xuống, chu kỳ 6 giây */
+@keyframes wc-nessie {
+  0% { transform: translateY(84px); }
+  9%, 52% { transform: translateY(0); }
+  30% { transform: translateY(-3px); }
+  62%, 100% { transform: translateY(84px); }
+}
+@keyframes wc-ripple {
+  0% { opacity: 0; transform: scale(0.5); }
+  5% { opacity: 1; }
+  18% { opacity: 0; transform: scale(1.25); }
+  55% { opacity: 0; transform: scale(0.5); }
+  60% { opacity: 1; }
+  74%, 100% { opacity: 0; transform: scale(1.25); }
+}
+@keyframes wc-rain {
+  0% { transform: translateY(-4px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
+/* Nhà du hành đứng thở nhẹ / lắc lư khi bước đi */
+@keyframes wc-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.035) scaleX(0.985); }
+}
+@keyframes wc-walk {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-6px) rotate(6deg); }
+}
+@keyframes wc-steam {
+  0% { transform: translateY(4px); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+@keyframes wc-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes wc-ping {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+@keyframes wc-fog-clear-l {
+  to { transform: translateX(-90px) scale(1.1); opacity: 0; }
+}
+@keyframes wc-fog-clear-r {
+  to { transform: translateX(90px) scale(1.1); opacity: 0; }
+}
+@keyframes wc-stamp {
+  0% { transform: scale(1.8) rotate(var(--tilt, -12deg)); opacity: 0; }
+  60% { transform: scale(0.94) rotate(var(--tilt, -12deg)); opacity: 1; }
+  100% { transform: scale(1) rotate(var(--tilt, -12deg)); }
+}
+
+.anim-sheep { animation: wc-sheep 5.5s ease-in-out infinite; }
+.anim-bus { animation: wc-bus 16s linear infinite; transform-origin: center; }
+.anim-bob { animation: wc-bob 3s ease-in-out infinite; transform-origin: 50% 80%; }
+.anim-flap { animation: wc-flap 0.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.anim-gull { animation: wc-gull 18s ease-in-out infinite; }
+.anim-shimmer { animation: wc-shimmer 4s linear infinite; }
+.anim-nessie { animation: wc-nessie 6s ease-in-out infinite; }
+.anim-ripple { animation: wc-ripple 6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.anim-rain > * { animation: wc-rain 0.9s linear infinite; }
+.anim-breathe { animation: wc-breathe 2.6s ease-in-out infinite; transform-origin: 50% 100%; }
+.anim-walk { animation: wc-walk 0.3s ease-in-out infinite; transform-origin: 50% 100%; }
+.anim-steam > * { animation: wc-steam 3s ease-out infinite; }
+.anim-wheel { animation: wc-spin 48s linear infinite; }
+.anim-spin-slow { animation: wc-spin 30s linear infinite; }
+.anim-ping { animation: wc-ping 1.6s ease-out infinite; }
+.anim-fog-clear-l { animation: wc-fog-clear-l 1.3s ease-out forwards; }
+.anim-fog-clear-r { animation: wc-fog-clear-r 1.3s ease-out forwards; }
+.anim-stamp { animation: wc-stamp 0.45s ease-out both; }
+.map-fog-front { transition: transform 1.2s ease-in-out; }
+
+/* Địa danh đang hướng tới: nhún nhẹ, quầng sáng thở; nhân vật Boss nháy mắt, ngón tay khẽ động */
+@keyframes wc-lm-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes wc-halo {
+  0%, 100% { opacity: 0.22; transform: scale(0.96); }
+  50% { opacity: 0.38; transform: scale(1.03); }
+}
+@keyframes wc-wink {
+  0%, 92%, 100% { opacity: 0; }
+  94%, 98% { opacity: 1; }
+}
+@keyframes wc-wink-open {
+  0%, 92%, 100% { opacity: 1; }
+  94%, 98% { opacity: 0; }
+}
+@keyframes wc-finger {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-7deg); }
+}
+/* Quái vật hồ vẫy khăn chào */
+@keyframes wc-wave {
+  0%, 100% { transform: rotate(-14deg); }
+  50% { transform: rotate(16deg); }
+}
+.anim-wave { animation: wc-wave 0.7s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.anim-lm-bob { animation: wc-lm-bob 2.4s ease-in-out infinite; }
+.anim-halo { animation: wc-halo 2.4s ease-in-out infinite; }
+.anim-wink { opacity: 0; animation: wc-wink 5s linear infinite; }
+.anim-wink-open { animation: wc-wink-open 5s linear infinite; }
+.anim-finger { animation: wc-finger 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-showcase,
+  .anim-wave,
+  .anim-lm-bob,
+  .anim-halo,
+  .anim-wink,
+  .anim-wink-open,
+  .anim-finger,
+  .anim-sheep,
+  .anim-bus,
+  .anim-bob,
+  .anim-flap,
+  .anim-gull,
+  .anim-shimmer,
+  .anim-nessie,
+  .anim-ripple,
+  .anim-rain > *,
+  .anim-breathe,
+  .anim-walk,
+  .anim-steam > *,
+  .anim-wheel,
+  .anim-spin-slow,
+  .anim-ping,
+  .anim-fog-clear-l,
+  .anim-fog-clear-r,
+  .anim-stamp,
+  .anim-rainbow,
+  .anim-lowhp,
+  .anim-signal,
+  .anim-radar,
+  .anim-jitter,
+  .anim-blink,
+  .anim-flicker,
+  .anim-shine,
+  .anim-idle,
+  .anim-idle-shadow,
+  .anim-flag,
+  .anim-drift,
+  .anim-pedestal,
+  .anim-boss-hit,
+  .anim-sway,
+  .anim-shake,
+  .anim-pop,
+  .anim-hit,
+  .anim-wobble,
+  .anim-sparkle,
+  .anim-glow,
+  .anim-wiggle,
+  .anim-alert,
+  .anim-float,
+  .anim-beacon {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-tilt { transform: none; transition: none; }
+  .map-fog-front { transition: none; }
+  .anim-ripple { opacity: 0; }
+}

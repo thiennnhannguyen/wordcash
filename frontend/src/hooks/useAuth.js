@@ -1,0 +1,3 @@
+/*
+ * Trạng thái đăng nhập.
+ */

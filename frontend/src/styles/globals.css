@@ -1,0 +1,106 @@
+/*
+ * CSS toàn cục, nạp font Be Vietnam Pro và Chakra Petch.
+ *
+ * Font được nạp trong index.html (Google Fonts, có subset tiếng Việt).
+ */
+
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./animations.css";
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Tiêu đề lớn: Be Vietnam Pro rất đậm, chữ chặt */
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  h3, h4 {
+    font-weight: 800;
+    letter-spacing: -0.015em;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Nhãn game in hoa (Chakra Petch) */
+  .hud-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+}
+
+/* Viền dày neo-brutalism (2.5px), luôn đi kèm border-line hoặc màu khác */
+@utility border-thick {
+  border-width: var(--border-w);
+  border-style: solid;
+}
+
+@utility border-t-thick {
+  border-top-width: var(--border-w);
+  border-top-style: solid;
+}
+
+@utility border-b-thick {
+  border-bottom-width: var(--border-w);
+  border-bottom-style: solid;
+}
+
+@utility border-r-thick {
+  border-right-width: var(--border-w);
+  border-right-style: solid;
+}
+
+/* Nhấn lún: dịch 4px xuống dưới-phải và mất bóng */
+@utility pressable {
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out, background-color 120ms, filter 120ms;
+  /* !important để thắng hiệu ứng nổi lên của hover:-translate-y / hover:shadow-* khi đang giữ chuột */
+  &:active,
+  &[data-state="active"] {
+    transform: translate(var(--press-offset), var(--press-offset));
+    translate: none !important;
+    box-shadow: none !important;
+  }
+}
+
+@utility font-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility bg-legend {
+  background-image: var(--gradient-legend);
+}

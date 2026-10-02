@@ -1,0 +1,26 @@
+# Các file/thư mục không đưa lên Git.
+
+# Bí mật và cấu hình máy
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.db
+
+# Node / build
+node_modules/
+dist/
+
+# Dữ liệu thô của kho từ
+backend/data_pipeline/raw/*
+!backend/data_pipeline/raw/.gitkeep
+
+# Hệ điều hành, editor
+.DS_Store
+.vscode/
+.idea/
