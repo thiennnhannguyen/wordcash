@@ -13,6 +13,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
+from redis.asyncio import Redis
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,6 +30,7 @@ from app.core.security import (
 from app.models import RefreshToken, User
 from app.schemas.auth import RegisterIn, password_matches_identity
 from app.schemas.user import OnboardingIn, UserUpdateIn
+from app.services import rate_limit
 
 CLEANUP_AFTER = timedelta(days=7)
 NEXT_STEPS = {"a1": "roadmap_a1", "placement": "placement_test"}
@@ -117,7 +119,10 @@ async def issue_session(
     return issued
 
 
-async def register(session: AsyncSession, data: RegisterIn, ip: str | None, ua: str | None) -> IssuedSession:
+async def register(
+    session: AsyncSession, data: RegisterIn, ip: str | None, ua: str | None, *, redis: Redis | None = None
+) -> IssuedSession:
+    await rate_limit.hit_register(redis, ip)
     if await _exists(session, User.email, data.email):
         raise AppError("EMAIL_TAKEN", details={"field": "email"})
     if await _exists(session, User.username, data.username):
@@ -160,10 +165,24 @@ async def authenticate(session: AsyncSession, identifier: str, password: str) ->
 
 
 async def login(
-    session: AsyncSession, identifier: str, password: str, ip: str | None, ua: str | None, *, with_refresh: bool = True
+    session: AsyncSession,
+    identifier: str,
+    password: str,
+    ip: str | None,
+    ua: str | None,
+    *,
+    redis: Redis | None = None,
+    with_refresh: bool = True,
 ) -> IssuedSession:
-    """Đăng nhập. `with_refresh=False` chỉ cấp access token (dùng cho /auth/token của /docs)."""
-    user = await authenticate(session, identifier, password)
+    """Đăng nhập có giới hạn số lần sai (rate_limit). `with_refresh=False` chỉ cấp access token (cho /auth/token của /docs)."""
+    await rate_limit.ensure_login_allowed(redis, ip, identifier)
+    try:
+        user = await authenticate(session, identifier, password)
+    except AppError as exc:
+        if exc.code == "INVALID_CREDENTIALS":
+            await rate_limit.record_login_failure(redis, ip, identifier)
+        raise
+    await rate_limit.reset_login(redis, identifier)
     return await issue_session(session, user, ip, ua) if with_refresh else _access_only(user)
 
 

@@ -11,7 +11,7 @@ from fastapi import APIRouter, Cookie, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.cookies import clear_refresh_cookie, set_refresh_cookie
-from app.api.deps import ClientIp, CurrentUser, DbSession, UserAgent, check_origin
+from app.api.deps import ClientIp, CurrentUser, DbSession, RedisClient, UserAgent, check_origin
 from app.api.responses import error_responses
 from app.core.config import settings
 from app.core.errors import AuthError
@@ -37,10 +37,10 @@ def _token_out(issued: IssuedSession, response: Response | None = None) -> Token
     response_model=TokenOut,
     summary="Đăng ký tài khoản",
     description="Tạo tài khoản, trả access token và đặt cookie refresh token (httpOnly).",
-    responses=error_responses("EMAIL_TAKEN", "USERNAME_TAKEN", "VALIDATION_ERROR"),
+    responses=error_responses("EMAIL_TAKEN", "USERNAME_TAKEN", "VALIDATION_ERROR", "TOO_MANY_ATTEMPTS"),
 )
-async def register(data: RegisterIn, response: Response, session: DbSession, ip: ClientIp, ua: UserAgent):
-    issued = await auth_service.register(session, data, ip, ua)
+async def register(data: RegisterIn, response: Response, session: DbSession, redis: RedisClient, ip: ClientIp, ua: UserAgent):
+    issued = await auth_service.register(session, data, ip, ua, redis=redis)
     return _token_out(issued, response)
 
 
@@ -49,10 +49,10 @@ async def register(data: RegisterIn, response: Response, session: DbSession, ip:
     response_model=TokenOut,
     summary="Đăng nhập bằng email hoặc tên người dùng",
     description="Trả access token và đặt cookie refresh token. Sai tài khoản hay sai mật khẩu đều trả INVALID_CREDENTIALS.",
-    responses=error_responses("INVALID_CREDENTIALS", "ACCOUNT_DISABLED", "VALIDATION_ERROR"),
+    responses=error_responses("INVALID_CREDENTIALS", "ACCOUNT_DISABLED", "VALIDATION_ERROR", "TOO_MANY_ATTEMPTS"),
 )
-async def login(data: LoginIn, response: Response, session: DbSession, ip: ClientIp, ua: UserAgent):
-    issued = await auth_service.login(session, data.identifier, data.password, ip, ua)
+async def login(data: LoginIn, response: Response, session: DbSession, redis: RedisClient, ip: ClientIp, ua: UserAgent):
+    issued = await auth_service.login(session, data.identifier, data.password, ip, ua, redis=redis)
     return _token_out(issued, response)
 
 
@@ -61,10 +61,12 @@ async def login(data: LoginIn, response: Response, session: DbSession, ip: Clien
     response_model=AccessTokenOut,
     summary="Lấy access token (form OAuth2, chỉ dùng cho nút Authorize trên /docs)",
     description="`username` nhận email hoặc tên người dùng. Không tạo phiên refresh.",
-    responses=error_responses("INVALID_CREDENTIALS", "ACCOUNT_DISABLED"),
+    responses=error_responses("INVALID_CREDENTIALS", "ACCOUNT_DISABLED", "TOO_MANY_ATTEMPTS"),
 )
-async def token(form: Annotated[OAuth2PasswordRequestForm, Depends()], session: DbSession, ip: ClientIp, ua: UserAgent):
-    issued = await auth_service.login(session, form.username, form.password, ip, ua, with_refresh=False)
+async def token(
+    form: Annotated[OAuth2PasswordRequestForm, Depends()], session: DbSession, redis: RedisClient, ip: ClientIp, ua: UserAgent
+):
+    issued = await auth_service.login(session, form.username, form.password, ip, ua, redis=redis, with_refresh=False)
     return AccessTokenOut(access_token=issued.access_token)
 
 
