@@ -214,8 +214,8 @@ async def test_update_profile_only_sent_fields(db_session):
     issued = await _register(db_session)
     user = await svc.update_profile(db_session, issued.user, UserUpdateIn(display_name="  Nhân WC "))
     assert user.display_name == "Nhân WC" and user.timezone == settings.DEFAULT_TIMEZONE
-    user = await svc.update_profile(db_session, user, UserUpdateIn(timezone="Europe/London", avatar_mascot_id=37))
-    assert (user.display_name, user.timezone, user.avatar_mascot_id) == ("Nhân WC", "Europe/London", 37)
+    user = await svc.update_profile(db_session, user, UserUpdateIn(timezone="Europe/London", avatar_mascot_id=2))
+    assert (user.display_name, user.timezone, user.avatar_mascot_id) == ("Nhân WC", "Europe/London", 2)
 
 
 async def test_cleanup_expired_tokens(db_session):

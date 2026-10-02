@@ -31,6 +31,7 @@ ERRORS: dict[str, tuple[int, str]] = {
     "WRONG_PASSWORD": (400, "Mật khẩu hiện tại không đúng"),
     "ACCOUNT_DISABLED": (403, "Tài khoản này đã bị khóa."),
     "FORBIDDEN_ORIGIN": (403, "Yêu cầu bị từ chối vì không đến từ trang WORDCLASH."),
+    "MASCOT_NOT_OWNED": (403, "Bạn chưa sở hữu linh vật này nên chưa thể đặt làm ảnh đại diện."),
     # Mã bổ sung cho các lỗi chung
     "FORBIDDEN": (403, "Bạn không có quyền thực hiện thao tác này."),
     "EMAIL_NOT_VERIFIED": (403, "Bạn cần xác thực email trước."),

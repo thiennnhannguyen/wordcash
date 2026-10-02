@@ -287,13 +287,36 @@ async def test_onboarding_invalid_values(client, auth_user, overrides):
 
 
 async def test_update_profile(client, auth_user):
-    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"display_name": " Nhân WC ", "avatar_mascot_id": 37})
+    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"display_name": " Nhân WC ", "avatar_mascot_id": 3})
     assert res.status_code == 200
-    assert (res.json()["display_name"], res.json()["avatar_mascot_id"], res.json()["timezone"]) == ("Nhân WC", 37, "Asia/Ho_Chi_Minh")
+    assert (res.json()["display_name"], res.json()["avatar_mascot_id"], res.json()["timezone"]) == ("Nhân WC", 3, "Asia/Ho_Chi_Minh")
     for bad in ({"role": "admin"}, {"email": "x@y.vn"}, {"display_name": None}, {"timezone": "Sao/Hoa"}):
         res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json=bad)
         assert res.status_code == 422, bad
     assert (await client.get(f"{API}/users/me", headers=auth_user["headers"])).json()["role"] == "user"
+
+
+@pytest.mark.parametrize("mascot_id", [1, 2, 3])
+async def test_avatar_starter_mascots_allowed(client, auth_user, mascot_id):
+    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": mascot_id})
+    assert res.status_code == 200 and res.json()["avatar_mascot_id"] == mascot_id
+
+
+@pytest.mark.parametrize("mascot_id", [4, 37, 100])
+async def test_avatar_not_owned(client, auth_user, mascot_id):
+    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": mascot_id, "display_name": "Đổi"})
+    assert res.status_code == 403
+    assert res.json()["error"]["code"] == "MASCOT_NOT_OWNED"
+    assert res.json()["error"]["details"] == {"field": "avatar_mascot_id"}
+    # Không lưu gì khi bị từ chối
+    me = (await client.get(f"{API}/users/me", headers=auth_user["headers"])).json()
+    assert me["avatar_mascot_id"] is None and me["display_name"] == "Nhân"
+
+
+async def test_avatar_can_be_cleared(client, auth_user):
+    await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": 2})
+    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": None})
+    assert res.status_code == 200 and res.json()["avatar_mascot_id"] is None
 
 
 # 11. Giới hạn tần suất

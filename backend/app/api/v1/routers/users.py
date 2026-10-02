@@ -23,8 +23,9 @@ async def me(user: CurrentUser):
     "/me",
     response_model=UserOut,
     summary="Sửa hồ sơ",
-    description="Chỉ cập nhật các trường được gửi lên: display_name, timezone, avatar_mascot_id.",
-    responses=error_responses(*AUTH_ERRORS, "VALIDATION_ERROR"),
+    description="Chỉ cập nhật các trường được gửi lên: display_name, timezone, avatar_mascot_id. "
+    "Hiện chỉ đặt được avatar là linh vật khởi đầu (1, 2, 3).",
+    responses=error_responses(*AUTH_ERRORS, "VALIDATION_ERROR", "MASCOT_NOT_OWNED"),
 )
 async def update_me(data: UserUpdateIn, user: CurrentUser, session: DbSession):
     return await auth_service.update_profile(session, user, data)

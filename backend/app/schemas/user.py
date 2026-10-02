@@ -67,7 +67,7 @@ class UserUpdateIn(BaseModel):
 
     display_name: str | None = Field(default=None, min_length=1, max_length=30)
     timezone: str | None = None
-    # TODO: khi có bảng mascots, chỉ cho chọn linh vật người dùng đã sở hữu (kiểm tra ở service)
+    # Quyền sở hữu kiểm tra ở service (MASCOT_NOT_OWNED); null = bỏ ảnh đại diện
     avatar_mascot_id: int | None = Field(default=None, ge=1, le=100)
 
     _strip = field_validator("display_name", mode="before")(clean_display_name)

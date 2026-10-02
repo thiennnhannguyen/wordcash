@@ -78,7 +78,7 @@ sequenceDiagram
 | POST | `/api/v1/auth/logout-all` | Bearer | Hủy mọi phiên, xóa cookie → 204 | TOKEN_*, FORBIDDEN_ORIGIN |
 | POST | `/api/v1/auth/change-password` | Bearer (+ cookie) | Đổi mật khẩu, hủy phiên khác, giữ phiên của cookie → `TokenOut` | WRONG_PASSWORD, WEAK_PASSWORD, VALIDATION_ERROR |
 | GET | `/api/v1/users/me` | Bearer | `UserOut` | TOKEN_INVALID, TOKEN_EXPIRED, ACCOUNT_DISABLED |
-| PATCH | `/api/v1/users/me` | Bearer | Sửa `display_name`, `timezone`, `avatar_mascot_id` (chỉ trường được gửi) | VALIDATION_ERROR |
+| PATCH | `/api/v1/users/me` | Bearer | Sửa `display_name`, `timezone`, `avatar_mascot_id` (chỉ trường được gửi; avatar hiện chỉ nhận linh vật khởi đầu 1, 2, 3) | VALIDATION_ERROR, MASCOT_NOT_OWNED |
 | PATCH | `/api/v1/users/me/onboarding` | Bearer | `{goal, daily_minutes, starter_mascot_id, start_mode}` → `{user, next_step}` | VALIDATION_ERROR |
 
 **Dữ liệu chính:**
@@ -110,6 +110,7 @@ Mọi lỗi có dạng `{"error": {"code": "...", "message": "...", "details": .
 | WRONG_PASSWORD | 400 | Mật khẩu hiện tại không đúng | |
 | ACCOUNT_DISABLED | 403 | Tài khoản này đã bị khóa. | |
 | FORBIDDEN_ORIGIN | 403 | Yêu cầu bị từ chối… | Origin khác FRONTEND_URL ở refresh/logout/logout-all |
+| MASCOT_NOT_OWNED | 403 | Bạn chưa sở hữu linh vật này… | avatar ngoài 3 linh vật khởi đầu (sẽ kiểm tra bảng user_mascots khi có) |
 | FORBIDDEN | 403 | Bạn không có quyền… | route chỉ dành cho admin |
 | EMAIL_NOT_VERIFIED | 403 | Bạn cần xác thực email trước. | dành cho giai đoạn 2 |
 | NOT_FOUND / METHOD_NOT_ALLOWED / INTERNAL_ERROR | 404 / 405 / 500 | | lỗi chung |
