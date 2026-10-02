@@ -4,6 +4,9 @@ Cấu hình chung cho pytest: app test, DB test.
 - ENV=testing đặt trước khi import app → mọi thứ dùng TEST_DATABASE_URL (database test riêng, PostgreSQL thật).
 - Bảng tạo một lần cho cả phiên test; mỗi test chạy trong một transaction rồi rollback, nên dữ liệu không rò sang test khác.
   Service gọi session.commit() bình thường: commit chỉ đóng SAVEPOINT bên trong transaction đó.
+- `client`: httpx.AsyncClient(ASGITransport) gọi app, với get_db → session của test, get_redis → fakeredis.FakeAsyncRedis.
+- `auth_user`: tài khoản mẫu đăng ký qua API, trả kèm access token, refresh token và header Authorization.
+- `live_server`: uvicorn chạy thật trên cổng ngẫu nhiên (cho test Socket.IO).
 """
 
 import os
@@ -11,11 +14,18 @@ import os
 os.environ["ENV"] = "testing"
 
 import pytest_asyncio  # noqa: E402
+from fakeredis import FakeAsyncRedis  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine  # noqa: E402
 from sqlalchemy.pool import NullPool  # noqa: E402
 
 from app.core.config import settings  # noqa: E402
+from app.core.database import get_db  # noqa: E402
+from app.core.redis import get_redis  # noqa: E402
+from app.main import app  # noqa: E402
 from app.models import Base  # noqa: E402
+
+PASSWORD = "Wordclash2026"
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -40,6 +50,44 @@ async def db_session(test_engine):
         finally:
             await session.close()
             await trans.rollback()
+
+
+@pytest_asyncio.fixture
+async def fake_redis():
+    client = FakeAsyncRedis(decode_responses=True)
+    yield client
+    await client.aclose()
+
+
+@pytest_asyncio.fixture
+async def client(db_session, fake_redis):
+    async def _db():
+        yield db_session
+
+    app.dependency_overrides[get_db] = _db
+    app.dependency_overrides[get_redis] = lambda: fake_redis
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+            yield c
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def auth_user(client):
+    """Đăng ký tài khoản mẫu qua API; trả dict: user, access_token, refresh_token, headers, password."""
+    payload = {"email": "nhan@wordclash.vn", "username": "nhan.wc", "display_name": "Nhân", "password": PASSWORD}
+    res = await client.post("/api/v1/auth/register", json=payload)
+    assert res.status_code == 201, res.text
+    body = res.json()
+    client.cookies.clear()
+    return {
+        "user": body["user"],
+        "access_token": body["access_token"],
+        "refresh_token": res.cookies[settings.COOKIE_NAME],
+        "headers": {"Authorization": f"Bearer {body['access_token']}"},
+        "password": PASSWORD,
+    }
 
 
 @pytest_asyncio.fixture
