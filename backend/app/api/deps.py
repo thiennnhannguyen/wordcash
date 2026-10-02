@@ -54,11 +54,19 @@ async def require_verified_email(user: CurrentUser) -> User:
 
 
 def get_client_ip(request: Request) -> str | None:
-    """IP người dùng. Chỉ tin X-Forwarded-For khi TRUST_PROXY bật (chạy sau reverse proxy tin cậy)."""
+    """IP người dùng (dùng cho giới hạn đăng nhập và ghi phiên).
+
+    - TRUST_PROXY tắt: request.client.host (kết nối trực tiếp). X-Forwarded-For bị bỏ qua vì client tự đặt được.
+    - TRUST_PROXY bật: mỗi proxy tin cậy nối IP nó nhìn thấy vào cuối X-Forwarded-For, nên lấy phần tử thứ
+      TRUSTED_PROXY_HOPS tính từ phải sang; các phần tử bên trái hơn do client tự gửi, không tin được.
+      Header ít phần tử hơn số hop thì lấy phần tử trái nhất (đều do proxy tin cậy thêm vào).
+    """
     if settings.TRUST_PROXY:
-        forwarded = request.headers.get("x-forwarded-for")
-        if forwarded:
-            return forwarded.split(",")[0].strip() or None
+        forwarded = request.headers.get("x-forwarded-for", "")
+        hops = [ip.strip() for ip in forwarded.split(",") if ip.strip()]
+        if hops:
+            index = max(len(hops) - max(settings.TRUSTED_PROXY_HOPS, 1), 0)
+            return hops[index]
     return request.client.host if request.client else None
 
 

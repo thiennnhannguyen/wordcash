@@ -165,7 +165,7 @@ Trình duyệt không có `navigator.locks` (rất cũ) thì vẫn an toàn nh�
 - **Chống dò tài khoản:** sai tài khoản hay sai mật khẩu đều trả cùng một lỗi. Không có user thì vẫn kiểm tra trên hash giả để thời gian phản hồi như nhau.
 - **Giới hạn phiên:** tối đa 10 phiên (family) đang hoạt động mỗi người; vượt thì hủy phiên bắt đầu sớm nhất.
 - **Đổi mật khẩu:** hủy mọi phiên khác. Access token cũ của thiết bị khác còn dùng được tối đa 15 phút.
-- **IP:** lấy từ `request.client.host`; chỉ đọc `X-Forwarded-For` khi `TRUST_PROXY=true`.
+- **IP:** mặc định lấy `request.client.host`. Khi `TRUST_PROXY=true` (chạy sau Railway/Render/Nginx) thì đọc `X-Forwarded-For` từ phải sang theo `TRUSTED_PROXY_HOPS`; phần bên trái do client tự gửi nên không tin. Xem `docs/deploy-checklist.md`.
 - **Log:** không ghi mật khẩu, token hay body request. Engine SQL đặt `hide_parameters`.
 - **Dọn dẹp:** `auth_service.cleanup_expired_tokens` xóa token hết hạn quá 7 ngày, chạy định kỳ khi có scheduler.
 

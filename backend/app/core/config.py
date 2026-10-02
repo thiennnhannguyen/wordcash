@@ -51,7 +51,10 @@ class Settings(BaseSettings):
     REGISTER_MAX_PER_HOUR: int = 10
     MAX_SESSIONS_PER_USER: int = 10
     DEFAULT_TIMEZONE: str = "Asia/Ho_Chi_Minh"
-    TRUST_PROXY: bool = False  # chỉ bật khi chạy sau reverse proxy tin cậy (đọc X-Forwarded-For)
+    # Chạy sau reverse proxy tin cậy (Railway, Render, Nginx): đọc IP từ X-Forwarded-For.
+    # TRUSTED_PROXY_HOPS = số proxy tin cậy đứng trước app; IP thật là phần tử thứ HOPS tính từ phải sang.
+    TRUST_PROXY: bool = False
+    TRUSTED_PROXY_HOPS: int = 1
 
     # Socket.IO: bật khi chạy nhiều tiến trình để đồng bộ sự kiện qua Redis
     SIO_USE_REDIS: bool = False
