@@ -704,7 +704,7 @@ wordclash/
 
 ### Chạy dự án
 ```bash
-docker compose up -d                       # PostgreSQL (kèm database wordclash_test) + Redis
+docker compose up -d                       # PostgreSQL ở localhost:5433 (kèm wordclash_test) + Redis 6379
 cp .env.example .env                       # lần đầu (file .env ở gốc repo)
 cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt

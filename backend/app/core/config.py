@@ -24,8 +24,8 @@ class Settings(BaseSettings):
 
     ENV: str = "development"  # development | testing | production
 
-    DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5432/wordclash_db"
-    TEST_DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5432/wordclash_test"
+    DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_db"
+    TEST_DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_test"
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # Token

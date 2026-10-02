@@ -140,7 +140,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Chưa có trang: phiên ôn tập (`/academy/review/session` đang là trang tạm), kiểm tra chặng (nút trên bản đồ tạm mở giao diện kiểm tra cuối bài), quên mật khẩu. Các nút dẫn tới đó đang rơi vào trang "Không tìm thấy trang" hoặc trang tạm `ComingSoon`.
 - Chưa chặn vào Sảnh khi chưa làm Cửa Ải (cần server biết ngày theo múi giờ người dùng; TODO trong `App.jsx`).
 - Chưa có đăng nhập Google, trang Điều khoản/Chính sách.
-- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Khi nối frontend với auth: làm theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md` (form Đăng ký cần thêm ô username và gửi `display_name`; Đăng nhập gửi `identifier`). Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Trên máy dev hiện tại có một PostgreSQL cài sẵn chiếm `localhost:5432`, che PostgreSQL của Docker; cần tắt nó hoặc trỏ `DATABASE_URL`/`TEST_DATABASE_URL` tới IP LAN của máy.
+- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Khi nối frontend với auth: làm theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md` (form Đăng ký cần thêm ô username và gửi `display_name`; Đăng nhập gửi `identifier`). Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
 - Repo đã khởi tạo git (02/10/2026), nhánh `main` chứa hiện trạng ban đầu, auth làm trên nhánh `feat/auth-phase1`; chưa có remote.
 
 ## Công nghệ
@@ -284,7 +284,7 @@ Các điểm sau **chưa được chốt**. Hãy hỏi trước thay vì tự qu
 ## Lệnh thường dùng
 
 ```bash
-docker compose up -d                          # PostgreSQL (+ database wordclash_test) và Redis
+docker compose up -d                          # PostgreSQL ở localhost:5433 (+ database wordclash_test) và Redis
 cp .env.example .env                          # lần đầu (file .env đặt ở gốc repo)
 cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt

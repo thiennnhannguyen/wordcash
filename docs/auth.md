@@ -1,6 +1,6 @@
 # Auth giai đoạn 1
 
-Tài khoản, phiên đăng nhập và xác thực Socket.IO của WORDCLASH (backend FastAPI). Tài liệu API đầy đủ, có thử trực tiếp: `/docs`.
+Tài khoản, phiên đăng nhập và xác thực Socket.IO của WORDCLASH (backend FastAPI). Tài liệu API đầy đủ, có thử trực tiếp: `/docs`. Môi trường dev: `docker compose up -d` (PostgreSQL ở `localhost:5433`, database test `wordclash_test`).
 
 **Đã chốt:**
 - Đăng nhập bằng email **hoặc** username (trường `identifier`).
