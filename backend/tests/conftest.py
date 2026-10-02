@@ -40,3 +40,22 @@ async def db_session(test_engine):
         finally:
             await session.close()
             await trans.rollback()
+
+
+@pytest_asyncio.fixture
+async def live_server():
+    """Chạy asgi_app (FastAPI + Socket.IO) bằng uvicorn trên cổng ngẫu nhiên, trả về URL gốc."""
+    import asyncio
+
+    import uvicorn
+
+    from app.main import asgi_app
+
+    server = uvicorn.Server(uvicorn.Config(asgi_app, host="127.0.0.1", port=0, lifespan="off", log_level="warning"))
+    task = asyncio.create_task(server.serve())
+    while not server.started:
+        await asyncio.sleep(0.02)
+    port = server.servers[0].sockets[0].getsockname()[1]
+    yield f"http://127.0.0.1:{port}"
+    server.should_exit = True
+    await task

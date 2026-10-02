@@ -19,7 +19,7 @@ from app.core.database import engine, ping_database
 from app.core.errors import register_exception_handlers
 from app.core.redis import close_redis, connect_redis
 from app.game import events  # noqa: F401 - đăng ký sự kiện Socket.IO
-from app.game.server import sio
+from app.game.sio_server import sio
 
 logger = logging.getLogger(__name__)
 

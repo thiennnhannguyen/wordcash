@@ -1,8 +1,7 @@
 """
 Đăng ký các sự kiện Socket.IO (xem docs/socket-events.md) và chuyển tới xử lý tương ứng.
 
-- connect: xác thực JWT gửi qua `auth` của client (`io(url, { auth: { token } })`); token sai thì từ chối kết nối.
-  id người dùng lưu trong session của socket, các sự kiện sau đọc lại từ đó, không tin dữ liệu client gửi.
+- Kết nối và xác thực JWT: game/sio_server.py. id người dùng lấy từ session của socket, không tin dữ liệu client gửi.
 - Client → server: join_queue, leave_queue, create_room, join_room, submit_answer.
 - Server → client: match_found, round_start, round_result, match_end.
 Server là trọng tài: thời gian đo ở server (game/timing.py, time.monotonic), `round_start` không kèm đáp án;
@@ -14,7 +13,7 @@ TODO: nối các sự kiện client → server với matchmaking.py và match_ro
 import logging
 
 
-from app.game.server import sio
+from app.game.sio_server import sio
 
 logger = logging.getLogger(__name__)
 
