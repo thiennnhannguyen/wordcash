@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+    # Token vừa bị xoay vòng mà được dùng lại trong khoảng này (nhiều tab refresh cùng lúc) thì vẫn cấp token mới
+    REFRESH_REUSE_GRACE_SECONDS: int = 30
 
     FRONTEND_URL: str = "http://localhost:5173"
     TTS_API_KEY: str = ""

@@ -4,6 +4,8 @@ Nghiệp vụ tài khoản và phiên đăng nhập. Mọi hàm async, nhận As
 Phiên (session) = một "family" refresh token:
 - Đăng nhập/đăng ký tạo family mới. Mỗi lần /auth/refresh: token cũ bị thu hồi, token mới cùng family thay thế (xoay vòng).
 - Token đã thu hồi mà bị dùng lại → coi như bị đánh cắp: hủy cả family (SESSION_REVOKED).
+  Ngoại lệ (khoảng ân hạn): token bị thu hồi DO XOAY VÒNG, cách đây ≤ REFRESH_REUSE_GRACE_SECONDS và family vẫn còn
+  token hiệu lực → nhiều tab cùng refresh bằng một cookie; cấp thêm token mới cùng family thay vì hủy.
 - Mỗi người tối đa MAX_SESSIONS_PER_USER family đang hoạt động; vượt thì hủy family cũ nhất.
 DB chỉ lưu SHA-256 của refresh token. Băm/kiểm tra mật khẩu chạy trong thread để không chặn vòng lặp sự kiện.
 """
@@ -195,16 +197,31 @@ async def _find_token(session: AsyncSession, raw_token: str, *, lock: bool = Fal
     return await session.scalar(query)
 
 
+async def _in_reuse_grace(session: AsyncSession, token: RefreshToken, now: datetime) -> bool:
+    """Token bị thu hồi do xoay vòng, trong khoảng ân hạn, và family chưa bị hủy (còn token hiệu lực)."""
+    if token.replaced_by_id is None or token.revoked_at is None:
+        return False
+    if now - token.revoked_at > timedelta(seconds=settings.REFRESH_REUSE_GRACE_SECONDS):
+        return False
+    live = await session.scalar(
+        select(func.count())
+        .select_from(RefreshToken)
+        .where(RefreshToken.family_id == token.family_id, RefreshToken.revoked_at.is_(None), RefreshToken.expires_at > now)
+    )
+    return live > 0
+
+
 async def rotate_refresh(session: AsyncSession, raw_token: str, ip: str | None, ua: str | None) -> IssuedSession:
     token = await _find_token(session, raw_token, lock=True)
     if token is None:
         raise AuthError("TOKEN_INVALID")
-    if token.revoked_at is not None:
-        # Dùng lại token đã xoay vòng/thu hồi: hủy toàn bộ family (kể cả token mới nhất)
+    now = _now()
+    if token.revoked_at is not None and not await _in_reuse_grace(session, token, now):
+        # Dùng lại token đã thu hồi (quá hạn ân hạn, hoặc thu hồi do đăng xuất/đổi mật khẩu): hủy toàn bộ family
         await _revoke_families(session, [token.family_id])
         await session.commit()
         raise AuthError("SESSION_REVOKED")
-    if token.expires_at <= _now():
+    if token.expires_at <= now:
         raise AuthError("TOKEN_EXPIRED")
     user = await session.get(User, token.user_id)
     if user is None or not user.is_active:
@@ -212,8 +229,9 @@ async def rotate_refresh(session: AsyncSession, raw_token: str, ip: str | None, 
         await session.commit()
         raise AppError("ACCOUNT_DISABLED")
     raw, new = await _add_refresh_token(session, user.id, token.family_id, ip, ua)
-    token.revoked_at = _now()
-    token.replaced_by_id = new.id
+    if token.revoked_at is None:
+        token.revoked_at = now
+        token.replaced_by_id = new.id
     await session.commit()
     issued = _access_only(user)
     issued.refresh_token, issued.family_id = raw, new.family_id

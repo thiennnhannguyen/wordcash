@@ -161,7 +161,7 @@ async def test_me_rejects_bad_tokens(client, auth_user, make_token, code):
 
 
 # 7. Refresh xoay vòng và phát hiện dùng lại
-async def test_refresh_rotation_and_reuse_detection(client, auth_user):
+async def test_refresh_rotation_and_reuse_detection(client, auth_user, time_travel):
     old = auth_user["refresh_token"]
     res = await refresh(client, old)
     assert res.status_code == 200
@@ -170,11 +170,24 @@ async def test_refresh_rotation_and_reuse_detection(client, auth_user):
     assert res.json()["access_token"] != auth_user["access_token"]
     assert res.json()["user"]["id"] == auth_user["user"]["id"]
 
+    time_travel(settings.REFRESH_REUSE_GRACE_SECONDS + 1)  # 31 giây sau
     reused = await refresh(client, old)
     assert reused.status_code == 401 and error_code(reused) == "SESSION_REVOKED"
     # Cả family bị hủy: cookie mới cũng không dùng được nữa
     after = await refresh(client, new)
     assert after.status_code == 401 and error_code(after) == "SESSION_REVOKED"
+
+
+async def test_two_tabs_refresh_with_same_cookie(client, auth_user):
+    """Hai tab cùng gửi một cookie (trong khoảng ân hạn): cả hai đều nhận phiên mới hợp lệ."""
+    first = await refresh(client, auth_user["refresh_token"])
+    second = await refresh(client, auth_user["refresh_token"])
+    assert first.status_code == second.status_code == 200
+    assert first.cookies[COOKIE] != second.cookies[COOKIE]
+    for res in (first, second):
+        me = await client.get(f"{API}/users/me", headers={"Authorization": f"Bearer {res.json()['access_token']}"})
+        assert me.status_code == 200
+        assert (await refresh(client, res.cookies[COOKIE])).status_code == 200
 
 
 async def test_refresh_without_or_with_unknown_cookie(client):

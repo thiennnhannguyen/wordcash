@@ -53,7 +53,10 @@ sequenceDiagram
     API->>DB: SELECT … WHERE token_hash = sha256(T1) FOR UPDATE
     alt không thấy
         API-->>FE: 401 TOKEN_INVALID
-    else T1 đã bị thu hồi (dùng lại)
+    else T1 bị xoay vòng ≤ 30 giây trước và phiên còn hiệu lực (tab khác vừa refresh)
+        API->>DB: tạo thêm T3 cùng family (khoảng ân hạn)
+        API-->>FE: 200 {access_token mới} + Set-Cookie wc_refresh = T3
+    else T1 đã bị thu hồi (quá 30 giây, hoặc do đăng xuất/đổi mật khẩu)
         API->>DB: thu hồi TOÀN BỘ family
         API-->>FE: 401 SESSION_REVOKED
     else T1 hết hạn
@@ -62,7 +65,7 @@ sequenceDiagram
         API->>DB: tạo T2 cùng family, T1.revoked_at = now, T1.replaced_by_id = T2
         API-->>FE: 200 {access_token mới} + Set-Cookie wc_refresh = T2
     end
-    Note over FE,DB: Kẻ gian giữ T1 gọi refresh sau đó → T1 đã thu hồi → cả family (gồm T2) bị hủy, cả hai bên phải đăng nhập lại.
+    Note over FE,DB: Kẻ gian giữ T1 gọi refresh sau khoảng ân hạn → cả family (gồm T2) bị hủy, cả hai bên phải đăng nhập lại.
 ```
 
 ## Endpoint
@@ -129,6 +132,31 @@ Mọi lỗi có dạng `{"error": {"code": "...", "message": "...", "details": .
 
 Chống CSRF: các route dùng cookie (refresh, logout, logout-all) từ chối mọi header `Origin` không phải `FRONTEND_URL` (hoặc chính địa chỉ API, để /docs dùng được). Khi dev, frontend gọi qua proxy của Vite (`/api` → cổng 8000) nên trình duyệt coi là cùng site; khi triển khai khác domain thì phải cấu hình `COOKIE_DOMAIN` và `FRONTEND_URL` cho khớp.
 
+## Khoảng ân hạn khi nhiều tab cùng làm mới phiên
+
+Nhiều tab dùng chung một cookie. Nếu hai tab cùng gọi `/auth/refresh` gần như đồng thời, tab đến sau gửi token mà tab kia vừa xoay vòng, nên không có ân hạn thì sẽ bị coi là dùng lại và cả phiên bị hủy. Vì vậy server cho một khoảng ân hạn `REFRESH_REUSE_GRACE_SECONDS` (mặc định 30 giây):
+
+- Token bị thu hồi **do xoay vòng** (có `replaced_by_id`), cách đây ≤ 30 giây, và phiên còn token hiệu lực: cấp thêm một refresh token mới cùng phiên, trả access token mới như bình thường.
+- Quá 30 giây, hoặc token bị thu hồi vì lý do khác (đăng xuất, đăng xuất mọi thiết bị, đổi mật khẩu ở thiết bị khác): giữ hành vi cũ, trả `SESSION_REVOKED` và hủy cả phiên.
+- Hai yêu cầu đồng thời được xếp hàng bằng `SELECT … FOR UPDATE` trên dòng token.
+
+Phía frontend vẫn nên tránh tình huống này: dùng **`navigator.locks`** để tại một thời điểm chỉ một tab gọi refresh. Các tab khác chờ khóa, rồi kiểm tra xem đã có token mới chưa (chia sẻ qua `BroadcastChannel`) trước khi tự gọi:
+
+```js
+// Chỉ một tab làm mới phiên tại một thời điểm; trong cùng tab, gom các lời gọi bằng một Promise
+async function refreshSession() {
+  return navigator.locks.request('wc-auth-refresh', async () => {
+    const fresh = useAuthStore.getState().freshTokenFromOtherTab() // token tab khác vừa nhận qua BroadcastChannel (< vài giây)
+    if (fresh) return fresh
+    const { data } = await api.post('/auth/refresh')
+    authChannel.postMessage({ type: 'refreshed', access_token: data.access_token, user: data.user })
+    return data
+  })
+}
+```
+
+Trình duyệt không có `navigator.locks` (rất cũ) thì vẫn an toàn nhờ khoảng ân hạn ở server.
+
 ## Giới hạn và an toàn
 
 - **Đăng nhập sai:** mỗi lần tăng `rl:login:ip:{ip}` và `rl:login:id:{identifier}` (TTL 15 phút). Một trong hai bộ đếm ≥ 5 thì trả 429, **kể cả khi mật khẩu đúng**. Đăng nhập đúng thì xóa bộ đếm của identifier.
@@ -156,7 +184,7 @@ Client gửi access token khi kết nối. Token thiếu, sai hoặc hết hạn
    api.interceptors.response.use(undefined, async (error) => {
      const { config, response } = error
      if (response?.status !== 401 || response.data?.error?.code !== 'TOKEN_EXPIRED' || config._retried) throw error
-     refreshing ??= api.post('/auth/refresh').then((r) => r.data).finally(() => { refreshing = null })
+     refreshing ??= refreshSession().finally(() => { refreshing = null }) // refreshSession: xem mục "Khoảng ân hạn"
      try {
        const { access_token, user } = await refreshing
        useAuthStore.getState().setSession(access_token, user)

@@ -107,3 +107,16 @@ async def live_server():
     yield f"http://127.0.0.1:{port}"
     server.should_exit = True
     await task
+
+
+@pytest_asyncio.fixture
+async def time_travel(monkeypatch):
+    """Dời đồng hồ của auth_service tới `seconds` giây sau hiện tại (không sleep thật)."""
+    from datetime import UTC, datetime, timedelta
+
+    from app.services import auth_service
+
+    def travel(seconds: float) -> None:
+        monkeypatch.setattr(auth_service, "_now", lambda: datetime.now(UTC) + timedelta(seconds=seconds))
+
+    return travel

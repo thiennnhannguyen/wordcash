@@ -2,13 +2,14 @@
 Kiểm thử service tài khoản/phiên trên PostgreSQL thật; mỗi test rollback sau khi chạy.
 """
 
+import asyncio
 import uuid
 from datetime import UTC, datetime, timedelta
 
 import pytest
 from pwdlib import PasswordHash
 from pwdlib.hashers.argon2 import Argon2Hasher
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 
 from app.core.config import settings
 from app.core.errors import AppError, AuthError
@@ -112,9 +113,10 @@ async def test_rotate_refresh(db_session):
     assert new.revoked_at is None and new.ip == "127.0.0.2"
 
 
-async def test_rotate_reuse_revokes_whole_family(db_session):
+async def test_rotate_reuse_after_grace_revokes_whole_family(db_session, time_travel):
     issued = await _register(db_session)
     rotated = await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    time_travel(settings.REFRESH_REUSE_GRACE_SECONDS + 1)
     with pytest.raises(AuthError) as err:
         await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
     assert err.value.code == "SESSION_REVOKED"
@@ -123,6 +125,74 @@ async def test_rotate_reuse_revokes_whole_family(db_session):
         await svc.rotate_refresh(db_session, rotated.refresh_token, None, None)
     assert err.value.code == "SESSION_REVOKED"
     assert all(t.revoked_at is not None for t in await _tokens(db_session, issued.user.id))
+
+
+async def test_rotate_reuse_within_grace_issues_new_token(db_session, time_travel):
+    issued = await _register(db_session)
+    first = await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    time_travel(10)
+    second = await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    assert second.family_id == first.family_id == issued.family_id
+    assert len({issued.refresh_token, first.refresh_token, second.refresh_token}) == 3
+    tokens = await _tokens(db_session, issued.user.id)
+    assert len(tokens) == 3 and sum(t.revoked_at is None for t in tokens) == 2
+    # Token gốc vẫn trỏ tới token thay thế đầu tiên
+    assert tokens[0].replaced_by_id == tokens[1].id
+    # Cả hai tab đều làm mới tiếp được
+    assert (await svc.rotate_refresh(db_session, first.refresh_token, None, None)).family_id == issued.family_id
+    assert (await svc.rotate_refresh(db_session, second.refresh_token, None, None)).family_id == issued.family_id
+
+
+async def test_reuse_within_grace_after_logout_is_revoked(db_session):
+    issued = await _register(db_session)
+    rotated = await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    await svc.revoke_family(db_session, rotated.refresh_token)
+    with pytest.raises(AuthError) as err:
+        await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    assert err.value.code == "SESSION_REVOKED"
+
+
+async def test_reuse_of_logged_out_token_is_never_graced(db_session):
+    issued = await _register(db_session)
+    await svc.revoke_family(db_session, issued.refresh_token)  # thu hồi do đăng xuất, không có replaced_by_id
+    with pytest.raises(AuthError) as err:
+        await svc.rotate_refresh(db_session, issued.refresh_token, None, None)
+    assert err.value.code == "SESSION_REVOKED"
+
+
+async def test_reuse_within_grace_after_password_change_elsewhere_is_revoked(db_session):
+    phone = await _register(db_session)
+    laptop = await svc.login(db_session, "nhan.wc", PASSWORD, None, None)
+    rotated = await svc.rotate_refresh(db_session, phone.refresh_token, None, None)
+    await svc.change_password(db_session, laptop.user, PASSWORD, "MatKhauMoi2026", laptop.family_id)
+    for token in (phone.refresh_token, rotated.refresh_token):
+        with pytest.raises(AuthError) as err:
+            await svc.rotate_refresh(db_session, token, None, None)
+        assert err.value.code == "SESSION_REVOKED"
+
+
+async def test_parallel_refresh_with_same_token(test_engine):
+    """Hai yêu cầu refresh cùng lúc bằng một cookie, trên hai kết nối DB thật: FOR UPDATE xếp hàng, cả hai thành công."""
+    from sqlalchemy.ext.asyncio import async_sessionmaker
+
+    make = async_sessionmaker(test_engine, expire_on_commit=False)
+    async with make() as s:
+        issued = await svc.register(s, _register_in(email="song.song@wordclash.vn", username="song.song"), None, None)
+    try:
+        async def refresh_once():
+            async with make() as s:
+                return await svc.rotate_refresh(s, issued.refresh_token, None, None)
+
+        a, b = await asyncio.gather(refresh_once(), refresh_once())
+        assert a.family_id == b.family_id == issued.family_id
+        assert a.refresh_token != b.refresh_token
+        async with make() as s:
+            tokens = await _tokens(s, issued.user.id)
+            assert len(tokens) == 3 and sum(t.revoked_at is None for t in tokens) == 2
+    finally:
+        async with make() as s:
+            await s.execute(delete(User).where(User.id == issued.user.id))
+            await s.commit()
 
 
 async def test_rotate_unknown_and_expired(db_session):
