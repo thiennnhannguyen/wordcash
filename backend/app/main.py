@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import api_router
 from app.core.config import settings
 from app.core.database import engine, ping_database
-from app.core.exceptions import register_exception_handlers
+from app.core.errors import register_exception_handlers
 from app.core.redis import close_redis, connect_redis
 from app.game import events  # noqa: F401 - đăng ký sự kiện Socket.IO
 from app.game.server import sio

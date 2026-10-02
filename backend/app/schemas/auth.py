@@ -8,7 +8,7 @@ Quy tắc:
 - mật khẩu: 8–128 ký tự, không trùng email, username hay phần trước @ của email (không phân biệt hoa thường).
 """
 
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from pydantic import BaseModel, EmailStr, Field, ValidationInfo, field_validator
 
 from app.schemas.user import UserOut, check_timezone, clean_display_name
 
@@ -54,11 +54,13 @@ class RegisterIn(BaseModel):
     def _timezone(cls, value: str | None) -> str | None:
         return None if value is None else check_timezone(value)
 
-    @model_validator(mode="after")
-    def _password_not_identity(self):
-        if password_matches_identity(self.password, self.email, self.username):
+    @field_validator("password")
+    @classmethod
+    def _password_not_identity(cls, value: str, info: ValidationInfo) -> str:
+        # email, username khai báo trước password nên đã có trong info.data (nếu hợp lệ)
+        if password_matches_identity(value, info.data.get("email"), info.data.get("username")):
             raise ValueError("Mật khẩu không được trùng email hoặc tên người dùng")
-        return self
+        return value
 
 
 class LoginIn(BaseModel):

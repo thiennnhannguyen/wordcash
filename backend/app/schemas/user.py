@@ -72,17 +72,18 @@ class UserUpdateIn(BaseModel):
 
     _strip = field_validator("display_name", mode="before")(clean_display_name)
 
+    @field_validator("display_name", "timezone")
+    @classmethod
+    def _not_null(cls, value: str | None) -> str:
+        # Chỉ chạy khi trường được gửi lên: gửi null cho tên hoặc múi giờ là không hợp lệ
+        if value is None:
+            raise ValueError("Không được để trống")
+        return value
+
     @field_validator("timezone")
     @classmethod
-    def _timezone(cls, value: str | None) -> str | None:
-        return None if value is None else check_timezone(value)
-
-    @model_validator(mode="after")
-    def _no_null_required(self):
-        for name in ("display_name", "timezone"):
-            if name in self.model_fields_set and getattr(self, name) is None:
-                raise ValueError(f"{name} không được để trống")
-        return self
+    def _timezone(cls, value: str) -> str:
+        return check_timezone(value)
 
 
 class OnboardingIn(BaseModel):
