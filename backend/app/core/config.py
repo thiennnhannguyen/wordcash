@@ -3,10 +3,9 @@ Cấu hình đọc từ file `.env` ở gốc repo (không phải `backend/`) v�
 Các hằng số luật game cũng đặt ở đây để không rải con số trong code; có thể ghi đè bằng biến môi trường cùng tên.
 """
 
-from functools import cached_property
 from pathlib import Path
 
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -23,18 +22,37 @@ def _to_async_url(url: str) -> str:
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT_DIR / ".env", env_file_encoding="utf-8", extra="ignore")
 
-    APP_ENV: str = "development"  # development | testing | production
+    ENV: str = "development"  # development | testing | production
 
     DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5432/wordclash_db"
-    TEST_DATABASE_URL: str = "sqlite+aiosqlite://"
+    TEST_DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5432/wordclash_test"
     REDIS_URL: str = "redis://localhost:6379/0"
 
+    # Token
     JWT_SECRET_KEY: str = "dev-jwt-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRE_MINUTES: int = 60 * 24 * 7
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
     FRONTEND_URL: str = "http://localhost:5173"
     TTS_API_KEY: str = ""
+
+    # Cookie chứa refresh token (httpOnly). COOKIE_SECURE để trống thì tự bật khi ENV=production.
+    COOKIE_NAME: str = "wc_refresh"
+    COOKIE_SECURE: bool | None = None
+    COOKIE_DOMAIN: str | None = None
+    COOKIE_PATH: str = "/api/v1/auth"
+
+    # Chống dò mật khẩu, giới hạn phiên
+    LOGIN_MAX_ATTEMPTS: int = 5
+    LOGIN_WINDOW_SECONDS: int = 900
+    REGISTER_MAX_PER_HOUR: int = 10
+    MAX_SESSIONS_PER_USER: int = 10
+    DEFAULT_TIMEZONE: str = "Asia/Ho_Chi_Minh"
+    TRUST_PROXY: bool = False  # chỉ bật khi chạy sau reverse proxy tin cậy (đọc X-Forwarded-For)
+
+    # Socket.IO: bật khi chạy nhiều tiến trình để đồng bộ sự kiện qua Redis
+    SIO_USE_REDIS: bool = False
 
     # Học tập, Cửa Ải, rank
     DAILY_FORGET_PENALTY: int = 1
@@ -60,19 +78,34 @@ class Settings(BaseSettings):
     def _async_driver(cls, value: str) -> str:
         return _to_async_url(value)
 
+    @model_validator(mode="after")
+    def _production_guard(self):
+        if self.is_production and len(self.JWT_SECRET_KEY) < 32:
+            raise ValueError("JWT_SECRET_KEY phải dài ít nhất 32 ký tự khi ENV=production.")
+        if self.COOKIE_SECURE is None:
+            self.COOKIE_SECURE = self.is_production
+        return self
+
+    @property
+    def is_production(self) -> bool:
+        return self.ENV == "production"
+
     @property
     def is_testing(self) -> bool:
-        return self.APP_ENV == "testing"
+        return self.ENV == "testing"
 
-    @cached_property
+    @property
     def database_url(self) -> str:
         """URL thực dùng: khi chạy test thì dùng database test riêng."""
         return self.TEST_DATABASE_URL if self.is_testing else self.DATABASE_URL
 
     @property
-    def use_redis(self) -> bool:
-        """Test không cần Redis; Socket.IO khi đó dùng bộ quản lý trong bộ nhớ."""
-        return bool(self.REDIS_URL) and not self.is_testing
+    def access_token_seconds(self) -> int:
+        return self.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+
+    @property
+    def refresh_token_seconds(self) -> int:
+        return self.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600
 
 
 settings = Settings()

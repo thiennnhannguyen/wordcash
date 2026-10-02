@@ -1,9 +1,9 @@
 """
 Điểm vào ứng dụng: tạo FastAPI, gắn CORS, exception handler, router /api/v1 và Socket.IO.
 
-Chạy dev:    uvicorn app.main:asgi_app --reload --port 5000   (frontend proxy /api, /socket.io sang cổng 5000)
+Chạy dev:    uvicorn app.main:asgi_app --reload   (cổng 8000; frontend proxy /api, /socket.io sang đây)
 Triển khai:  uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT
-Ban đầu chạy 1 worker; khi nhiều worker phải bật sticky session cho Socket.IO (Redis đã đồng bộ sự kiện giữa các tiến trình).
+Ban đầu chạy 1 worker; khi nhiều worker phải bật sticky session và SIO_USE_REDIS cho Socket.IO.
 """
 
 import logging
@@ -36,16 +36,16 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="WORDCLASH API",
-    description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập. Mọi phản hồi có dạng {success, message, data | errors}.",
-    version="0.1.0",
+    description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập.",
+    version="0.2.0",
     lifespan=lifespan,
 )
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 register_exception_handlers(app)
 app.include_router(api_router)

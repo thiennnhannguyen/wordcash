@@ -1,6 +1,7 @@
 """
 Kết nối Redis bất đồng bộ (redis.asyncio), mở và đóng trong lifespan của app.
-Khi Redis không chạy, app vẫn khởi động được; `get_redis()` khi đó ném RuntimeError để nơi gọi tự xử lý.
+Khi Redis không chạy, app vẫn khởi động được: `get_redis()` trả None và nơi dùng tự xử lý
+(giới hạn đăng nhập khi đó tạm bỏ qua và ghi cảnh báo).
 """
 
 import logging
@@ -16,13 +17,13 @@ _client: Redis | None = None
 
 async def connect_redis() -> None:
     global _client
-    if not settings.use_redis:
+    if not settings.REDIS_URL:
         return
     client = Redis.from_url(settings.REDIS_URL, decode_responses=True)
     try:
         await client.ping()
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Không thể kết nối tới Redis (%s). Ghép trận và cache sẽ bị hạn chế.", exc)
+        logger.warning("Không thể kết nối tới Redis (%s). Giới hạn đăng nhập và ghép trận sẽ bị hạn chế.", exc)
         await client.aclose()
         return
     _client = client
@@ -40,7 +41,6 @@ def redis_ready() -> bool:
     return _client is not None
 
 
-def get_redis() -> Redis:
-    if _client is None:
-        raise RuntimeError("Redis chưa được khởi tạo hoặc kết nối không thành công.")
+async def get_redis() -> Redis | None:
+    """Dependency: client Redis dùng chung, hoặc None khi Redis không chạy."""
     return _client
