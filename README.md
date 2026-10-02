@@ -45,13 +45,16 @@ wordclash/
 │   │   │   │   │   ├── mascots.py
 │   │   │   │   │   ├── placement.py
 │   │   │   │   │   ├── profile.py
-│   │   │   │   │   └── review.py
+│   │   │   │   │   ├── review.py
+│   │   │   │   │   └── users.py
 │   │   │   │   └── __init__.py
-│   │   │   └── deps.py
+│   │   │   ├── cookies.py
+│   │   │   ├── deps.py
+│   │   │   └── responses.py
 │   │   ├── core/
 │   │   │   ├── config.py
 │   │   │   ├── database.py
-│   │   │   ├── exceptions.py
+│   │   │   ├── errors.py
 │   │   │   ├── redis.py
 │   │   │   └── security.py
 │   │   ├── game/
@@ -62,23 +65,24 @@ wordclash/
 │   │   │   ├── matchmaking.py
 │   │   │   ├── question_picker.py
 │   │   │   ├── scoring.py
-│   │   │   ├── server.py
+│   │   │   ├── sio_server.py
 │   │   │   └── timing.py
 │   │   ├── models/
 │   │   │   ├── __init__.py
-│   │   │   ├── base.py
 │   │   │   ├── daily_check.py
 │   │   │   ├── mascot.py
 │   │   │   ├── match.py
 │   │   │   ├── progress.py
+│   │   │   ├── refresh_token.py
 │   │   │   ├── user.py
 │   │   │   └── vocabulary.py
 │   │   ├── schemas/
 │   │   │   ├── auth.py
-│   │   │   └── common.py
+│   │   │   ├── common.py
+│   │   │   └── user.py
 │   │   ├── services/
 │   │   │   ├── __init__.py
-│   │   │   ├── auth.py
+│   │   │   ├── auth_service.py
 │   │   │   ├── certificate.py
 │   │   │   ├── daily_check.py
 │   │   │   ├── gacha.py
@@ -86,6 +90,7 @@ wordclash/
 │   │   │   ├── placement.py
 │   │   │   ├── question_builder.py
 │   │   │   ├── rank.py
+│   │   │   ├── rate_limit.py
 │   │   │   ├── srs.py
 │   │   │   ├── streak.py
 │   │   │   ├── system.py
@@ -113,20 +118,32 @@ wordclash/
 │   │   ├── seed_mascots.py
 │   │   └── seed_sample_units.py
 │   ├── tests/
-│   │   ├── conftest.py
-│   │   ├── test_auth.py
-│   │   ├── test_gacha.py
-│   │   ├── test_mastery.py
-│   │   ├── test_rank.py
-│   │   ├── test_scoring.py
-│   │   ├── test_socket.py
-│   │   ├── test_srs.py
-│   │   └── test_unlock.py
+│   │   ├── api/
+│   │   │   ├── test_auth_api.py
+│   │   │   └── test_socket.py
+│   │   ├── integration/
+│   │   │   ├── test_auth_service.py
+│   │   │   └── test_rate_limit.py
+│   │   ├── unit/
+│   │   │   ├── test_errors.py
+│   │   │   ├── test_gacha.py
+│   │   │   ├── test_mastery.py
+│   │   │   ├── test_rank.py
+│   │   │   ├── test_schemas.py
+│   │   │   ├── test_scoring.py
+│   │   │   ├── test_security.py
+│   │   │   ├── test_srs.py
+│   │   │   └── test_unlock.py
+│   │   └── conftest.py
 │   ├── alembic.ini
 │   ├── pytest.ini
 │   └── requirements.txt
+├── docker/
+│   └── postgres/
+│       └── init.sql
 ├── docs/
 │   ├── api.md
+│   ├── auth.md
 │   ├── bao-cao-y-tuong.md
 │   ├── database.md
 │   ├── game-rules.md
@@ -564,19 +581,19 @@ wordclash/
 │   ├── alembic/             # migration async (versions/)
 │   ├── app/
 │   │   ├── main.py          # FastAPI + CORS + lifespan (DB, Redis) + Socket.IO → asgi_app
-│   │   ├── core/            # config (Settings), database (AsyncSession), redis, security (JWT, băm), exceptions
-│   │   ├── api/             # deps.py (get_db, get_current_user); v1/routers/ mỏng: health, auth, academy,
-│   │   │                    # review, daily_check, placement, profile, mascots, leaderboard, arena
+│   │   ├── core/            # config (Settings), database (Base, AsyncSession), redis, security (JWT, băm, refresh token), errors
+│   │   ├── api/             # deps.py (get_db, get_current_user…), cookies.py, responses.py; v1/routers/ mỏng:
+│   │   │                    # health, auth, users, academy, review, daily_check, placement, profile, mascots, leaderboard, arena
 │   │   ├── schemas/         # Pydantic v2: dữ liệu vào/ra, ApiResponse[T]
-│   │   ├── models/          # SQLAlchemy 2.0: user, vocabulary, progress, mascot, match, daily_check
+│   │   ├── models/          # SQLAlchemy 2.0: user, refresh_token, vocabulary, progress, mascot, match, daily_check
 │   │   ├── services/        # logic: srs, mastery, unlock, rank, gacha, daily_check,
-│   │   │                    # placement, question_builder, streak, certificate, auth
-│   │   ├── game/            # Đấu Trường: server (sio), events, matchmaking, match_room,
+│   │   │                    # placement, question_builder, streak, certificate, auth_service, rate_limit
+│   │   ├── game/            # Đấu Trường: sio_server (sio, xác thực JWT), events, matchmaking, match_room,
 │   │   │                    # scoring, question_picker, timing, bot
 │   │   └── utils/           # responses, time
 │   ├── data_pipeline/       # 01_import → 07_load_to_db; raw/ processed/ reviewed/
 │   ├── seeds/               # địa danh A1–A2, linh vật, bài mẫu A1
-│   └── tests/               # auth, socket, srs, mastery, unlock, rank, gacha, scoring
+│   └── tests/               # unit/ (hàm thuần), integration/ (service + PostgreSQL), api/ (HTTP, Socket.IO)
 └── frontend/
     └── src/
         ├── pages/           # Auth, DailyCheck, Lobby, Academy, Arena, Collection,
@@ -669,8 +686,11 @@ wordclash/
 
 - [x] Báo cáo ý tưởng v1.1 (file Word)
 - [x] Khung thư mục dự án (mỗi file mới có ghi chú mô tả và TODO, **chưa có code**)
-- [ ] Thiết kế giao diện, làm theo 5 phần: (1) Nền tảng: style guide và logo → (2) Vào game → (3) Học Viện → (4) Đấu Trường → (5) Bộ Sưu Tập và Hồ Sơ
-- [ ] Bắt đầu code giai đoạn 1
+- [x] Thiết kế giao diện (frontend chạy trên dữ liệu mẫu, chưa nối API; chi tiết trong CLAUDE.md)
+- [x] Backend chuyển sang FastAPI (SQLAlchemy async, Alembic, python-socketio)
+- [x] Auth giai đoạn 1: đăng ký, đăng nhập email/username, refresh token xoay vòng trong cookie httpOnly, đăng xuất, đổi mật khẩu, hồ sơ, onboarding, chống dò mật khẩu, xác thực Socket.IO (xem `docs/auth.md`)
+- [ ] Nối frontend với API auth
+- [ ] Phần còn lại của giai đoạn 1: kho từ, lộ trình A1–A2, SRS, mở khóa, Cửa Ải Hôm Nay, rank
 
 ### Thứ tự gợi ý khi bắt đầu code
 1. `docker-compose.yml`, `.env`, `app/core/config.py`, `app/main.py`
@@ -684,14 +704,16 @@ wordclash/
 
 ### Chạy dự án
 ```bash
-docker compose up -d                       # PostgreSQL + Redis
+docker compose up -d                       # PostgreSQL (kèm database wordclash_test) + Redis
 cp .env.example .env                       # lần đầu (file .env ở gốc repo)
 cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
-pytest                                     # test (mặc định SQLite trong bộ nhớ)
+pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
 cd ../frontend && npm install && npm run dev   # proxy /api, /socket.io sang cổng 8000
 ```
-Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session (Socket.IO).
+Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session và `SIO_USE_REDIS=true` (Socket.IO). Production: `ENV=production`, `JWT_SECRET_KEY` dài ít nhất 32 ký tự, cookie tự bật `Secure`; chạy sau reverse proxy thì đặt `TRUST_PROXY=true`.
+
+Volume PostgreSQL tạo từ trước khi có `docker/postgres/init.sql` thì tạo database test một lần: `docker exec wordclash_postgres createdb -U wordclash wordclash_test`. Tài liệu auth: `docs/auth.md`; API: `/docs`.
