@@ -96,10 +96,69 @@ async def test_counter_expiry_set_once(redis):
     assert await redis.ttl("rl:login:id:a") <= 5  # lần tăng sau không kéo dài hạn
 
 
-async def test_without_redis_fails_open(db_session):
-    await _register(db_session, None)
-    for _ in range(settings.LOGIN_MAX_ATTEMPTS + 1):
+@pytest.fixture
+async def broken_redis():
+    """Redis giả đang mất kết nối: mọi lệnh ném redis.exceptions.ConnectionError."""
+    from fakeredis import FakeServer
+
+    server = FakeServer()
+    server.connected = False
+    client = FakeAsyncRedis(server=server, decode_responses=True)
+    yield client
+    await client.aclose()
+
+
+@pytest.mark.parametrize("redis_kind", ["none", "broken"])
+async def test_redis_down_still_blocks_with_memory_counters(db_session, broken_redis, redis_kind):
+    redis = None if redis_kind == "none" else broken_redis
+    await _register(db_session, redis)
+    for _ in range(settings.LOGIN_MAX_ATTEMPTS):
         with pytest.raises(AppError) as err:
-            await _login(db_session, None, password="SaiMatKhau1")
+            await _login(db_session, redis, password="SaiMatKhau1")
         assert err.value.code == "INVALID_CREDENTIALS"
-    assert (await _login(db_session, None)).user.username == "user0"
+    with pytest.raises(AppError) as err:
+        await _login(db_session, redis)  # mật khẩu đúng nhưng vẫn bị chặn
+    assert err.value.code == "TOO_MANY_ATTEMPTS"
+    assert 0 < err.value.details["retry_after_seconds"] <= settings.LOGIN_WINDOW_SECONDS
+
+
+async def test_redis_down_login_still_works(db_session, broken_redis):
+    await _register(db_session, broken_redis)
+    assert (await _login(db_session, broken_redis)).user.username == "user0"
+
+
+async def test_redis_down_register_limit(db_session, broken_redis):
+    for n in range(settings.REGISTER_MAX_PER_HOUR):
+        await _register(db_session, broken_redis, n)
+    with pytest.raises(AppError) as err:
+        await _register(db_session, broken_redis, 99)
+    assert err.value.code == "TOO_MANY_ATTEMPTS"
+
+
+async def test_redis_down_warning_is_throttled_and_has_no_sensitive_data(db_session, broken_redis, caplog):
+    await _register(db_session, broken_redis)
+    with caplog.at_level("WARNING", logger="app.services.rate_limit"):
+        for _ in range(3):
+            with pytest.raises(AppError):
+                await _login(db_session, broken_redis, identifier="user0", password="SaiMatKhau1", ip="203.0.113.9")
+    warnings = [r for r in caplog.records if r.name == "app.services.rate_limit"]
+    assert len(warnings) == 1 and warnings[0].levelname == "WARNING"
+    text = warnings[0].getMessage()
+    assert "ConnectionError" in text
+    for secret in ("user0", "203.0.113.9", "SaiMatKhau1", "rl:"):
+        assert secret not in text
+
+
+async def test_memory_counters_expire():
+    now = [1000.0]
+    counters = rate_limit.MemoryCounters(clock=lambda: now[0])
+    assert await counters.incr("k", 10) == 1
+    assert await counters.incr("k", 10) == 2
+    assert await counters.ttl("k") == 10
+    now[0] += 4
+    assert await counters.incr("k", 10) == 3  # lần tăng sau không kéo dài hạn
+    assert await counters.ttl("k") == 6
+    now[0] += 6
+    assert await counters.counts(["k"]) == [0]
+    assert await counters.ttl("k") == -2
+    assert await counters.incr("k", 10) == 1

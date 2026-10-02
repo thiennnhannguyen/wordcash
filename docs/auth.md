@@ -29,7 +29,7 @@ sequenceDiagram
     API->>DB: refresh_tokens: lưu SHA-256(token), family mới
     API-->>FE: 201 {access_token, expires_in, user} + Set-Cookie wc_refresh (httpOnly)
     FE->>API: POST /auth/login {identifier, password}
-    API->>R: rl:login:ip / rl:login:id ≥ 5? → 429 TOO_MANY_ATTEMPTS
+    API->>R: rl:login:ip / rl:login:id ≥ 5? → 429 TOO_MANY_ATTEMPTS (Redis lỗi: bộ đếm trong bộ nhớ)
     API->>DB: tìm user (email nếu có "@", không thì username), kiểm tra mật khẩu
     alt sai
         API->>R: tăng 2 bộ đếm (TTL 15 phút)
@@ -161,7 +161,7 @@ Trình duyệt không có `navigator.locks` (rất cũ) thì vẫn an toàn nh�
 
 - **Đăng nhập sai:** mỗi lần tăng `rl:login:ip:{ip}` và `rl:login:id:{identifier}` (TTL 15 phút). Một trong hai bộ đếm ≥ 5 thì trả 429, **kể cả khi mật khẩu đúng**. Đăng nhập đúng thì xóa bộ đếm của identifier.
 - **Đăng ký:** tối đa 10 lần/IP/giờ.
-- **Khi Redis không chạy:** bỏ qua giới hạn và ghi cảnh báo, không chặn đăng nhập.
+- **Khi Redis không chạy hoặc lỗi:** vẫn cho đăng nhập, nhưng giới hạn chuyển sang bộ đếm dự phòng trong bộ nhớ (riêng từng tiến trình, có thời hạn), nên vẫn chặn được dò mật khẩu ở mức cơ bản. Cảnh báo ghi ở mức WARNING, tối đa một lần mỗi 60 giây, không kèm IP hay identifier. Chạy nhiều worker thì mỗi worker đếm riêng, nên giới hạn thực tế lỏng hơn cho tới khi Redis hoạt động lại.
 - **Chống dò tài khoản:** sai tài khoản hay sai mật khẩu đều trả cùng một lỗi. Không có user thì vẫn kiểm tra trên hash giả để thời gian phản hồi như nhau.
 - **Giới hạn phiên:** tối đa 10 phiên (family) đang hoạt động mỗi người; vượt thì hủy phiên bắt đầu sớm nhất.
 - **Đổi mật khẩu:** hủy mọi phiên khác. Access token cũ của thiết bị khác còn dùng được tối đa 15 phút.

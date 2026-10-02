@@ -52,6 +52,16 @@ async def db_session(test_engine):
             await trans.rollback()
 
 
+@pytest_asyncio.fixture(autouse=True)
+async def _reset_memory_rate_limits():
+    """Bộ đếm dự phòng trong bộ nhớ là toàn cục theo tiến trình: xóa trước mỗi test."""
+    from app.services import rate_limit
+
+    rate_limit.memory_counters.clear()
+    rate_limit._last_warning = float("-inf")
+    yield
+
+
 @pytest_asyncio.fixture
 async def fake_redis():
     client = FakeAsyncRedis(decode_responses=True)
