@@ -130,7 +130,7 @@ Mọi lỗi có dạng `{"error": {"code": "...", "message": "...", "details": .
 | Domain | `COOKIE_DOMAIN` (để trống = đúng host của API) |
 | Max-Age | 30 ngày (`REFRESH_TOKEN_EXPIRE_DAYS`) |
 
-Chống CSRF: các route dùng cookie (refresh, logout, logout-all) từ chối mọi header `Origin` không phải `FRONTEND_URL` (hoặc chính địa chỉ API, để /docs dùng được). Khi dev, frontend gọi qua proxy của Vite (`/api` → cổng 8000) nên trình duyệt coi là cùng site; khi triển khai khác domain thì phải cấu hình `COOKIE_DOMAIN` và `FRONTEND_URL` cho khớp.
+Chống CSRF: các route dùng cookie (refresh, logout, logout-all) từ chối mọi header `Origin` không phải `FRONTEND_URL`. Khi `ENV` khác `production`, chấp nhận thêm chính địa chỉ API để thử trên /docs; ở production chỉ có `FRONTEND_URL`. Ở production, `/docs`, `/redoc`, `/openapi.json` tắt hẳn trừ khi đặt `ENABLE_DOCS=true`. Khi dev, frontend gọi qua proxy của Vite (`/api` → cổng 8000) nên trình duyệt coi là cùng site; khi triển khai khác domain thì phải cấu hình `COOKIE_DOMAIN` và `FRONTEND_URL` cho khớp.
 
 ## Khoảng ân hạn khi nhiều tab cùng làm mới phiên
 

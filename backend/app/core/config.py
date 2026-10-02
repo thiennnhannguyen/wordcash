@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     REFRESH_REUSE_GRACE_SECONDS: int = 30
 
     FRONTEND_URL: str = "http://localhost:5173"
+    # /docs, /redoc, /openapi.json luôn bật khi dev; ở production chỉ bật khi ENABLE_DOCS=true
+    ENABLE_DOCS: bool = False
     TTS_API_KEY: str = ""
 
     # Cookie chứa refresh token (httpOnly). COOKIE_SECURE để trống thì tự bật khi ENV=production.
@@ -98,6 +100,10 @@ class Settings(BaseSettings):
     @property
     def is_testing(self) -> bool:
         return self.ENV == "testing"
+
+    @property
+    def docs_enabled(self) -> bool:
+        return not self.is_production or self.ENABLE_DOCS
 
     @property
     def database_url(self) -> str:

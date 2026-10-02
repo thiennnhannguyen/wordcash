@@ -34,20 +34,29 @@ async def lifespan(_: FastAPI):
     await engine.dispose()
 
 
-app = FastAPI(
-    title="WORDCLASH API",
-    description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập.",
-    version="0.2.0",
-    lifespan=lifespan,
-)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
-)
-register_exception_handlers(app)
-app.include_router(api_router)
+def create_app() -> FastAPI:
+    """Dựng app theo settings hiện tại. Ở production tắt /docs, /redoc, /openapi.json trừ khi ENABLE_DOCS=true."""
+    docs = settings.docs_enabled
+    application = FastAPI(
+        title="WORDCLASH API",
+        description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập.",
+        version="0.2.0",
+        lifespan=lifespan,
+        docs_url="/docs" if docs else None,
+        redoc_url="/redoc" if docs else None,
+        openapi_url="/openapi.json" if docs else None,
+    )
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=[settings.FRONTEND_URL],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type"],
+    )
+    register_exception_handlers(application)
+    application.include_router(api_router)
+    return application
 
+
+app = create_app()
 asgi_app = socketio.ASGIApp(sio, other_asgi_app=app)

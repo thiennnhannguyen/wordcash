@@ -79,11 +79,16 @@ UserAgent = Annotated[str | None, Depends(get_user_agent)]
 
 
 async def check_origin(request: Request) -> None:
-    """Chống CSRF cho các route dùng cookie: có header Origin thì phải là FRONTEND_URL (hoặc chính API, ví dụ /docs)."""
+    """Chống CSRF cho các route dùng cookie: có header Origin thì phải là FRONTEND_URL.
+
+    Khi ENV != production, cho thêm chính địa chỉ API (để thử /auth/refresh, /auth/logout trên /docs).
+    Ở production chỉ chấp nhận FRONTEND_URL.
+    """
     origin = request.headers.get("origin")
     if not origin:
         return
-    origin = origin.rstrip("/")
-    own = f"{request.url.scheme}://{request.url.netloc}"
-    if origin not in (settings.FRONTEND_URL.rstrip("/"), own):
+    allowed = {settings.FRONTEND_URL.rstrip("/")}
+    if not settings.is_production:
+        allowed.add(f"{request.url.scheme}://{request.url.netloc}")
+    if origin.rstrip("/") not in allowed:
         raise AppError("FORBIDDEN_ORIGIN")
