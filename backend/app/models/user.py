@@ -36,6 +36,8 @@ def _enum(cls: type[enum.StrEnum], name: str) -> Enum:
 
 class User(Base):
     __tablename__ = "users"
+    # Đọc lại giá trị do DB sinh (created_at, updated_at) ngay bằng RETURNING, tránh lazy load trong async
+    __mapper_args__ = {"eager_defaults": True}
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)

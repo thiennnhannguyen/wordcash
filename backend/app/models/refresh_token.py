@@ -17,6 +17,8 @@ from app.core.database import Base
 
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
+    # Đọc lại giá trị do DB sinh (created_at, updated_at) ngay bằng RETURNING, tránh lazy load trong async
+    __mapper_args__ = {"eager_defaults": True}
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
