@@ -689,6 +689,7 @@ wordclash/
 - [x] Thiết kế giao diện (frontend chạy trên dữ liệu mẫu, chưa nối API; chi tiết trong CLAUDE.md)
 - [x] Backend chuyển sang FastAPI (SQLAlchemy async, Alembic, python-socketio)
 - [x] Auth giai đoạn 1: đăng ký, đăng nhập email/username, refresh token xoay vòng trong cookie httpOnly, đăng xuất, đổi mật khẩu, hồ sơ, onboarding, chống dò mật khẩu, xác thực Socket.IO (xem `docs/auth.md`)
+- [x] Hoàn thiện auth sau review: PostgreSQL Docker ở cổng 5433, khoảng ân hạn refresh cho nhiều tab, IP thật sau proxy, tắt /docs ở production, bộ đếm dự phòng khi Redis hỏng, checklist triển khai (`docs/deploy-checklist.md`)
 - [ ] Nối frontend với API auth
 - [ ] Phần còn lại của giai đoạn 1: kho từ, lộ trình A1–A2, SRS, mở khóa, Cửa Ải Hôm Nay, rank
 
@@ -715,5 +716,7 @@ pytest -q                                  # test: cần PostgreSQL wordclash_te
 cd ../frontend && npm install && npm run dev   # proxy /api, /socket.io sang cổng 8000
 ```
 Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session và `SIO_USE_REDIS=true` (Socket.IO). Production: `ENV=production`, `JWT_SECRET_KEY` dài ít nhất 32 ký tự, cookie tự bật `Secure`; chạy sau reverse proxy thì đặt `TRUST_PROXY=true`.
+
+Trước khi deploy: đi theo `docs/deploy-checklist.md`. Sau lần deploy đầu, không viết lại migration cũ, chỉ thêm migration mới.
 
 Volume PostgreSQL tạo từ trước khi có `docker/postgres/init.sql` thì tạo database test một lần: `docker exec wordclash_postgres createdb -U wordclash wordclash_test`. Tài liệu auth: `docs/auth.md`; API: `/docs`.
