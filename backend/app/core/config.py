@@ -67,6 +67,26 @@ class Settings(BaseSettings):
     BOSS_PASS_RATE: float = 0.85
     RANK_GRACE_DAYS: int = 3
 
+    # Lặp lại ngắt quãng (SM-2): khoảng ôn cho 5 lần nhớ đầu, sau đó nhân với hệ số dễ
+    SRS_INTERVALS: list[int] = [1, 3, 7, 16, 35]
+    SRS_START_EASE: float = 2.5
+    SRS_MIN_EASE: float = 1.3
+    # "Đã thuộc": đúng ở mức ≥ MASTERY_MIN_LEVEL vào ≥ MASTERY_MIN_DAYS ngày khác nhau
+    MASTERY_MIN_LEVEL: int = 3
+    MASTERY_MIN_DAYS: int = 3
+    DAILY_NEW_WORDS_LIMIT: int = 20
+
+    # Khóa học của tôi (giới hạn MVP)
+    COURSE_MAX_PER_USER: int = 50
+    COURSE_MAX_WORDS: int = 500
+    IMPORT_MAX_ROWS: int = 200
+    CUSTOM_ENTRY_MAX_PER_USER: int = 1000
+    STUDY_SESSION_TTL_HOURS: int = 24
+    STUDY_DEFAULT_LIMIT: int = 10
+    STUDY_MAX_LIMIT: int = 50
+    STUDY_QUICK_QUESTIONS: int = 20
+    STUDY_TEST_QUESTIONS: int = 20
+
     # Vòng quay
     SPIN_EVERY_N_WORDS: int = 50
     PITY_EPIC: int = 20
