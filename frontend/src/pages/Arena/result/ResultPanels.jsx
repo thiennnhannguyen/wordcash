@@ -20,6 +20,7 @@ import cx from '../../../utils/cx'
 import { ARENA } from '../../../utils/constants'
 import { formatDecimal } from '../../../utils/format'
 import { speak } from '../../../utils/speech'
+import AddToCoursePopover from '../../../components/courses/AddToCoursePopover'
 
 // ---------- Bảng tỉ số ----------
 
@@ -290,6 +291,7 @@ export function WrongWords({ words, onReview }) {
               Bạn chọn: <s className="font-semibold text-danger-deep decoration-2">{w.chose}</s>
             </p>
             <Example sentence={w.example} word={w.word} />
+            <AddToCoursePopover word={{ headword: w.word, meaning_vi: w.meaning }} label="Thêm vào khóa học" className="mt-auto pt-1" />
           </li>
         ))}
       </ul>

@@ -5,7 +5,7 @@
  * TODO: thay bằng dữ liệu từ services/profileApi và academyApi khi backend sẵn sàng. Gợi ý nguồn:
  * - user, stats, week, goals: GET /users/me + thống kê hôm nay/tuần này (server tính theo múi giờ người dùng)
  * - academy, journey: bản đồ lộ trình (roadmapMock.js); arena: thống kê Đấu Trường + số người online (socket)
- * - wordOfDay: server chọn theo cấp người học; courses: tính năng "Khóa học của tôi" (/courses, chưa có)
+ * - wordOfDay: server chọn theo cấp người học. Khóa học của tôi KHÔNG nằm ở đây: Sảnh gọi services/coursesApi.js
  * Linh vật tham chiếu theo id trong data/mascots.js.
  */
 
@@ -77,11 +77,6 @@ const BASE = {
     { key: 'review', label: 'Ôn 8 từ đến hạn', current: 0, target: 8 },
     { key: 'arena', label: 'Chơi 1 trận Đấu Trường', current: 1, target: 1 },
   ],
-  courses: [
-    { id: 'it', name: 'Từ vựng IT', icon: 'code', color: 'sky', words: 120, learned: 54, due: 3 },
-    { id: 'marvel', name: 'Phim Marvel', icon: 'film', color: 'danger', words: 85, learned: 51, due: 5 },
-    { id: 'japan', name: 'Du lịch Nhật Bản', icon: 'plane', color: 'gold', words: 60, learned: 12, due: 0 },
-  ],
   courseEmptyMascotId: 4,
   journey: journey('B1', 14),
   nextRank: { from: 'bach_kim', to: 'kim_cuong', current: 1248, target: 2000 },
@@ -148,7 +143,6 @@ const VARIANTS = {
       { key: 'new', label: 'Học 15 từ mới', current: 0, target: 15 },
       { key: 'arena', label: 'Chơi trận Đấu Trường đầu tiên', current: 0, target: 1 },
     ],
-    courses: [],
     journey: journey('A1', 0),
     nextRank: { from: 'tan_binh', to: 'dong', current: 0, target: 100 },
     nextSpin: { current: 0, target: 50 },

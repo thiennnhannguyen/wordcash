@@ -35,6 +35,9 @@ import CertificateGallery from './pages/Profile/CertificateGallery'
 import RankUpPreview from './pages/RankUp/RankUpPreview'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import ComingSoon from './pages/ComingSoon'
+import MyCourses from './pages/Courses/MyCourses'
+import CourseDetail from './pages/Courses/CourseDetail'
+import CourseStudy from './pages/Courses/CourseStudy'
 
 function AppLayout() {
   return (
@@ -56,6 +59,8 @@ export default function AppRoutes() {
     { path: '/academy/boss', element: <BossBattle /> },
     { path: '/academy/placement', element: <PlacementTest /> },
     { path: '/academy/review/session', element: <ComingSoon title="Phiên ôn tập" standalone /> },
+    // Màn học của "Khóa học của tôi": toàn màn hình như Học bài
+    { path: '/courses/:id/study', element: <CourseStudy /> },
     // Sảnh Đấu Trường tự vẽ nền tràn màn hình và tự gắn thanh điều hướng
     { path: '/arena', element: <ArenaLobby /> },
     { path: '/arena/matchmaking', element: <Matchmaking /> },
@@ -83,7 +88,8 @@ export default function AppRoutes() {
         { path: '/profile', element: <Profile /> },
         { path: '/profile/:handle', element: <Profile /> },
         { path: '/certificates', element: <CertificateGallery /> },
-        { path: '/courses', element: <ComingSoon title="Khóa học của tôi" /> },
+        { path: '/courses', element: <MyCourses /> },
+        { path: '/courses/:id', element: <CourseDetail /> },
         { path: '/design-system', element: <DesignSystem /> },
         { path: '*', element: <ComingSoon title="Không tìm thấy trang" /> },
       ],

@@ -10,6 +10,7 @@
  * thanh chuyển biến thể chỉ hiện ở môi trường dev.
  */
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'react-router-dom'
 import { Check, CheckCircle, Star, WarningCircle } from '@phosphor-icons/react'
@@ -18,6 +19,7 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import StatusBar from '../../components/layout/StatusBar'
 import cx from '../../utils/cx'
+import * as coursesApi from '../../services/coursesApi'
 import { getLobbyMock, LOBBY_VARIANTS } from '../../data/mockLobby'
 import { AcademyCard, ArenaCard } from './LobbyCards'
 import { DailyGoals, JourneyStrip, MyCourses, WordOfDay } from './LobbyBlocks'
@@ -167,11 +169,32 @@ function Deco({ className, children }) {
   )
 }
 
+// Khóa học đang học lấy từ coursesApi (API thật hoặc mock). Biến thể "Người mới" luôn xem trạng thái chưa có khóa nào.
+function useMyCourses(isNew) {
+  const [courses, setCourses] = useState(null)
+  useEffect(() => {
+    if (isNew) {
+      setCourses([])
+      return undefined
+    }
+    let alive = true
+    coursesApi
+      .listCourses()
+      .then((res) => alive && setCourses(res.items))
+      .catch(() => alive && setCourses([]))
+    return () => {
+      alive = false
+    }
+  }, [isNew])
+  return courses
+}
+
 export default function Lobby() {
   const [params, setParams] = useSearchParams()
   const variant = params.get('variant') ?? 'default'
   const data = getLobbyMock(variant)
   const isNew = Boolean(data.academy.isNew)
+  const courses = useMyCourses(isNew)
 
   return (
     <>
@@ -246,7 +269,7 @@ export default function Lobby() {
           {/* Hàng dưới, trải hết 12 cột */}
           <div className="order-2 grid min-w-0 gap-6 xl:order-3 xl:col-span-12 xl:grid-cols-12 xl:gap-8">
             <Appear i={5} className="relative flex min-w-0 xl:col-span-7">
-              <MyCourses courses={data.courses} emptyMascot={data.courseEmptyMascot} className="w-full min-w-0" />
+              <MyCourses courses={courses} emptyMascot={data.courseEmptyMascot} className="w-full min-w-0" />
             </Appear>
 
             <Appear i={6} className="relative flex xl:col-span-5">

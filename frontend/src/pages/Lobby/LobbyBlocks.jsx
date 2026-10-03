@@ -2,9 +2,11 @@
  * Các khối ở cột trái của Sảnh, dưới hai card lớn:
  * - WordOfDay: "Từ của ngày" (nền vàng nhạt, phát âm, nghĩa, ví dụ tô highlight, linh vật Tò He mách mẹo nhớ).
  * - DailyGoals: "Mục tiêu hôm nay" — checklist 3 dòng, chỉ hiển thị, không có phần thưởng.
- * - MyCourses: "Khóa học của tôi" — xem trước tính năng tự tạo bộ từ (/courses), cuộn ngang; người mới thấy card trống.
+ * - MyCourses: "Khóa học của tôi" — các khóa đang học (services/coursesApi.js, API thật hoặc mock), cuộn ngang; chưa có
+ *   khóa nào thì thấy card trống.
  * - JourneyStrip: "Hành trình" — 6 vùng đất A1 → C2 nối bằng đường bay nét đứt, máy bay ở vùng hiện tại; bấm mở Học Viện.
- * Mọi nội dung lấy từ data/mockLobby.js. Hai nút ở "Từ của ngày" chưa có API nên chỉ báo toast.
+ * Nội dung khác lấy từ data/mockLobby.js. Nút "Đã biết" ở "Từ của ngày" chưa có API nên chỉ báo toast;
+ * "Thêm vào khóa học của tôi" dùng AddToCoursePopover.
  */
 
 import { useState } from 'react'
@@ -16,8 +18,6 @@ import {
   Check,
   CheckCircle,
   Circle,
-  Code,
-  FilmSlate,
   Lightbulb,
   Plus,
   SpeakerHigh,
@@ -33,6 +33,8 @@ import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
 import { speak } from '../../utils/speech'
 import RegionIcon from './RegionIcon'
+import AddToCoursePopover from '../../components/courses/AddToCoursePopover'
+import { courseIcon } from '../../utils/courseIcons'
 
 const BLOCK = 'rounded-panel border-thick border-line p-5 shadow-hard lift md:p-6'
 
@@ -65,7 +67,7 @@ function Highlighted({ text, word }) {
 }
 
 export function WordOfDay({ word, className }) {
-  const [state, setState] = useState(null) // null | 'added' | 'known'
+  const [state, setState] = useState(null) // null | 'known'
   const toast = (title, message) => useToastStore.getState().push({ variant: 'success', title, message })
   const mascot = word.tipMascot
 
@@ -90,17 +92,7 @@ export function WordOfDay({ word, className }) {
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <Button
-          size="sm"
-          icon={state === 'added' ? Check : Plus}
-          disabled={state !== null}
-          onClick={() => {
-            setState('added')
-            toast('Đã thêm vào khóa học', `"${word.word}" sẽ xuất hiện trong lượt ôn của bạn.`)
-          }}
-        >
-          {state === 'added' ? 'Đã thêm' : 'Thêm vào khóa học của tôi'}
-        </Button>
+        <AddToCoursePopover word={{ headword: word.word, meaning_vi: word.meaning }} variant="primary" />
         <Button
           size="sm"
           variant="secondary"
@@ -212,10 +204,8 @@ export function DailyGoals({ goals, mascot, className }) {
 
 /* ---------- Khóa học của tôi ---------- */
 
-const COURSE_ICONS = { code: Code, film: FilmSlate, plane: AirplaneTilt }
-
 function CourseCard({ course, onOpen }) {
-  const pct = Math.round((course.learned / course.words) * 100)
+  const pct = course.word_count ? Math.round((course.mastered_count / course.word_count) * 100) : 0
   return (
     <button
       type="button"
@@ -223,18 +213,18 @@ function CourseCard({ course, onOpen }) {
       className="flex w-[168px] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border-thick border-line bg-surface text-left shadow-hard lift"
     >
       <div className="flex items-center justify-between gap-2 border-b-thick border-line px-3.5 py-3" style={{ background: `var(--color-${course.color})` }}>
-        <IconBadge icon={COURSE_ICONS[course.icon] ?? Code} bg="surface" size="sm" shape="square" />
-        <ProgressRing value={course.learned} max={course.words} size={48} stroke={7} tone="primary" label={`Đã học ${pct}%`}>
+        <IconBadge icon={courseIcon(course.icon)} bg="surface" size="sm" shape="square" />
+        <ProgressRing value={course.mastered_count} max={Math.max(course.word_count, 1)} size={48} stroke={7} tone="primary" label={`Đã thuộc ${pct}%`}>
           <span className="font-num text-[13px]">{pct}%</span>
         </ProgressRing>
       </div>
       <div className="flex flex-1 flex-col gap-1 px-3.5 py-3">
-        <span className="font-heading text-base font-extrabold leading-tight">{course.name}</span>
+        <span className="line-clamp-2 font-heading text-base font-extrabold leading-tight">{course.title}</span>
         <span className="text-[13px] text-muted">
-          <span className="font-num text-ink">{course.words}</span> từ
+          <span className="font-num text-ink">{course.word_count}</span> từ
         </span>
-        <span className={cx('mt-auto pt-1 text-[13px] font-semibold', course.due > 0 ? 'text-danger-deep' : 'text-muted')}>
-          {course.due > 0 ? `Đến hạn ôn: ${course.due}` : 'Chưa có từ đến hạn'}
+        <span className={cx('mt-auto pt-1 text-[13px] font-semibold', course.due_count > 0 ? 'text-danger-deep' : 'text-muted')}>
+          {course.due_count > 0 ? `Đến hạn ôn: ${course.due_count}` : 'Chưa có từ đến hạn'}
         </span>
       </div>
     </button>
@@ -244,6 +234,7 @@ function CourseCard({ course, onOpen }) {
 export function MyCourses({ courses, emptyMascot, className }) {
   const navigate = useNavigate()
   const open = () => navigate('/courses')
+  if (courses === null) return <section aria-busy="true" className={cx(BLOCK, 'min-h-[260px] bg-surface', className)} />
 
   return (
     <section aria-labelledby="lobby-courses" className={cx(BLOCK, 'bg-surface', className)}>
@@ -280,7 +271,7 @@ export function MyCourses({ courses, emptyMascot, className }) {
       ) : (
         <div className="-mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3 pt-1">
           {courses.map((course) => (
-            <CourseCard key={course.id} course={course} onOpen={open} />
+            <CourseCard key={course.id} course={course} onOpen={() => navigate(`/courses/${course.id}`)} />
           ))}
           <button
             type="button"
