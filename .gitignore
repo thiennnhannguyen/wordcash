@@ -4,6 +4,9 @@
 .env
 .env.*
 !.env.example
+# Cấu hình công khai của Vite (chỉ biến VITE_*, không bao giờ chứa bí mật)
+!frontend/.env.development
+!frontend/.env.production
 *.pem
 *.key
 *.p12

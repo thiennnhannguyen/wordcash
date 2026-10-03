@@ -1,8 +1,9 @@
 /*
  * Gọi API "Khóa học của tôi" (docs/courses.md).
  *
- * VITE_USE_MOCK: mặc định bật (frontend chưa có đăng nhập thật), dùng services/coursesMock.js đóng vai server.
- * Đặt VITE_USE_MOCK=false để gọi backend thật qua services/api.js (cần access token trong authStore).
+ * Mặc định gọi backend thật qua services/api.js (.env.development, .env.production: VITE_USE_MOCK=false).
+ * Bật mock thủ công khi không có backend: `VITE_USE_MOCK=true npm run dev` (services/coursesMock.js đóng vai server).
+ * Bản build production không bao giờ dùng mock (vite.config.js dừng build).
  * Hai chế độ trả cùng cấu trúc JSON (snake_case như server) và cùng dạng lỗi {code, message, details, status}.
  * Riêng câu hỏi phiên học được đổi `letter_count` → `letterCount` cho khớp components/academy/QuestionView.
  */
@@ -10,7 +11,7 @@
 import { request } from './api'
 import * as mock from './coursesMock'
 
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
+export const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
 const real = {
   listCourses: ({ archived = false } = {}) => request({ url: '/courses', params: { archived } }),
