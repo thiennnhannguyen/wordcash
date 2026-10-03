@@ -1,33 +1,55 @@
 /*
- * Đăng nhập.
+ * Đăng nhập bằng email hoặc tên người dùng (gửi `identifier`) qua authStore → POST /auth/login.
  *
- * TODO: gọi API đăng nhập (services/api.js, lưu JWT vào authStore) khi backend có routes/auth.py.
- * Hiện chỉ kiểm tra đầu vào rồi chuyển sang Sảnh.
+ * Thành công: quay lại trang người dùng định vào trước khi bị chuyển tới đây (`location.state.from`), mặc định Sảnh;
+ * route guard tự đưa người chưa xong onboarding sang /onboarding. Phiên vừa hết hạn thì hiện thông báo phía trên form.
  */
 
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { GoogleLogo, Sword, User } from '@phosphor-icons/react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { GoogleLogo, Info, Sword, User, WarningCircle } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
+import Icon from '../../components/ui/Icon'
 import Input from '../../components/ui/Input'
+import { useAuthStore } from '../../store/authStore'
+import { useToastStore } from '../../store/toastStore'
+import { fieldErrors, messageFor } from '../../utils/errorMessages'
 import AuthLayout, { OrDivider } from './AuthLayout'
 import PasswordField from './PasswordField'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [identity, setIdentity] = useState('')
+  const location = useLocation()
+  const login = useAuthStore((s) => s.login)
+  const expired = useAuthStore((s) => s.expired)
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
+  const [formError, setFormError] = useState(null)
   const [attempt, setAttempt] = useState(0)
+  const [pending, setPending] = useState(false)
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
     const next = {}
-    if (!identity.trim()) next.identity = 'Nhập email hoặc tên người dùng.'
+    if (!identifier.trim()) next.identifier = 'Nhập email hoặc tên người dùng.'
     if (!password) next.password = 'Nhập mật khẩu.'
     setErrors(next)
+    setFormError(null)
     setAttempt((n) => n + 1)
-    if (Object.keys(next).length === 0) navigate('/lobby')
+    if (Object.keys(next).length) return
+    setPending(true)
+    try {
+      await login({ identifier: identifier.trim(), password })
+      const from = location.state?.from
+      navigate(from ? `${from.pathname}${from.search ?? ''}` : '/lobby', { replace: true })
+    } catch (err) {
+      const byField = fieldErrors(err)
+      setErrors(byField)
+      if (!Object.keys(byField).length) setFormError(messageFor(err))
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -44,15 +66,23 @@ export default function Login() {
       }
     >
       <form noValidate onSubmit={submit} className="flex flex-col gap-5">
+        {expired && !formError && (
+          <p role="status" className="flex items-center gap-2 rounded-card border-2 border-line bg-raised p-3 font-semibold">
+            <Icon icon={Info} size={22} color="primary" className="shrink-0" />
+            Phiên đăng nhập đã hết hạn. Bạn đăng nhập lại nhé.
+          </p>
+        )}
         <Input
-          key={`identity-${errors.identity ? attempt : 0}`}
+          key={`identifier-${errors.identifier ? attempt : 0}`}
           label="Email hoặc tên người dùng"
           icon={User}
           autoComplete="username"
-          value={identity}
-          onChange={(e) => setIdentity(e.target.value)}
-          status={errors.identity ? 'error' : undefined}
-          hint={errors.identity}
+          autoCapitalize="none"
+          spellCheck={false}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          status={errors.identifier ? 'error' : undefined}
+          hint={errors.identifier}
         />
         <div className="flex flex-col gap-2">
           <PasswordField
@@ -68,12 +98,24 @@ export default function Login() {
             Quên mật khẩu?
           </Link>
         </div>
-        <Button type="submit" size="lg" icon={Sword} fullWidth>
-          Vào trận
+        {formError && (
+          <p role="alert" className="flex items-center gap-2 rounded-card border-2 border-danger bg-surface p-3 font-semibold text-danger-deep">
+            <Icon icon={WarningCircle} size={22} className="shrink-0" />
+            {formError}
+          </p>
+        )}
+        <Button type="submit" size="lg" icon={Sword} fullWidth disabled={pending}>
+          {pending ? 'Đang vào…' : 'Vào trận'}
         </Button>
         <OrDivider />
         {/* TODO: đăng nhập Google (OAuth) */}
-        <Button variant="secondary" size="lg" icon={GoogleLogo} fullWidth>
+        <Button
+          variant="secondary"
+          size="lg"
+          icon={GoogleLogo}
+          fullWidth
+          onClick={() => useToastStore.getState().push({ variant: 'info', title: 'Sắp ra mắt', message: 'Đăng nhập Google sẽ có ở giai đoạn sau.' })}
+        >
           Tiếp tục với Google
         </Button>
       </form>
