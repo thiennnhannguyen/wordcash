@@ -80,10 +80,17 @@ async def test_validation_errors(client, auth_user):
 
 
 async def test_course_limit(client, auth_user, monkeypatch):
-    monkeypatch.setattr(settings, "COURSE_MAX_PER_USER", 1)
-    await create_course(client, auth_user["headers"])
-    res = await client.post(f"{API}/courses", json={"title": "Thứ hai"}, headers=auth_user["headers"])
+    monkeypatch.setattr(settings, "COURSE_MAX_ACTIVE", 1)
+    h = auth_user["headers"]
+    first = await create_course(client, h)
+    res = await client.post(f"{API}/courses", json={"title": "Thứ hai"}, headers=h)
     assert res.status_code == 409 and code(res) == "COURSE_LIMIT_REACHED"
+    await client.post(f"{API}/courses/{first['id']}/archive", headers=h)
+    second = await create_course(client, h, "Thứ hai")
+    res = await client.post(f"{API}/courses/{first['id']}/restore", headers=h)
+    assert res.status_code == 409 and code(res) == "COURSE_LIMIT_REACHED"
+    assert res.json()["error"]["details"]["scope"] == "active"
+    assert second["archived_at"] is None
 
 
 async def test_other_user_cannot_touch_course(client, auth_user, other_headers, bank):

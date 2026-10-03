@@ -77,7 +77,8 @@ class Settings(BaseSettings):
     DAILY_NEW_WORDS_LIMIT: int = 20
 
     # Khóa học của tôi (giới hạn MVP)
-    COURSE_MAX_PER_USER: int = 50
+    COURSE_MAX_ACTIVE: int = 50  # khóa đang học
+    COURSE_MAX_ARCHIVED: int = 100  # khóa đã lưu trữ
     COURSE_MAX_WORDS: int = 500
     IMPORT_MAX_ROWS: int = 200
     CUSTOM_ENTRY_MAX_PER_USER: int = 1000

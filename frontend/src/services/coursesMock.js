@@ -11,7 +11,7 @@ import { BANK, COURSES, CUSTOM, PROGRESS } from '../data/mockCourses'
 
 const LATENCY_MS = 220
 const DAY = 24 * 3600 * 1000
-const LIMITS = { courses: 50, words_per_course: 500, import_rows: 200, custom_entries: 1000 }
+const LIMITS = { courses: 50, archived_courses: 100, words_per_course: 500, import_rows: 200, custom_entries: 1000 }
 const DAILY_NEW_LIMIT = 20
 const OPTION_COUNT = 4
 const BLANK = '______'
@@ -137,6 +137,16 @@ function ownCustom() {
 
 // ---------- Khóa học ----------
 
+// Tối đa 50 khóa đang học và 100 khóa đã lưu trữ (đếm riêng)
+function ensureRoom(archived) {
+  const limit = archived ? LIMITS.archived_courses : LIMITS.courses
+  const count = db.courses.filter((c) => Boolean(c.archived_at) === archived).length
+  if (count >= limit) {
+    const message = archived ? `Bạn đã lưu trữ tối đa ${limit} khóa học. Xóa bớt một khóa đã lưu trữ nhé.` : `Bạn đang học tối đa ${limit} khóa học. Lưu trữ hoặc xóa bớt một khóa nhé.`
+    fail('COURSE_LIMIT_REACHED', message, { limit, scope: archived ? 'archived' : 'active' }, 409)
+  }
+}
+
 export async function listCourses({ archived = false } = {}) {
   await wait()
   const items = db.courses
@@ -156,7 +166,7 @@ export async function listCourses({ archived = false } = {}) {
 
 export async function createCourse(data) {
   await wait()
-  if (db.courses.length >= LIMITS.courses) fail('COURSE_LIMIT_REACHED', 'Bạn đã có tối đa số khóa học cho phép. Lưu trữ hoặc xóa bớt một khóa nhé.', null, 409)
+  ensureRoom(false)
   const title = (data.title ?? '').trim()
   if (!title) fail('VALIDATION_ERROR', 'Dữ liệu chưa hợp lệ, bạn kiểm tra lại nhé.', [{ field: 'title', message: 'Cần ít nhất 1 ký tự' }], 422)
   const course = {
@@ -194,6 +204,8 @@ export async function updateCourse(id, data) {
 export async function setArchived(id, archived) {
   await wait()
   const course = findCourse(id)
+  if (archived === Boolean(course.archived_at)) return courseOut(course)
+  ensureRoom(archived)
   course.archived_at = archived ? nowIso() : null
   return courseOut(course)
 }

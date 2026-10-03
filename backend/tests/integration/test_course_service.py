@@ -28,7 +28,8 @@ async def test_create_and_list_courses(db_session):
     assert course.visibility.value == "private" and course.word_count == 0
     listing = await svc.list_courses(db_session, user)
     assert [c["id"] for c in listing["items"]] == [course.id]
-    assert listing["limits"]["courses"] == settings.COURSE_MAX_PER_USER
+    assert listing["limits"]["courses"] == settings.COURSE_MAX_ACTIVE
+    assert listing["limits"]["archived_courses"] == settings.COURSE_MAX_ARCHIVED
 
 
 async def test_other_users_course_is_not_found(db_session):
@@ -45,16 +46,41 @@ async def test_other_users_course_is_not_found(db_session):
         assert _code(exc) == "COURSE_NOT_FOUND" and exc.value.status_code == 404
 
 
-async def test_course_limit_counts_archived(db_session, monkeypatch):
-    monkeypatch.setattr(settings, "COURSE_MAX_PER_USER", 2)
+async def test_active_limit_ignores_archived_courses(db_session, monkeypatch):
+    monkeypatch.setattr(settings, "COURSE_MAX_ACTIVE", 2)
+    user = await make_user(db_session)
+    first = await _course(db_session, user, "Một")
+    await svc.set_archived(db_session, user, first.id, True)
+    await _course(db_session, user, "Hai")
+    await _course(db_session, user, "Ba")  # khóa đã lưu trữ không tính vào 2 khóa đang học
+    with pytest.raises(AppError) as exc:
+        await _course(db_session, user, "Bốn")
+    assert _code(exc) == "COURSE_LIMIT_REACHED" and exc.value.details["scope"] == "active"
+    assert [c["title"] for c in (await svc.list_courses(db_session, user, archived=True))["items"]] == ["Một"]
+
+
+async def test_restore_blocked_when_active_full(db_session, monkeypatch):
+    monkeypatch.setattr(settings, "COURSE_MAX_ACTIVE", 1)
     user = await make_user(db_session)
     first = await _course(db_session, user, "Một")
     await svc.set_archived(db_session, user, first.id, True)
     await _course(db_session, user, "Hai")
     with pytest.raises(AppError) as exc:
-        await _course(db_session, user, "Ba")
-    assert _code(exc) == "COURSE_LIMIT_REACHED"
-    assert [c["title"] for c in (await svc.list_courses(db_session, user, archived=True))["items"]] == ["Một"]
+        await svc.set_archived(db_session, user, first.id, False)
+    assert _code(exc) == "COURSE_LIMIT_REACHED" and exc.value.details["scope"] == "active"
+    assert (await svc.get_course(db_session, user, first.id)).archived_at is not None
+
+
+async def test_archived_limit(db_session, monkeypatch):
+    monkeypatch.setattr(settings, "COURSE_MAX_ARCHIVED", 1)
+    user = await make_user(db_session)
+    a, b = await _course(db_session, user, "A"), await _course(db_session, user, "B")
+    await svc.set_archived(db_session, user, a.id, True)
+    with pytest.raises(AppError) as exc:
+        await svc.set_archived(db_session, user, b.id, True)
+    assert _code(exc) == "COURSE_LIMIT_REACHED" and exc.value.details["scope"] == "archived"
+    # Lưu trữ lại khóa đã lưu trữ thì không báo lỗi
+    await svc.set_archived(db_session, user, a.id, True)
 
 
 async def test_delete_requires_confirm(db_session):

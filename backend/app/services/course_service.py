@@ -7,7 +7,7 @@ Quy tắc:
 - Mọi truy vấn entries lọc qua `Entry.visible_to(user.id)`; từ tự tạo của người khác coi như không tồn tại (404).
 - Từ hệ thống chỉ được LIÊN KẾT (không sao chép). Từ tự tạo: source=user, status=approved, chỉ chủ sở hữu thấy,
   không tính rank/lượt quay/Cửa Ải (xem services/mastery.py).
-- Giới hạn: COURSE_MAX_PER_USER khóa (tính cả khóa đã lưu trữ), COURSE_MAX_WORDS từ/khóa, IMPORT_MAX_ROWS dòng/lần nhập,
+- Giới hạn: COURSE_MAX_ACTIVE khóa đang học, COURSE_MAX_ARCHIVED khóa đã lưu trữ, COURSE_MAX_WORDS từ/khóa, IMPORT_MAX_ROWS dòng/lần nhập,
   CUSTOM_ENTRY_MAX_PER_USER từ tự tạo/người.
 - `word_count` của khóa là bộ đếm cache, cập nhật trong cùng transaction với thao tác thêm/bớt.
 Phiên học (chọn từ, sinh câu hỏi, chấm) nằm ở services/study_service.py.
@@ -52,7 +52,8 @@ def _now() -> datetime:
 
 def limits() -> dict[str, int]:
     return {
-        "courses": settings.COURSE_MAX_PER_USER,
+        "courses": settings.COURSE_MAX_ACTIVE,
+        "archived_courses": settings.COURSE_MAX_ARCHIVED,
         "words_per_course": settings.COURSE_MAX_WORDS,
         "import_rows": settings.IMPORT_MAX_ROWS,
         "custom_entries": settings.CUSTOM_ENTRY_MAX_PER_USER,
@@ -83,10 +84,22 @@ async def get_course(session: AsyncSession, user: User, course_id: uuid.UUID) ->
     return course
 
 
+async def _ensure_room(session: AsyncSession, user: User, *, archived: bool) -> None:
+    """Tối đa COURSE_MAX_ACTIVE khóa đang học và COURSE_MAX_ARCHIVED khóa đã lưu trữ (đếm riêng)."""
+    limit = settings.COURSE_MAX_ARCHIVED if archived else settings.COURSE_MAX_ACTIVE
+    state = UserCourse.archived_at.is_not(None) if archived else UserCourse.archived_at.is_(None)
+    count = await session.scalar(select(func.count()).select_from(UserCourse).where(UserCourse.user_id == user.id, state))
+    if count >= limit:
+        message = (
+            f"Bạn đã lưu trữ tối đa {limit} khóa học. Xóa bớt một khóa đã lưu trữ nhé."
+            if archived
+            else f"Bạn đang học tối đa {limit} khóa học. Lưu trữ hoặc xóa bớt một khóa nhé."
+        )
+        raise AppError("COURSE_LIMIT_REACHED", message, details={"limit": limit, "scope": "archived" if archived else "active"})
+
+
 async def create_course(session: AsyncSession, user: User, data: CourseIn) -> UserCourse:
-    count = await session.scalar(select(func.count()).select_from(UserCourse).where(UserCourse.user_id == user.id))
-    if count >= settings.COURSE_MAX_PER_USER:
-        raise AppError("COURSE_LIMIT_REACHED", details={"limit": settings.COURSE_MAX_PER_USER})
+    await _ensure_room(session, user, archived=False)
     course = UserCourse(user_id=user.id, **data.model_dump())
     session.add(course)
     await session.commit()
@@ -104,6 +117,9 @@ async def update_course(session: AsyncSession, user: User, course_id: uuid.UUID,
 
 async def set_archived(session: AsyncSession, user: User, course_id: uuid.UUID, archived: bool) -> UserCourse:
     course = await get_course(session, user, course_id)
+    if archived == (course.archived_at is not None):
+        return course  # đã đúng trạng thái
+    await _ensure_room(session, user, archived=archived)
     course.archived_at = _now() if archived else None
     await session.commit()
     await session.refresh(course)

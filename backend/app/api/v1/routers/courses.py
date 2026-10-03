@@ -72,12 +72,14 @@ async def delete_course(course_id: uuid.UUID, user: CurrentUser, session: DbSess
 
 
 @router.post("/{course_id}/archive", response_model=CourseOut, summary="Lưu trữ khóa học (ẩn khỏi danh sách đang học)",
-             responses=error_responses(*NF))
+             responses=error_responses(*NF, "COURSE_LIMIT_REACHED"))
 async def archive_course(course_id: uuid.UUID, user: CurrentUser, session: DbSession):
     return await course_service.set_archived(session, user, course_id, True)
 
 
-@router.post("/{course_id}/restore", response_model=CourseOut, summary="Bỏ lưu trữ khóa học", responses=error_responses(*NF))
+@router.post("/{course_id}/restore", response_model=CourseOut, summary="Bỏ lưu trữ khóa học",
+             description="Đã có đủ số khóa đang học (COURSE_MAX_ACTIVE) thì trả COURSE_LIMIT_REACHED.",
+             responses=error_responses(*NF, "COURSE_LIMIT_REACHED"))
 async def restore_course(course_id: uuid.UUID, user: CurrentUser, session: DbSession):
     return await course_service.set_archived(session, user, course_id, False)
 

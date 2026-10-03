@@ -16,7 +16,9 @@ Code: `backend/app/models/course.py`, `services/course_service.py`, `services/st
    hiện ở Cửa Ải Hôm Nay**. Đếm riêng ở `users.custom_mastered_count`; `users.mastered_count` chỉ đếm từ hệ thống.
 3. **Bộ từ riêng chỉ dùng ở Phòng riêng** của Đấu Trường, không dùng cho trận xếp hạng (mới chuẩn bị dữ liệu và API,
    chưa có logic trận).
-4. **Giới hạn MVP** (trong `core/config.py`): 50 khóa học/người (`COURSE_MAX_PER_USER`, tính cả khóa đã lưu trữ),
+4. **Giới hạn MVP** (trong `core/config.py`): tối đa 50 khóa **đang học** (`COURSE_MAX_ACTIVE`, không tính khóa đã lưu trữ)
+   và 100 khóa **đã lưu trữ** (`COURSE_MAX_ARCHIVED`); bỏ lưu trữ khi đã có 50 khóa đang học trả `COURSE_LIMIT_REACHED`
+   (`details.scope`: active | archived),
    500 từ/khóa (`COURSE_MAX_WORDS`), 200 dòng/lần nhập (`IMPORT_MAX_ROWS`), 1.000 từ tự tạo/người (`CUSTOM_ENTRY_MAX_PER_USER`).
 5. **Khóa học luôn riêng tư.** Cột `visibility` (`private` | `shared`) để sẵn, chưa làm chia sẻ.
 
@@ -123,7 +125,6 @@ Bấm lưu thì server phân loại lại toàn bộ (không tin bảng xem trư
 ## Điểm đã tự quyết định (chờ duyệt)
 
 - Trạng thái thứ 5 `match_own` ở bảng xem trước (đề chỉ có 4): tránh tạo trùng từ tự tạo đã có.
-- Giới hạn 50 khóa tính cả khóa đã lưu trữ (nếu không, lưu trữ là cách vượt giới hạn).
 - `quick` và `test` cũng cập nhật SRS/mastery; giới hạn 20 từ mới/ngày áp cho chế độ `learn`.
 - "Từ của tôi đã thuộc" ở trang `/courses` = số từ khác nhau đã thuộc trong các khóa đang học (gồm cả từ kho).
 - Tạo từ tự tạo trùng chữ với kho: trả gợi ý dùng bản trong kho; gửi `force: true` vẫn tạo được từ riêng (vd. "bug" nghĩa IT).
