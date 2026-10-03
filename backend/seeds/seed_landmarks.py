@@ -3,7 +3,9 @@ Dữ liệu địa danh cho bản đồ "Hộ chiếu vòng quanh thế giới" 
 
 Mỗi cấp có `region_theme` (cột mới của bảng levels); mỗi chặng (bảng topics) có `landmark_key`, `landmark_name`,
 `landmark_image` (nullable: điền đường dẫn ảnh PNG thì frontend dùng ảnh thay tranh SVG, không cần sửa code).
-Thứ tự chặng khớp `order` của topics. Trận Boss lưu ở cấp (`boss_landmark_key`, `boss_landmark_name`).
+Thứ tự chặng khớp `order` của topics. Trận Boss không phải một chặng nên lưu ở bảng levels (`boss_landmark_key`,
+`boss_landmark_name`), không nằm trong topics: mỗi cấp 10 chặng + 1 Boss = 11 địa danh, A1 + A2 = 22.
+`guardian` (quái vật canh giữ) chưa có cột trong DB; hiện chỉ frontend dùng (roadmapMock.js).
 
 Chạy (sau `alembic upgrade head`): `python -m seeds.seed_landmarks` trong backend/. Chạy lại nhiều lần vẫn an toàn:
 cấp và chặng đã có thì cập nhật, chưa có thì tạo.

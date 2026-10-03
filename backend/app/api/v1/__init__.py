@@ -4,7 +4,7 @@ API phiên bản 1: gom router dưới prefix /api/v1.
 
 from fastapi import APIRouter
 
-from app.schemas.common import ErrorResponse
+from app.schemas.common import ErrorOut
 
 from app.api.v1.routers import (
     academy,
@@ -17,9 +17,10 @@ from app.api.v1.routers import (
     placement,
     profile,
     review,
+    users,
 )
 
-# 422 dùng cùng định dạng lỗi chung thay cho mẫu mặc định của FastAPI
-api_router = APIRouter(prefix="/api/v1", responses={422: {"model": ErrorResponse, "description": "Dữ liệu không hợp lệ"}})
-for module in (health, auth, academy, review, daily_check, placement, profile, mascots, leaderboard, arena):
+# 422 dùng định dạng lỗi chung {"error": {...}} thay cho mẫu mặc định của FastAPI
+api_router = APIRouter(prefix="/api/v1", responses={422: {"model": ErrorOut, "description": "VALIDATION_ERROR"}})
+for module in (health, auth, users, academy, review, daily_check, placement, profile, mascots, leaderboard, arena):
     api_router.include_router(module.router)

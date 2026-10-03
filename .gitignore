@@ -1,9 +1,19 @@
 # Các file/thư mục không đưa lên Git.
 
-# Bí mật và cấu hình máy
+# Bí mật và cấu hình máy (không bao giờ commit)
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+id_rsa*
+id_ed25519*
+secrets/
+*.secret
+service-account*.json
 
 # Python
 __pycache__/

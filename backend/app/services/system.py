@@ -8,4 +8,4 @@ from app.core.redis import redis_ready
 
 
 async def health_status() -> dict:
-    return {"status": "online", "env": settings.APP_ENV, "database": await ping_database(), "redis": redis_ready()}
+    return {"status": "ok", "env": settings.ENV, "database": await ping_database(), "redis": redis_ready()}

@@ -18,14 +18,14 @@ Phần game hóa gồm: rank theo số từ đã thuộc, Cửa Ải Hôm Nay b�
 ## Hiện trạng
 
 - Khung thư mục đã có. Phần lớn file chỉ chứa docstring hoặc comment mô tả nhiệm vụ kèm TODO; `docs/` cũng mới là TODO, đặc tả thật nằm trong `README.md`.
-- **Backend đã chuyển sang FastAPI** (01/10/2026). Đã có code thật: khởi động (`app/main.py`, `app/core/`), tài khoản (đăng ký, đăng nhập, `/auth/me`), model `User`, `Level`, `Topic` kèm migration Alembic đầu tiên, seed địa danh A1–A2, kết nối Socket.IO có xác thực JWT, 15 test (auth + socket).
-- **Chưa có:** các model còn lại (Unit, Entry, tiến độ, linh vật, trận đấu, Cửa Ải), các service luật (srs, mastery, unlock, rank, gacha, scoring) và test của chúng; các router ngoài auth/health mới là khung rỗng; sự kiện trận đấu mới trả ack "đang phát triển".
+- **Backend chạy FastAPI.** Đã có code thật: khởi động (`app/main.py`, `app/core/`), **Auth giai đoạn 1** (02/10/2026, đã hoàn thiện sau review; xem `docs/auth.md`): đăng ký, đăng nhập email/username, refresh token xoay vòng trong cookie httpOnly có khoảng ân hạn 30 giây cho nhiều tab, đăng xuất, đăng xuất mọi thiết bị, hồ sơ (avatar chỉ 3 linh vật khởi đầu), onboarding, đổi mật khẩu, giới hạn đăng nhập sai (Redis, dự phòng trong bộ nhớ khi Redis hỏng), IP thật sau proxy, tắt /docs ở production, xác thực Socket.IO. Model `User` (UUID), `RefreshToken`, `Level`, `Topic` kèm migration; seed 22 địa danh A1–A2; 165 test. Checklist triển khai: `docs/deploy-checklist.md`.
+- **Chưa có:** các model còn lại (Unit, Entry, tiến độ, linh vật, trận đấu, Cửa Ải), các service luật (srs, mastery, unlock, rank, gacha, scoring) và test của chúng; các router ngoài health/auth/users mới là khung rỗng; sự kiện trận đấu mới trả ack "đang phát triển". Frontend chưa gọi API thật.
 - **Frontend** đã có nền tảng giao diện bản sáng và 23 màn hình chạy trên dữ liệu mẫu, chưa nối API. Chi tiết xem mục **Báo cáo công việc** bên dưới.
 - Đang ở giai đoạn thiết kế giao diện, sau đó sẽ code **Giai đoạn 1: MVP Học Viện** (tài khoản, lộ trình A1–A2, mở khóa, SRS, Cửa Ải Hôm Nay, rank).
 - Khi code một file, hãy thay phần mô tả placeholder bằng code thật nhưng giữ lại docstring hoặc comment đầu file.
 - Không làm vượt giai đoạn hiện tại khi chưa được yêu cầu, ví dụ không tự làm Đấu Trường khi đang làm MVP Học Viện.
 
-## Báo cáo công việc (cập nhật 01/10/2026)
+## Báo cáo công việc (cập nhật 02/10/2026)
 
 Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. Backend xem dòng cuối bảng và mục Kiến trúc backend. Mọi màn hình đã được kiểm tra bằng ảnh chụp ở 1440px và 390px, không tràn ngang.
 
@@ -59,7 +59,8 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 | Thẻ chứng nhận rank (poster canvas, khổ 1080×1350 và 1080×1920): logo, huy hiệu cực lớn, tên rank, "Rank 5/8", họ tên, số từ trên dải highlighter, 3 chỉ số, linh vật khung độ hiếm, mã QR tới hồ sơ, ngày đạt, mã chứng nhận, tagline; 8 bậc trang trí theo rank; màn xem trước (thẻ nghiêng, công tắc Bài đăng/Story, Tải ảnh, Facebook, Instagram, Sao chép link); trang trưng bày 8 phiên bản | `/certificates`, `/profile?cert=1` | `pages/Profile/{certificateArt.js,Certificate.jsx,CertificateGallery.jsx}`, `utils/canvasArt.js` |
 | Cảnh chuyển cấp "Bay sang vùng đất mới" (~5 giây, có Bỏ qua): quái vật Loch Ness vẫy khăn, băng "B1 · ĐÃ CHINH PHỤC", con dấu "UNITED KINGDOM" dập xuống kèm rung → nhà du hành kéo vali lên máy bay tím, cất cánh → bản đồ thế giới màu kem, đường bay nét đứt vẽ dần Anh → Mỹ kèm vệt mây → sương tan lộ Tượng Nữ thần Tự do và New York, chữ "CHÀO MỪNG ĐẾN VỚI B2 · MỸ & CANADA" → card tổng kết (2.000 từ, 9/9 địa danh, trang hộ chiếu đủ dấu, +1 lượt quay đặc biệt, Bắt đầu hành trình B2); biến thể người mới: nhà của linh vật, biển "Hành trình 10.000 từ bắt đầu từ đây", mini-map 6 vùng đất, Lên đường | `/travel`, `/travel?variant=start` | `pages/Travel/` |
 | Bảng xếp hạng: đồng hồ đếm ngược mùa tuần, tab Học tập / Đấu trường / Tổng và Bạn bè / Toàn quốc, bục top 3 (vàng/bạc/đồng, số khổng lồ, vương miện và tia sáng cho hạng 1), danh sách card từ hạng 4 (thay đổi hạng, avatar linh vật, rank, số liệu, Thách đấu ở tab Đấu trường), vùng thưởng top 10 viền vàng, thẻ phần thưởng tuần, dòng của mình tô xanh chanh kèm câu động viên và dính đáy khi cuộn khuất, "Quanh hạng của bạn" khi ngoài top 50, trạng thái chưa có bạn (linh vật cầm ống nhòm, Mời bạn) | `/leaderboard` | `pages/Leaderboard/`, `leaderboardMock.js`, `hooks/useCountdown.js` |
-| **Backend chuyển Flask → FastAPI**: FastAPI + Uvicorn, SQLAlchemy 2.0 async (asyncpg), Alembic async, pydantic-settings, PyJWT + OAuth2PasswordBearer, pwdlib Argon2, python-socketio ASGI + AsyncRedisManager; `POST /api/v1/auth/register`, `/auth/login`, `/auth/token` (form, cho nút Authorize ở /docs), `GET /auth/me`, `GET /health`; exception handler chung giữ định dạng `{success, message, errors}`; model `users`, `levels`, `topics` (cột địa danh) + migration đầu tiên; `seeds/seed_landmarks.py` chạy thật; 15 test pytest-asyncio (SQLite và PostgreSQL đều qua) | `/docs` (backend) | `backend/app/`, `backend/alembic/`, `backend/tests/` |
+| **Backend chuyển Flask → FastAPI**: FastAPI + Uvicorn, SQLAlchemy 2.0 async (asyncpg), Alembic async, pydantic-settings, python-socketio ASGI; `GET /health`; model `levels`, `topics` (cột địa danh); `seeds/seed_landmarks.py` chạy thật | `/docs` (backend) | `backend/app/`, `backend/alembic/` |
+| **Auth giai đoạn 1** (backend): đăng ký, đăng nhập bằng email hoặc username, access JWT 15 phút + refresh token 30 ngày trong cookie httpOnly `wc_refresh` (DB chỉ lưu SHA-256, xoay vòng, dùng lại thì hủy cả phiên, ân hạn 30 giây khi nhiều tab cùng refresh, tối đa 10 phiên/người), `/auth/refresh`, `/logout`, `/logout-all`, `/change-password`, `/auth/token` (form cho /docs), `GET/PATCH /users/me` (avatar chỉ linh vật 1–3, khác thì MASCOT_NOT_OWNED), `PATCH /users/me/onboarding`; giới hạn đăng nhập sai 5 lần/15 phút và đăng ký 10 lần/IP/giờ bằng Redis (Redis hỏng thì dùng bộ đếm trong bộ nhớ); IP thật sau proxy (`TRUST_PROXY`, `TRUSTED_PROXY_HOPS`); kiểm tra Origin cho route dùng cookie; /docs tắt ở production (trừ `ENABLE_DOCS`); lỗi thống nhất `{error: {code, message, details}}`; Socket.IO từ chối kết nối khi token sai/hết hạn; 165 test (unit, integration trên PostgreSQL thật, API, Socket.IO) | `/docs`, `docs/auth.md`, `docs/deploy-checklist.md` | `backend/app/{core,api,services/auth_service.py,services/rate_limit.py,game/sio_server.py}`, `backend/tests/` |
 
 ### Kiến trúc frontend cần biết
 
@@ -139,8 +140,8 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Chưa có trang: phiên ôn tập (`/academy/review/session` đang là trang tạm), kiểm tra chặng (nút trên bản đồ tạm mở giao diện kiểm tra cuối bài), quên mật khẩu. Các nút dẫn tới đó đang rơi vào trang "Không tìm thấy trang" hoặc trang tạm `ComingSoon`.
 - Chưa chặn vào Sảnh khi chưa làm Cửa Ải (cần server biết ngày theo múi giờ người dùng; TODO trong `App.jsx`).
 - Chưa có đăng nhập Google, trang Điều khoản/Chính sách.
-- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có tài khoản, `users`/`levels`/`topics` và seed địa danh). Frontend chưa gọi API thật; khi nối, form Đăng ký gửi `display_name` (frontend đang đặt tên `displayName`) và đọc token trong `data.access_token`. Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Trên máy dev hiện tại có một PostgreSQL cài sẵn chiếm `localhost:5432`, che PostgreSQL của Docker; cần tắt nó hoặc trỏ `DATABASE_URL` tới IP máy/cổng khác.
-- `.gitignore` vẫn là placeholder; repo chưa khởi tạo git.
+- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Khi nối frontend với auth: làm theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md` (form Đăng ký cần thêm ô username và gửi `display_name`; Đăng nhập gửi `identifier`). Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Seed có 22 địa danh: 10 chặng mỗi cấp trong `topics` + Boss lưu ở `levels.boss_landmark_*`; tên quái vật canh giữ (Rồng Vịnh, Bàn Tay Núi) chưa có cột trong DB. PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
+- Repo đã khởi tạo git (02/10/2026), nhánh `main` chứa hiện trạng ban đầu, auth làm trên nhánh `feat/auth-phase1`; chưa có remote.
 
 ## Công nghệ
 
@@ -152,17 +153,28 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 
 ### Backend
 - Điểm vào: `app/main.py` tạo `FastAPI`, gắn `CORSMiddleware` (origin = `FRONTEND_URL`), exception handler, router `/api/v1`, rồi bọc Socket.IO: `asgi_app = socketio.ASGIApp(sio, other_asgi_app=app)`. Chạy bằng `uvicorn app.main:asgi_app`. `lifespan` kiểm tra kết nối DB, mở/đóng Redis và giải phóng engine.
-- `core/config.py`: `Settings` (pydantic-settings) đọc `.env` ở **gốc repo**; có `DATABASE_URL` (URL `postgres://`/`postgresql://` tự đổi sang `postgresql+asyncpg://`), `TEST_DATABASE_URL`, `REDIS_URL`, JWT, `FRONTEND_URL` và **mọi hằng số luật game** (`DAILY_FORGET_PENALTY`, `UNIT_PASS_RATE`, `BOSS_PASS_RATE`, `RANK_GRACE_DAYS`, `SPIN_EVERY_N_WORDS`, `PITY_EPIC`, `MATCH_HP`, `MATCH_QUESTIONS`, `DMG_*`, `FAST_MS`, `COMBO_MULT`, `WRONG_SELF_DMG`). Không rải các con số này trong code. `APP_ENV=testing` thì dùng `TEST_DATABASE_URL` và bỏ Redis.
-- `core/database.py`: async engine + `async_sessionmaker`; `get_db()` cấp một `AsyncSession` mỗi request. `core/redis.py`: `get_redis()` ném `RuntimeError` khi Redis không chạy (app vẫn khởi động được). `core/security.py`: băm mật khẩu (chạy trong thread), tạo/giải mã JWT.
-- `api/deps.py`: `DbSession`, `get_current_user` / `CurrentUser` (OAuth2PasswordBearer, `tokenUrl=/api/v1/auth/token`). `api/v1/routers/` chỉ nhận request bằng schema Pydantic (`schemas/`), gọi service, trả `response_model=ApiResponse[...]`. **Không đặt logic nghiệp vụ trong router.** Router mới phải thêm vào `api/v1/__init__.py`.
-- Định dạng JSON: thành công trả `success_response(data, message)` → `{success: true, message, data}` (mã HTTP đặt ở `status_code` của route); lỗi: service ném `AppError(message, code, errors)`, handler chung trong `core/exceptions.py` đổi thành `{success: false, message, errors?}` (cả 401/404/422 và lỗi 500).
+- `core/config.py`: `Settings` (pydantic-settings) đọc `.env` ở **gốc repo**; có `ENV` (development/testing/production), `DATABASE_URL` (URL `postgres://`/`postgresql://` tự đổi sang `postgresql+asyncpg://`), `TEST_DATABASE_URL`, `REDIS_URL`, token (`ACCESS_TOKEN_EXPIRE_MINUTES`, `REFRESH_TOKEN_EXPIRE_DAYS`), cookie (`COOKIE_*`), giới hạn (`LOGIN_MAX_ATTEMPTS`, `LOGIN_WINDOW_SECONDS`, `REGISTER_MAX_PER_HOUR`, `MAX_SESSIONS_PER_USER`), `TRUST_PROXY`, `SIO_USE_REDIS`, `FRONTEND_URL` và **mọi hằng số luật game** (`DAILY_FORGET_PENALTY`, `UNIT_PASS_RATE`, `BOSS_PASS_RATE`, `RANK_GRACE_DAYS`, `SPIN_EVERY_N_WORDS`, `PITY_EPIC`, `MATCH_HP`, `MATCH_QUESTIONS`, `DMG_*`, `FAST_MS`, `COMBO_MULT`, `WRONG_SELF_DMG`). Không rải các con số này trong code. `ENV=testing` thì dùng `TEST_DATABASE_URL`. `ENV=production` mà `JWT_SECRET_KEY` ngắn hơn 32 ký tự thì app không khởi động.
+- `core/database.py`: `Base` (DeclarativeBase, có quy ước tên ràng buộc), async engine (`hide_parameters`, timeout kết nối 5 giây) + `async_sessionmaker`; `get_db()` cấp một `AsyncSession` mỗi request. `core/redis.py`: `get_redis()` trả `None` khi Redis không chạy (app vẫn khởi động được). `core/security.py`: băm mật khẩu, JWT, refresh token. `core/errors.py`: `AppError`, bảng mã lỗi, exception handler.
+- `api/deps.py`: `DbSession`, `RedisClient`, `CurrentUser` (= `Depends(get_current_user)`, Bearer qua OAuth2PasswordBearer `tokenUrl=/api/v1/auth/token`), `get_current_active_admin`, `require_verified_email` (chưa gắn), `ClientIp`, `UserAgent`, `check_origin`. `api/v1/routers/` chỉ nhận request bằng schema Pydantic (`schemas/`), gọi service, trả `response_model` (schema trực tiếp, không bọc khung), khai báo `status_code`, `summary` tiếng Việt và `responses=error_responses(...)` (`api/responses.py`) để /docs liệt kê mã lỗi. **Không đặt logic nghiệp vụ trong router.** Router mới phải thêm vào `api/v1/__init__.py`.
+- **Định dạng phản hồi:** thành công trả **thẳng dữ liệu** (schema của route, không bọc `{success, message, data}`; khung cũ đã bỏ cùng `utils/responses.py`). **Lỗi luôn dùng `AppError(code, …)`** (`core/errors.py`), không trả `HTTPException` hay JSON tự chế; handler chung đổi thành `{"error": {"code", "message", "details"}}` với `message` tiếng Việt. 422 của Pydantic thành `VALIDATION_ERROR`, `details` = `[{field, message}]`; 401/403/404/405/500 cùng định dạng. Mã mới thêm vào bảng `ERRORS`.
 - `services/`: hàm tính luật thuần (srs, mastery, unlock, rank, gacha, `game/scoring.py`) viết **đồng bộ, không phụ thuộc DB** để dễ test; hàm đọc/ghi DB viết `async` và nhận `session` làm tham số.
-- `models/`: SQLAlchemy 2.0 (`Mapped[]`, `mapped_column`), kế thừa `models/base.Base` (có quy ước tên ràng buộc). Mọi model mới phải import trong `app/models/__init__.py` để Alembic thấy. Test mặc định chạy SQLite nên tránh kiểu chỉ PostgreSQL có (ARRAY, JSONB…).
-- Thay đổi schema phải có migration Alembic (`backend/alembic/versions/`, `env.py` dạng async, URL lấy từ settings).
-- `game/`: `server.py` tạo `sio = AsyncServer(async_mode="asgi", client_manager=AsyncRedisManager)`; `events.py` xác thực JWT trong `connect` (token qua `auth` của client, sai thì từ chối) và đăng ký các sự kiện. Trạng thái trận lưu trong Redis; chỉ ghi PostgreSQL khi trận kết thúc. Đo thời gian bằng `game/timing.py` (`time.monotonic()`).
+- `models/`: SQLAlchemy 2.0 (`Mapped[]`, `mapped_column`), kế thừa `core.database.Base`. Mọi model mới phải import trong `app/models/__init__.py` để Alembic thấy. Model có cột do DB sinh (`server_default`, `onupdate`) đặt `__mapper_args__ = {"eager_defaults": True}` để tránh lazy load trong async. Enum lưu dạng VARCHAR + CHECK (`native_enum=False`) để migration lùi/tiến không vướng kiểu ENUM của PostgreSQL.
+- Thay đổi schema phải có migration Alembic (`backend/alembic/versions/`, `env.py` dạng async, URL lấy từ settings). **Sau khi deploy lần đầu, KHÔNG viết lại migration cũ, chỉ thêm migration mới.** (Trước lần deploy đầu đã viết lại một lần khi đổi id người dùng sang UUID.)
+- `game/`: `sio_server.py` tạo `sio = AsyncServer(async_mode="asgi")` (thêm `AsyncRedisManager` khi `SIO_USE_REDIS`) và xác thực access token trong `connect` (`auth.token`; sai/hết hạn thì từ chối với mã TOKEN_INVALID/TOKEN_EXPIRED), lưu `{user_id, role}` vào session socket, vào room `user:{id}`; `events.py` đăng ký các sự kiện trận đấu. Trạng thái trận lưu trong Redis; chỉ ghi PostgreSQL khi trận kết thúc. Đo thời gian bằng `game/timing.py` (`time.monotonic()`).
 - Không dùng thư viện đồng bộ chặn luồng (requests, psycopg2, redis đồng bộ) trong hàm async. Việc nặng CPU (băm mật khẩu) chạy qua `asyncio.to_thread`.
 - Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`; ban đầu 1 worker, nhiều worker thì bật sticky session.
-- Mọi thay đổi trong `services/` và `game/scoring.py` phải kèm test pytest.
+- Mọi thay đổi trong `services/` và `game/scoring.py` phải kèm test pytest. Test chia `tests/unit/` (hàm thuần), `tests/integration/` (service trên PostgreSQL test thật, mỗi test rollback), `tests/api/` (httpx + ASGITransport, `get_db`/`get_redis` được thay bằng session test và fakeredis; Socket.IO qua uvicorn chạy thật).
+
+### Auth (quy tắc bắt buộc, chi tiết ở `docs/auth.md`)
+- Access token (JWT 15 phút) chỉ giữ trong bộ nhớ phía client (Zustand). **Không lưu token ở localStorage/sessionStorage.**
+- Refresh token **chỉ nằm trong cookie httpOnly** `wc_refresh` (path `/api/v1/auth`); DB chỉ lưu SHA-256. Mỗi lần refresh là xoay vòng; token cũ bị dùng lại thì hủy cả phiên, trừ khoảng ân hạn `REFRESH_REUSE_GRACE_SECONDS` cho token vừa xoay vòng (nhiều tab). Frontend dùng `navigator.locks` để chỉ một tab refresh tại một thời điểm.
+- Mọi route cần đăng nhập dùng `Depends(get_current_user)` (`CurrentUser`); route quản trị dùng `get_current_active_admin`.
+- Mọi lỗi dùng `AppError` với mã trong bảng `ERRORS`, không trả `HTTPException` hay JSON tự chế.
+- Route đọc cookie phải có `dependencies=[Depends(check_origin)]`: chỉ chấp nhận `FRONTEND_URL`; origin của chính API chỉ được chấp nhận khi `ENV` khác production. Ở production `/docs`, `/redoc`, `/openapi.json` tắt trừ khi `ENABLE_DOCS=true`.
+- IP người dùng luôn lấy qua `ClientIp` (`get_client_ip`); sau reverse proxy đặt `TRUST_PROXY=true` và `TRUSTED_PROXY_HOPS`. Trước khi deploy đi theo `docs/deploy-checklist.md`.
+- Giới hạn tần suất đi qua `services/rate_limit.py`; Redis hỏng thì tự chuyển sang bộ đếm trong bộ nhớ, không chặn đăng nhập.
+- Không log mật khẩu, token, mã băm hay body của request auth. Không lưu refresh token dạng gốc.
+- ID người dùng là UUID. Email, username lưu chữ thường.
 
 ### Frontend
 - Component chia theo khu: `components/{ui,layout,academy,game,collection}`; trang nằm trong `pages/`.
@@ -274,7 +286,7 @@ Các điểm sau **chưa được chốt**. Hãy hỏi trước thay vì tự qu
 ## Lệnh thường dùng
 
 ```bash
-docker compose up -d                          # PostgreSQL + Redis
+docker compose up -d                          # PostgreSQL ở localhost:5433 (+ database wordclash_test) và Redis
 cp .env.example .env                          # lần đầu (file .env đặt ở gốc repo)
 cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
@@ -282,9 +294,9 @@ alembic upgrade head                          # áp dụng migration
 alembic revision --autogenerate -m "..."      # sinh migration sau khi sửa model
 python -m seeds.seed_landmarks                # nạp địa danh A1, A2 (chạy lại được)
 uvicorn app.main:asgi_app --reload            # API + Socket.IO, cổng 8000; tài liệu API tại /docs
-pytest                                        # chạy trong backend/ (mặc định SQLite trong bộ nhớ)
-TEST_DATABASE_URL=postgresql+asyncpg://wordclash:wordclash_password@localhost:5432/wordclash_test pytest   # test trên PostgreSQL
-pytest tests/test_auth.py::test_login_success -v   # chạy một test
+pytest -q                                     # chạy trong backend/; cần PostgreSQL test (TEST_DATABASE_URL, mặc định wordclash_test)
+pytest tests/unit -q                          # chỉ test đơn vị (không cần DB)
+pytest tests/api/test_auth_api.py::test_refresh_rotation_and_reuse_detection -v   # chạy một test
 cd frontend && npm install && npm run dev     # dev server ở cổng 5173 (FRONTEND_URL), proxy sang 8000
 cd frontend && npm run build                  # kiểm tra build production
 ```

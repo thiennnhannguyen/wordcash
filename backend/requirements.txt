@@ -4,8 +4,9 @@ uvicorn[standard]>=0.30
 python-multipart>=0.0.9
 
 # Cấu hình, kiểm tra dữ liệu
-pydantic[email]>=2.7
+pydantic>=2.7
 pydantic-settings>=2.3
+email-validator>=2.1
 
 # Cơ sở dữ liệu
 sqlalchemy[asyncio]>=2.0.30
@@ -16,16 +17,16 @@ alembic>=1.13
 pyjwt>=2.8
 pwdlib[argon2]>=0.2
 
-# Thời gian thực, cache
+# Thời gian thực, cache, giới hạn tần suất
 python-socketio>=5.11
 redis>=5.0
 
 # Kho từ
 pandas>=2.0.0
 
-# Kiểm thử
+# Dev / kiểm thử
 pytest>=8.0.0
-pytest-asyncio>=0.23
+pytest-asyncio>=0.24
 httpx>=0.27
-aiosqlite>=0.20
+fakeredis>=2.23
 aiohttp>=3.9

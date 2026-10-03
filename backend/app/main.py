@@ -1,9 +1,9 @@
 """
 Điểm vào ứng dụng: tạo FastAPI, gắn CORS, exception handler, router /api/v1 và Socket.IO.
 
-Chạy dev:    uvicorn app.main:asgi_app --reload --port 5000   (frontend proxy /api, /socket.io sang cổng 5000)
+Chạy dev:    uvicorn app.main:asgi_app --reload   (cổng 8000; frontend proxy /api, /socket.io sang đây)
 Triển khai:  uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT
-Ban đầu chạy 1 worker; khi nhiều worker phải bật sticky session cho Socket.IO (Redis đã đồng bộ sự kiện giữa các tiến trình).
+Ban đầu chạy 1 worker; khi nhiều worker phải bật sticky session và SIO_USE_REDIS cho Socket.IO.
 """
 
 import logging
@@ -16,10 +16,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import api_router
 from app.core.config import settings
 from app.core.database import engine, ping_database
-from app.core.exceptions import register_exception_handlers
+from app.core.errors import register_exception_handlers
 from app.core.redis import close_redis, connect_redis
 from app.game import events  # noqa: F401 - đăng ký sự kiện Socket.IO
-from app.game.server import sio
+from app.game.sio_server import sio
 
 logger = logging.getLogger(__name__)
 
@@ -34,20 +34,29 @@ async def lifespan(_: FastAPI):
     await engine.dispose()
 
 
-app = FastAPI(
-    title="WORDCLASH API",
-    description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập. Mọi phản hồi có dạng {success, message, data | errors}.",
-    version="0.1.0",
-    lifespan=lifespan,
-)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-register_exception_handlers(app)
-app.include_router(api_router)
+def create_app() -> FastAPI:
+    """Dựng app theo settings hiện tại. Ở production tắt /docs, /redoc, /openapi.json trừ khi ENABLE_DOCS=true."""
+    docs = settings.docs_enabled
+    application = FastAPI(
+        title="WORDCLASH API",
+        description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập.",
+        version="0.2.0",
+        lifespan=lifespan,
+        docs_url="/docs" if docs else None,
+        redoc_url="/redoc" if docs else None,
+        openapi_url="/openapi.json" if docs else None,
+    )
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=[settings.FRONTEND_URL],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type"],
+    )
+    register_exception_handlers(application)
+    application.include_router(api_router)
+    return application
 
+
+app = create_app()
 asgi_app = socketio.ASGIApp(sio, other_asgi_app=app)

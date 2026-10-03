@@ -10,15 +10,18 @@ services:
       POSTGRES_PASSWORD: wordclash_password
       POSTGRES_DB: wordclash_db
     ports:
-      - "5432:5432"
+      # Cổng 5433 trên máy để không đụng PostgreSQL cài sẵn (thường chiếm 5432)
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # Tạo thêm database wordclash_test khi khởi tạo volume lần đầu.
+      # Volume đã có từ trước: docker exec wordclash_postgres createdb -U wordclash wordclash_test
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U wordclash -d wordclash_db"]
       interval: 5s
       timeout: 5s
       retries: 5
-    # Database test riêng (wordclash_test) tạo một lần: docker exec wordclash_postgres createdb -U wordclash wordclash_test
 
   redis:
     image: redis:7-alpine

@@ -1,57 +1,115 @@
 """
 Cấu hình chung cho pytest: app test, DB test.
 
-Đặt APP_ENV=testing trước khi import app nên mọi kết nối dùng TEST_DATABASE_URL (mặc định SQLite trong bộ nhớ;
-đặt TEST_DATABASE_URL=postgresql+asyncpg://.../wordclash_test để chạy trên PostgreSQL) và không dùng Redis.
-Bảng được tạo lại cho từng test. `client` gọi API qua httpx.AsyncClient + ASGITransport (không cần mở cổng);
-`live_server` chạy uvicorn thật trên cổng ngẫu nhiên cho test Socket.IO.
+- ENV=testing đặt trước khi import app → mọi thứ dùng TEST_DATABASE_URL (database test riêng, PostgreSQL thật).
+- Bảng tạo một lần cho cả phiên test; mỗi test chạy trong một transaction rồi rollback, nên dữ liệu không rò sang test khác.
+  Service gọi session.commit() bình thường: commit chỉ đóng SAVEPOINT bên trong transaction đó.
+- `client`: httpx.AsyncClient(ASGITransport) gọi app, với get_db → session của test, get_redis → fakeredis.FakeAsyncRedis.
+- `auth_user`: tài khoản mẫu đăng ký qua API, trả kèm access token, refresh token và header Authorization.
+- `live_server`: uvicorn chạy thật trên cổng ngẫu nhiên (cho test Socket.IO).
 """
 
-import asyncio
 import os
 
-os.environ["APP_ENV"] = "testing"
+os.environ["ENV"] = "testing"
 
 import pytest_asyncio  # noqa: E402
-import uvicorn  # noqa: E402
+from fakeredis import FakeAsyncRedis  # noqa: E402
 from httpx import ASGITransport, AsyncClient  # noqa: E402
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine  # noqa: E402
+from sqlalchemy.pool import NullPool  # noqa: E402
 
-from app.core.database import engine  # noqa: E402
-from app.core.security import create_access_token  # noqa: E402
-from app.main import app, asgi_app  # noqa: E402
+from app.core.config import settings  # noqa: E402
+from app.core.database import get_db  # noqa: E402
+from app.core.redis import get_redis  # noqa: E402
+from app.main import app  # noqa: E402
 from app.models import Base  # noqa: E402
 
+PASSWORD = "Wordclash2026"
 
-@pytest_asyncio.fixture(autouse=True)
-async def database():
+
+@pytest_asyncio.fixture(scope="session")
+async def test_engine():
+    engine = create_async_engine(settings.TEST_DATABASE_URL, poolclass=NullPool, hide_parameters=True)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-    yield
+    yield engine
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+    await engine.dispose()
 
 
 @pytest_asyncio.fixture
-async def client():
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
-        yield c
+async def db_session(test_engine):
+    async with test_engine.connect() as conn:
+        trans = await conn.begin()
+        session = AsyncSession(bind=conn, expire_on_commit=False, join_transaction_mode="create_savepoint")
+        try:
+            yield session
+        finally:
+            await session.close()
+            await trans.rollback()
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def _reset_memory_rate_limits():
+    """Bộ đếm dự phòng trong bộ nhớ là toàn cục theo tiến trình: xóa trước mỗi test."""
+    from app.services import rate_limit
+
+    rate_limit.memory_counters.clear()
+    rate_limit._last_warning = float("-inf")
+    yield
 
 
 @pytest_asyncio.fixture
-async def registered_user(client):
-    """Đăng ký một tài khoản mẫu, trả về (payload đăng ký, dữ liệu phản hồi)."""
-    payload = {"email": "nhan@wordclash.vn", "password": "Wordclash2026", "display_name": "Nhân", "timezone": "Asia/Ho_Chi_Minh"}
+async def fake_redis():
+    client = FakeAsyncRedis(decode_responses=True)
+    yield client
+    await client.aclose()
+
+
+@pytest_asyncio.fixture
+async def client(db_session, fake_redis):
+    async def _db():
+        yield db_session
+
+    app.dependency_overrides[get_db] = _db
+    app.dependency_overrides[get_redis] = lambda: fake_redis
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+            yield c
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def auth_user(client):
+    """Đăng ký tài khoản mẫu qua API; trả dict: user, access_token, refresh_token, headers, password."""
+    payload = {"email": "nhan@wordclash.vn", "username": "nhan.wc", "display_name": "Nhân", "password": PASSWORD}
     res = await client.post("/api/v1/auth/register", json=payload)
     assert res.status_code == 201, res.text
-    return payload, res.json()["data"]
+    body = res.json()
+    client.cookies.clear()
+    return {
+        "user": body["user"],
+        "access_token": body["access_token"],
+        "refresh_token": res.cookies[settings.COOKIE_NAME],
+        "headers": {"Authorization": f"Bearer {body['access_token']}"},
+        "password": PASSWORD,
+    }
 
 
 @pytest_asyncio.fixture
 async def live_server():
     """Chạy asgi_app (FastAPI + Socket.IO) bằng uvicorn trên cổng ngẫu nhiên, trả về URL gốc."""
-    config = uvicorn.Config(asgi_app, host="127.0.0.1", port=0, lifespan="off", log_level="warning")
-    server = uvicorn.Server(config)
+    import asyncio
+
+    import uvicorn
+
+    from app.main import asgi_app
+
+    server = uvicorn.Server(uvicorn.Config(asgi_app, host="127.0.0.1", port=0, lifespan="off", log_level="warning"))
     task = asyncio.create_task(server.serve())
     while not server.started:
         await asyncio.sleep(0.02)
@@ -61,5 +119,14 @@ async def live_server():
     await task
 
 
-def make_token(user_id: int) -> str:
-    return create_access_token(user_id)[0]
+@pytest_asyncio.fixture
+async def time_travel(monkeypatch):
+    """Dời đồng hồ của auth_service tới `seconds` giây sau hiện tại (không sleep thật)."""
+    from datetime import UTC, datetime, timedelta
+
+    from app.services import auth_service
+
+    def travel(seconds: float) -> None:
+        monkeypatch.setattr(auth_service, "_now", lambda: datetime.now(UTC) + timedelta(seconds=seconds))
+
+    return travel
