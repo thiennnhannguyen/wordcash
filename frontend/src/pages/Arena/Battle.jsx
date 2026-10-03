@@ -29,6 +29,7 @@ import BattleScene from './battle/BattleScene'
 import { HpPanel, RoundCenter } from './battle/BattleHud'
 import { AnswerGrid, BattleCard, StatusLine } from './battle/BattleQuestion'
 import { Banner, DamagePopup, EdgeFlash, HpCompare, OpponentOfflineBanner, ReconnectOverlay, StickerPicker, WhiteFlash } from './battle/BattleFx'
+import useSocket from '../../hooks/useSocket'
 
 const HIT_STOP_MS = 80
 const STICKER_MS = 2000
@@ -44,6 +45,8 @@ const headOf = (el) => {
 }
 
 export default function Battle() {
+  // Kết nối Socket.IO chỉ mở khi vào Đấu Trường (xác thực bằng access token, tự làm mới khi hết hạn)
+  useSocket()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const scene = params.get('scene') ?? 'play'

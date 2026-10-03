@@ -26,6 +26,7 @@ import { ArenaScene } from './ArenaScene'
 import { OPPONENT, PLAYER_CARD, getRoom, watchRoom } from './arenaMock'
 import VersusIntro from './VersusIntro'
 import { getMascot } from '../../data/mascots'
+import useSocket from '../../hooks/useSocket'
 
 const FRIEND_PREVIEW = { ...OPPONENT, name: 'Khoa', rank: 'bac', mascot: getMascot(14), accuracy: 79, avgSeconds: 2.1 }
 const START_DELAY_MS = 900
@@ -104,6 +105,8 @@ function EmptySlot() {
 }
 
 export default function RoomLobby() {
+  // Kết nối Socket.IO chỉ mở khi vào Đấu Trường (xác thực bằng access token, tự làm mới khi hết hạn)
+  useSocket()
   const navigate = useNavigate()
   const { code } = useParams()
   const [params] = useSearchParams()
