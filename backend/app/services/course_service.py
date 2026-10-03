@@ -657,7 +657,7 @@ async def bank_search(session: AsyncSession, user: User, q: str, course_id: uuid
         )
     return [
         {"id": e.id, "headword": e.headword, "cefr": e.cefr, "pos": e.pos, "ipa": e.ipa, "meaning_vi": e.meaning_vi,
-         "entry_type": e.entry_type.value, "in_course": (e.id in in_course) if in_course is not None else None}
+         "entry_type": e.entry_type.value, "topic": e.topic, "in_course": (e.id in in_course) if in_course is not None else None}
         for e in entries
     ]
 

@@ -108,6 +108,7 @@ class Entry(Base):
     word_family: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     synonyms: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     cefr: Mapped[str | None] = mapped_column(String(2))  # từ tự tạo: rỗng
+    topic: Mapped[str | None] = mapped_column(String(64))  # chủ đề (vd. "Gia đình"); từ tự tạo: rỗng
     exam_tags: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     image_url: Mapped[str | None] = mapped_column(String(512))
     status: Mapped[EntryStatus] = mapped_column(str_enum(EntryStatus, "entry_status"), default=EntryStatus.DRAFT, server_default=EntryStatus.DRAFT.value)

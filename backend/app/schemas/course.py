@@ -254,6 +254,7 @@ class BankEntryOut(BaseModel):
     ipa: str | None
     meaning_vi: str
     entry_type: str
+    topic: str | None = None
     in_course: bool | None = None
 
 
