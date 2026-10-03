@@ -38,27 +38,10 @@ import {
   Umbrella,
   UsersThree,
 } from '@phosphor-icons/react'
+import { LEVELS, POSITION, REGIONS, journeyProgress } from '../../data/roadmap'
 
-// Vùng đất theo `region_theme` của cấp; `flag` là mã lá cờ vẽ phẳng (components/academy/Flag.jsx),
-// `theme` chọn bộ vật trang trí nền bản đồ
-export const REGIONS = {
-  'vn-north': { name: 'Việt Nam · Miền Bắc', short: 'Việt Nam', flag: 'vn', theme: 'generic' },
-  'vn-central-south': { name: 'Việt Nam · Miền Trung & Nam', short: 'Miền Trung & Nam', flag: 'vn', theme: 'generic' },
-  uk: { name: 'Vương quốc Anh', short: 'Anh', flag: 'uk', theme: 'uk', stamp: 'UNITED KINGDOM' },
-  us: { name: 'Mỹ & Canada', short: 'Mỹ & Canada', flag: 'us', theme: 'generic' },
-  au: { name: 'Úc', short: 'Úc', flag: 'au', theme: 'generic' },
-  world: { name: 'Thế giới', short: 'Thế giới', flag: 'world', theme: 'generic' },
-}
-
-// `stages`: số chặng (địa danh) của cấp. B2–C2 chưa có danh sách địa danh, tạm 11 chặng mỗi cấp (cần chốt).
-export const LEVELS = [
-  { code: 'A1', name: 'Mới bắt đầu', words: 800, status: 'done', region_theme: 'vn-north', stages: 10 },
-  { code: 'A2', name: 'Sơ cấp', words: 1200, status: 'done', region_theme: 'vn-central-south', stages: 10 },
-  { code: 'B1', name: 'Trung cấp', words: 2000, status: 'current', region_theme: 'uk', stages: 9 },
-  { code: 'B2', name: 'Trung cao cấp', words: 2500, status: 'locked', region_theme: 'us', stages: 11 },
-  { code: 'C1', name: 'Cao cấp', words: 2000, status: 'locked', region_theme: 'au', stages: 11 },
-  { code: 'C2', name: 'Thành thạo', words: 1500, status: 'locked', region_theme: 'world', stages: 11 },
-]
+// Vùng đất, các cấp và vị trí học dùng chung với Sảnh: data/roadmap.js
+export { LEVELS, REGIONS }
 
 export const BRANCHES = [
   { key: 'core', label: 'Nền tảng' },
@@ -213,11 +196,8 @@ function b1Defs(branch) {
   return B1_STAGES.map((d, i) => (overrides[i + 1] ? { ...d, lessons: overrides[i + 1] } : d))
 }
 
-// Mỗi cấp: số chặng + 1 địa danh Trận Boss không tính; hộ chiếu đếm địa danh cuối chặng
-const countLandmarks = (levels) => levels.reduce((sum, l) => sum + l.stages, 0)
-
-// Vị trí hiện tại ở B1: chặng 3 (index 2), bài 3 (index 2). `progress` tăng khi xem thử hoàn thành bài.
-const B1_POSITION = { stage: 2, lesson: 2 }
+// Vị trí hiện tại (data/roadmap.js). `progress` tăng khi xem thử hoàn thành bài.
+const B1_POSITION = { stage: POSITION.stage, lesson: POSITION.lesson }
 
 /**
  * Bản đồ một cấp. `progress` = số bài đã hoàn thành thêm (chỉ dùng cho bản xem thử "hoàn thành bài":
@@ -239,7 +219,7 @@ export function getLevelMap(code, branch = 'core', { progress = 0 } = {}) {
   const stages = buildStages(defs, done ? { current: {}, allDone: true, start } : { current, start })
   const bossDef = BOSSES[level.code] ?? DEFAULT_BOSS
   const visited = stages.filter((s) => s.visit.status === 'visited').length
-  const before = countLandmarks(LEVELS.slice(0, index))
+  const journey = journeyProgress({ level: level.code, stage: visited })
 
   return {
     level,
@@ -264,8 +244,8 @@ export function getLevelMap(code, branch = 'core', { progress = 0 } = {}) {
     passport: {
       visited,
       total: stages.length,
-      journeyVisited: before + visited,
-      journeyTotal: countLandmarks(LEVELS),
+      journeyVisited: journey.visited,
+      journeyTotal: journey.total,
     },
     // Câu "Bạn có biết?" về địa danh đang tới; cấp chưa có tranh riêng thì dùng mẹo học
     fact: LANDMARK_FACTS[stages.find((s) => s.visit.status === 'target')?.landmark_key] ?? (level.code === 'B1' ? LANDMARK_FACTS.loch_ness : null),

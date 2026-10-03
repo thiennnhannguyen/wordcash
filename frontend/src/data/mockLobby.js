@@ -10,6 +10,9 @@
  */
 
 import { getMascot } from './mascots'
+import { LEVELS, NEW_USER_POSITION, POSITION, journeyProgress, journeyRegions } from './roadmap'
+
+const stagesOf = (code) => LEVELS.find((l) => l.code === code).stages
 
 // Hôm nay là Thứ Sáu (ô thứ 5); thứ tự ô: T2 → CN
 const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
@@ -23,22 +26,9 @@ function week({ studiedBefore, studiedToday }) {
   }))
 }
 
-// 6 vùng đất A1 → C2 (khớp REGIONS trong pages/Academy/roadmapMock.js); `icon` vẽ trong pages/Lobby/RegionIcon.jsx
-const REGIONS = [
-  { code: 'A1', short: 'Việt Nam', icon: 'ho_guom', landmark: 'Hồ Gươm' },
-  { code: 'A2', short: 'Miền Trung & Nam', icon: 'chua_cau', landmark: 'Chùa Cầu' },
-  { code: 'B1', short: 'Anh', icon: 'big_ben', landmark: 'Big Ben' },
-  { code: 'B2', short: 'Mỹ & Canada', icon: 'liberty', landmark: 'Tượng Nữ thần Tự do' },
-  { code: 'C1', short: 'Úc', icon: 'opera', landmark: 'Nhà hát Sydney' },
-  { code: 'C2', short: 'Thế giới', icon: 'globe', landmark: 'Vòng quanh thế giới' },
-]
-
-function journey(currentCode, visited) {
-  const current = REGIONS.findIndex((r) => r.code === currentCode)
-  return {
-    regions: REGIONS.map((r, i) => ({ ...r, status: i < current ? 'done' : i === current ? 'current' : 'locked' })),
-    passport: { visited, total: 54 },
-  }
+// Hành trình và hộ chiếu tính từ nguồn lộ trình dùng chung (data/roadmap.js), không viết cứng
+function journey(position) {
+  return { regions: journeyRegions(position), passport: journeyProgress(position) }
 }
 
 const BASE = {
@@ -53,8 +43,8 @@ const BASE = {
     lessonNumber: 3,
     lessonTitle: 'Phỏng vấn xin việc',
     lessonsInStage: 5,
-    stage: 3,
-    stagesTotal: 9,
+    stage: POSITION.stage + 1,
+    stagesTotal: stagesOf(POSITION.level),
     learned: 12,
     total: 18,
     dueReviews: 8,
@@ -78,7 +68,7 @@ const BASE = {
     { key: 'arena', label: 'Chơi 1 trận Đấu Trường', current: 1, target: 1 },
   ],
   courseEmptyMascotId: 4,
-  journey: journey('B1', 14),
+  journey: journey(POSITION),
   nextRank: { from: 'bach_kim', to: 'kim_cuong', current: 1248, target: 2000 },
   nextSpin: { current: 38, target: 50 },
   mascotId: 1,
@@ -119,10 +109,10 @@ const VARIANTS = {
     academy: {
       isNew: true,
       landmark: { key: 'a1_ho_guom', name: 'Hồ Gươm', label: 'Điểm đầu tiên' },
-      stagesTotal: 10,
+      stagesTotal: stagesOf(NEW_USER_POSITION.level),
       intro: [
         { icon: 'clock', text: '40 câu, khó dần theo câu trả lời của bạn' },
-        { icon: 'map', text: 'A1 có 10 chặng quanh Miền Bắc Việt Nam' },
+        { icon: 'map', text: `A1 có ${stagesOf('A1')} chặng quanh Miền Bắc Việt Nam` },
         { icon: 'boss', text: 'Thắng Trận Boss ở Vịnh Hạ Long để bay sang A2' },
       ],
     },
@@ -143,7 +133,7 @@ const VARIANTS = {
       { key: 'new', label: 'Học 15 từ mới', current: 0, target: 15 },
       { key: 'arena', label: 'Chơi trận Đấu Trường đầu tiên', current: 0, target: 1 },
     ],
-    journey: journey('A1', 0),
+    journey: journey(NEW_USER_POSITION),
     nextRank: { from: 'tan_binh', to: 'dong', current: 0, target: 100 },
     nextSpin: { current: 0, target: 50 },
     friends: [],
