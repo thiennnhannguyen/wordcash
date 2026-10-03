@@ -245,3 +245,32 @@ async def test_learn_flow_and_rank_counter(client, auth_user, bank, db_session):
     assert res.status_code == 409 and code(res) == "NOTHING_TO_STUDY"
     res = await client.post(f"{API}/courses/{cid}/study-sessions", json={"mode": "sleep"}, headers=h)
     assert res.status_code == 422
+
+
+async def test_mode_counts_follow_progress(client, auth_user, bank, db_session):
+    """Số từ của 5 nút chế độ học đổi theo tiến độ; nút có 0 từ thì bắt đầu sẽ báo NOTHING_TO_STUDY."""
+    h = auth_user["headers"]
+    cid = (await create_course(client, h))["id"]
+    for word in ("deadline", "salary", "colleague"):
+        await client.post(f"{API}/courses/{cid}/entries/from-bank", json={"entry_id": bank[word].id}, headers=h)
+
+    modes = (await client.get(f"{API}/courses/{cid}/stats", headers=h)).json()["modes"]
+    assert modes == {"learn": 3, "review": 0, "quick": 3, "hard": 0, "test": 3}
+
+    body = (await client.post(f"{API}/courses/{cid}/study-sessions", json={"mode": "learn", "limit": 2}, headers=h)).json()
+    study = await db_session.get(StudySession, body["id"])
+    # Sai đúng một câu → từ đó vào nhóm "Từ khó"
+    answers = [{"question_id": q["id"], "answer": "sai" if i == 0 else q["answer"]} for i, q in enumerate(study.questions)]
+    summary = (await client.post(f"{API}/study-sessions/{body['id']}/answers", json={"answers": answers}, headers=h)).json()["summary"]
+    assert summary["correct"] == 3 and len(summary["wrong"]) == 1
+
+    stats = (await client.get(f"{API}/courses/{cid}/stats", headers=h)).json()
+    assert stats["modes"]["learn"] == 1 and stats["modes"]["hard"] == 1 and stats["by_status"]["learning"] == 2
+    assert stats["accuracy_7d"] == 0.75
+
+    wrong_id = summary["wrong"][0]["id"]
+    for mode, payload in (("hard", {}), ("quick", {"entry_ids": [wrong_id]}), ("test", {})):
+        res = await client.post(f"{API}/courses/{cid}/study-sessions", json={"mode": mode, **payload}, headers=h)
+        assert res.status_code == 201, (mode, res.text)
+    hard = (await client.post(f"{API}/courses/{cid}/study-sessions", json={"mode": "hard"}, headers=h)).json()
+    assert hard["total"] == 1 and hard["questions"][0]["level"] >= 3
