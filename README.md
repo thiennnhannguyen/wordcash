@@ -6,6 +6,7 @@ Website học từ vựng kiểu game đối kháng. Bộ khung dự án này m�
 
 - **Học Viện**: học theo lộ trình A1–C2 từ kho khoảng 10.000 mục từ, ôn lặp lại ngắt quãng, Cửa Ải Hôm Nay.
 - **Đấu Trường**: ghép trận đối kháng thời gian thực, ai đúng và nhanh hơn thì bắn trừ máu đối thủ.
+- **Khóa học của tôi**: người học tự tạo bộ từ riêng (từ trong kho hoặc tự tạo) và học bằng thẻ học, 4 mức câu hỏi, SRS (xem `docs/courses.md`).
 
 ## Công nghệ
 
@@ -321,6 +322,7 @@ Kết hợp phương pháp ghi nhớ khoa học với game đối kháng online.
 | **Học Viện** | Học và ôn theo lộ trình | Lộ trình A1–C2, học theo từ/cụm/họ từ/ngữ cảnh, ôn SRS, Cửa Ải Hôm Nay, kiểm tra xếp lớp |
 | **Đấu Trường** | Thi đấu đối kháng | Ghép trận theo rank, phòng riêng bằng mã, bảng xếp hạng |
 | **Bộ Sưu Tập và Hồ Sơ** | Thể hiện thành tích | Rank, thẻ chứng nhận, album linh vật, vòng quay, streak |
+| **Khóa học của tôi** | Bộ từ vựng tự tạo (từ ngành IT, từ trong phim, từ trên lớp…) | Thêm từ từ kho (chỉ liên kết, tiến độ chung với Học Viện) hoặc tự tạo; nhập hàng loạt; 5 chế độ học (học mới, ôn đến hạn, ôn nhanh, từ khó, kiểm tra); dùng ở Phòng riêng của Đấu Trường. Từ tự tạo không tính rank, lượt quay, Cửa Ải. Chi tiết: `docs/courses.md` |
 
 **Nguyên tắc liên kết:** Học Viện tạo ra vốn từ, Đấu Trường sử dụng vốn từ. Câu hỏi trong trận chỉ lấy từ các cấp độ mà **cả hai người chơi đều đã mở khóa**.
 
