@@ -20,6 +20,7 @@ import MascotBlob from '../../components/collection/MascotBlob'
 import StatusBar from '../../components/layout/StatusBar'
 import cx from '../../utils/cx'
 import * as coursesApi from '../../services/coursesApi'
+import { useAuthStore } from '../../store/authStore'
 import { getLobbyMock, LOBBY_VARIANTS } from '../../data/mockLobby'
 import { AcademyCard, ArenaCard } from './LobbyCards'
 import { DailyGoals, JourneyStrip, MyCourses, WordOfDay } from './LobbyBlocks'
@@ -192,7 +193,8 @@ function useMyCourses(isNew) {
 export default function Lobby() {
   const [params, setParams] = useSearchParams()
   const variant = params.get('variant') ?? 'default'
-  const data = getLobbyMock(variant)
+  const user = useAuthStore((s) => s.user)
+  const data = getLobbyMock(variant, user)
   const isNew = Boolean(data.academy.isNew)
   const courses = useMyCourses(isNew)
 

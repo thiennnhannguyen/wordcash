@@ -2,6 +2,11 @@
  * Dữ liệu mẫu cho Sảnh khi chưa có API. Có 3 biến thể: "default", "shaky" (rank lung lay), "new" (người mới).
  * Mọi số liệu, chữ nội dung của Sảnh nằm ở đây (component không tự đặt số), để sau này thay bằng API dễ dàng.
  *
+ * ĐÃ LẤY TỪ API: tên người chào và linh vật đang dùng (user từ authStore: display_name, avatar_mascot_id),
+ * truyền vào getLobbyMock(variant, user); "Khóa học của tôi" gọi services/coursesApi.js.
+ * CÒN MOCK (TODO, chưa có API): streak, số từ đã thuộc, rank, lượt quay, Cửa Ải, tuần này, Học Viện, Đấu Trường,
+ * Từ của ngày, mục tiêu, hành trình, rank kế tiếp, lượt quay kế tiếp, bạn bè.
+ *
  * TODO: thay bằng dữ liệu từ services/profileApi và academyApi khi backend sẵn sàng. Gợi ý nguồn:
  * - user, stats, week, goals: GET /users/me + thống kê hôm nay/tuần này (server tính theo múi giờ người dùng)
  * - academy, journey: bản đồ lộ trình (roadmapMock.js); arena: thống kê Đấu Trường + số người online (socket)
@@ -146,12 +151,16 @@ export const LOBBY_VARIANTS = [
   { key: 'new', label: 'Người mới' },
 ]
 
-export function getLobbyMock(variant) {
+/** `user`: người dùng thật (authStore). Có thì tên và linh vật lấy từ user, kể cả dòng "bạn" ở bảng bạn bè. */
+export function getLobbyMock(variant, user = null) {
   const data = VARIANTS[variant] ?? VARIANTS.default
+  const name = user?.display_name ?? data.user.name
+  const mascotId = user ? (user.avatar_mascot_id ?? 1) : data.mascotId
   return {
     ...data,
-    mascot: getMascot(data.mascotId),
-    friends: data.friends.map((f) => ({ ...f, mascot: getMascot(f.mascotId) })),
+    user: { name },
+    mascot: getMascot(mascotId),
+    friends: data.friends.map((f) => (f.isMe ? { ...f, name: `${name} (bạn)`, mascot: getMascot(mascotId) } : { ...f, mascot: getMascot(f.mascotId) })),
     wordOfDay: { ...data.wordOfDay, tipMascot: getMascot(data.wordOfDay.tipMascotId) },
     courseEmptyMascot: getMascot(data.courseEmptyMascotId),
   }
