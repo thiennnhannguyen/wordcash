@@ -80,8 +80,9 @@ daily_limit), `STUDY_SESSION_NOT_FOUND`, `STUDY_SESSION_EXPIRED`, `STUDY_SESSION
 
 - `services/srs.py`: SM-2; 5 lần nhớ đầu theo khoảng ôn 1 → 3 → 7 → 16 → 35 ngày, sau đó nhân hệ số dễ. Đúng khi chưa tới
   hạn (ôn sớm) không đẩy lịch. Sai: ôn lại sau 1 ngày, giảm hệ số dễ.
-- `services/mastery.py`: đúng ở mức ≥ 3 vào ≥ 3 ngày khác nhau (theo múi giờ người học) → `mastered`. Trả lời sai khi đang
-  học/ôn trong khóa học **không** làm mất `mastered` (SRS tự đưa từ về ôn sớm); chỉ Cửa Ải Hôm Nay chuyển từ sang `forgotten`.
+- `services/mastery.py`: đúng ở mức ≥ 3 vào ≥ 3 ngày khác nhau (theo múi giờ người học) → `mastered`.
+- **Luật ghi nhớ thống nhất (đã chốt):** chỉ Cửa Ải Hôm Nay được làm mất `mastered`. Ở mọi nơi khác (khóa học, Học Viện,
+  Đấu Trường) trả lời sai thì lịch SRS đặt lại (khoảng ôn ngắn nhất, ease giảm theo SM-2, `lapse_count` +1) nhưng giữ `mastered`.
 
 ## Nhập hàng loạt
 
@@ -123,7 +124,6 @@ Bấm lưu thì server phân loại lại toàn bộ (không tin bảng xem trư
 
 - Trạng thái thứ 5 `match_own` ở bảng xem trước (đề chỉ có 4): tránh tạo trùng từ tự tạo đã có.
 - Giới hạn 50 khóa tính cả khóa đã lưu trữ (nếu không, lưu trữ là cách vượt giới hạn).
-- Sai khi ôn trong khóa học không làm mất `mastered` (chỉ Cửa Ải mới chuyển `forgotten`), để học thêm không làm tụt rank.
 - `quick` và `test` cũng cập nhật SRS/mastery; giới hạn 20 từ mới/ngày áp cho chế độ `learn`.
 - "Từ của tôi đã thuộc" ở trang `/courses` = số từ khác nhau đã thuộc trong các khóa đang học (gồm cả từ kho).
 - Tạo từ tự tạo trùng chữ với kho: trả gợi ý dùng bản trong kho; gửi `force: true` vẫn tạo được từ riêng (vd. "bug" nghĩa IT).

@@ -53,3 +53,12 @@ def test_ease_never_below_minimum():
     for _ in range(20):
         state = srs.schedule(state, 0, NOW)
     assert state.ease == 1.3
+
+
+def test_wrong_answer_resets_to_shortest_interval_and_counts_lapse():
+    state = _review_chain(4)
+    assert state.lapses == 0
+    lapsed = srs.schedule(state, srs.quality_from(False, 1), state.due_at)
+    assert lapsed.interval_days == 1 and lapsed.lapses == 1
+    again = srs.schedule(lapsed, srs.quality_from(False, 1), lapsed.due_at)
+    assert again.lapses == 2

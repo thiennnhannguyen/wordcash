@@ -5,8 +5,9 @@ Hàm thuần, không phụ thuộc DB. Ngày (`today`) tính theo múi giờ c�
 - Trả lời bất kỳ: `new` → `learning`; `forgotten` → `learning` (quay lại học khi ôn).
 - Đúng ở mức ≥ MASTERY_MIN_LEVEL vào một ngày chưa được tính: `strong_days` +1.
 - `learning` và `strong_days` ≥ MASTERY_MIN_DAYS → `mastered`.
-- Sai khi đang `mastered` trong lúc học/ôn: giữ `mastered` (SRS tự đưa từ về ôn sớm). Chỉ Cửa Ải Hôm Nay chuyển từ sang
-  `forgotten` qua `forget()`, và khi đó cần lại đủ số ngày đúng mới thuộc lại.
+- LUẬT GHI NHỚ THỐNG NHẤT: chỉ Cửa Ải Hôm Nay được làm mất `mastered` (qua `forget()`, cần lại đủ số ngày đúng mới thuộc lại).
+  Ở mọi nơi khác (ôn trong khóa học, ôn Học Viện, Đấu Trường), trả lời sai chỉ đặt lại lịch SRS (services/srs.py:
+  khoảng ôn ngắn nhất, ease giảm theo SM-2, lapse +1) và GIỮ trạng thái `mastered`.
 - Bộ đếm số từ đã thuộc: từ hệ thống cộng vào `mastered_count` (rank, lượt quay); từ tự tạo chỉ cộng `custom_mastered_count`.
 """
 

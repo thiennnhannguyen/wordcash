@@ -36,6 +36,8 @@ class UserEntryProgress(Base):
     ease: Mapped[float] = mapped_column(Float, default=2.5, server_default="2.5")
     interval_days: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     repetitions: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    # Số lần quên (trả lời sai): mỗi lần sai lịch ôn đặt lại về khoảng ngắn nhất
+    lapse_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     # "Đã thuộc": số ngày khác nhau (theo múi giờ người học) trả lời đúng ở mức ≥ 3
     strong_days: Mapped[int] = mapped_column(SmallInteger, default=0, server_default="0")

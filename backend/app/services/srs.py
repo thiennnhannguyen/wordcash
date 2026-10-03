@@ -6,7 +6,7 @@ Hàm thuần, không phụ thuộc DB. Biến thể SM-2 dùng ở WORDCLASH:
 - Nhớ được (quality ≥ 3): `repetitions` +1. Năm lần đầu dùng khoảng ôn tham khảo SRS_INTERVALS (1 → 3 → 7 → 16 → 35 ngày),
   sau đó khoảng ôn = khoảng trước × hệ số dễ `ease`.
 - Ôn sớm (trả lời đúng khi chưa tới hạn, vd. ôn nhanh nhiều lần trong ngày): giữ nguyên lịch, chỉ lần ôn đúng hạn mới đẩy lịch.
-- Quên (quality < 3): `repetitions` về 0, ôn lại sau 1 ngày.
+- Quên (quality < 3): `repetitions` về 0, ôn lại sau 1 ngày (khoảng ngắn nhất), `lapses` +1.
 - `ease` cập nhật theo công thức SM-2, không thấp hơn SRS_MIN_EASE.
 """
 
@@ -22,6 +22,7 @@ class SrsState:
     interval_days: int
     repetitions: int
     due_at: datetime | None
+    lapses: int = 0
 
 
 def initial_state() -> SrsState:
@@ -42,7 +43,10 @@ def _next_ease(ease: float, quality: int) -> float:
 def schedule(state: SrsState, quality: int, now: datetime) -> SrsState:
     """Trả trạng thái SRS mới sau một câu trả lời lúc `now`."""
     if quality < 3:
-        return SrsState(ease=_next_ease(state.ease, quality), interval_days=1, repetitions=0, due_at=now + timedelta(days=1))
+        return SrsState(
+            ease=_next_ease(state.ease, quality), interval_days=settings.SRS_INTERVALS[0], repetitions=0,
+            due_at=now + timedelta(days=settings.SRS_INTERVALS[0]), lapses=state.lapses + 1,
+        )
 
     if state.due_at is not None and now < state.due_at:
         return state  # ôn sớm: không đẩy lịch
@@ -53,4 +57,7 @@ def schedule(state: SrsState, quality: int, now: datetime) -> SrsState:
         interval = ladder[repetitions - 1]
     else:
         interval = max(state.interval_days + 1, round(state.interval_days * state.ease))
-    return SrsState(ease=_next_ease(state.ease, quality), interval_days=interval, repetitions=repetitions, due_at=now + timedelta(days=interval))
+    return SrsState(
+        ease=_next_ease(state.ease, quality), interval_days=interval, repetitions=repetitions,
+        due_at=now + timedelta(days=interval), lapses=state.lapses,
+    )
