@@ -117,6 +117,9 @@ Bảng xem trước, mỗi dòng một trạng thái:
 | `new_custom` | Sẽ tạo từ riêng mới | xanh chanh |
 | `match_system` | Khớp kho hệ thống, sẽ liên kết (nghĩa gõ vào bị bỏ, dùng nghĩa trong kho; ghi chú vẫn giữ) | tím |
 | `match_own` | Khớp một từ bạn đã tự tạo trước đó, sẽ liên kết | tím |
+
+`match_own` là trạng thái thứ 5 (đã duyệt): dòng trùng chữ với một từ người dùng đã tự tạo trước đó thì liên kết lại từ đó
+thay vì tạo bản trùng (mỗi người không có hai từ tự tạo cùng chữ).
 | `duplicate_in_course` | Đã có trong khóa hoặc lặp lại dòng trước | vàng |
 | `invalid` | Lỗi, kèm lý do (thiếu từ/nghĩa, quá dài, vượt giới hạn) | hồng |
 
@@ -124,7 +127,6 @@ Bấm lưu thì server phân loại lại toàn bộ (không tin bảng xem trư
 
 ## Điểm đã tự quyết định (chờ duyệt)
 
-- Trạng thái thứ 5 `match_own` ở bảng xem trước (đề chỉ có 4): tránh tạo trùng từ tự tạo đã có.
 - `quick` và `test` cũng cập nhật SRS/mastery; giới hạn 20 từ mới/ngày áp cho chế độ `learn`.
 - "Từ của tôi đã thuộc" ở trang `/courses` = số từ khác nhau đã thuộc trong các khóa đang học (gồm cả từ kho).
 - Tạo từ tự tạo trùng chữ với kho: trả gợi ý dùng bản trong kho; gửi `force: true` vẫn tạo được từ riêng (vd. "bug" nghĩa IT).
