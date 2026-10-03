@@ -1,0 +1,174 @@
+/*
+ * Dữ liệu mẫu cho Sảnh khi chưa có API. Có 3 biến thể: "default", "shaky" (rank lung lay), "new" (người mới).
+ * Mọi số liệu, chữ nội dung của Sảnh nằm ở đây (component không tự đặt số), để sau này thay bằng API dễ dàng.
+ *
+ * TODO: thay bằng dữ liệu từ services/profileApi và academyApi khi backend sẵn sàng. Gợi ý nguồn:
+ * - user, stats, week, goals: GET /users/me + thống kê hôm nay/tuần này (server tính theo múi giờ người dùng)
+ * - academy, journey: bản đồ lộ trình (roadmapMock.js); arena: thống kê Đấu Trường + số người online (socket)
+ * - wordOfDay: server chọn theo cấp người học; courses: tính năng "Khóa học của tôi" (/courses, chưa có)
+ * Linh vật tham chiếu theo id trong data/mascots.js.
+ */
+
+import { getMascot } from './mascots'
+
+// Hôm nay là Thứ Sáu (ô thứ 5); thứ tự ô: T2 → CN
+const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+const TODAY = 4
+
+function week({ studiedBefore, studiedToday }) {
+  return WEEK_LABELS.map((label, i) => ({
+    label,
+    state: i < TODAY ? (studiedBefore ? 'done' : 'empty') : i === TODAY ? 'today' : 'future',
+    studied: i < TODAY ? studiedBefore : i === TODAY ? studiedToday : false,
+  }))
+}
+
+// 6 vùng đất A1 → C2 (khớp REGIONS trong pages/Academy/roadmapMock.js); `icon` vẽ trong pages/Lobby/RegionIcon.jsx
+const REGIONS = [
+  { code: 'A1', short: 'Việt Nam', icon: 'ho_guom', landmark: 'Hồ Gươm' },
+  { code: 'A2', short: 'Miền Trung & Nam', icon: 'chua_cau', landmark: 'Chùa Cầu' },
+  { code: 'B1', short: 'Anh', icon: 'big_ben', landmark: 'Big Ben' },
+  { code: 'B2', short: 'Mỹ & Canada', icon: 'liberty', landmark: 'Tượng Nữ thần Tự do' },
+  { code: 'C1', short: 'Úc', icon: 'opera', landmark: 'Nhà hát Sydney' },
+  { code: 'C2', short: 'Thế giới', icon: 'globe', landmark: 'Vòng quanh thế giới' },
+]
+
+function journey(currentCode, visited) {
+  const current = REGIONS.findIndex((r) => r.code === currentCode)
+  return {
+    regions: REGIONS.map((r, i) => ({ ...r, status: i < current ? 'done' : i === current ? 'current' : 'locked' })),
+    passport: { visited, total: 54 },
+  }
+}
+
+const BASE = {
+  user: { name: 'Nhân' },
+  stats: { streak: 12, masteredWords: 1248, rank: 'bach_kim', rankShaky: false, spins: 2 },
+  dailyCheck: { correct: 4, total: 4, streakGained: true },
+  week: week({ studiedBefore: true, studiedToday: true }),
+  academy: {
+    isNew: false,
+    level: 'B1',
+    topic: 'Công việc',
+    lessonNumber: 3,
+    lessonTitle: 'Phỏng vấn xin việc',
+    lessonsInStage: 5,
+    stage: 3,
+    stagesTotal: 9,
+    learned: 12,
+    total: 18,
+    dueReviews: 8,
+    landmark: { key: 'big_ben', name: 'Big Ben', label: 'Đang tới' },
+  },
+  arena: { weekWins: 7, weekLosses: 3, winStreak: 4, online: 128 },
+  wordOfDay: {
+    word: 'resilient',
+    ipa: '/rɪˈzɪl.i.ənt/',
+    pos: 'tính từ',
+    level: 'B1',
+    meaning: 'kiên cường, nhanh chóng gượng dậy sau khó khăn',
+    example: 'After losing three matches in a row, Minh stayed resilient and won the fourth.',
+    highlight: 'resilient',
+    tipMascotId: 7,
+    tip: 'Nghĩ tới lò xo: "re-" là bật lại. Bị ép tới đâu cũng bật lên được.',
+  },
+  goals: [
+    { key: 'new', label: 'Học 15 từ mới', current: 10, target: 15 },
+    { key: 'review', label: 'Ôn 8 từ đến hạn', current: 0, target: 8 },
+    { key: 'arena', label: 'Chơi 1 trận Đấu Trường', current: 1, target: 1 },
+  ],
+  courses: [
+    { id: 'it', name: 'Từ vựng IT', icon: 'code', color: 'sky', words: 120, learned: 54, due: 3 },
+    { id: 'marvel', name: 'Phim Marvel', icon: 'film', color: 'danger', words: 85, learned: 51, due: 5 },
+    { id: 'japan', name: 'Du lịch Nhật Bản', icon: 'plane', color: 'gold', words: 60, learned: 12, due: 0 },
+  ],
+  courseEmptyMascotId: 4,
+  journey: journey('B1', 14),
+  nextRank: { from: 'bach_kim', to: 'kim_cuong', current: 1248, target: 2000 },
+  nextSpin: { current: 38, target: 50 },
+  mascotId: 1,
+  friends: [
+    { name: 'Minh Anh', weekWords: 142, mascotId: 7 },
+    { name: 'Nhân (bạn)', weekWords: 96, mascotId: 1, isMe: true },
+    { name: 'Tuấn', weekWords: 71, mascotId: 12 },
+  ],
+  shaky: null,
+}
+
+const VARIANTS = {
+  default: BASE,
+  shaky: {
+    ...BASE,
+    stats: { ...BASE.stats, masteredWords: 996, rankShaky: true },
+    dailyCheck: { correct: 2, total: 4, streakGained: false },
+    goals: [
+      { key: 'new', label: 'Học 15 từ mới', current: 4, target: 15 },
+      { key: 'review', label: 'Ôn 13 từ đến hạn', current: 0, target: 13 },
+      { key: 'arena', label: 'Chơi 1 trận Đấu Trường', current: 0, target: 1 },
+    ],
+    academy: { ...BASE.academy, dueReviews: 13 },
+    arena: { ...BASE.arena, winStreak: 0 },
+    nextRank: { from: 'bach_kim', to: 'kim_cuong', current: 996, target: 2000 },
+    shaky: { daysLeft: 2, wordsToReview: 5, threshold: 1000 },
+    friends: [
+      { name: 'Minh Anh', weekWords: 142, mascotId: 7 },
+      { name: 'Tuấn', weekWords: 71, mascotId: 12 },
+      { name: 'Nhân (bạn)', weekWords: 38, mascotId: 1, isMe: true },
+    ],
+  },
+  new: {
+    ...BASE,
+    stats: { streak: 1, masteredWords: 0, rank: 'tan_binh', rankShaky: false, spins: 0 },
+    dailyCheck: null,
+    week: week({ studiedBefore: false, studiedToday: false }),
+    academy: {
+      isNew: true,
+      landmark: { key: 'a1_ho_guom', name: 'Hồ Gươm', label: 'Điểm đầu tiên' },
+      stagesTotal: 10,
+      intro: [
+        { icon: 'clock', text: '40 câu, khó dần theo câu trả lời của bạn' },
+        { icon: 'map', text: 'A1 có 10 chặng quanh Miền Bắc Việt Nam' },
+        { icon: 'boss', text: 'Thắng Trận Boss ở Vịnh Hạ Long để bay sang A2' },
+      ],
+    },
+    arena: { weekWins: 0, weekLosses: 0, winStreak: 0, online: 128 },
+    wordOfDay: {
+      word: 'journey',
+      ipa: '/ˈdʒɜː.ni/',
+      pos: 'danh từ',
+      level: 'A1',
+      meaning: 'chuyến đi, hành trình',
+      example: 'Every journey starts with one small step.',
+      highlight: 'journey',
+      tipMascotId: 7,
+      tip: 'Đọc gần giống "chơ-ni": chuyến đi chơi nào cũng là một hành trình.',
+    },
+    goals: [
+      { key: 'placement', label: 'Làm bài xếp lớp', current: 0, target: 1 },
+      { key: 'new', label: 'Học 15 từ mới', current: 0, target: 15 },
+      { key: 'arena', label: 'Chơi trận Đấu Trường đầu tiên', current: 0, target: 1 },
+    ],
+    courses: [],
+    journey: journey('A1', 0),
+    nextRank: { from: 'tan_binh', to: 'dong', current: 0, target: 100 },
+    nextSpin: { current: 0, target: 50 },
+    friends: [],
+  },
+}
+
+export const LOBBY_VARIANTS = [
+  { key: 'default', label: 'Bình thường' },
+  { key: 'shaky', label: 'Rank lung lay' },
+  { key: 'new', label: 'Người mới' },
+]
+
+export function getLobbyMock(variant) {
+  const data = VARIANTS[variant] ?? VARIANTS.default
+  return {
+    ...data,
+    mascot: getMascot(data.mascotId),
+    friends: data.friends.map((f) => ({ ...f, mascot: getMascot(f.mascotId) })),
+    wordOfDay: { ...data.wordOfDay, tipMascot: getMascot(data.wordOfDay.tipMascotId) },
+    courseEmptyMascot: getMascot(data.courseEmptyMascotId),
+  }
+}

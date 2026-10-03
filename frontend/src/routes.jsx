@@ -83,6 +83,7 @@ export default function AppRoutes() {
         { path: '/profile', element: <Profile /> },
         { path: '/profile/:handle', element: <Profile /> },
         { path: '/certificates', element: <CertificateGallery /> },
+        { path: '/courses', element: <ComingSoon title="Khóa học của tôi" /> },
         { path: '/design-system', element: <DesignSystem /> },
         { path: '*', element: <ComingSoon title="Không tìm thấy trang" /> },
       ],

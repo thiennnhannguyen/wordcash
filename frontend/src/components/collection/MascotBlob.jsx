@@ -3,6 +3,7 @@
  * Sẽ được thay bằng linh vật do tác giả tự vẽ. `shadow` = false bỏ bóng dưới chân (khi màn gọi tự vẽ bóng riêng). `monster` vẽ thêm sừng, lông mày cau và răng (dùng cho Trận Boss).
  * `traits` tạo khác biệt giữa 100 linh vật: `top` (tai mèo, tai thỏ, tai gấu, ăng-ten, mầm lá, vương miện, tia sét, sừng, chỏm tóc),
  * `eyes` (tròn, cười híp, nháy mắt), `belly` (mảng bụng sáng). Hình bóng (`silhouette`) giữ nguyên dáng, kể cả phần trên đầu.
+ * `blink`: mắt chớp định kỳ (trạng thái idle; tắt khi giảm chuyển động).
  */
 
 // Thân khối, vị trí khuôn mặt và đỉnh đầu theo từng dáng
@@ -90,7 +91,7 @@ function Eyes({ eyes, y }) {
   return <>{open(46)}{open(74)}</>
 }
 
-export default function MascotBlob({ color = 'primary', shape = 'round', size = 96, silhouette = false, monster = false, shadow = true, traits, className }) {
+export default function MascotBlob({ color = 'primary', shape = 'round', size = 96, silhouette = false, monster = false, shadow = true, blink = false, traits, className }) {
   const s = SHAPES[shape] ?? SHAPES.round
   const fill = silhouette ? 'var(--color-ink)' : `var(--color-${color})`
   const y = s.faceY
@@ -128,7 +129,9 @@ export default function MascotBlob({ color = 'primary', shape = 'round', size = 
             </>
           ) : (
             <>
-              <Eyes eyes={traits?.eyes} y={y} />
+              <g className={blink ? 'anim-eye-blink' : undefined}>
+                <Eyes eyes={traits?.eyes} y={y} />
+              </g>
               <path
                 d={`M54 ${y + 12} Q60 ${y + 18} 66 ${y + 12}`}
                 fill="none"
