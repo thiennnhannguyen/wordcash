@@ -37,6 +37,9 @@ class UserOut(BaseModel):
     onboarding_completed: bool
     email_verified: bool
     role: Role
+    # Số từ đã thuộc: mastered_count chỉ tính từ hệ thống (rank, lượt quay); custom_mastered_count là từ tự tạo
+    mastered_count: int = 0
+    custom_mastered_count: int = 0
     created_at: datetime
 
     @model_validator(mode="before")
@@ -55,6 +58,8 @@ class UserOut(BaseModel):
                 "onboarding_completed": data.onboarding_completed_at is not None,
                 "email_verified": data.email_verified_at is not None,
                 "role": data.role,
+                "mastered_count": data.mastered_count or 0,
+                "custom_mastered_count": data.custom_mastered_count or 0,
                 "created_at": data.created_at,
             }
         return data
