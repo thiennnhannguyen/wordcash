@@ -713,10 +713,32 @@ cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
+python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
-cd ../frontend && npm install && npm run dev   # proxy /api, /socket.io sang cổng 8000
+cd ../frontend && npm install && npm run dev   # gọi API thật qua proxy /api, /socket.io sang cổng 8000
+VITE_USE_MOCK=true npm run dev                 # chạy bằng dữ liệu giả khi không có backend (build production cấm mock)
 ```
+
+### Kiểm thử đầu-cuối (Playwright)
+
+Chạy với backend và PostgreSQL thật, trên database riêng `wordclash_e2e` (tự tạo và làm sạch mỗi lần chạy):
+
+```bash
+docker compose up -d                 # PostgreSQL 5433 + Redis 6379
+cd backend && source .venv/bin/activate && pip install -r requirements.txt   # backend/.venv phải có sẵn
+cd ../frontend && npm install
+npm run e2e                          # tự bật backend (cổng 8100) và Vite (cổng 5180), chạy frontend/e2e/*.spec.js
+E2E_SHOTS=/tmp/wc-shots npm run e2e  # chụp ảnh các bước vào thư mục chỉ định
+npx playwright test e2e/auth.spec.js -g "hai tab"   # chạy một kịch bản
+```
+
+- Trình duyệt: Google Chrome cài trên máy (`channel: "chrome"`), không cần tải trình duyệt của Playwright.
+- `e2e/start-backend.sh`: `ENV=testing`, `TEST_DATABASE_URL` trỏ `wordclash_e2e` (đổi bằng `E2E_DATABASE_URL`), `alembic downgrade base` → `upgrade head`,
+  nạp `seeds.seed_dev_entries`, Redis db 15, `JWT_SECRET_KEY` cố định để test ký được access token hết hạn.
+- Kịch bản: đăng ký → onboarding → Sảnh; tải lại vẫn đăng nhập; đăng xuất bị chặn; khóa học (thêm từ kho, tự tạo, nhập 5 dòng có 1 lỗi,
+  học mới đến hết, thống kê đổi); hai tab cùng hết hạn token không bị đăng xuất; người B không xem được khóa học của A.
+- Kết quả lỗi (ảnh, trace) nằm ở `frontend/test-results/` (đã bỏ qua trong git).
 Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session và `SIO_USE_REDIS=true` (Socket.IO). Production: `ENV=production`, `JWT_SECRET_KEY` dài ít nhất 32 ký tự, cookie tự bật `Secure`; chạy sau reverse proxy thì đặt `TRUST_PROXY=true`.
 
 Trước khi deploy: đi theo `docs/deploy-checklist.md`. Sau lần deploy đầu, không viết lại migration cũ, chỉ thêm migration mới.

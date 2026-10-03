@@ -37,3 +37,7 @@ backend/data_pipeline/raw/*
 .DS_Store
 .vscode/
 .idea/
+
+# Kết quả Playwright
+frontend/test-results/
+frontend/playwright-report/
