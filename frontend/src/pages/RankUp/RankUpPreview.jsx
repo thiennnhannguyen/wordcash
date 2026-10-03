@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import RankUpOverlay from '../../components/layout/RankUpOverlay'
 import { RANKS } from '../../utils/constants'
-import { MASCOT_BY_ID } from '../Collection/collectionMock'
+import { getMascot } from '../../data/mascots'
 import CertificateModal from '../Profile/Certificate'
 import { fetchCertificate } from '../Profile/profileMock'
 
@@ -28,7 +28,7 @@ export default function RankUpPreview() {
         from={RANKS[index - 1].key}
         to={toKey}
         words={RANKS[index].min}
-        mascot={MASCOT_BY_ID[77]}
+        mascot={getMascot(1)}
         hold={params.get('hold')}
         onCertificate={() => setCertOpen(true)}
         onSpin={() => navigate('/collection/spin?type=special')}

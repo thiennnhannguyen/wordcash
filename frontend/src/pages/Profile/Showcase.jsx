@@ -12,7 +12,8 @@ import Modal from '../../components/ui/Modal'
 import MascotCard from '../../components/collection/MascotCard'
 import { GACHA } from '../../utils/constants'
 import MascotArt from '../Collection/MascotArt'
-import { MASCOTS, fetchCollection } from '../Collection/collectionMock'
+import { MASCOTS } from '../../data/mascots'
+import { fetchCollection } from '../Collection/collectionMock'
 import { StatCard } from './LearningStats'
 
 function Picker({ open, onClose, taken, onPick }) {

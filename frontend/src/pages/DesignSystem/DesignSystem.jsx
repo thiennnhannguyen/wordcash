@@ -47,6 +47,7 @@ import { BottomTabs, SidebarNav } from '../../components/layout/NavBar'
 import { useToastStore } from '../../store/toastStore'
 import { RANKS } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
+import { MASCOT_BY_ID } from '../../data/mascots'
 
 const SECTIONS = [
   { id: 'colors', title: 'Bảng màu' },
@@ -109,12 +110,14 @@ const ANSWER_STATES = [
   { state: 'wrong', name: 'Sai (rung)', label: 'nguy hiểm' },
 ]
 
+// Mẫu khung thẻ lấy từ data/mascots.js: 4 độ hiếm, 1 thẻ chưa có, 1 ô "Sắp ra mắt"
 const MASCOTS = [
-  { rarity: 'common', name: 'Bột Nếp', number: 12, color: 'gold', shape: 'round' },
-  { rarity: 'rare', name: 'Giọt Sương', number: 48, color: 'sky', shape: 'drop' },
-  { rarity: 'epic', name: 'Kẹo Dẻo', number: 77, color: 'danger', shape: 'tall' },
-  { rarity: 'legendary', name: 'Đại Bánh Bao', number: 97, color: 'accent', shape: 'wide' },
-  { rarity: 'rare', name: 'Chưa có', number: 53, color: 'sky', shape: 'round', owned: false },
+  { ...MASCOT_BY_ID[4] },
+  { ...MASCOT_BY_ID[7] },
+  { ...MASCOT_BY_ID[9] },
+  { ...MASCOT_BY_ID[10] },
+  { ...MASCOT_BY_ID[18], owned: false },
+  { ...MASCOT_BY_ID[40], owned: false },
 ]
 
 const LEVELS = [
@@ -437,13 +440,14 @@ export default function DesignSystem() {
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
           {MASCOTS.map((m) => (
             <MascotCard
-              key={m.name}
+              key={m.id}
               rarity={m.rarity}
               name={m.name}
               number={m.number}
               owned={m.owned ?? true}
+              comingSoon={m.status === 'coming_soon'}
               interactive
-              art={<MascotBlob color={m.color} shape={m.shape} size={112} silhouette={m.owned === false} />}
+              art={<MascotBlob color={m.color} shape={m.shape} traits={m.traits} size={112} silhouette={m.owned === false} />}
             />
           ))}
         </div>

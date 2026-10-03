@@ -8,7 +8,8 @@
  */
 
 import { RANKS } from '../../utils/constants'
-import { MASCOT_BY_ID } from '../Collection/collectionMock'
+import { MASCOT_BY_ID } from '../../data/mascots'
+import { OWNED_COUNT } from '../Collection/collectionMock'
 
 // Số từ đã thuộc theo cấp (tổng mỗi cấp là số mục từ đã duyệt của cấp đó)
 const LEVELS_ME = [
@@ -38,7 +39,7 @@ const ME = {
   name: 'Nhân',
   handle: 'nhan.wordclash',
   joined: '2026-09-01',
-  avatar: { id: 77, name: 'Kẹo Dẻo', rarity: 'epic', number: 77, color: 'danger', shape: 'tall', traits: {} },
+  avatar: MASCOT_BY_ID[1],
   rank: 'bach_kim',
   masteredWords: 1248,
   streak: 12,
@@ -63,13 +64,13 @@ const ME = {
     { key: 'speed', title: 'Tốc độ bàn thờ', detail: '5 câu đúng dưới 1 giây trong một trận', icon: 'lightning', color: 'sky', done: true, date: '2026-09-21' },
     { key: 'words_1000', title: 'Nghìn từ', detail: 'Thuộc 1.000 từ', icon: 'book', color: 'accent', done: true, date: '2026-09-18' },
     { key: 'clear_a1', title: 'Phá đảo A1', detail: 'Thuộc hết từ cấp A1', icon: 'crown', color: 'primary', done: false, progress: 452, goal: 500 },
-    { key: 'collector_50', title: 'Nhà sưu tầm', detail: 'Sở hữu 50 linh vật', icon: 'cards', color: 'gold', done: false, progress: 37, goal: 50 },
+    { key: 'collector_50', title: 'Nhà sưu tầm', detail: 'Sở hữu 50 linh vật', icon: 'cards', color: 'gold', done: false, progress: OWNED_COUNT, goal: 50 },
     { key: 'unbeaten_10', title: 'Bất bại 10 trận', detail: 'Thắng 10 trận liên tiếp', icon: 'shield', color: 'orange', done: false, progress: 9, goal: 10 },
     { key: 'ko_50', title: 'Sát thủ từ vựng', detail: 'K.O. 50 lần', icon: 'ko', color: 'danger', done: false, progress: 21, goal: 50 },
     { key: 'perfect_30', title: 'Cửa Ải hoàn hảo', detail: 'Đúng hết Cửa Ải 30 lần', icon: 'gate', color: 'sky', done: false, progress: 22, goal: 30 },
   ],
-  showcase: [77, 37, 63],
-  collection: { owned: 37, total: 100 },
+  showcase: [9, 15, 27],
+  collection: { owned: OWNED_COUNT, total: 100 },
 }
 
 const OTHER = {
@@ -77,7 +78,7 @@ const OTHER = {
   name: 'Minh Thư',
   handle: 'minhthu',
   joined: '2026-06-01',
-  avatar: { id: 99, name: 'Kỳ Lân Cầu Vồng', rarity: 'legendary', number: 99 },
+  avatar: MASCOT_BY_ID[10],
   rank: 'kim_cuong',
   masteredWords: 2310,
   streak: 45,
@@ -96,10 +97,10 @@ const OTHER = {
   activity: activity(3.1, [5]),
   arena: { matches: 142, wins: 97, losses: 45, bestWinStreak: 14, avgSeconds: 1.9, bestCombo: 11, knockouts: 48, recent: ['win', 'lose', 'win', 'win', 'win'] },
   achievements: ME.achievements.map((a) =>
-    ['clear_a1', 'unbeaten_10', 'perfect_30'].includes(a.key) ? { ...a, done: true, date: '2026-08-20', progress: undefined } : a.key === 'collector_50' ? { ...a, progress: 44 } : a.key === 'ko_50' ? { ...a, progress: 48 } : a,
+    ['clear_a1', 'unbeaten_10', 'perfect_30'].includes(a.key) ? { ...a, done: true, date: '2026-08-20', progress: undefined } : a.key === 'collector_50' ? { ...a, progress: 26 } : a.key === 'ko_50' ? { ...a, progress: 48 } : a,
   ),
-  showcase: [99, 94, 80],
-  collection: { owned: 44, total: 100 },
+  showcase: [10, 20, 30],
+  collection: { owned: 26, total: 100 },
 }
 
 export function fetchProfile(handle, variant = 'default') {
@@ -122,7 +123,7 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
  * Chứng nhận rank (giả lập `GET /api/profile/me/certificate`): server lưu bản ghi lúc đạt rank
  * gồm mã chứng nhận, ngày đạt, số từ lúc đạt và các chỉ số kèm theo. `rank` đổi được để xem 8 phiên bản màu.
  */
-const GALLERY_MASCOTS = [2, 37, 48, 63, 77, 82, 97, 99]
+const GALLERY_MASCOTS = [2, 9, 7, 14, 15, 27, 10, 20]
 const GALLERY_WORDS = [64, 100, 300, 600, 1000, 2000, 3500, 5000]
 
 export function fetchCertificate(rank) {
@@ -135,8 +136,8 @@ export function fetchCertificate(rank) {
     code: '#WC-2026-00482',
     streak: 31,
     level: 'B1',
-    mascots: 37,
-    mascot: MASCOT_BY_ID[77],
+    mascots: OWNED_COUNT,
+    mascot: MASCOT_BY_ID[1],
   }
   if (!rank || rank === base.rank) return base
   const i = RANKS.findIndex((r) => r.key === rank)

@@ -25,8 +25,9 @@ import { RANK_BY_KEY } from '../../utils/constants'
 import { ArenaScene } from './ArenaScene'
 import { OPPONENT, PLAYER_CARD, getRoom, watchRoom } from './arenaMock'
 import VersusIntro from './VersusIntro'
+import { getMascot } from '../../data/mascots'
 
-const FRIEND_PREVIEW = { ...OPPONENT, name: 'Khoa', rank: 'bac', mascot: { color: 'orange', shape: 'drop', name: 'Giọt Sương' }, accuracy: 79, avgSeconds: 2.1 }
+const FRIEND_PREVIEW = { ...OPPONENT, name: 'Khoa', rank: 'bac', mascot: getMascot(14), accuracy: 79, avgSeconds: 2.1 }
 const START_DELAY_MS = 900
 
 function ReadyBadge() {

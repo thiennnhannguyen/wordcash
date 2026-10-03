@@ -15,6 +15,7 @@ import Icon, { IconBadge } from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import { Wordmark } from '../../components/layout/NavBar'
+import { MASCOT_BY_ID, STARTER_MASCOT_IDS } from '../../data/mascots'
 import cx from '../../utils/cx'
 
 const GOALS = [
@@ -43,11 +44,8 @@ const STARTS = [
   },
 ]
 
-const STARTERS = [
-  { value: 'mochi', name: 'Mochi', color: 'primary', shape: 'round' },
-  { value: 'suong', name: 'Giọt Sương', color: 'sky', shape: 'drop' },
-  { value: 'lua', name: 'Lửa Nhỏ', color: 'orange', shape: 'tall' },
-]
+// Linh vật khởi đầu #001–#003 (data/mascots.js); `value` là id gửi lên server (starter_mascot_id)
+const STARTERS = STARTER_MASCOT_IDS.map((id) => ({ ...MASCOT_BY_ID[id], value: id }))
 
 const STEPS = [
   { key: 'goal', title: 'Bạn học để làm gì?', subtitle: 'Chọn một mục tiêu. Bạn có thể đổi sau trong Hồ Sơ.' },
@@ -193,7 +191,7 @@ function MascotStep({ value, onChange }) {
               transition={{ duration: 0.7, ease: 'easeOut' }}
               className="inline-flex"
             >
-              <MascotBlob color={m.color} shape={m.shape} size={140} className="h-auto w-[84px] md:w-[140px]" />
+              <MascotBlob color={m.color} shape={m.shape} traits={m.traits} size={140} className="h-auto w-[84px] md:w-[140px]" />
             </motion.span>
             <span
               className={cx(
