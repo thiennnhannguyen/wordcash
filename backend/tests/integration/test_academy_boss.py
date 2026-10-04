@@ -10,7 +10,8 @@ from sqlalchemy import func, select
 
 from app.core.errors import AppError
 from app.models import SpinGrant, UserStats
-from app.services import boss_service, lesson_service, roadmap_service
+from app.schemas.course import AnswerIn
+from app.services import boss_service, lesson_service, roadmap_service, study_service
 from tests import academy_helpers as H
 from tests.factories import make_user
 
@@ -99,3 +100,35 @@ async def test_win_after_loss_and_rewin_gives_no_extra_spin(at_boss, clock_at):
     grants = await db.scalar(select(func.count()).select_from(SpinGrant).where(SpinGrant.user_id == user.id, SpinGrant.reason == "boss"))
     stats = await db.scalar(select(UserStats).where(UserStats.user_id == user.id).execution_options(populate_existing=True))
     assert grants == 1 and stats.spins_special == 1
+
+
+SECRET_KEYS = {"answer", "correct_answer", "entry_id", "entry", "meaning_vi", "example"}
+
+
+def _keys_deep(value) -> set[str]:
+    if isinstance(value, dict):
+        return set(value) | set().union(*(_keys_deep(v) for v in value.values()))
+    if isinstance(value, list):
+        return set().union(set(), *(_keys_deep(v) for v in value))
+    return set()
+
+
+async def test_topic_practice_reveals_answer_only_after_each_submit(at_boss):
+    """Luyện chặng yếu: tạo phiên KHÔNG kèm đáp án (kể cả câu gõ từ không lộ chữ đúng); nộp câu nào thì chỉ câu đó có
+    `correct_answer`; các câu chưa nộp vẫn kín."""
+    db, user, level, topics = at_boss
+    out = await lesson_service.start_topic_practice(db, user, topics[0].id, NOW)
+    assert out["cards"] == [] and not (_keys_deep(out["questions"]) & SECRET_KEYS)
+    keys = await H.keys_of(db, out["id"])
+    for q, key in zip(out["questions"], keys, strict=True):
+        if q["level"] == 3:  # gõ từ: đề chỉ có nghĩa + số chữ cái
+            assert key["answer"] not in str(q)
+
+    first, second = keys[0], keys[1]
+    res = await study_service.submit_answers(db, user, out["id"], [AnswerIn(question_id=first["id"], answer="sai-hoan-toan")])
+    assert [r["question_id"] for r in res["results"]] == [first["id"]]
+    assert res["results"][0]["correct_answer"] == first["answer"] and not res["finished"]
+    assert second["answer"] not in str(res) or second["answer"] == first["answer"]
+
+    res = await study_service.submit_answers(db, user, out["id"], [AnswerIn(question_id=second["id"], answer=second["answer"])])
+    assert res["results"][0]["correct"] and res["results"][0]["correct_answer"] == second["answer"]
