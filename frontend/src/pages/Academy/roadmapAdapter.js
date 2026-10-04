@@ -105,11 +105,11 @@ export function buildLevelMap(roadmap, code) {
   }
 }
 
-/** Cột widget bên phải bản đồ: số từ đến hạn ôn, mục tiêu từ mới hôm nay (GET /me/stats). */
+/** Cột widget bên phải bản đồ: số từ đến hạn ôn, mục tiêu từ mới hôm nay + hạn mức cứng (GET /me/stats). */
 export function buildSidebar(stats, tip) {
   return {
     dueReviews: stats.today.due_now,
-    dailyGoal: { learned: stats.today.new_words, target: stats.today.new_words_goal },
+    dailyGoal: { learned: stats.today.new_words, target: stats.today.new_words_goal, cap: stats.today.new_words_cap },
     tip,
   }
 }

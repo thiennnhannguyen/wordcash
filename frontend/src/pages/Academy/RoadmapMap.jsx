@@ -42,6 +42,7 @@ import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
 import { formatDayMonth, formatNumber } from '../../utils/format'
 import { speak } from '../../utils/speech'
+import { goalMessage } from '../../utils/dailyGoal'
 import { PASS_BOSS_PERCENT, PASS_LESSON_PERCENT } from '../../utils/constants'
 import { BRANCHES } from './roadmapMock'
 import useAcademyMap from './useAcademyMap'
@@ -279,7 +280,7 @@ function SideWidgets({ data, map }) {
       </PaperCard>
 
       <PaperCard className="flex items-center gap-4" pin="accent">
-        <ProgressRing value={data.dailyGoal.learned} max={data.dailyGoal.target} size={80} stroke={11} tone="accent" label="Mục tiêu từ mới hôm nay">
+        <ProgressRing value={Math.min(data.dailyGoal.learned, data.dailyGoal.target)} max={data.dailyGoal.target} size={80} stroke={11} tone="accent" label="Mục tiêu từ mới hôm nay">
           <div className="leading-none">
             <div className="font-num text-xl">{data.dailyGoal.learned}</div>
             <div className="font-num text-[13px] text-muted">/{data.dailyGoal.target}</div>
@@ -288,7 +289,7 @@ function SideWidgets({ data, map }) {
         <div>
           <h2 className="font-heading text-lg font-extrabold leading-tight">Mục tiêu hôm nay</h2>
           <p className="text-caption text-muted">
-            {data.dailyGoal.learned}/{data.dailyGoal.target} từ mới. Còn {data.dailyGoal.target - data.dailyGoal.learned} từ nữa!
+            {goalMessage({ learned: data.dailyGoal.learned, goal: data.dailyGoal.target, cap: data.dailyGoal.cap })}
           </p>
         </div>
       </PaperCard>

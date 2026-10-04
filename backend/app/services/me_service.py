@@ -75,6 +75,7 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
         "today": {
             "date": today,
             "new_words": activity.new_words if activity else 0, "new_words_goal": daily_goal(user.daily_minutes),
+            "new_words_cap": settings.NEW_WORDS_DAILY_CAP,
             "reviews_done": reviewed, "reviews_total": reviewed + due_now, "due_now": due_now,
             "answers": activity.total if activity else 0, "correct": activity.correct if activity else 0,
             "daily_check": checks.get(today, DailyCheckStatus.PENDING),

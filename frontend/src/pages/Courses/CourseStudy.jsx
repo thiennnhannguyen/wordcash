@@ -21,6 +21,7 @@ import MascotBlob from '../../components/collection/MascotBlob'
 import * as coursesApi from '../../services/coursesApi'
 import cx from '../../utils/cx'
 import { courseIcon } from '../../utils/courseIcons'
+import { CAP_MESSAGE } from '../../utils/dailyGoal'
 import { MODES } from './courseUi'
 
 function StudyTopBar({ course, mode, value, max, onExit }) {
@@ -180,11 +181,11 @@ export default function CourseStudy() {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-bg px-4 text-center">
         <MascotBlob color="sky" shape="round" size={110} />
-        <h1 className="text-h2">{error.code === 'NOTHING_TO_STUDY' ? (reason === 'daily_limit' ? 'Hôm nay đủ từ mới rồi!' : 'Chưa có từ cho chế độ này') : 'Chưa bắt đầu được'}</h1>
+        <h1 className="text-h2">{error.code === 'NOTHING_TO_STUDY' ? (reason === 'daily_limit' ? CAP_MESSAGE : 'Chưa có từ cho chế độ này') : 'Chưa bắt đầu được'}</h1>
         <p className="max-w-md text-muted">
           {error.code === 'NOTHING_TO_STUDY'
             ? reason === 'daily_limit'
-              ? 'Bạn đã học đủ số từ mới cho hôm nay. Ôn lại các từ đã học để nhớ lâu hơn nhé.'
+              ? 'Bạn đã chạm hạn mức từ mới của hôm nay (tính chung với Học Viện). Ôn lại các từ đã học để nhớ lâu hơn nhé.'
               : 'Thử chế độ khác hoặc thêm từ vào khóa học.'
             : error.message}
         </p>

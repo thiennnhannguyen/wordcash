@@ -86,7 +86,7 @@ class Settings(BaseSettings):
     DAILY_CHECK_MAX_WORDS: int = 5
     DAILY_CHECK_RANDOM_WORDS: int = 2  # số từ trộn ngẫu nhiên, còn lại ưu tiên từ sắp đến hạn ôn
     STREAK_SPIN_EVERY: int = 7  # streak chạm bội số này thì +1 lượt quay thường
-    # Mục tiêu từ mới mỗi ngày theo thời lượng chọn ở onboarding (phút → số từ)
+    # Mục tiêu từ mới mỗi ngày theo thời lượng chọn ở onboarding (phút → số từ); chỉ hiển thị, không chặn
     DAILY_GOAL_BY_MINUTES: dict[int, int] = {5: 10, 10: 12, 15: 15, 20: 20}
 
     # Lặp lại ngắt quãng (SM-2): khoảng ôn cho 5 lần nhớ đầu, sau đó nhân với hệ số dễ
@@ -96,7 +96,9 @@ class Settings(BaseSettings):
     # "Đã thuộc": đúng ở mức ≥ MASTERY_MIN_LEVEL vào ≥ MASTERY_MIN_DAYS ngày khác nhau
     MASTERY_MIN_LEVEL: int = 3
     MASTERY_MIN_DAYS: int = 3
-    DAILY_NEW_WORDS_LIMIT: int = 20
+    # Hạn mức CỨNG từ mới mỗi ngày (chung Học Viện + Khóa học). Vượt mức này thì học bài chỉ luyện lại từ đã gặp.
+    # Mục tiêu ngày (DAILY_GOAL_BY_MINUTES) chỉ để hiển thị, động viên; KHÔNG chặn.
+    NEW_WORDS_DAILY_CAP: int = 40
 
     # Khóa học của tôi (giới hạn MVP)
     COURSE_MAX_ACTIVE: int = 50  # khóa đang học

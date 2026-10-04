@@ -2,9 +2,9 @@
 Học bài trong Học Viện: phiên học bài, kiểm tra cuối bài, bài tổng hợp chặng, luyện chặng yếu. Dùng lại question_builder
 và StudySession (services/session_engine.py); chấm ở server qua study_service.submit_answers.
 
-- Học bài (`unit_learn`): thẻ học các từ MỚI của bài (tối đa số từ mới còn lại trong ngày, DAILY_NEW_WORDS_LIMIT tính chung
-  với Khóa học), rồi luyện: mỗi từ một câu mức 1–2 và một câu mức 3–4, cả phiên trộn đủ 4 mức (mức 2 cần audio). Hết từ mới
-  (đã học hết hoặc chạm giới hạn ngày) thì luyện lại các từ ĐÃ gặp của bài, không có thẻ (chưa gặp từ nào và hết quota →
+- Học bài (`unit_learn`): thẻ học các từ MỚI của bài (tối đa số từ mới còn lại trong ngày theo hạn mức cứng
+  NEW_WORDS_DAILY_CAP, tính chung với Khóa học; mục tiêu ngày chỉ để hiển thị, không chặn), rồi luyện: mỗi từ một câu
+  mức 1–2 và một câu mức 3–4, cả phiên trộn đủ 4 mức (mức 2 cần audio). Hết từ mới (đã học hết hoặc chạm hạn mức) thì luyện lại các từ ĐÃ gặp của bài, không có thẻ (chưa gặp từ nào và hết quota →
   NOTHING_TO_STUDY, reason daily_limit). Không mở khóa gì.
 - Kiểm tra cuối bài (`unit_test`): UNIT_TEST_QUESTIONS câu (mỗi từ một câu; bài ít từ hơn thì hỏi hết), xoay vòng đủ mức.
   Không bắt buộc học bài trước (bài đã mở là làm được). Đạt ≥ UNIT_PASS_RATE → qua bài, mở bài kế / bài tổng hợp.

@@ -205,7 +205,7 @@ async def new_words_left_today(session: AsyncSession, user: User, now: datetime)
     started = await session.scalar(
         select(func.count()).select_from(UserEntryProgress).where(UserEntryProgress.user_id == user.id, UserEntryProgress.first_seen_day == today)
     )
-    return max(settings.DAILY_NEW_WORDS_LIMIT - (started or 0), 0)
+    return max(settings.NEW_WORDS_DAILY_CAP - (started or 0), 0)
 
 
 async def course_stats(session: AsyncSession, user: User, course_id: uuid.UUID) -> dict:

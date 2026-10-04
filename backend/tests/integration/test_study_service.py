@@ -141,7 +141,7 @@ async def test_review_mode_uses_srs_due_dates(db_session, clock):
 
 
 async def test_daily_new_word_limit(db_session, clock, monkeypatch):
-    monkeypatch.setattr(settings, "DAILY_NEW_WORDS_LIMIT", 2)
+    monkeypatch.setattr(settings, "NEW_WORDS_DAILY_CAP", 2)
     user, course, _ = await _setup(db_session)
     await _answer_all(db_session, user, await _start(db_session, user, course, "learn", limit=5))
     with pytest.raises(AppError) as exc:
