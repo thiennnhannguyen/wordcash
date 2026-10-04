@@ -104,7 +104,8 @@ Chạm mỗi bội số của `STREAK_SPIN_EVERY` = 7 (7, 14, 21…) → +1 lư�
   Kim Cương 2.000 · Cao Thủ 3.500 · Huyền Thoại 5.000 (`RANK_THRESHOLDS`).
 - Đủ mốc cao hơn → lên ngay. Lần **đầu** đạt mỗi rank → +1 lượt đặc biệt (lên lại sau khi bị hạ thì không).
 - Rơi dưới mốc rank hiện tại → **lung lay** `RANK_GRACE_DAYS` = 3 ngày (`shaky_deadline`); gỡ lại kịp thì hết lung lay;
-  quá hạn vẫn dưới mốc → hạ xuống rank đúng theo số từ lúc đó.
+  quá hạn vẫn dưới mốc → hạ xuống rank đúng theo số từ lúc đó. `/me/stats` trả `shaky_seconds_left` tính theo giờ server
+  (client không tự trừ theo giờ máy).
 - `stats_service.on_mastered_changed` chạy trong **cùng transaction** mỗi khi `mastered_count` đổi; dòng `user_stats` bị
   khóa `FOR UPDATE` nên hai request song song không ghi đè nhau.
 
@@ -117,7 +118,8 @@ Chạm mỗi bội số của `STREAK_SPIN_EVERY` = 7 (7, 14, 21…) → +1 lư�
 | Lần đầu thắng Boss một cấp | đặc biệt | `boss`, mã cấp |
 | Streak chạm bội số 7 | thường | `streak`, ngày |
 
-Mất từ ở Cửa Ải rồi thuộc lại **không** cấp lượt lần nữa. `spin_grants` có unique `(user_id, reason, ref)` và ghi bằng
+Mất từ ở Cửa Ải rồi thuộc lại **không** cấp lượt lần nữa; tiến độ tới lượt kế (`spins.progress`) luôn tính tới mốc
+`max_spin_milestone + 50`, nên `remaining` có thể lớn hơn 50. `spin_grants` có unique `(user_id, reason, ref)` và ghi bằng
 `INSERT … ON CONFLICT DO NOTHING`, nên chạy lại hay gửi trùng không cấp hai lần. Logic vòng quay (gacha) chưa làm.
 
 ## Thời gian

@@ -65,6 +65,8 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
             "current": stats.current_rank, "highest": stats.highest_rank, "by_words": rank.rank_for(mastered),
             **rank.progress(stats.current_rank, mastered),
             "shaky": deadline is not None, "shaky_since": stats.rank_shaky_since, "shaky_deadline": deadline,
+            # tính theo giờ server để client đếm ngược đúng cả khi giờ máy lệch
+            "shaky_seconds_left": max(int((deadline - now).total_seconds()), 0) if deadline else None,
             "words_to_recover": max(rank.threshold(stats.current_rank) - mastered, 0) if deadline else 0,
         },
         "streak": {"current": stats.streak_current, "best": stats.streak_best, "last_date": stats.streak_last_date, "week": week},

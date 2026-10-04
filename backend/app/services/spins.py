@@ -17,6 +17,11 @@ def new_milestones(max_milestone: int, mastered: int, step: int | None = None) -
 
 
 def next_spin_progress(mastered: int, max_milestone: int, step: int | None = None) -> dict:
-    """Tiến độ tới lượt quay kế tiếp ("x/50"): tính từ mốc cao nhất từng đạt."""
+    """Tiến độ tới lượt quay kế tiếp ("x/50"): mốc kế = mốc cao nhất từng đạt + step.
+
+    `remaining` = số từ thuộc còn thiếu tới mốc kế (đã mất từ thì có thể lớn hơn step); `current` = step − remaining (≥ 0).
+    """
     step = step or settings.SPIN_EVERY_N_WORDS
-    return {"current": min(max(mastered - max_milestone, 0), step), "target": step, "next_milestone": max_milestone + step}
+    nxt = max_milestone + step
+    remaining = max(nxt - mastered, 0)
+    return {"current": max(step - remaining, 0), "target": step, "remaining": remaining, "next_milestone": nxt}

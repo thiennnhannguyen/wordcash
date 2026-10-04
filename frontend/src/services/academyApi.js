@@ -38,6 +38,11 @@ export const getReviewDue = () => request({ url: '/review/due' })
 export const startReview = (limit) => request({ method: 'post', url: '/review/sessions', data: limit ? { limit } : {} }).then(withQuestions)
 
 /** Mục từ của server → dạng WordCard / danh sách từ sai. */
+/** Số ngày còn lại (làm tròn lên, tối thiểu 1) từ số giây server trả; không dùng giờ máy người dùng. */
+export function daysLeft(seconds) {
+  return Math.max(1, Math.ceil((seconds ?? 0) / 86400))
+}
+
 export function toWordEntry(e) {
   if (!e) return null
   return { id: e.id, word: e.headword, ipa: e.ipa, pos: e.pos, meaning: e.meaning_vi, example: e.example, collocations: e.collocations ?? [], family: e.word_family ?? [], audio_url: e.audio_url }
@@ -220,7 +225,6 @@ async function realFinishDailyCheck({ streak }) {
   const result = res.result
   const stats = await getMeStats()
   const wrong = Object.values(check.answers).filter((a) => !a.correct)
-  const deadline = result.rank?.shaky_deadline ? new Date(result.rank.shaky_deadline) : null
   return {
     correctCount: result.correct,
     total: result.total,
@@ -231,7 +235,7 @@ async function realFinishDailyCheck({ streak }) {
     masteredDelta: -result.mastered_lost,
     wrongWords: wrong.map((a) => ({ word: a.correct_answer, meaning: a.entry?.meaning_vi })),
     rankShaky: result.rank?.shaky
-      ? { rank: result.rank.current, daysLeft: Math.max(1, Math.ceil((deadline - Date.now()) / 86400000)), wordsToRecover: stats.rank.words_to_recover }
+      ? { rank: result.rank.current, daysLeft: daysLeft(stats.rank.shaky_seconds_left), wordsToRecover: stats.rank.words_to_recover }
       : null,
     rewards: result.rewards,
   }

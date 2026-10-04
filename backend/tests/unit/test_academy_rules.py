@@ -73,8 +73,10 @@ def test_new_milestones(max_milestone, mastered, expected):
 
 
 def test_spin_progress():
-    assert spins.next_spin_progress(38, 0) == {"current": 38, "target": 50, "next_milestone": 50}
-    assert spins.next_spin_progress(98, 100)["current"] == 0  # mất từ: chưa tiến tới mốc mới
+    assert spins.next_spin_progress(38, 0) == {"current": 38, "target": 50, "remaining": 12, "next_milestone": 50}
+    lost = spins.next_spin_progress(95, 100)  # mất từ: mốc kế vẫn là 150, còn thiếu 55 (không phải 50)
+    assert (lost["current"], lost["remaining"], lost["next_milestone"]) == (0, 55, 150)
+    assert spins.next_spin_progress(130, 100)["current"] == 30
 
 
 # ---------- Streak ----------

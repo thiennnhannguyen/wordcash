@@ -9,7 +9,7 @@
 import { useEffect, useState } from 'react'
 import { journeyRegions } from '../../data/roadmap'
 import { getLobbyMock } from '../../data/mockLobby'
-import { USE_MOCK, getMeStats, getUnit } from '../../services/academyApi'
+import { USE_MOCK, daysLeft, getMeStats, getUnit } from '../../services/academyApi'
 
 const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 const ALIVE = new Set(['passed', 'partial', 'exempt'])
@@ -40,7 +40,6 @@ export function buildLobby(stats, unit, user) {
     state: d.today ? 'today' : d.status === 'future' ? 'future' : ALIVE.has(d.status) ? 'done' : 'empty',
     studied: ALIVE.has(d.status),
   }))
-  const deadline = r.shaky_deadline ? new Date(r.shaky_deadline) : null
   return {
     ...base,
     stats: { streak: stats.streak.current, masteredWords: stats.mastered_count, rank: r.current, rankShaky: r.shaky, spins: stats.spins.normal + stats.spins.special },
@@ -55,8 +54,8 @@ export function buildLobby(stats, unit, user) {
       base.goals.find((g) => g.key === 'arena'), // TODO: chưa có API Đấu Trường
     ],
     nextRank: { from: r.current, to: r.next ?? r.current, current: stats.mastered_count, target: r.next_min ?? stats.mastered_count },
-    nextSpin: { current: stats.spins.progress.current, target: stats.spins.progress.target },
-    shaky: deadline ? { daysLeft: Math.max(1, Math.ceil((deadline - Date.now()) / 86400000)), wordsToReview: r.words_to_recover, threshold: r.current_min } : null,
+    nextSpin: { current: stats.spins.progress.current, target: stats.spins.progress.target, left: stats.spins.progress.remaining },
+    shaky: r.shaky ? { daysLeft: daysLeft(r.shaky_seconds_left), wordsToReview: r.words_to_recover, threshold: r.current_min } : null,
     journey: { regions: journeyRegions({ level: stats.position?.level_code ?? 'A1' }), passport: stats.passport },
   }
 }

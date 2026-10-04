@@ -69,7 +69,7 @@ export function NextSpinWidget({ nextSpin, spins }) {
           </div>
         </ProgressRing>
         <p className="min-w-0 flex-1 text-caption text-muted">
-          Còn <span className="font-num text-ink">{Math.max(0, nextSpin.target - nextSpin.current)}</span> từ nữa là có thêm
+          Còn <span className="font-num text-ink">{nextSpin.left ?? Math.max(0, nextSpin.target - nextSpin.current)}</span> từ nữa là có thêm
           lượt. Cứ 50 từ thuộc được 1 lượt quay linh vật.
         </p>
       </div>

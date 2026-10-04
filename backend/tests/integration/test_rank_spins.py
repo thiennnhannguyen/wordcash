@@ -14,7 +14,7 @@ from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import EntryState, SpinGrant, SpinKind, SpinReason, User, UserEntryProgress, UserStats
-from app.services import progress_service, stats_service
+from app.services import me_service, progress_service, stats_service
 from tests.factories import make_entry, make_user
 
 T0 = datetime(2026, 10, 4, 3, 0, tzinfo=UTC)
@@ -67,6 +67,10 @@ async def test_rank_up_grants_special_once_and_shaky_recover_demote(db_session):
     assert rewards.rank["became_shaky"] and rewards.rank["to"] == "dong"
     s = await stats_of(db, user)
     assert s.current_rank == "dong" and s.rank_shaky_deadline == T0 + timedelta(hours=1, days=3)
+    # /me/stats: thời gian còn lại tính theo giờ server (client không tự trừ giờ máy); mốc lượt quay kế vẫn là 150
+    me = await me_service.get_stats(db, user, T0 + timedelta(days=1, hours=1))
+    assert me["rank"]["shaky"] and me["rank"]["shaky_seconds_left"] == 2 * 86400
+    assert (me["spins"]["progress"]["next_milestone"], me["spins"]["progress"]["remaining"]) == (150, 51)
 
     # Gỡ lại kịp: thuộc thêm một từ → hết lung lay, không cấp lượt đặc biệt lần nữa
     other = await almost_mastered(db, user, "save")
