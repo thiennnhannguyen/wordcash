@@ -22,6 +22,7 @@ import random
 import uuid
 from datetime import datetime
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -220,7 +221,7 @@ async def submit_answers(session: AsyncSession, user: User, session_id: uuid.UUI
         rewards.merge(hook_rewards)
         stored["rewards"] = _rewards_of(stored).merge(hook_rewards).as_dict()
         stored["summary"], stored["outcome"] = summary, outcome
-    study.result = stored
+    study.result = stored = jsonable_encoder(stored)  # JSONB: datetime → chuỗi ISO, lần đầu và lần nộp lại trả cùng dạng
     await session.commit()
 
     out = {"results": results, "answered": len(recorded), "total": len(keys), "finished": finished, "summary": None,
