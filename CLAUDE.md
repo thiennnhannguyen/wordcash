@@ -149,6 +149,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Chưa chặn vào Sảnh khi chưa làm Cửa Ải (cần server biết ngày theo múi giờ người dùng; TODO trong `App.jsx`).
 - Chưa có đăng nhập Google, trang Điều khoản/Chính sách.
 - Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Frontend đã nối auth theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md`. Seed dev: `python -m seeds.seed_dev_entries` (60 mục từ A1 mẫu, `exam_tags` DEV_SAMPLE, `status = approved` chỉ để dev/e2e dùng được /bank/search; xóa bằng `python -m seeds.purge_dev_entries` trước khi ra mắt; database production phải có 0 mục DEV_SAMPLE, xem `docs/deploy-checklist.md`). Database e2e: `wordclash_e2e`. Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Seed có 22 địa danh: 10 chặng mỗi cấp trong `topics` + Boss lưu ở `levels.boss_landmark_*`; tên quái vật canh giữ (Rồng Vịnh, Bàn Tay Núi) chưa có cột trong DB. PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
+- CI: `.github/workflows/ci.yml` chạy khi push / pull request: PostgreSQL + Redis (service containers) → `alembic upgrade head` → kiểm tra một head → `pytest`; frontend `npm ci` → `npm test` → `npm run build`. Chưa chạy e2e trên CI.
 - Repo đã khởi tạo git (02/10/2026). `feat/auth-phase1` đã gộp vào `main` (03/10/2026); Khóa học của tôi và việc nối frontend nằm trên `feat/my-courses` (rebase lên `main`); chưa có remote.
 
 ## Công nghệ
