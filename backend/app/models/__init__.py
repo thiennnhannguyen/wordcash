@@ -6,6 +6,18 @@ from app.core.database import Base
 from app.models.academy import BossAttempt, ProgressStatus, TopicPracticeLog, UserLevelProgress, UserTopicProgress, UserUnitProgress
 from app.models.course import CourseVisibility, SessionKind, StudyMode, StudySession, UserCourse, UserCourseEntry
 from app.models.daily_check import DailyCheck, DailyCheckStatus
+from app.models.mascot import (
+    IdempotencyKey,
+    Mascot,
+    MascotObtain,
+    MascotRarity,
+    MascotRegion,
+    MascotSource,
+    MascotStatus,
+    ShardExchange,
+    SpinHistory,
+    UserMascot,
+)
 from app.models.progress import EntryState, ReviewLog, UserEntryProgress
 from app.models.refresh_token import RefreshToken
 from app.models.stats import SpinGrant, SpinKind, SpinReason, UserDailyActivity, UserStats
@@ -26,13 +38,22 @@ __all__ = [
     "EntryStatus",
     "EntryType",
     "Goal",
+    "IdempotencyKey",
     "Level",
+    "Mascot",
+    "MascotObtain",
+    "MascotRarity",
+    "MascotRegion",
+    "MascotSource",
+    "MascotStatus",
     "ProgressStatus",
     "RefreshToken",
     "ReviewLog",
     "Role",
     "SessionKind",
+    "ShardExchange",
     "SpinGrant",
+    "SpinHistory",
     "SpinKind",
     "SpinReason",
     "StudyMode",
@@ -47,6 +68,7 @@ __all__ = [
     "UserDailyActivity",
     "UserEntryProgress",
     "UserLevelProgress",
+    "UserMascot",
     "UserStats",
     "UserTopicProgress",
     "UserUnitProgress",
