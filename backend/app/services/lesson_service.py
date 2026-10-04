@@ -4,7 +4,8 @@ và StudySession (services/session_engine.py); chấm ở server qua study_servi
 
 - Học bài (`unit_learn`): thẻ học các từ MỚI của bài (tối đa số từ mới còn lại trong ngày, DAILY_NEW_WORDS_LIMIT tính chung
   với Khóa học), rồi luyện: mỗi từ một câu mức 1–2 và một câu mức 3–4, cả phiên trộn đủ 4 mức (mức 2 cần audio). Hết từ mới
-  (đã học hết hoặc chạm giới hạn ngày) thì luyện lại toàn bộ từ của bài, không có thẻ. Không mở khóa gì.
+  (đã học hết hoặc chạm giới hạn ngày) thì luyện lại các từ ĐÃ gặp của bài, không có thẻ (chưa gặp từ nào và hết quota →
+  NOTHING_TO_STUDY, reason daily_limit). Không mở khóa gì.
 - Kiểm tra cuối bài (`unit_test`): UNIT_TEST_QUESTIONS câu (mỗi từ một câu; bài ít từ hơn thì hỏi hết), xoay vòng đủ mức.
   Không bắt buộc học bài trước (bài đã mở là làm được). Đạt ≥ UNIT_PASS_RATE → qua bài, mở bài kế / bài tổng hợp.
 - Bài tổng hợp chặng (`topic_test`): TOPIC_TEST_QUESTIONS câu trộn đều các bài; chỉ mở khi mọi bài của chặng đã qua.
@@ -118,7 +119,11 @@ async def start_learn(session: AsyncSession, user: User, unit_id: int, now: date
     reason = None
     if not learn:
         reason = "daily_limit" if fresh else "all_learned"
-    words = learn or [e for e, _, _ in rows]
+    # Hết quota từ mới: chỉ luyện lại các từ ĐÃ gặp (không lén đưa từ mới vào, vượt giới hạn ngày)
+    seen = [e for e, p, _ in rows if p is not None and p.status != EntryState.NEW]
+    words = learn or seen
+    if not words:
+        raise AppError("NOTHING_TO_STUDY", details={"reason": reason})
 
     # Mỗi từ: một câu dễ (1–2) và một câu khó (3–4); câu dễ trước để vừa học xong thẻ là làm được
     easy = [(e, session_engine.easy_level(e, rng)) for e in words]

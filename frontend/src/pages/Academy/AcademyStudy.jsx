@@ -6,7 +6,8 @@
  * Sai chỉ đặt lại lịch ôn (luật ghi nhớ thống nhất), không làm mất "đã thuộc". Giao diện câu hỏi: components/academy/SessionSteps.jsx.
  */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Barbell, BookOpenText, CheckCircle, Sword, Target } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
@@ -86,7 +87,7 @@ export default function AcademyStudy({ kind }) {
   const [done, setDone] = useState(null)
   const [rewards, setRewards] = useState(null)
 
-  useEffect(() => {
+  useStartOnce(() => {
     setSession(null)
     setDone(null)
     const start = kind === 'practice' ? startPractice(topicId) : startReview()

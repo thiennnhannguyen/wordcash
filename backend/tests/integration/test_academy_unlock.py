@@ -135,3 +135,21 @@ async def test_last_topic_opens_boss_and_win_opens_next_level(world):
     assert road["levels"][0]["status"] == S.COMPLETED and road["levels"][0]["boss"]["status"] == "won"
     assert road["levels"][1]["status"] == S.UNLOCKED and road["passport"]["visited"] == 11
     assert road["current"]["level_code"] == "A2"
+
+
+async def test_learn_respects_daily_new_word_limit(world):
+    db, user = world
+    t1 = (await H.topics(db, "A1"))[0]
+    u1, u2 = await H.units(db, t1)
+    first = await lesson_service.start_learn(db, user, u1.id, NOW)
+    assert len(first["cards"]) == 15
+    await H.answer(db, user, first)
+    await H.answer(db, user, await lesson_service.start_unit_test(db, user, u1.id, NOW))
+    second = await lesson_service.start_learn(db, user, u2.id, NOW)
+    assert len(second["cards"]) == 5  # 20 từ mới / ngày
+    await H.answer(db, user, second)
+    # Hết quota: luyện lại đúng 5 từ đã gặp của bài 2, không đưa 10 từ chưa học vào
+    third = await lesson_service.start_learn(db, user, u2.id, NOW)
+    assert third["reason"] == "daily_limit" and third["cards"] == [] and third["total"] == 10
+    keys = await H.keys_of(db, third["id"])
+    assert len({k["entry_id"] for k in keys}) == 5

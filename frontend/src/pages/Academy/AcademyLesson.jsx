@@ -6,7 +6,8 @@
  * Giao diện dùng chung với Khóa học của tôi (components/academy/SessionSteps.jsx). Bản mock (VITE_USE_MOCK=true) là Lesson.jsx.
  */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { MapTrifold } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
@@ -50,7 +51,7 @@ export default function AcademyLesson() {
   const [exitOpen, setExitOpen] = useState(false)
   const [streak, setStreak] = useState({ now: 0, max: 0 })
 
-  useEffect(() => {
+  useStartOnce(() => {
     if (!unitId) {
       navigate('/academy', { replace: true })
       return
@@ -63,7 +64,7 @@ export default function AcademyLesson() {
         setStep(s.cards.length ? 'cards' : 'questions')
       })
       .catch(setError)
-  }, [unitId, navigate])
+  }, [unitId])
 
   const back = () => navigate(`/academy?level=${unit?.level.code ?? ''}`)
   if (error) return <AcademyError error={error} onBack={() => navigate('/academy')} />

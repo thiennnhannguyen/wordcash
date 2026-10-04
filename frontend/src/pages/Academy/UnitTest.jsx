@@ -12,6 +12,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import confetti from 'canvas-confetti'
@@ -349,11 +350,10 @@ export default function UnitTest() {
     startUnitTest({ resumeAt, unitId, topicId }).then(setSession).catch(setError)
   }
 
-  useEffect(() => {
+  // Chỉ bắt đầu một lần khi vào trang (kể cả StrictMode)
+  useStartOnce(() => {
     if (!preview) begin(Number(params.get('q')) || 0)
-    // Chỉ bắt đầu một lần khi vào trang
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [unitId, topicId])
 
   const finish = async () => {
     setResult(await finishUnitTest())

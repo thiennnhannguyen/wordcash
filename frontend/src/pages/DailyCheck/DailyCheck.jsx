@@ -9,7 +9,8 @@
  * Dev: `?streak=13` để thử mốc 7 ngày; `?preview=perfect|milestone|mistake` mở thẳng màn kết quả.
  */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Fire, LockKeyOpen } from '@phosphor-icons/react'
@@ -98,7 +99,7 @@ export default function DailyCheck() {
   const [pending, setPending] = useState(false)
   const [finalResult, setFinalResult] = useState(null)
 
-  useEffect(() => {
+  useStartOnce(() => {
     if (preview) return
     fetchDailyCheck({ streak: streakParam }).then((d) => {
       // Đã làm / được miễn hôm nay: không có gì để làm ở đây
@@ -113,7 +114,7 @@ export default function DailyCheck() {
       }
       setData(d)
     })
-  }, [streakParam, preview]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [streakParam, preview])
 
   if (preview && PREVIEW_RESULTS[preview]) return <DailyCheckResult result={PREVIEW_RESULTS[preview]} />
   if (!data) return <div className="min-h-dvh bg-gold" aria-busy="true" />

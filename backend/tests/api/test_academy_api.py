@@ -3,6 +3,7 @@ API Học Viện + Cửa Ải + /me/stats qua httpx (PostgreSQL test thật, clo
 Kiểm tra: không lộ đáp án trước khi nộp, nộp lại idempotent, chặn route học khi chưa vượt Cửa Ải, route dev không có ngoài dev/e2e.
 """
 
+import uuid
 from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
@@ -126,6 +127,33 @@ async def test_daily_check_gate_and_stats(client, db_session, auth_user, clock_a
 async def test_dev_router_absent_outside_dev(client, auth_user):
     res = await client.post(f"{API}/dev/academy/fast-forward", json={"level_code": "A1"}, headers=auth_user["headers"])
     assert res.status_code == 404
+    for path in (f"/dev/study-sessions/{uuid.uuid4()}/key", "/dev/daily-check/key"):
+        assert (await client.get(f"{API}{path}", headers=auth_user["headers"])).status_code == 404
+
+
+def test_dev_router_only_registered_in_dev_and_e2e():
+    """Router dev chỉ được gắn khi ENV development/e2e (kiểm tra trên app dựng lại với từng ENV)."""
+    import importlib
+
+    from app.core.config import settings
+    import app.api.v1 as v1
+
+    from fastapi import FastAPI
+
+    def paths(router):
+        probe = FastAPI()
+        probe.include_router(router)
+        return set(probe.openapi()["paths"])
+
+    original = settings.ENV
+    try:
+        for env, expected in (("production", False), ("testing", False), ("development", True), ("e2e", True)):
+            settings.ENV = env
+            module = importlib.reload(v1)
+            assert ("/api/v1/dev/daily-check/key" in paths(module.api_router)) is expected, env
+    finally:
+        settings.ENV = original
+        importlib.reload(v1)
 
 
 async def test_ielts_branch_is_coming_soon(client, db_session, auth_user, clock_at):

@@ -13,6 +13,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import confetti from 'canvas-confetti'
@@ -409,13 +410,13 @@ function LoseResult({ result, cooldownOnly = false }) {
         <section className="flex w-full flex-col gap-4 rounded-panel border-thick border-line bg-surface p-5 text-left text-ink shadow-[6px_6px_0_0_var(--color-primary)] md:p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-h3">Chặng làm yếu nhất</h2>
-            <span className="hud-label whitespace-nowrap max-sm:hidden">% câu đúng</span>
+            {!cooldownOnly && <span className="hud-label whitespace-nowrap max-sm:hidden">% câu đúng</span>}
           </div>
           <ul className="flex flex-col gap-3.5">
             {result.weakStages.map((s, i) => (
               <li key={s.title} className={cx('grid items-center gap-3', s.id ? 'grid-cols-[92px_1fr_44px] md:grid-cols-[110px_1fr_44px_auto]' : 'grid-cols-[92px_1fr_44px]')}>
                 <span className="truncate font-semibold">{s.title}</span>
-                <span className="relative h-5 overflow-hidden rounded-pill border-thick border-line bg-raised">
+                <span className={cx('relative h-5 overflow-hidden rounded-pill border-thick border-line bg-raised', s.percent == null && 'invisible')}>
                   <motion.span
                     className="absolute inset-y-0 left-0 border-r-thick border-line"
                     style={{ background: `var(--color-${s.color})` }}
@@ -440,7 +441,7 @@ function LoseResult({ result, cooldownOnly = false }) {
               </li>
             ))}
           </ul>
-          <p className="text-caption text-muted">Vạch đen là mức {result.passPercent}% cần đạt.</p>
+          {!cooldownOnly && <p className="text-caption text-muted">Vạch đen là mức {result.passPercent}% cần đạt.</p>}
         </section>
       </main>
 
@@ -472,11 +473,10 @@ export default function BossBattle() {
   const [exitOpen, setExitOpen] = useState(false)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
+  // Chỉ bắt đầu một lần khi vào trang (kể cả StrictMode)
+  useStartOnce(() => {
     if (!preview) startBoss({ level, resumeAt: Number(params.get('q')) || 0 }).then(setSession).catch(setError)
-    // Chỉ bắt đầu một lần khi vào trang
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [level])
 
   const finish = async () => {
     setResult(await finishBoss({ level }))
