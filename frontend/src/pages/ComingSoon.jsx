@@ -24,9 +24,12 @@ export default function ComingSoon({ title, standalone = false }) {
           <Button variant="secondary" onClick={() => navigate('/')}>
             Về trang chủ
           </Button>
-          <Button variant="ghost" onClick={() => navigate('/design-system')}>
-            Design System
-          </Button>
+          {/* Trang Design System chỉ có khi chạy dev */}
+          {import.meta.env.DEV && (
+            <Button variant="ghost" onClick={() => navigate('/design-system')}>
+              Design System
+            </Button>
+          )}
         </div>
       </Card>
     </div>
