@@ -3,11 +3,12 @@
  *
  * Trang tổng quan ôn tập theo lặp lại ngắt quãng: số từ đến hạn và nút bắt đầu ôn, 4 thẻ thống kê theo
  * trạng thái, biểu đồ lịch ôn 7 ngày tới, phần "Ôn gấp" (từ vừa quên ở Cửa Ải) và danh sách từ có tìm
- * kiếm, lọc theo cấp/trạng thái. Mọi con số và ngày ôn tiếp do server tính (hiện lấy từ reviewMock.js).
+ * kiếm, lọc theo cấp/trạng thái. Mọi con số và ngày ôn tiếp do server tính (GET /review/due qua services/academyApi.js;
+ * VITE_USE_MOCK=true dùng reviewMock.js).
  * Mobile: thẻ thống kê lưới 2x2, danh sách dạng card gọn, nút chính dính ở đáy màn hình (trên thanh tab).
  */
 
-import { useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowsClockwise, BookOpenText, CalendarBlank, CheckCircle, Lightning, MagnifyingGlass, Plant, Siren, XCircle } from '@phosphor-icons/react'
@@ -20,7 +21,34 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import cx from '../../utils/cx'
 import { formatDueIn, formatNumber } from '../../utils/format'
-import { REVIEW_SUMMARY, URGENT, WORDS } from './reviewMock'
+import { USE_MOCK, getReviewDue } from '../../services/academyApi'
+import { REVIEW_SUMMARY as MOCK_SUMMARY, URGENT as MOCK_URGENT, WORDS as MOCK_WORDS } from './reviewMock'
+
+/** Dữ liệu trang (thật hoặc mock) cùng một dạng: {summary, urgent, words}. */
+const ReviewData = createContext({ summary: MOCK_SUMMARY, urgent: MOCK_URGENT, words: MOCK_WORDS })
+
+const DAY_MS = 86400000
+
+function fromServer(due) {
+  const toWord = (w) => ({
+    word: w.headword,
+    meaning: w.meaning_vi,
+    level: w.cefr ?? '—',
+    status: w.status,
+    dueInDays: w.due_at ? Math.max(0, Math.ceil((new Date(w.due_at).getTime() - Date.now()) / DAY_MS)) : null,
+    forgotAt: w.status === 'forgotten' ? 'Cửa Ải' : 'Quá hạn',
+  })
+  return {
+    summary: {
+      due: due.due_count,
+      estimatedMinutes: Math.max(1, Math.ceil(due.due_count / 4)),
+      counts: due.status_counts,
+      forecast: [due.due_count, ...due.schedule.slice(0, 6).map((d) => d.count)],
+    },
+    urgent: due.urgent.map(toWord),
+    words: due.words.map(toWord),
+  }
+}
 
 const STATUSES = {
   learning: { label: 'Đang học', color: 'sky', icon: ArrowsClockwise },
@@ -42,21 +70,23 @@ function dayLabel(offset) {
 }
 
 function StartButton({ className }) {
+  const { summary, urgent, words } = useContext(ReviewData)
   const navigate = useNavigate()
   return (
     <Button size="lg" icon={Lightning} className={className} onClick={() => navigate('/academy/review/session')}>
-      Bắt đầu ôn (≈ {REVIEW_SUMMARY.estimatedMinutes} phút)
+      Bắt đầu ôn (≈ {summary.estimatedMinutes} phút)
     </Button>
   )
 }
 
 function Hero() {
+  const { summary, urgent, words } = useContext(ReviewData)
   return (
     <section className="relative flex flex-col gap-5 overflow-hidden rounded-panel border-thick border-line bg-sky p-6 shadow-hard-lg md:flex-row md:items-center md:justify-between md:p-10">
       <div className="flex flex-col gap-3">
         <span className="hud-label text-ink/70">Ôn tập hôm nay</span>
         <p className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-num text-[88px] leading-none md:text-[112px]">{REVIEW_SUMMARY.due}</span>
+          <span className="font-num text-[88px] leading-none md:text-[112px]">{summary.due}</span>
           <span className="font-heading text-[28px] font-black leading-tight md:text-[36px]">từ đến hạn ôn</span>
         </p>
         <p className="max-w-md font-medium text-ink/80">Ôn đúng lúc sắp quên giúp nhớ lâu hơn nhiều so với học dồn một lần.</p>
@@ -75,6 +105,7 @@ function Hero() {
 }
 
 function StatCards() {
+  const { summary, urgent, words } = useContext(ReviewData)
   return (
     <section aria-label="Số từ theo trạng thái" className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
       {Object.entries(STATUSES).map(([key, s]) => (
@@ -85,7 +116,7 @@ function StatCards() {
         >
           <IconBadge icon={s.icon} bg="surface" size="sm" shadow={false} />
           <div>
-            <div className="font-num text-[32px] leading-none md:text-[40px]">{formatNumber(REVIEW_SUMMARY.counts[key])}</div>
+            <div className="font-num text-[32px] leading-none md:text-[40px]">{formatNumber(summary.counts[key])}</div>
             <div className="mt-1 font-display text-sm font-bold uppercase tracking-wide">{s.label}</div>
           </div>
         </div>
@@ -95,7 +126,8 @@ function StatCards() {
 }
 
 function ForecastChart() {
-  const max = Math.max(...REVIEW_SUMMARY.forecast)
+  const { summary, urgent, words } = useContext(ReviewData)
+  const max = Math.max(...summary.forecast)
   return (
     <section className="flex flex-col gap-4 rounded-panel border-thick border-line bg-surface p-5 shadow-hard md:p-6">
       <div className="flex items-center gap-3">
@@ -103,7 +135,7 @@ function ForecastChart() {
         <h2 className="text-h3">Lịch ôn 7 ngày tới</h2>
       </div>
       <ol className="grid h-44 grid-cols-7 items-end gap-2" aria-label="Số từ đến hạn mỗi ngày">
-        {REVIEW_SUMMARY.forecast.map((n, i) => (
+        {summary.forecast.map((n, i) => (
           <li key={i} className="flex h-full flex-col items-center justify-end gap-1.5" aria-label={`${dayLabel(i)}: ${n} từ`}>
             <span className="font-num text-sm">{n}</span>
             <motion.span
@@ -123,18 +155,19 @@ function ForecastChart() {
 }
 
 function UrgentBox() {
+  const { summary, urgent, words } = useContext(ReviewData)
   const navigate = useNavigate()
   return (
     <section className="flex flex-col gap-4 rounded-panel border-thick border-danger bg-[color-mix(in_srgb,var(--color-danger)_10%,var(--color-surface))] p-5 shadow-hard md:p-6">
       <div className="flex items-center gap-3">
         <IconBadge icon={Siren} bg="danger" size="md" shape="square" />
         <div className="min-w-0 flex-1">
-          <h2 className="text-h3 leading-tight">Ôn gấp · {URGENT.length} từ</h2>
+          <h2 className="text-h3 leading-tight">Ôn gấp · {urgent.length} từ</h2>
           <p className="text-caption text-muted">Vừa quên ở Cửa Ải Hôm Nay. Ôn lại trước để lấy lại từ đã thuộc.</p>
         </div>
       </div>
       <ul className="grid gap-2 sm:grid-cols-3">
-        {URGENT.map((w) => (
+        {urgent.map((w) => (
           <li key={w.word} className="flex flex-col gap-1 rounded-card border-2 border-danger bg-surface px-4 py-3">
             <div className="flex items-center justify-between gap-2">
               <span className="font-display text-lg font-bold">{w.word}</span>
@@ -146,7 +179,7 @@ function UrgentBox() {
         ))}
       </ul>
       <Button variant="danger" icon={Lightning} className="self-start max-sm:w-full" onClick={() => navigate('/academy/review/session?urgent=1')}>
-        Ôn gấp {URGENT.length} từ
+        Ôn gấp {urgent.length} từ
       </Button>
     </section>
   )
@@ -171,13 +204,14 @@ function DueLabel({ days }) {
 }
 
 function WordList() {
+  const { summary, urgent, words } = useContext(ReviewData)
   const [query, setQuery] = useState('')
   const [level, setLevel] = useState('all')
   const [status, setStatus] = useState('all')
 
   const items = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return WORDS.filter(
+    return words.filter(
       (w) =>
         (level === 'all' || w.level === level) &&
         (status === 'all' || w.status === status) &&
@@ -272,7 +306,13 @@ function WordList() {
 }
 
 export default function Review() {
+  const [data, setData] = useState(USE_MOCK ? { summary: MOCK_SUMMARY, urgent: MOCK_URGENT, words: MOCK_WORDS } : null)
+  useEffect(() => {
+    if (!USE_MOCK) getReviewDue().then((due) => setData(fromServer(due)))
+  }, [])
+  if (!data) return <div className="min-h-[60vh]" aria-busy="true" />
   return (
+    <ReviewData.Provider value={data}>
     <div className="flex flex-col gap-6 pb-20 md:gap-8 md:pb-0">
       <Hero />
       <StatCards />
@@ -291,5 +331,6 @@ export default function Review() {
         <StartButton className="w-full" />
       </div>
     </div>
+    </ReviewData.Provider>
   )
 }

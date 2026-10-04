@@ -103,12 +103,12 @@ const A2_STAGES = [
 ]
 
 // Trận Boss cuối cấp: địa danh biểu tượng có "quái vật canh giữ"
-const BOSSES = {
+export const BOSSES = {
   A1: { landmark_key: 'a1_boss_ha_long', landmark_name: 'Vịnh Hạ Long', guardian: 'Rồng Vịnh', stamp: 'HẠ LONG', scene: 'island' },
   A2: { landmark_key: 'a2_boss_cau_vang', landmark_name: 'Cầu Vàng Bà Nà', guardian: 'Bàn Tay Núi', stamp: 'CẦU VÀNG', scene: 'island' },
   B1: { landmark_key: null, landmark_name: 'Hồ Loch Ness', guardian: 'Quái vật hồ', stamp: 'LOCH NESS', scene: 'loch_ness' },
 }
-const DEFAULT_BOSS = { landmark_key: null, landmark_name: 'Hồ quái vật', guardian: 'Quái vật', stamp: 'HỒ BOSS', scene: 'lake' }
+export const DEFAULT_BOSS = { landmark_key: null, landmark_name: 'Hồ quái vật', guardian: 'Quái vật', stamp: 'HỒ BOSS', scene: 'lake' }
 
 // Ngày hoàn thành chặng (server lưu, ISO). Mẫu: A1 từ 04/05/2026, A2 từ 20/06/2026, B1 từ 02/09/2026.
 const START_DATE = { A1: '2026-05-04', A2: '2026-06-20', B1: '2026-09-02' }
@@ -133,7 +133,7 @@ export const LANDMARK_FACTS = {
 }
 
 // Con dấu hộ chiếu: màu mực và hình dáng khác nhau cho từng địa danh
-const STAMP_STYLE = [
+export const STAMP_STYLE = [
   { ink: 'primary', shape: 'round', tilt: -10 },
   { ink: 'danger-deep', shape: 'square', tilt: 7 },
   { ink: 'accent-deep', shape: 'round', tilt: -4 },
@@ -190,6 +190,9 @@ function genericDefs(count) {
 }
 
 const LEVEL_DEFS = { A1: () => A1_STAGES, A2: () => A2_STAGES }
+
+/** Phần trang trí của chặng theo `landmark_key` (icon, chữ trên con dấu) để bản đồ dữ liệu thật dùng chung tranh vẽ. */
+export const STAGE_ART = Object.fromEntries([...A1_STAGES, ...A2_STAGES, ...B1_STAGES].map((d) => [d.landmark_key, { icon: d.icon, stamp: d.stamp }]))
 
 function b1Defs(branch) {
   const overrides = BRANCH_LESSONS[branch] ?? {}

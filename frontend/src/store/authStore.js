@@ -12,6 +12,7 @@
 
 import { create } from 'zustand'
 import { broadcastLogout, broadcastSession, refreshSession, request } from '../services/api'
+import { useDailyCheckStore } from './dailyCheckStore'
 
 let bootstrapping = null
 
@@ -57,6 +58,7 @@ export const useAuthStore = create((set, get) => ({
       await request({ method: 'post', url: '/auth/logout' })
     } finally {
       broadcastLogout()
+      useDailyCheckStore.getState().reset()
       set({ accessToken: null, user: null, status: 'anonymous', expired: false })
     }
   },
@@ -66,6 +68,7 @@ export const useAuthStore = create((set, get) => ({
       await request({ method: 'post', url: '/auth/logout-all' })
     } finally {
       broadcastLogout()
+      useDailyCheckStore.getState().reset()
       set({ accessToken: null, user: null, status: 'anonymous', expired: false })
     }
   },

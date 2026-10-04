@@ -8,11 +8,13 @@
  *   BroadcastChannel để tab khác dùng luôn (không gọi refresh lần hai). Trình duyệt không có navigator.locks thì vẫn an toàn
  *   nhờ khoảng ân hạn REFRESH_REUSE_GRACE_SECONDS ở server (docs/auth.md).
  * - Làm mới thất bại, hoặc 401 SESSION_REVOKED / TOKEN_INVALID khi đang đăng nhập: xóa phiên; route guard chuyển về /login.
+ * - 409 DAILY_CHECK_REQUIRED (chưa vượt Cửa Ải hôm nay) ở bất kỳ đâu: đánh dấu store Cửa Ải `pending`; route guard chuyển sang /daily-check.
  * Lỗi luôn được chuẩn hóa thành {code, message, details, status} (`toApiError`).
  */
 
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
+import { useDailyCheckStore } from '../store/dailyCheckStore'
 
 const BASE_URL = '/api/v1'
 const LOCK_NAME = 'wc-auth-refresh'
@@ -114,6 +116,8 @@ api.interceptors.response.use(undefined, async (error) => {
     config.headers.Authorization = `Bearer ${useAuthStore.getState().accessToken}`
     return api(config)
   }
+
+  if (code === 'DAILY_CHECK_REQUIRED') useDailyCheckStore.getState().markPending()
 
   if (response?.status === 401 && sentToken && ['SESSION_REVOKED', 'TOKEN_INVALID', 'TOKEN_EXPIRED'].includes(code)) {
     useAuthStore.getState().expire()

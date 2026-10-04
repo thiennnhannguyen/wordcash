@@ -25,6 +25,7 @@ import {
   Sword,
   Target,
   AirplaneTilt,
+  Compass as CompassIcon,
 } from '@phosphor-icons/react'
 import NavBar from '../../components/layout/NavBar'
 import Button from '../../components/ui/Button'
@@ -42,7 +43,9 @@ import cx from '../../utils/cx'
 import { formatDayMonth, formatNumber } from '../../utils/format'
 import { speak } from '../../utils/speech'
 import { PASS_BOSS_PERCENT, PASS_LESSON_PERCENT } from '../../utils/constants'
-import { BRANCHES, getLevelMap, LEVELS, SIDEBAR_MOCK } from './roadmapMock'
+import { BRANCHES } from './roadmapMock'
+import useAcademyMap from './useAcademyMap'
+import { USE_MOCK } from '../../services/academyApi'
 import { buildLayout, pointAt, travelerSpot } from './map/layout'
 import Terrain from './map/Terrain'
 import Fog from './map/Fog'
@@ -151,19 +154,22 @@ function StationPopup({ row, level, nextLevel, onClose }) {
 
   if (row.kind === 'lesson') {
     title = `Bài ${row.item.number} · ${row.item.title}`
-    meta = `Chặng ${row.stage.number} · ${row.stage.title} · ${row.item.words} từ · ${row.item.phrases} cụm từ`
-    requirement = locked ? `Hoàn thành bài trước với ít nhất ${PASS_LESSON_PERCENT}% để mở bài này.` : `Cần ${PASS_LESSON_PERCENT}% để mở bài tiếp.`
+    meta = `Chặng ${row.stage.number} · ${row.stage.title} · ${row.item.words} từ${row.item.phrases != null ? ` · ${row.item.phrases} cụm từ` : ''}`
+    requirement = locked ? `Hoàn thành bài trước với ít nhất ${PASS_LESSON_PERCENT}% để mở bài này.` : `Cần ${PASS_LESSON_PERCENT}% ở bài kiểm tra cuối bài để mở bài tiếp.`
     primary = { label: row.status === 'done' ? 'Học lại' : 'Học', icon: Play, to: `/academy/lesson?unit=${row.item.id}` }
-    secondary = { label: 'Ôn lại', icon: ArrowsClockwise, to: `/academy/review?unit=${row.item.id}`, disabled: row.item.best == null }
+    secondary = USE_MOCK
+      ? { label: 'Ôn lại', icon: ArrowsClockwise, to: `/academy/review?unit=${row.item.id}`, disabled: row.item.best == null }
+      : { label: 'Kiểm tra cuối bài', icon: ShieldStar, to: `/academy/unit-test?unit=${row.item.id}` }
   } else if (row.kind === 'checkpoint') {
     title = `Kiểm tra chặng ${row.stage.number} · ${row.stage.title}`
     meta = `Tổng hợp mọi bài trong chặng · Qua bài để đặt chân tới ${row.stage.landmark_name}`
     requirement = locked ? 'Hoàn thành mọi bài trong chặng để mở bài kiểm tra.' : 'Đạt bài kiểm tra để mở chặng tiếp theo.'
-    primary = { label: 'Làm bài kiểm tra', icon: ShieldStar, to: `/academy/unit-test?stage=${row.stage.id}` }
+    primary = { label: 'Làm bài kiểm tra', icon: ShieldStar, to: `/academy/unit-test?topic=${row.stage.topicId ?? row.stage.id}` }
   } else {
     title = `Trận Boss ${level.code} · ${row.item.landmark_name}`
     meta = `Khoảng ${row.item.questions} câu trộn từ cả cấp`
     requirement = locked ? 'Vượt mọi chặng của cấp để mở Trận Boss.' : `Cần ${PASS_BOSS_PERCENT}% để bay tới ${nextLevel ? `${nextLevel.code} · ${nextLevel.region.short}` : 'cấp tiếp theo'}.`
+    if (row.item.cooldown?.retry_at) requirement = `Luyện các chặng yếu hoặc chờ tới ${new Date(row.item.cooldown.retry_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} để đánh lại.`
     primary = { label: 'Vào Trận Boss', icon: Sword, to: `/academy/boss?level=${level.code}` }
   }
 
@@ -488,11 +494,13 @@ export default function RoadmapMap() {
   const navigate = useNavigate()
   const pushToast = useToastStore((state) => state.push)
   const [params, setParams] = useSearchParams()
-  const levelCode = params.get('level') ?? LEVELS.find((l) => l.status === 'current')?.code ?? 'A1'
   const branch = params.get('branch') ?? 'core'
   const demo = params.get('demo')
   const [progress, setProgress] = useState(params.get('fog') === 'after' ? 1 : 0)
-  const map = useMemo(() => getLevelMap(levelCode, branch, { progress }), [levelCode, branch, progress])
+  const academy = useAcademyMap(params.get('level'), branch, { progress })
+  const { levels: LEVELS, sidebar: SIDEBAR } = academy
+  const levelCode = academy.currentCode
+  const map = academy.map
   const [openRow, setOpenRow] = useState(null)
   const [passportOpen, setPassportOpen] = useState(params.get('passport') === '1')
   const [walk, setWalk] = useState(null)
@@ -503,19 +511,21 @@ export default function RoadmapMap() {
   const cloudRef = useRef(null)
   const [box, setBox] = useState({ width: 0, height: 0 })
 
+  // Gắn lại khi bản đồ vừa tải xong (lúc đang tải chưa có khung cuộn)
+  const hasMap = Boolean(map)
   useLayoutEffect(() => {
     const el = scrollerRef.current
     if (!el) return undefined
     const observer = new ResizeObserver(() => setBox({ width: el.clientWidth, height: el.clientHeight }))
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [hasMap])
 
   const topPad = mobile ? 150 : wide ? 320 : 340
   const bottomPad = mobile ? 230 : 150
-  const theme = map.region?.theme ?? 'generic'
+  const theme = map?.region?.theme ?? 'generic'
   const layout = useMemo(() => {
-    if (!box.width || map.locked) return null
+    if (!box.width || !map || map.locked) return null
     return buildLayout(map, { width: box.width, roadLeft: 0, roadRight: wide ? box.width - 360 : box.width, mobile, topPad, bottomPad, theme })
   }, [map, box.width, wide, mobile, topPad, bottomPad, theme])
 
@@ -568,13 +578,35 @@ export default function RoadmapMap() {
   const selectLevel = (level) => {
     if (level.status === 'locked') {
       const prev = LEVELS[LEVELS.indexOf(level) - 1]
-      pushToast({ variant: 'info', title: `${level.code} đang khóa`, message: `Vượt Trận Boss ${prev.code} để bay tới ${level.code}.` })
+      pushToast(level.comingSoon
+        ? { variant: 'info', title: `${level.code} sắp ra mắt`, message: 'Kho từ của cấp này đang được biên soạn.' }
+        : { variant: 'info', title: `${level.code} đang khóa`, message: `Vượt Trận Boss ${prev.code} để bay tới ${level.code}.` })
       return
     }
     setProgress(0)
     setParams({ level: level.code, ...(branch !== 'core' && { branch }) })
   }
   const setBranch = (key) => setParams({ level: levelCode, ...(key !== 'core' && { branch: key }) })
+
+  if (!map) {
+    return (
+      <div className="min-h-dvh">
+        <NavBar />
+        <main className="grid min-h-dvh place-items-center bg-map-grass md:pl-64" aria-busy={academy.loading}>
+          {academy.error && (
+            <div className="flex flex-col items-center gap-3 rounded-card border-thick border-line bg-surface p-6 text-center shadow-hard">
+              <p className="font-semibold">{academy.error.message}</p>
+              <Button onClick={academy.reload}>Thử lại</Button>
+            </div>
+          )}
+        </main>
+      </div>
+    )
+  }
+  // Nhánh IELTS / TOEIC chưa có kho từ (bản dữ liệu thật)
+  const branchSoon = !USE_MOCK && branch !== 'core'
+  // Onboarding chọn "Làm bài xếp lớp": tạm vào A1 kèm thông báo
+  const placementSoon = params.get('placement') === 'soon'
 
   return (
     <div className="min-h-dvh">
@@ -585,7 +617,18 @@ export default function RoadmapMap() {
             <h1 className="sr-only">
               Bản đồ lộ trình {map.level.code} · {map.region.name}
             </h1>
-            {layout && <World map={map} layout={layout} onOpen={setOpenRow} cloudRef={cloudRef} walk={walk} />}
+            {layout && !branchSoon && <World map={map} layout={layout} onOpen={setOpenRow} cloudRef={cloudRef} walk={walk} />}
+            {branchSoon && (
+              <div className="relative grid min-h-full place-items-center px-4 pb-40 pt-40">
+                <div className="relative flex max-w-md flex-col items-center gap-4 rounded-card border-thick border-line bg-surface p-8 text-center shadow-hard">
+                  <Pin className="-top-2 left-1/2 -translate-x-1/2" />
+                  <IconBadge icon={AirplaneTilt} bg="gold" size="xl" />
+                  <h2 className="text-[26px] uppercase">Nhánh {BRANCHES.find((b) => b.key === branch)?.label} · Sắp ra mắt</h2>
+                  <p className="text-muted">Lộ trình riêng cho kỳ thi đang được biên soạn. Trong lúc chờ, học nhánh Nền tảng nhé: tiến độ từng từ dùng chung cho mọi nhánh.</p>
+                  <Button onClick={() => setBranch('core')}>Về nhánh Nền tảng</Button>
+                </div>
+              </div>
+            )}
             {map.locked && (
               <div className="relative grid min-h-full place-items-center px-4 pb-40 pt-40">
                 {/* Vùng đất chìm trong mây */}
@@ -601,7 +644,11 @@ export default function RoadmapMap() {
                     {map.level.code} · {map.region.name}
                     <Flag code={map.region.flag} width={36} />
                   </h2>
-                  <p className="text-muted">Vùng đất này vẫn chìm trong mây. Vượt Trận Boss của cấp trước để lên máy bay tới {map.region.name}.</p>
+                  <p className="text-muted">
+                    {map.comingSoon
+                      ? 'Vùng đất này sắp ra mắt: kho từ của cấp đang được biên soạn.'
+                      : `Vùng đất này vẫn chìm trong mây. Vượt Trận Boss của cấp trước để lên máy bay tới ${map.region.name}.`}
+                  </p>
                   <span className="font-num inline-flex items-center gap-2 rounded-pill border-thick border-line bg-raised px-3 py-1 text-sm uppercase">
                     <Icon icon={LockSimple} size={16} /> Đang khóa
                   </span>
@@ -609,6 +656,16 @@ export default function RoadmapMap() {
               </div>
             )}
           </div>
+
+          {placementSoon && (
+            <div role="status" className="absolute inset-x-3 bottom-[calc(170px+env(safe-area-inset-bottom))] z-[70] mx-auto flex max-w-lg items-center gap-3 rounded-card border-thick border-line bg-gold p-3 shadow-hard md:bottom-auto md:top-40">
+              <IconBadge icon={CompassIcon} bg="surface" size="md" />
+              <p className="flex-1 text-caption font-semibold">Bài xếp lớp sắp ra mắt. Bạn bắt đầu từ A1 nhé, học nhanh thì qua bài nhanh!</p>
+              <Button size="sm" variant="secondary" onClick={() => setParams({})}>
+                Đã hiểu
+              </Button>
+            </div>
+          )}
 
           {/* Desktop, tablet: thanh tab và card tóm tắt nổi trên bản đồ */}
           <div className={cx('pointer-events-none absolute left-4 top-4 z-[60] hidden flex-col gap-3 md:flex lg:left-6', wide ? 'right-[372px]' : 'right-4 lg:right-6')}>
@@ -629,7 +686,7 @@ export default function RoadmapMap() {
           {wide && !map.locked && (
             <aside aria-label="Tiện ích học tập" className="pointer-events-none absolute bottom-0 right-0 top-0 z-[60] w-[360px] overflow-y-auto px-5 pb-6 pt-6 [scrollbar-width:none]">
               <div className="flex flex-col gap-6">
-                <SideWidgets data={SIDEBAR_MOCK} map={map} />
+                <SideWidgets data={SIDEBAR} map={map} />
               </div>
             </aside>
           )}
@@ -649,7 +706,7 @@ export default function RoadmapMap() {
           {!wide && !map.locked && (
             <div className="pointer-events-none absolute bottom-[calc(96px+env(safe-area-inset-bottom))] right-4 z-[60] flex items-end gap-3 md:bottom-6">
               <Fab icon={Stamp} label="Hộ chiếu" bg="gold" onClick={() => setPassportOpen(true)} />
-              <Fab icon={BookOpenText} label={`Ôn ${SIDEBAR_MOCK.dueReviews} từ`} bg="sky" badge={SIDEBAR_MOCK.dueReviews} onClick={() => navigate('/academy/review')} />
+              <Fab icon={BookOpenText} label={`Ôn ${SIDEBAR.dueReviews} từ`} bg="sky" badge={SIDEBAR.dueReviews} onClick={() => navigate('/academy/review')} />
             </div>
           )}
 
@@ -673,7 +730,7 @@ export default function RoadmapMap() {
               <h3 className="hud-label mb-2">Đường bay vòng quanh thế giới</h3>
               <WorldMiniMap current={map.region.flag} className="block w-full rounded-[14px] border-thick border-line" />
             </div>
-            <FactCard fact={map.fact} tip={SIDEBAR_MOCK.tip} className="mt-2" />
+            <FactCard fact={map.fact} tip={SIDEBAR.tip} className="mt-2" />
           </div>
         </Modal>
       )}

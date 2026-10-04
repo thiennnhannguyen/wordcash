@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react'
-import { playTestAudio, submitTestAnswer } from './testMock'
+import { playTestAudio, submitTestAnswer } from '../../services/academyApi'
 
 export default function useTestRun(session, { onVerdict, onFinish } = {}) {
   const [index, setIndex] = useState(session?.answered ?? 0)

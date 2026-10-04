@@ -212,7 +212,8 @@ function MascotStep({ value, onChange }) {
 }
 
 // next_step của server → trang tiếp theo (docs/auth.md)
-const NEXT_ROUTES = { roadmap_a1: '/travel?variant=start', placement_test: '/academy/placement' }
+// Bài xếp lớp chưa có: chọn xếp lớp thì tạm vào A1 kèm thông báo "sắp ra mắt"
+const NEXT_ROUTES = { roadmap_a1: '/travel?variant=start', placement_test: '/academy?level=A1&placement=soon' }
 
 export default function Onboarding() {
   const navigate = useNavigate()

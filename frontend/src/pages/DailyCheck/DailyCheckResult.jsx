@@ -42,7 +42,7 @@ function StreakFlame({ days, grow }) {
   )
 }
 
-export default function DailyCheckResult({ result }) {
+export default function DailyCheckResult({ result, continueTo = '/lobby' }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const { perfect } = result
@@ -151,8 +151,8 @@ export default function DailyCheckResult({ result }) {
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t-thick border-line bg-surface px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 md:static md:flex md:justify-center md:border-0 md:bg-transparent md:pb-12 md:pt-0">
-        <Button size="lg" iconRight={ArrowRight} fullWidth className="md:w-auto md:min-w-80" onClick={() => navigate('/lobby')}>
-          Vào Sảnh
+        <Button size="lg" iconRight={ArrowRight} fullWidth className="md:w-auto md:min-w-80" onClick={() => navigate(continueTo)}>
+          {continueTo === '/lobby' ? 'Vào Sảnh' : 'Tiếp tục'}
         </Button>
       </div>
     </div>

@@ -3,14 +3,19 @@
  *
  * - RequireAuth: chưa đăng nhập → /login (nhớ trang định vào trong `state.from` để quay lại sau khi đăng nhập).
  *   Đã đăng nhập nhưng chưa xong onboarding → /onboarding (trừ khi route cho phép, `allowOnboarding`).
+ * - Cửa Ải Hôm Nay (store/dailyCheckStore.js): sau đăng nhập và onboarding, nếu Cửa Ải hôm nay còn `pending` thì MỌI trang
+ *   trong app chuyển sang /daily-check trước (giữ trang định vào trong `state.from`). Nhận DAILY_CHECK_REQUIRED từ bất kỳ API
+ *   nào (services/api.js) cũng chuyển như vậy.
  * - GuestOnly (/login, /register): đã đăng nhập → Sảnh (hoặc onboarding nếu chưa xong).
  * - Trong lúc khôi phục phiên (bootstrap gọi /auth/refresh) hiện màn chờ có linh vật, tránh nháy trang đăng nhập.
  */
 
+import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import MascotBlob from '../collection/MascotBlob'
 import { getMascot } from '../../data/mascots'
 import { useAuthStore } from '../../store/authStore'
+import { useDailyCheckStore } from '../../store/dailyCheckStore'
 import { Wordmark } from './NavBar'
 
 export function BootSplash() {
@@ -33,11 +38,21 @@ const isPending = (status) => status === 'idle' || status === 'loading'
 export function RequireAuth({ allowOnboarding = false }) {
   const status = useAuthStore((s) => s.status)
   const user = useAuthStore((s) => s.user)
+  const daily = useDailyCheckStore((s) => s.status)
   const location = useLocation()
+  const ready = status === 'authenticated' && (allowOnboarding || user?.onboarding_completed)
+
+  useEffect(() => {
+    if (ready && !allowOnboarding) useDailyCheckStore.getState().load()
+  }, [ready, allowOnboarding])
 
   if (isPending(status)) return <BootSplash />
   if (status !== 'authenticated') return <Navigate to="/login" replace state={{ from: { pathname: location.pathname, search: location.search } }} />
   if (!allowOnboarding && !user?.onboarding_completed) return <Navigate to="/onboarding" replace />
+  if (!allowOnboarding && daily === 'unknown') return <BootSplash />
+  if (!allowOnboarding && daily === 'pending' && location.pathname !== '/daily-check') {
+    return <Navigate to="/daily-check" replace state={{ from: { pathname: location.pathname, search: location.search } }} />
+  }
   return <Outlet />
 }
 

@@ -2,20 +2,24 @@
  * Cửa Ải Hôm Nay: 2–5 câu bắt buộc mỗi ngày.
  *
  * Luồng: màn mở đầu → từng câu hỏi (phản hồi trượt từ đáy lên) → màn kết quả. Không có nút bỏ qua,
- * không có đồng hồ đếm ngược. Mọi đúng/sai, mức trừ từ thuộc và streak do server quyết định (hiện là dailyCheckMock).
+ * không có đồng hồ đếm ngược. Mọi đúng/sai, mức trừ từ thuộc và streak do server quyết định
+ * (GET /daily-check/today, POST /daily-check/today/answers qua services/academyApi.js; VITE_USE_MOCK=true dùng dailyCheckMock).
+ * Đã làm xong hoặc được miễn hôm nay thì chuyển thẳng về trang định vào (hoặc Sảnh). Làm dở thì tiếp từ câu chưa trả lời.
  *
  * Dev: `?streak=13` để thử mốc 7 ngày; `?preview=perfect|milestone|mistake` mở thẳng màn kết quả.
  */
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Fire, LockKeyOpen } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
 import Icon from '../../components/ui/Icon'
 import { Wordmark } from '../../components/layout/NavBar'
 import cx from '../../utils/cx'
-import { fetchDailyCheck, finishDailyCheck, PREVIEW_RESULTS, submitAnswer } from './dailyCheckMock'
+import { fetchDailyCheck, finishDailyCheck, submitDailyAnswer as submitAnswer } from '../../services/academyApi'
+import { useDailyCheckStore } from '../../store/dailyCheckStore'
+import { PREVIEW_RESULTS } from './dailyCheckMock'
 import DailyCheckResult from './DailyCheckResult'
 import FeedbackSheet from '../../components/academy/FeedbackSheet'
 import GateIllustration from './GateIllustration'
@@ -78,6 +82,10 @@ function Intro({ data, onStart }) {
 
 export default function DailyCheck() {
   const [params] = useSearchParams()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from
+  const backTo = from ? `${from.pathname}${from.search ?? ''}` : '/lobby'
   const preview = params.get('preview')
   const streakParam = Number(params.get('streak')) || undefined
 
@@ -91,13 +99,26 @@ export default function DailyCheck() {
   const [finalResult, setFinalResult] = useState(null)
 
   useEffect(() => {
-    fetchDailyCheck({ streak: streakParam }).then(setData)
-  }, [streakParam])
+    if (preview) return
+    fetchDailyCheck({ streak: streakParam }).then((d) => {
+      // Đã làm / được miễn hôm nay: không có gì để làm ở đây
+      if (d.status && d.status !== 'pending') {
+        useDailyCheckStore.getState().markDone()
+        navigate(backTo, { replace: true })
+        return
+      }
+      if (d.answered?.length) {
+        setResults(d.answered)
+        setIndex(Math.min(d.answered.length, d.questions.length - 1))
+      }
+      setData(d)
+    })
+  }, [streakParam, preview]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (preview && PREVIEW_RESULTS[preview]) return <DailyCheckResult result={PREVIEW_RESULTS[preview]} />
   if (!data) return <div className="min-h-dvh bg-gold" aria-busy="true" />
   if (phase === 'intro') return <Intro data={data} onStart={() => setPhase('question')} />
-  if (phase === 'result' && finalResult) return <DailyCheckResult result={finalResult} />
+  if (phase === 'result' && finalResult) return <DailyCheckResult result={finalResult} continueTo={backTo} />
 
   const question = data.questions[index]
   const total = data.questions.length
@@ -119,6 +140,7 @@ export default function DailyCheck() {
       return
     }
     const summary = await finishDailyCheck({ streak: data.streak, results })
+    useDailyCheckStore.getState().markDone()
     setFinalResult(summary)
     setPhase('result')
     window.scrollTo({ top: 0 })
