@@ -10,7 +10,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Query, status
 
-from app.api.deps import CurrentUser, DbSession
+from app.api.deps import CurrentUser, DailyCheckDone, DbSession
 from app.api.responses import error_responses
 from app.schemas.course import (
     CourseDetailOut,
@@ -152,8 +152,8 @@ async def import_commit(course_id: uuid.UUID, data: ImportIn, user: CurrentUser,
 
 
 @router.post("/{course_id}/study-sessions", response_model=StudySessionOut, status_code=status.HTTP_201_CREATED,
-             summary="Bắt đầu phiên học",
+             summary="Bắt đầu phiên học", dependencies=[DailyCheckDone],
              description="Câu hỏi gửi xuống không kèm đáp án. Chế độ: learn, review, quick, hard, test.",
-             responses=error_responses(*NF, "VALIDATION_ERROR", "NOTHING_TO_STUDY"))
+             responses=error_responses(*NF, "VALIDATION_ERROR", "NOTHING_TO_STUDY", "DAILY_CHECK_REQUIRED"))
 async def start_session(course_id: uuid.UUID, data: StudySessionIn, user: CurrentUser, session: DbSession):
     return await study_service.build_study_session(session, user, course_id, data.mode, data.limit, data.entry_ids)
