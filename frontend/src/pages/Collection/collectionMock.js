@@ -4,11 +4,12 @@
  * Server trả danh sách 100 linh vật (số thứ tự, tên, độ hiếm, hình), phần sở hữu của người dùng
  * (số bản, ngày nhận, nguồn nhận, thẻ mới), số lượt quay, số mảnh, bộ đếm pity và linh vật đang dùng.
  * Việc đổi mảnh, đặt avatar, chọn linh vật cho Đấu Trường đều do server kiểm tra và trả trạng thái mới;
- * client không tự trừ mảnh hay tự thêm thẻ. Danh sách 100 linh vật nằm ở data/mascots.js (ô "Sắp ra mắt" không bao giờ
- * rơi ra từ vòng quay hay đổi mảnh được).
+ * client không tự trừ mảnh hay tự thêm thẻ. Danh sách 100 linh vật nằm ở data/mascots.js (ô "Sắp ra mắt" và linh vật
+ * thành tích không bao giờ rơi ra từ vòng quay hay đổi mảnh được; vòng quay chỉ lấy vùng người dùng đã mở).
  */
 
-import { MASCOT_BY_ID, OBTAINABLE_MASCOTS } from '../../data/mascots'
+import { MASCOT_BY_ID, OBTAINABLE_MASCOTS, gachaPool, isGachaObtainable, pickGachaMascot } from '../../data/mascots'
+import { unlockedRegions } from '../../data/roadmap'
 import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
 
 // Thẻ đã sở hữu (chỉ trong 30 linh vật đã ra mắt): Thường 12 · Hiếm 6 · Sử Thi 3 · Huyền Thoại 0
@@ -77,7 +78,7 @@ export function markSeen(id) {
 export async function exchangeShards(id) {
   await wait(500)
   const mascot = MASCOT_BY_ID[id]
-  if (mascot?.status !== 'available') throw new Error('coming_soon')
+  if (!isGachaObtainable(mascot)) throw new Error('not_obtainable')
   const cost = GACHA.shardCost[mascot.rarity]
   if (state.owned[id]) throw new Error('already_owned')
   if (state.shards < cost) throw new Error('not_enough_shards')
@@ -129,20 +130,21 @@ export async function openPack(type, count = 1, force = []) {
   for (let i = 0; i < count; i++) {
     const forced = force[i]
     const rarity = forced ? forced.replace('-dupe', '') : rollRarity(type, pity)
-    pity = rarity === 'epic' || rarity === 'legendary' ? 0 : pity + 1
-    // Chỉ linh vật đã ra mắt; ô "Sắp ra mắt" không bao giờ rơi ra
-    const pool = OBTAINABLE_MASCOTS.filter((m) => m.rarity === rarity)
+    // Chỉ linh vật `gacha` đã ra mắt, thuộc vùng đã mở; cùng độ hiếm thì khả năng ngang nhau
+    const regions = unlockedRegions()
+    const pool = gachaPool(rarity, regions)
     const wantDupe = forced?.endsWith('-dupe')
     const ownedPool = pool.filter((m) => owned[m.id])
     const freshPool = pool.filter((m) => !owned[m.id])
-    const mascot = wantDupe && ownedPool.length ? pick(ownedPool) : forced && freshPool.length ? pick(freshPool) : pick(pool)
+    const mascot = wantDupe && ownedPool.length ? pick(ownedPool) : forced && freshPool.length ? pick(freshPool) : pickGachaMascot(rarity, regions)
+    pity = mascot.rarity === 'epic' || mascot.rarity === 'legendary' ? 0 : pity + 1
     const duplicate = Boolean(owned[mascot.id])
-    const gained = duplicate ? GACHA.shardsPerDuplicate[rarity] : 0
+    const gained = duplicate ? GACHA.shardsPerDuplicate[mascot.rarity] : 0
     shards += gained
     owned[mascot.id] = duplicate
       ? { ...owned[mascot.id], count: owned[mascot.id].count + 1 }
       : { count: 1, isNew: true, receivedAt: new Date().toISOString(), source: type === 'special' ? 'Lượt quay đặc biệt' : 'Lượt quay thường' }
-    results.push({ id: mascot.id, rarity, duplicate, shards: gained })
+    results.push({ id: mascot.id, rarity: mascot.rarity, duplicate, shards: gained })
   }
   state = { ...state, owned, shards, pity, spins: { ...state.spins, [type]: state.spins[type] - count } }
   return { results, state }

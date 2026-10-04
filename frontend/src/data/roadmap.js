@@ -51,3 +51,9 @@ export function journeyRegions(position = POSITION) {
     status: i < index ? 'done' : i === index ? 'current' : 'locked',
   }))
 }
+
+/** Mã các cấp (= vùng linh vật) người học đã mở: mọi cấp tới cấp hiện tại. Vòng quay chỉ lấy linh vật ở các vùng này. */
+export function unlockedRegions(position = POSITION) {
+  const index = LEVELS.findIndex((l) => l.code === position.level)
+  return LEVELS.slice(0, index + 1).map((l) => l.code)
+}

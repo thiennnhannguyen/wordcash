@@ -3,12 +3,18 @@
  * Landing đều import từ đây; không giữ danh sách linh vật ở nơi khác.
  *
  * - #001–#030: linh vật đã có tên (tên do người dùng đặt; tiểu sử là nội dung nháp tự viết, status = draft).
- * - #031–#100: ô trống `status: "coming_soon"`, `name: null`, đã có vùng đất và độ hiếm theo bảng phân bổ:
- *   vùng A1 17 · A2 17 · B1 15 · B2 15 · C1 14 · C2 15 · Đặc biệt 7; độ hiếm Thường 45 · Hiếm 30 · Sử Thi 18 · Huyền Thoại 7.
- *   Ô "Sắp ra mắt" hiện bóng đen, dấu "?" và nhãn "Sắp ra mắt"; KHÔNG BAO GIỜ rơi ra từ vòng quay hay đổi mảnh được.
+ * - #031–#100: ô trống `status: "coming_soon"`, `name: null`, đã có vùng đất và độ hiếm theo bảng phân bổ (DISTRIBUTION,
+ *   cũng ghi ở docs/game-rules.md). Ô "Sắp ra mắt" hiện bóng đen, dấu "?" và nhãn "Sắp ra mắt"; KHÔNG BAO GIỜ rơi ra từ
+ *   vòng quay hay đổi mảnh được.
+ * - Mỗi vùng A1–C2 có đúng 1 Huyền Thoại ("con của Boss" vùng đó). 7 linh vật Đặc biệt có `obtain: "achievement"` (nhận
+ *   qua thành tích), mọi linh vật theo vùng có `obtain: "gacha"`; vòng quay và đổi mảnh chỉ trả linh vật `gacha`.
+ * - Vòng quay chỉ lấy linh vật thuộc các vùng người dùng đã mở (`unlockedRegions` trong data/roadmap.js); trong cùng một
+ *   độ hiếm, các con có khả năng ra ngang nhau (`pickGachaMascot`).
+ * Kiểm tra tự động: `npm test` (tests/mascots.test.js).
  *
  * Mỗi linh vật: `id`, `number`, `name`, `rarity` (common | rare | epic | legendary, khớp RARITIES trong utils/constants.js),
- * `region` (A1…C2 hoặc special), `status` (available | coming_soon), `shape` + `color` + `traits` để vẽ tạm bằng MascotBlob
+ * `region` (A1…C2 hoặc special), `status` (available | coming_soon), `obtain` (gacha | achievement),
+ * `shape` + `color` + `traits` để vẽ tạm bằng MascotBlob
  * (tác giả sẽ vẽ linh vật thật). `color` là tên token màu trong styles/tokens.css.
  * Linh vật khởi đầu (chọn ở Onboarding, backend chỉ cho đặt avatar 1–3): #001–#003.
  * TODO: lấy từ API khi có bảng mascots.
@@ -65,14 +71,28 @@ const SPECIAL_BIOS = {
   20: 'Truyền thuyết kể rằng ai thấy nó sẽ nhớ mãi 1.000 từ.',
 }
 
-// Ô #031–#100 theo vùng: [vùng, số Thường, Hiếm, Sử Thi, Huyền Thoại]
+export const RARITY_KEYS = ['common', 'rare', 'epic', 'legendary']
+
+// Bảng phân bổ 100 linh vật theo vùng × độ hiếm (Thường / Hiếm / Sử Thi / Huyền Thoại), tính cả 30 con đã có tên.
+// Tổng: Thường 45 · Hiếm 30 · Sử Thi 18 · Huyền Thoại 7.
+export const DISTRIBUTION = {
+  A1: [8, 5, 3, 1],
+  A2: [8, 5, 3, 1],
+  B1: [7, 5, 2, 1],
+  B2: [7, 4, 3, 1],
+  C1: [6, 4, 3, 1],
+  C2: [6, 5, 3, 1],
+  special: [3, 2, 1, 1],
+}
+
+// Ô #031–#100 theo vùng = bảng phân bổ trừ đi các con đã có tên (A1 đã đủ; A2 thiếu 1 Thường, 1 Hiếm, 2 Sử Thi)
 const COMING_SOON_PLAN = [
-  ['A2', 2, 1, 1, 0],
-  ['B1', 7, 5, 3, 0],
-  ['B2', 7, 5, 3, 0],
-  ['C1', 7, 5, 2, 0],
-  ['C2', 7, 5, 3, 0],
-  ['special', 0, 0, 2, 5],
+  ['A2', 1, 1, 2, 0],
+  ['B1', 7, 5, 2, 1],
+  ['B2', 7, 4, 3, 1],
+  ['C1', 6, 4, 3, 1],
+  ['C2', 6, 5, 3, 1],
+  ['special', 3, 2, 1, 1],
 ]
 const SHAPES = ['round', 'tall', 'wide', 'drop']
 
@@ -83,6 +103,7 @@ const available = RAW.map(([id, name, rarity, shape, color, traits]) => ({
   rarity,
   region: A1_IDS.has(id) ? 'A1' : 'A2',
   status: 'available',
+  obtain: 'gacha',
   shape,
   color,
   traits,
@@ -91,10 +112,11 @@ const available = RAW.map(([id, name, rarity, shape, color, traits]) => ({
 
 const comingSoon = []
 for (const [region, ...counts] of COMING_SOON_PLAN) {
-  ;['common', 'rare', 'epic', 'legendary'].forEach((rarity, r) => {
+  RARITY_KEYS.forEach((rarity, r) => {
     for (let i = 0; i < counts[r]; i += 1) {
       const id = 31 + comingSoon.length
-      comingSoon.push({ id, number: id, name: null, rarity, region, status: 'coming_soon', shape: SHAPES[id % SHAPES.length], color: 'neutral', traits: {}, bio: null })
+      const obtain = region === 'special' ? 'achievement' : 'gacha'
+      comingSoon.push({ id, number: id, name: null, rarity, region, status: 'coming_soon', obtain, shape: SHAPES[id % SHAPES.length], color: 'neutral', traits: {}, bio: null })
     }
   })
 }
@@ -107,8 +129,26 @@ export const REGION_LABELS = { A1: 'Vùng A1', A2: 'Vùng A2', B1: 'Vùng B1', B
 
 export const isAvailable = (mascot) => mascot?.status === 'available'
 
-/** Linh vật có thể nhận được (vòng quay, đổi mảnh): bỏ mọi ô "Sắp ra mắt". */
-export const OBTAINABLE_MASCOTS = MASCOTS.filter(isAvailable)
+/** Linh vật có thể nhận từ vòng quay / đổi mảnh: đã ra mắt và `obtain = gacha` (bỏ ô "Sắp ra mắt" và linh vật thành tích). */
+export const isGachaObtainable = (mascot) => isAvailable(mascot) && mascot.obtain === 'gacha'
+export const OBTAINABLE_MASCOTS = MASCOTS.filter(isGachaObtainable)
+
+/** Các linh vật có thể ra ở một độ hiếm, chỉ trong các vùng đã mở (`regions`: mã cấp, vd. ['A1', 'A2', 'B1']). */
+export function gachaPool(rarity, regions) {
+  return OBTAINABLE_MASCOTS.filter((m) => m.rarity === rarity && regions.includes(m.region))
+}
+
+/**
+ * Chọn linh vật cho một lượt quay (mock của server) khi đã biết độ hiếm: các con cùng độ hiếm có khả năng ngang nhau.
+ * Độ hiếm đó chưa có con nào trong các vùng đã mở thì hạ dần xuống độ hiếm thấp hơn. `random` trả số trong [0, 1).
+ */
+export function pickGachaMascot(rarity, regions, random = Math.random) {
+  for (let r = RARITY_KEYS.indexOf(rarity); r >= 0; r -= 1) {
+    const pool = gachaPool(RARITY_KEYS[r], regions)
+    if (pool.length) return pool[Math.floor(random() * pool.length)]
+  }
+  return null
+}
 
 export function getMascot(id) {
   const mascot = MASCOT_BY_ID[id]
