@@ -219,7 +219,8 @@ export function getLevelMap(code, branch = 'core', { progress = 0 } = {}) {
   const stages = buildStages(defs, done ? { current: {}, allDone: true, start } : { current, start })
   const bossDef = BOSSES[level.code] ?? DEFAULT_BOSS
   const visited = stages.filter((s) => s.visit.status === 'visited').length
-  const journey = journeyProgress({ level: level.code, stage: visited })
+  // Toàn hành trình tính theo vị trí thật của người học, không theo cấp đang xem
+  const journey = journeyProgress(POSITION)
 
   return {
     level,
@@ -241,9 +242,10 @@ export function getLevelMap(code, branch = 'core', { progress = 0 } = {}) {
       visited_at: done ? addDays(start, stages.length * 4 + 6) : null,
       stampStyle: STAMP_STYLE[stages.length % STAMP_STYLE.length],
     },
+    // Hộ chiếu của cấp: các chặng + địa danh Boss
     passport: {
-      visited,
-      total: stages.length,
+      visited: visited + (done ? 1 : 0),
+      total: stages.length + 1,
       journeyVisited: journey.visited,
       journeyTotal: journey.total,
     },

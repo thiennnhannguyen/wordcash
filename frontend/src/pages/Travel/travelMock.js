@@ -17,14 +17,14 @@ export function fetchLevelComplete(code = 'B1') {
   // Sau khi thắng Boss: mọi địa danh của cấp đều đã có dấu
   const stages = map.stages.map((s, i) => (s.visit.status === 'visited' ? s : { ...s, visit: { status: 'visited', visited_at: `2026-09-${String(14 + i).padStart(2, '0')}` } }))
   return {
-    from: { code: level.code, name: level.name, region: REGIONS[level.region_theme], words: level.words, landmarks: stages.length },
+    from: { code: level.code, name: level.name, region: REGIONS[level.region_theme], words: level.words, landmarks: stages.length + 1 },
     to: next && { code: next.code, name: next.name, region: REGIONS[next.region_theme] },
     boss: { name: map.boss.landmark_name, guardian: map.boss.guardian },
     passportMap: {
       ...map,
       stages,
       boss: { ...map.boss, status: 'done' },
-      passport: { ...map.passport, visited: stages.length },
+      passport: { ...map.passport, visited: stages.length + 1 }, // các chặng + Boss
     },
     reward: { specialSpins: 1 },
   }

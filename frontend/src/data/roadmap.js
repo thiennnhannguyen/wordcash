@@ -2,7 +2,8 @@
  * Nguồn dữ liệu lộ trình dùng chung (mock) cho bản đồ Học Viện, khối Hành trình và Hộ chiếu ở Sảnh, cảnh chuyển cấp.
  * Mọi con số "đã đến / tổng địa danh" đều tính từ LEVELS (số chặng mỗi cấp) và vị trí người học, không viết cứng ở màn nào.
  *
- * Hộ chiếu đếm địa danh cuối mỗi chặng (topics); Trận Boss không tính.
+ * Hộ chiếu đếm mọi địa danh: mỗi chặng (topics) một địa danh + địa danh Trận Boss của cấp (khớp seed backend:
+ * 10 chặng + 1 Boss = 11 địa danh mỗi cấp A1, A2). Tổng = Σ(số chặng + 1) = 68 khi B2–C2 tạm 11 chặng.
  * TODO: thay bằng GET /academy/levels (số chặng, trạng thái từng cấp) và vị trí học hiện tại do server trả.
  */
 
@@ -32,13 +33,20 @@ export const LEVELS = [
 export const POSITION = { level: 'B1', stage: 2, lesson: 2 }
 export const NEW_USER_POSITION = { level: 'A1', stage: 0, lesson: 0 }
 
-export const TOTAL_LANDMARKS = LEVELS.reduce((sum, l) => sum + l.stages, 0)
+/** Số địa danh của một cấp: các chặng + địa danh Trận Boss. */
+export const landmarksOf = (level) => level.stages + 1
 
-/** Số địa danh đã đến trên cả hành trình: mọi chặng của các cấp trước + các chặng đã xong của cấp hiện tại. */
+export const TOTAL_LANDMARKS = LEVELS.reduce((sum, l) => sum + landmarksOf(l), 0)
+
+/**
+ * Số địa danh đã đến trên cả hành trình: mọi địa danh (gồm Boss) của các cấp trước + các chặng đã xong của cấp hiện tại
+ * (`position.stage` = số chặng đã xong, cũng là index chặng đang học) + Boss cấp hiện tại nếu `position.bossDone`.
+ */
 export function journeyProgress(position = POSITION) {
   const index = LEVELS.findIndex((l) => l.code === position.level)
-  const before = LEVELS.slice(0, index).reduce((sum, l) => sum + l.stages, 0)
-  return { visited: before + position.stage, total: TOTAL_LANDMARKS }
+  if (index < 0) throw new Error(`Cấp không tồn tại: ${position.level}`)
+  const before = LEVELS.slice(0, index).reduce((sum, l) => sum + landmarksOf(l), 0)
+  return { visited: before + position.stage + (position.bossDone ? 1 : 0), total: TOTAL_LANDMARKS }
 }
 
 /** 6 vùng đất theo thứ tự cấp, kèm trạng thái done / current / locked so với vị trí người học. */
