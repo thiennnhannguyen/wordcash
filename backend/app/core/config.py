@@ -63,9 +63,31 @@ class Settings(BaseSettings):
 
     # Học tập, Cửa Ải, rank
     DAILY_FORGET_PENALTY: int = 1
-    UNIT_PASS_RATE: float = 0.8
-    BOSS_PASS_RATE: float = 0.85
-    RANK_GRACE_DAYS: int = 3
+    UNIT_PASS_RATE: float = 0.8  # qua bài (kiểm tra cuối bài)
+    TOPIC_PASS_RATE: float = 0.8  # qua bài tổng hợp chặng
+    BOSS_PASS_RATE: float = 0.85  # thắng Trận Boss
+    RANK_GRACE_DAYS: int = 3  # vùng đệm "lung lay" trước khi tụt rank thật
+    # Rank theo mastered_count (chỉ từ hệ thống): mã → số từ tối thiểu, theo thứ tự tăng dần
+    RANK_THRESHOLDS: dict[str, int] = {
+        "tan_binh": 0, "dong": 100, "bac": 300, "vang": 600, "bach_kim": 1000, "kim_cuong": 2000, "cao_thu": 3500, "huyen_thoai": 5000,
+    }
+
+    # Học Viện
+    UNIT_TEST_QUESTIONS: int = 20  # hoặc toàn bộ từ của bài nếu ít hơn
+    TOPIC_TEST_QUESTIONS: int = 20
+    TOPIC_PRACTICE_QUESTIONS: int = 10  # luyện chặng yếu (tối thiểu)
+    BOSS_QUESTIONS: int = 50
+    BOSS_WEAK_TOPICS: int = 2  # số chặng yếu chỉ ra sau khi thua Boss
+    BOSS_RETRY_COOLDOWN_HOURS: int = 12  # chưa luyện đủ chặng yếu thì chờ từng này giờ kể từ lần thua
+    REVIEW_SESSION_LIMIT: int = 20
+
+    # Cửa Ải Hôm Nay
+    DAILY_CHECK_MIN_WORDS: int = 2  # dưới mức này (từ hệ thống đã học) thì được miễn hôm đó
+    DAILY_CHECK_MAX_WORDS: int = 5
+    DAILY_CHECK_RANDOM_WORDS: int = 2  # số từ trộn ngẫu nhiên, còn lại ưu tiên từ sắp đến hạn ôn
+    STREAK_SPIN_EVERY: int = 7  # streak chạm bội số này thì +1 lượt quay thường
+    # Mục tiêu từ mới mỗi ngày theo thời lượng chọn ở onboarding (phút → số từ)
+    DAILY_GOAL_BY_MINUTES: dict[int, int] = {5: 10, 10: 12, 15: 15, 20: 20}
 
     # Lặp lại ngắt quãng (SM-2): khoảng ôn cho 5 lần nhớ đầu, sau đó nhân với hệ số dễ
     SRS_INTERVALS: list[int] = [1, 3, 7, 16, 35]
