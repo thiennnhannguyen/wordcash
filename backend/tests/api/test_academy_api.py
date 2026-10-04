@@ -136,3 +136,26 @@ async def test_ielts_branch_is_coming_soon(client, db_session, auth_user, clock_
     bad = await client.get(f"{API}/academy/roadmap?branch=xyz", headers=auth_user["headers"])
     assert bad.status_code == 422
 
+
+
+async def test_review_due_and_session(client, db_session, auth_user, clock_at):
+    clock_at(DAY1)
+    await H.seeded(db_session)
+    h = auth_user["headers"]
+    road = (await client.get(f"{API}/academy/roadmap", headers=h)).json()
+    unit1 = road["levels"][0]["topics"][0]["units"][0]["id"]
+    before = (await client.get(f"{API}/review/due", headers=h)).json()
+    assert before["due_count"] == 0 and before["status_counts"]["new"] == 15
+    learn = (await client.post(f"{API}/academy/units/{unit1}/learn-sessions", headers=h)).json()
+    await _submit_all(client, db_session, h, learn["id"])
+    assert (await client.post(f"{API}/review/sessions", headers=h)).json()["error"]["code"] == "NOTHING_TO_STUDY"
+
+    clock_at(DAY1 + timedelta(days=1, hours=1))  # hạn ôn đầu tiên: 1 ngày sau
+    await client.get(f"{API}/daily-check/today", headers=h)
+    row = await db_session.scalar(select(DailyCheck).where(DailyCheck.status == "pending").execution_options(populate_existing=True))
+    await client.post(f"{API}/daily-check/today/answers", json={"answers": [{"question_id": q["id"], "answer": q["answer"]} for q in row.questions]}, headers=h)
+    due = (await client.get(f"{API}/review/due", headers=h)).json()
+    assert due["due_count"] > 0 and len(due["words"]) == 15 and due["status_counts"]["new"] == 0
+    session = (await client.post(f"{API}/review/sessions", headers=h)).json()
+    assert session["kind"] == "review" and session["total"] == min(due["due_count"], 20)
+    _no_answers(session["questions"])

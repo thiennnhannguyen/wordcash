@@ -135,6 +135,7 @@ class ReviewDueOut(BaseModel):
     schedule: list[dict]
     urgent: list[dict]
     due: list[dict]
+    words: list[dict]
 
 
 class DailyCheckOut(BaseModel):

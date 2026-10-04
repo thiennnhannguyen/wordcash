@@ -1,8 +1,9 @@
 """
 Ôn tập chung (Học Viện): mọi từ đến hạn ôn theo SRS, gồm cả từ hệ thống và từ tự tạo của chính người học (Entry.visible_to).
 
-- `due_overview`: số từ đến hạn, số từ theo trạng thái, lịch 7 ngày tới (theo ngày địa phương), danh sách ôn gấp
-  (từ `forgotten` hoặc quá hạn lâu nhất) và danh sách đến hạn.
+- `due_overview`: số từ đến hạn, số từ theo trạng thái (kèm số từ mới = mục từ trong các bài đã mở chưa học), lịch 7 ngày tới
+  (theo ngày địa phương), danh sách ôn gấp (từ `forgotten` hoặc quá hạn từ 2 ngày), danh sách đến hạn và sổ từ (mọi từ
+  đã học, sắp theo hạn ôn, tối đa 300).
 - `start_review`: phiên ôn REVIEW_SESSION_LIMIT từ đến hạn sớm nhất, mỗi từ một câu (từ mới học dùng mức 1–2, còn lại 3–4).
   Trả lời sai chỉ đặt lại lịch SRS (luật ghi nhớ thống nhất), không làm mất "đã thuộc".
 """
@@ -15,7 +16,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.errors import AppError
-from app.models import Entry, EntryState, SessionKind, StudyMode, User, UserEntryProgress
+from app.models import (
+    Entry,
+    EntryState,
+    ProgressStatus,
+    SessionKind,
+    StudyMode,
+    UnitEntry,
+    User,
+    UserEntryProgress,
+    UserUnitProgress,
+)
 from app.services import course_service, session_engine
 from app.utils.time import day_bounds, local_date
 
@@ -51,12 +62,23 @@ async def due_overview(session: AsyncSession, user: User, now: datetime) -> dict
                 "lapse_count": p.lapse_count}
 
     urgent = [item(e, p) for e, p in due_rows if p.status == EntryState.FORGOTTEN or (now - p.due_at) >= timedelta(days=2)]
+    # Từ mới: mục từ trong các bài đã mở mà chưa học
+    new_count = await session.scalar(
+        select(func.count(func.distinct(UnitEntry.entry_id)))
+        .join(UserUnitProgress, and_(UserUnitProgress.unit_id == UnitEntry.unit_id, UserUnitProgress.user_id == user.id))
+        .outerjoin(UserEntryProgress, and_(UserEntryProgress.entry_id == UnitEntry.entry_id, UserEntryProgress.user_id == user.id))
+        .where(UserUnitProgress.status != ProgressStatus.LOCKED,
+               (UserEntryProgress.entry_id.is_(None)) | (UserEntryProgress.status == EntryState.NEW))
+    ) or 0
+    book = list(await session.execute(_base(user).order_by(UserEntryProgress.due_at.asc().nulls_last()).limit(300)))
     return {
         "due_count": len(due_rows),
-        "status_counts": {s.value: counts.get(s, 0) for s in (EntryState.LEARNING, EntryState.MASTERED, EntryState.FORGOTTEN)},
+        "status_counts": {**{s.value: counts.get(s, 0) for s in (EntryState.LEARNING, EntryState.MASTERED, EntryState.FORGOTTEN)},
+                          "new": new_count},
         "schedule": schedule,
         "urgent": urgent[:20],
         "due": [item(e, p) for e, p in due_rows[:50]],
+        "words": [item(e, p) for e, p in book],
     }
 
 

@@ -13,7 +13,7 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.models import DailyCheckStatus, Entry, EntryState, User, UserDailyActivity, UserEntryProgress
+from app.models import DailyCheck, DailyCheckStatus, Entry, EntryState, User, UserDailyActivity, UserEntryProgress
 from app.services import daily_check_service, rank, roadmap_service, spins, stats_service, streak
 from app.utils.time import local_date
 
@@ -46,6 +46,7 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
         week.append({"date": day, "status": state, "today": day == today})
 
     activity = await session.get(UserDailyActivity, (user.id, today))
+    check = await session.scalar(select(DailyCheck).where(DailyCheck.user_id == user.id, DailyCheck.local_date == today))
     due_now = await session.scalar(
         select(func.count()).select_from(UserEntryProgress).join(Entry, Entry.id == UserEntryProgress.entry_id)
         .where(and_(UserEntryProgress.user_id == user.id, Entry.visible_to(user.id), UserEntryProgress.status != EntryState.NEW,
@@ -75,6 +76,8 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
             "reviews_done": reviewed, "reviews_total": reviewed + due_now, "due_now": due_now,
             "answers": activity.total if activity else 0, "correct": activity.correct if activity else 0,
             "daily_check": checks.get(today, DailyCheckStatus.PENDING),
+            "daily_check_correct": check.correct_count if check else 0,
+            "daily_check_total": check.total if check else 0,
         },
         "position": roadmap_service.current_position(st, progress),
         "passport": roadmap_service.passport(st, progress),

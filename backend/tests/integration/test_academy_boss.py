@@ -50,6 +50,7 @@ async def test_lose_reports_weak_topics_and_blocks_retry(at_boss, clock_at):
     assert e.value.code == "BOSS_COOLDOWN"
     assert e.value.details["retry_at"] == (NOW + timedelta(hours=12)).isoformat()
     assert [w["id"] for w in e.value.details["weak_topics"]] == [topics[3].id, topics[7].id]
+    assert e.value.details["retry_in_seconds"] == 60
     status = await boss_service.get_boss(db, user, level.id, NOW + timedelta(hours=1))
     assert status["status"] == "cooldown" and status["can_retry"]["allowed"] is False
 
@@ -81,7 +82,8 @@ async def test_practicing_every_weak_topic_allows_immediate_retry(at_boss, clock
 
     res = await H.answer(db, user, await lesson_service.start_topic_practice(db, user, topics[1].id, t))
     assert res["outcome"]["boss_retry"] | {"weak_topics": None} == {"allowed": True, "reason": "practiced", "practiced": True,
-                                                                   "retry_at": (NOW + timedelta(hours=12)).isoformat(), "weak_topics": None}
+                                                                   "retry_at": (NOW + timedelta(hours=12)).isoformat(),
+                                                                   "retry_in_seconds": 11 * 3600 + 50 * 60, "weak_topics": None}
     assert (await boss_service.start_boss(db, user, level.id, t))["total"] == 50
 
 

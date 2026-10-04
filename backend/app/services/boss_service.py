@@ -33,10 +33,13 @@ async def last_attempt(session: AsyncSession, user: User, level_id: int) -> Boss
 
 
 async def can_retry(session: AsyncSession, user: User, st: Structure, level: Level, now: datetime) -> dict:
-    """{allowed, reason, retry_at, weak_topics: [{id, title, practiced}], practiced}."""
+    """{allowed, reason, retry_at, retry_in_seconds, weak_topics: [{id, title, practiced}], practiced}.
+
+    `retry_in_seconds` tính theo giờ server để client đếm ngược đúng cả khi giờ máy người dùng lệch.
+    """
     attempt = await last_attempt(session, user, level.id)
     if attempt is None or attempt.passed:
-        return {"allowed": True, "reason": "ok", "retry_at": None, "weak_topics": [], "practiced": True}
+        return {"allowed": True, "reason": "ok", "retry_at": None, "retry_in_seconds": 0, "weak_topics": [], "practiced": True}
     done = set(await session.scalars(
         select(TopicPracticeLog.topic_id).where(TopicPracticeLog.user_id == user.id, TopicPracticeLog.boss_attempt_id == attempt.id)
     ))
@@ -44,11 +47,12 @@ async def can_retry(session: AsyncSession, user: User, st: Structure, level: Lev
             for tid in attempt.weak_topic_ids or []]
     practiced = all(w["practiced"] for w in weak)
     retry_at = attempt.created_at + timedelta(hours=settings.BOSS_RETRY_COOLDOWN_HOURS)
+    base = {"retry_at": retry_at, "retry_in_seconds": max(int((retry_at - now).total_seconds()), 0), "weak_topics": weak}
     if practiced:
-        return {"allowed": True, "reason": "practiced", "retry_at": retry_at, "weak_topics": weak, "practiced": True}
+        return {"allowed": True, "reason": "practiced", **base, "practiced": True}
     if now >= retry_at:
-        return {"allowed": True, "reason": "cooldown_over", "retry_at": retry_at, "weak_topics": weak, "practiced": False}
-    return {"allowed": False, "reason": "cooldown", "retry_at": retry_at, "weak_topics": weak, "practiced": False}
+        return {"allowed": True, "reason": "cooldown_over", **base, "practiced": False}
+    return {"allowed": False, "reason": "cooldown", **base, "practiced": False}
 
 
 async def boss_summary(session: AsyncSession, user: User, st: Structure, progress: UserProgress, level: Level, now: datetime) -> dict:
@@ -99,7 +103,8 @@ async def start_boss(session: AsyncSession, user: User, level_id: int, now: date
         raise AppError("BOSS_LOCKED")
     retry = await can_retry(session, user, st, level, now)
     if not retry["allowed"]:
-        raise AppError("BOSS_COOLDOWN", details={"retry_at": retry["retry_at"].isoformat(), "weak_topics": retry["weak_topics"]})
+        raise AppError("BOSS_COOLDOWN", details={"retry_at": retry["retry_at"].isoformat(), "retry_in_seconds": retry["retry_in_seconds"],
+                                                 "weak_topics": retry["weak_topics"]})
 
     # Chia đều số câu cho các chặng, mỗi mục từ tối đa một câu; xoay vòng đủ mức
     groups = []
@@ -144,7 +149,7 @@ async def finish(session: AsyncSession, user: User, study: StudySession, summary
     lp.boss_best = max(lp.boss_best or 0, summary["score"])
 
     out = {"type": "boss", "passed": passed, "score": summary["score"], "pass_rate": settings.BOSS_PASS_RATE,
-           "best_score": lp.boss_best, "unlocked": [], "stamps": [], "weak_topics": [], "retry_at": None,
+           "best_score": lp.boss_best, "unlocked": [], "stamps": [], "weak_topics": [], "retry_at": None, "retry_in_seconds": 0,
            "level": {"id": level.id, "code": level.code, "name": level.name},
            "topic_accuracy": [{"topic_id": tid, "title": st.topic(tid).title, "correct": a[0], "total": a[1]}
                               for tid, a in accuracy.items() if st.topic(tid)]}
@@ -156,5 +161,6 @@ async def finish(session: AsyncSession, user: User, study: StudySession, summary
     else:
         out["weak_topics"] = [{"id": tid, "title": st.topic(tid).title} for tid in weak]
         out["retry_at"] = (now + timedelta(hours=settings.BOSS_RETRY_COOLDOWN_HOURS)).isoformat()
+        out["retry_in_seconds"] = settings.BOSS_RETRY_COOLDOWN_HOURS * 3600
     await session.flush()
     return out
