@@ -6,8 +6,9 @@
 set -e
 cd "$(dirname "$0")/../../backend"
 
-export ENV=testing
-export TEST_DATABASE_URL="${E2E_DATABASE_URL:-postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_e2e}"
+# ENV=e2e: dùng DATABASE_URL (database e2e riêng) và cho phép header X-Debug-Now giả lập ngày
+export ENV=e2e
+export DATABASE_URL="${E2E_DATABASE_URL:-postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_e2e}"
 export FRONTEND_URL="http://localhost:${E2E_WEB_PORT:-5180}"
 export JWT_SECRET_KEY="${E2E_JWT_SECRET:-wordclash-e2e-secret-key-only-for-tests-0001}"
 export REDIS_URL="redis://localhost:6379/15"
@@ -22,7 +23,7 @@ import asyncpg
 from redis.asyncio import Redis
 
 async def main():
-    url = os.environ["TEST_DATABASE_URL"].replace("postgresql+asyncpg://", "postgresql://")
+    url = os.environ["DATABASE_URL"].replace("postgresql+asyncpg://", "postgresql://")
     base, name = url.rsplit("/", 1)
     conn = await asyncpg.connect(f"{base}/postgres")
     if not await conn.fetchval("SELECT 1 FROM pg_database WHERE datname = $1", name):

@@ -130,3 +130,16 @@ async def time_travel(monkeypatch):
         monkeypatch.setattr(auth_service, "_now", lambda: datetime.now(UTC) + timedelta(seconds=seconds))
 
     return travel
+
+
+@pytest_asyncio.fixture
+async def clock_at():
+    """Cố định clock.now() (luật game) tại một thời điểm; gọi lại để dời giờ. Tự bỏ cố định sau test."""
+    from app.core import clock
+
+    def set_at(at):
+        clock.freeze(at)
+        return at
+
+    yield set_at
+    clock.freeze(None)

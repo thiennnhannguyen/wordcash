@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import api_router
 from app.core.config import settings
 from app.core.database import engine, ping_database
+from app.core.debug_time import DebugNowMiddleware
 from app.core.errors import register_exception_handlers
 from app.core.redis import close_redis, connect_redis
 from app.game import events  # noqa: F401 - đăng ký sự kiện Socket.IO
@@ -53,6 +54,8 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type"],
     )
+    # Chỉ đọc X-Debug-Now khi ENV development/e2e; production bỏ qua (xem core/debug_time.py)
+    application.add_middleware(DebugNowMiddleware)
     register_exception_handlers(application)
     application.include_router(api_router)
     return application

@@ -15,11 +15,12 @@ Nộp lại một câu đã chấm trả lại đúng kết quả cũ, không gh
 
 import random
 import uuid
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import clock
 from app.core.config import settings
 from app.core.errors import AppError
 from app.models import Entry, EntryState, StudyMode, StudySession, User, UserCourseEntry, UserEntryProgress
@@ -30,7 +31,7 @@ QB = question_builder
 
 
 def _now() -> datetime:
-    return datetime.now(UTC)
+    return clock.now()
 
 
 def _data(entry: Entry) -> QB.EntryData:

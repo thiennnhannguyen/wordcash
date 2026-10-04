@@ -12,7 +12,6 @@ Bộ đếm cập nhật bằng biểu thức SQL (`mastered_count + n`) để h
 
 from dataclasses import dataclass
 from datetime import date, datetime
-from zoneinfo import ZoneInfo
 
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models import Entry, EntryState, ReviewLog, User, UserEntryProgress
 from app.services import mastery, srs
+from app.utils.time import local_date
 
 
 @dataclass(frozen=True)
@@ -29,8 +29,8 @@ class AnswerOutcome:
 
 
 def local_day(user: User, now: datetime) -> date:
-    """Ngày theo múi giờ của người học."""
-    return now.astimezone(ZoneInfo(user.timezone)).date()
+    """Ngày theo múi giờ của người học (giữ tên cũ cho nơi gọi; xem utils/time.py)."""
+    return local_date(user, now)
 
 
 async def _get_progress(session: AsyncSession, user: User, entry: Entry) -> UserEntryProgress:

@@ -22,7 +22,7 @@ def _to_async_url(url: str) -> str:
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT_DIR / ".env", env_file_encoding="utf-8", extra="ignore")
 
-    ENV: str = "development"  # development | testing | production
+    ENV: str = "development"  # development | testing | e2e | production
 
     DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_db"
     TEST_DATABASE_URL: str = "postgresql+asyncpg://wordclash:wordclash_password@localhost:5433/wordclash_test"
@@ -121,6 +121,11 @@ class Settings(BaseSettings):
     @property
     def is_testing(self) -> bool:
         return self.ENV == "testing"
+
+    @property
+    def debug_time_enabled(self) -> bool:
+        """Header X-Debug-Now chỉ có tác dụng khi dev và e2e; production, testing luôn bỏ qua (core/debug_time.py)."""
+        return self.ENV in ("development", "e2e")
 
     @property
     def docs_enabled(self) -> bool:
