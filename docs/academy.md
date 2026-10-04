@@ -56,13 +56,20 @@ Mỗi lần nộp câu cuối, kết quả có `outcome` với `unlocked` (danh 
 
 ## Học bài và kiểm tra
 
-- **Học bài**: thẻ học các từ **mới** của bài, tối đa số từ mới còn lại trong ngày (`DAILY_NEW_WORDS_LIMIT` = 20, tính chung
-  với Khóa học của tôi), sau đó luyện mỗi từ một câu mức 1–2 và một câu mức 3–4. Hết từ mới hoặc hết quota thì luyện lại
-  từ đã gặp của bài (không có thẻ, không giới thiệu từ chưa gặp). Chưa gặp từ nào và hết quota → `NOTHING_TO_STUDY`.
+- **Học bài**: thẻ học các từ **mới** của bài, sau đó luyện mỗi từ một câu mức 1–2 và một câu mức 3–4.
+- **Mục tiêu và hạn mức từ mới** (tách riêng, đã chốt 05/10/2026):
+  - *Mục tiêu ngày* (`DAILY_GOAL_BY_MINUTES`: 5 phút → 10, 10 → 12, 15 → 15, 20 → 20 từ) **chỉ để hiển thị và động viên**, không
+    chặn. Người chọn 5 phút vẫn học trọn một bài 15–20 từ (và bài kế) trong ngày. Vừa vượt mục tiêu thì frontend khen và gợi ý nghỉ.
+  - *Hạn mức cứng* `NEW_WORDS_DAILY_CAP` = 40 từ mới/ngày, tính chung với Khóa học của tôi, theo ngày địa phương. Chỉ khi chạm hạn
+    mức thì học bài mới chuyển sang luyện lại từ đã gặp của bài (không có thẻ, không giới thiệu từ chưa gặp, `reason: daily_limit`);
+    chưa gặp từ nào → `NOTHING_TO_STUDY`. Frontend hiện "Hôm nay bạn học đủ nhiều rồi, mai học tiếp nhé" và mời ôn tập (ôn tập
+    không bị hạn mức chặn).
+  - `/me/stats` → `today.new_words`, `new_words_goal`, `new_words_cap`. Lời hiển thị chọn ở `frontend/src/utils/dailyGoal.js`.
 - **Kiểm tra cuối bài**: `UNIT_TEST_QUESTIONS` = 20 câu (bài ít từ thì hỏi hết), xoay vòng đủ mức. Không bắt buộc học trước.
 - **Bài tổng hợp chặng**: 20 câu trộn đều các bài; chỉ làm được khi mọi bài của chặng đã qua.
 - Kiểm tra và Boss chỉ trả đúng/sai từng câu (để hiện thanh tiến độ, máu Boss); **đáp án đúng chỉ trả về sau khi nộp hết**.
-  Riêng luyện chặng yếu lộ đáp án từng câu vì là bài luyện.
+  Riêng luyện chặng yếu là bài luyện: lúc tạo phiên **không** gửi đáp án (câu hỏi giống mọi phiên khác); nộp câu nào thì
+  chỉ câu đó có `correct_answer`, câu chưa nộp vẫn kín (có test).
 
 ## Trận Boss
 
@@ -96,6 +103,10 @@ Mỗi lần nộp câu cuối, kết quả có `outcome` với `unlocked` (danh 
 | Được miễn (`exempt`) | giữ nguyên |
 | Bỏ trọn một ngày | về 0 (tính lười khi đọc stats hoặc làm Cửa Ải ngày kế) |
 
+**Streak hiệu lực**: mọi chỗ trả streak ra API (`/me/stats`; sau này hồ sơ, bảng xếp hạng) dùng
+`stats_service.effective_streak(user_stats, today)`: `streak_last_date` trước hôm qua thì trả 0, kể cả khi cột
+`streak_current` chưa được đặt lại. Không đọc thẳng cột `streak_current` để hiển thị.
+
 Chạm mỗi bội số của `STREAK_SPIN_EVERY` = 7 (7, 14, 21…) → +1 lượt quay thường (reason `streak`, ref = ngày địa phương).
 
 ## Rank và lung lay
@@ -124,7 +135,8 @@ Mất từ ở Cửa Ải rồi thuộc lại **không** cấp lượt lần n�
 
 ## Thời gian
 
-Service luôn nhận `now` từ `core/clock.now()`, không gọi `datetime.now()`. `X-Debug-Now` (ISO 8601) ghi đè giờ cho một
+Service luôn nhận `now` từ `core/clock.now()`, không gọi `datetime.now()`. Frontend không tự tính thời gian còn lại bằng
+đồng hồ máy: mọi đồng hồ đếm ngược dùng số giây server trả (`retry_in_seconds`, `shaky_seconds_left`). `X-Debug-Now` (ISO 8601) ghi đè giờ cho một
 request **chỉ** khi `ENV` là `development` hoặc `e2e`; production và testing bỏ qua (có test). E2E dùng header này để giả lập
 nhiều ngày; route `/api/v1/dev/*` (khóa đáp án, tới thẳng Boss) cũng chỉ đăng ký ở hai môi trường đó.
 
@@ -145,7 +157,7 @@ nhiều ngày; route `/api/v1/dev/*` (khóa đáp án, tới thẳng Boss) cũng
 | POST | `/daily-check/today/answers` | Nộp câu (một hoặc nhiều) | |
 | GET | `/review/due` | Số từ đến hạn, theo trạng thái, lịch 7 ngày, ôn gấp, sổ từ | |
 | POST | `/review/sessions` | Bắt đầu phiên ôn | ✓ |
-| GET | `/me/stats` | Số từ thuộc, rank (kèm lung lay), streak + tuần, lượt quay, hôm nay, vị trí, Hộ chiếu | |
+| GET | `/me/stats` | Số từ thuộc, rank (kèm lung lay, `shaky_seconds_left`), streak hiệu lực + tuần, lượt quay, hôm nay (từ mới, mục tiêu, hạn mức), vị trí, Hộ chiếu | |
 | POST | `/dev/academy/fast-forward` | (dev/e2e) Tới thẳng Boss của một cấp | |
 | GET | `/dev/study-sessions/{id}/key`, `/dev/daily-check/key` | (dev/e2e) Khóa đáp án | |
 

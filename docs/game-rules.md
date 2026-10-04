@@ -36,10 +36,14 @@ Chi tiết cài đặt, API, mã lỗi: `docs/academy.md`. Hằng số trong `ba
 6. **Chỉ Cửa Ải làm mất "đã thuộc"**: sai → từ thành `forgotten`, số từ thuộc −1 (`DAILY_FORGET_PENALTY`), vào ôn gấp.
    Ôn tập, kiểm tra, Boss, Khóa học, Đấu Trường trả lời sai chỉ đặt lại lịch SRS.
 7. **Streak**: đúng hết +1; có câu sai hoặc được miễn thì giữ nguyên; bỏ trọn một ngày thì về 0. Mỗi bội số của 7 (7, 14…) +1 lượt quay thường.
+   Streak hiển thị ở mọi nơi là **streak hiệu lực** (`effective_streak`): ngày cuối còn sống trước hôm qua thì là 0.
 8. **Rank** theo số từ hệ thống đã thuộc (0 / 100 / 300 / 600 / 1.000 / 2.000 / 3.500 / 5.000). Rơi dưới mốc → lung lay 3 ngày,
    gỡ lại kịp thì giữ rank, quá hạn thì hạ theo số từ lúc đó. Lần đầu đạt mỗi rank +1 lượt đặc biệt.
 9. **Lượt quay** ghi sổ `spin_grants` (duy nhất theo người, lý do, mốc); lượt theo số từ (mỗi 50) chỉ cấp khi vượt mốc cao
    nhất từng đạt (`max_spin_milestone`), nên mất từ rồi thuộc lại không được lượt mới.
 10. **Từ tự tạo** không tính rank, lượt quay, Cửa Ải hay Hộ chiếu. **Hộ chiếu** đếm mỗi chặng + Boss của các cấp đang có
     trong DB (hiện 22).
-11. **Ngoài phạm vi** giai đoạn này: nhánh IELTS/TOEIC (trả "Sắp ra mắt"), kiểm tra xếp lớp, logic vòng quay, Đấu Trường.
+11. **Từ mới mỗi ngày** (chốt 05/10/2026): mục tiêu ngày theo thời lượng (10/12/15/20 từ) chỉ để hiển thị, động viên; không chặn.
+    Hạn mức cứng 40 từ mới/ngày (`NEW_WORDS_DAILY_CAP`, chung Học Viện + Khóa học); chạm hạn mức thì chỉ luyện lại từ đã gặp và ôn tập.
+12. **Luyện chặng yếu** là bài luyện: đáp án chỉ trả về theo từng câu sau khi nộp câu đó, không gửi kèm khi tạo phiên.
+13. **Ngoài phạm vi** giai đoạn này: nhánh IELTS/TOEIC (trả "Sắp ra mắt"), kiểm tra xếp lớp, logic vòng quay, Đấu Trường.
