@@ -10,11 +10,12 @@ Băm mật khẩu (pwdlib, Argon2), JWT access token (PyJWT, HS256) và refresh 
 import hashlib
 import secrets
 import uuid
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 import jwt
 from pwdlib import PasswordHash
 
+from app.core import clock
 from app.core.config import settings
 from app.core.errors import AuthError
 
@@ -42,7 +43,7 @@ def verify_password(plain: str, hashed: str | None) -> tuple[bool, str | None]:
 def create_access_token(user_id: uuid.UUID | str, role: str) -> tuple[str, int]:
     """Trả (token, số giây còn hiệu lực)."""
     expires_in = settings.access_token_seconds
-    now = datetime.now(UTC)
+    now = clock.real_now()  # JWT luôn ký theo giờ thật
     payload = {
         "sub": str(user_id),
         "role": role,

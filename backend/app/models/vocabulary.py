@@ -12,9 +12,9 @@ Mọi truy vấn entries phía người học PHẢI lọc qua `visible_to(user_
 
 AudioJob: hàng đợi tạo phát âm cho từ tự tạo (chưa gọi TTS thật; frontend dùng Web Speech API khi `audio_url` trống).
 
-TODO:
-- Unit, UnitEntry.
-- Ngày đến địa danh lấy từ tiến độ người học (ngày hoàn thành chặng), trả về dạng ISO; API bản đồ trả các trường trên.
+Unit (bài học trong một chặng, thứ tự `position`) và UnitEntry (mục từ của bài, chỉ liên kết, không sao chép). Số bài mỗi
+chặng và số từ mỗi bài KHÔNG cố định (dữ liệu mẫu dev 2 bài × 15 từ; kho thật 4–5 bài). Hiện chỉ có nhánh Nền tảng;
+IELTS/TOEIC chưa có dữ liệu. Ngày đến địa danh (con dấu) lưu ở user_topic_progress.stamped_at (models/academy.py).
 """
 
 import enum
@@ -55,6 +55,26 @@ class Topic(Base):
     landmark_image: Mapped[str | None] = mapped_column(String(512))
 
     level: Mapped[Level] = relationship(back_populates="topics")
+
+
+class Unit(Base):
+    __tablename__ = "units"
+    __table_args__ = (UniqueConstraint("topic_id", "position"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    topic_id: Mapped[int] = mapped_column(ForeignKey("topics.id", ondelete="CASCADE"), index=True)
+    position: Mapped[int]  # thứ tự trong chặng, bắt đầu từ 1
+    title: Mapped[str] = mapped_column(String(128))
+
+
+class UnitEntry(Base):
+    __tablename__ = "unit_entries"
+    __table_args__ = (UniqueConstraint("unit_id", "entry_id"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    unit_id: Mapped[int] = mapped_column(ForeignKey("units.id", ondelete="CASCADE"), index=True)
+    entry_id: Mapped[int] = mapped_column(ForeignKey("entries.id", ondelete="CASCADE"), index=True)
+    position: Mapped[int] = mapped_column(default=0)
 
 
 class EntryType(enum.StrEnum):

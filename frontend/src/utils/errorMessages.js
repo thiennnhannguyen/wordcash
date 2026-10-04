@@ -43,7 +43,7 @@ export const ERROR_MESSAGES = {
   NOTHING_TO_STUDY: 'Không có từ nào phù hợp với chế độ học này.',
   STUDY_SESSION_NOT_FOUND: 'Không tìm thấy phiên học.',
   STUDY_SESSION_EXPIRED: 'Phiên học đã hết hạn, bạn bắt đầu phiên mới nhé.',
-  STUDY_SESSION_FINISHED: 'Phiên học này đã kết thúc.',
+  SESSION_FINISHED: 'Phiên này đã kết thúc.',
 }
 
 // Mã mà thông báo của server cụ thể hơn bảng (kèm con số, lý do): ưu tiên dùng message của server

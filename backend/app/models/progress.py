@@ -1,11 +1,11 @@
 """
-Tiến độ học: UserUnitProgress (bài đã mở/đang học/hoàn thành, điểm) và UserEntryProgress (trạng thái từ, lịch ôn SRS, số ngày đúng ở mức 3+).
+Tiến độ học từng mục từ: UserEntryProgress (trạng thái từ, lịch ôn SRS, số ngày đúng ở mức 3+).
 
 UserEntryProgress dùng chung cho từ hệ thống và từ tự tạo, khóa (user_id, entry_id): một từ hệ thống học ở Học Viện
 hay trong "Khóa học của tôi" đều chung một dòng tiến độ. Chưa có dòng nào nghĩa là từ ở trạng thái `new`.
 ReviewLog: nhật ký từng câu trả lời (độ chính xác 7 ngày, từ sai nhiều nhất).
 
-TODO: UserUnitProgress khi làm Học Viện.
+Tiến độ bài / chặng / cấp của Học Viện: models/academy.py.
 """
 
 import enum

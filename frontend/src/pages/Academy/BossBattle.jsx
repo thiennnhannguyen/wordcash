@@ -6,10 +6,14 @@
  * và nhãn "Câu 23/50". Đúng: tia sáng bắn lên Boss, Boss rung và mất máu. Sai: màn hình rung nhẹ, viền hồng.
  * Đúng/sai, máu Boss, điểm, phần thưởng và thời gian chờ thử lại đều do server trả về.
  *
- * Dev: `?level=B1`, `?q=22` (vào thẳng câu 23), `?preview=win|lose`.
+ * Dữ liệu thật qua services/academyApi.js (`?level=A1`). Thua: điểm, chặng yếu kèm nút LUYỆN CHẶNG YẾU từng chặng, đồng hồ đếm
+ * ngược tới lúc được đánh lại (theo `retry_in_seconds` của server). Đang trong thời gian chờ mà vào trận: màn chờ tương tự.
+ * Thắng: con dấu Boss, +1 lượt đặc biệt (lần đầu), nút bay tới /travel.
+ * Dev: `?level=B1`, `?q=22` (bản mock: vào thẳng câu 23), `?preview=win|lose`.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import confetti from 'canvas-confetti'
@@ -21,9 +25,13 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import QuestionView from '../../components/academy/QuestionView'
 import TestActionBar from '../../components/academy/TestActionBar'
+import RewardsLayer from '../../components/academy/RewardsLayer'
+import useCountdown from '../../hooks/useCountdown'
+import { finishBoss, startBoss } from '../../services/academyApi'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
-import { PREVIEW_BOSS, finishBoss, startBoss } from './testMock'
+import { AcademyError } from './AcademyLesson'
+import { PREVIEW_BOSS } from './testMock'
 import useTestRun from './useTestRun'
 
 function tokenColors(names) {
@@ -315,6 +323,17 @@ function WinResult({ result }) {
           </p>
         </div>
 
+        {result.stamps?.length > 0 && (
+          <motion.div
+            initial={{ scale: 2.2, rotate: -18, opacity: 0 }}
+            animate={{ scale: 1, rotate: -6, opacity: 1 }}
+            transition={{ delay: 0.6, type: 'spring', stiffness: 260, damping: 14 }}
+            className="rounded-[14px] border-[3px] border-gold px-5 py-2 font-display text-xl font-bold uppercase text-gold"
+            aria-label={`Đóng dấu hộ chiếu: ${result.stamps[0].landmark_name}`}
+          >
+            Đã chinh phục · {result.stamps[0].landmark_name}
+          </motion.div>
+        )}
         {result.reward && (
           <motion.div
             initial={{ y: 24, opacity: 0 }}
@@ -346,9 +365,31 @@ function WinResult({ result }) {
   )
 }
 
-function LoseResult({ result }) {
+/** Đếm ngược tới lúc được đánh lại; `seconds` do server tính (không phụ thuộc giờ máy). */
+function RetryCountdown({ seconds }) {
+  const [deadline] = useState(() => (seconds != null ? Date.now() + seconds * 1000 : null))
+  const left = useCountdown(deadline)
+  if (!deadline) return null
+  const pad = (n) => String(n).padStart(2, '0')
+  const done = left.days + left.hours + left.minutes + left.seconds === 0
+  return (
+    <p className="flex items-center justify-center gap-2 text-caption font-medium text-white/80" role="timer">
+      <Icon icon={Clock} size={18} color="gold" />
+      {done ? (
+        'Bạn có thể đánh lại ngay bây giờ'
+      ) : (
+        <>
+          Đánh lại sau <span className="font-num text-base text-white">{pad(left.days * 24 + left.hours)}:{pad(left.minutes)}:{pad(left.seconds)}</span> · hoặc luyện xong các chặng yếu
+        </>
+      )}
+    </p>
+  )
+}
+
+function LoseResult({ result, cooldownOnly = false }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
+  const seconds = result.retryInSeconds ?? (result.retryInHours != null ? result.retryInHours * 3600 : null)
 
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip bg-night text-white">
@@ -358,22 +399,24 @@ function LoseResult({ result }) {
         </motion.div>
         <div className="flex flex-col gap-2">
           <span className="hud-label text-white/70">Trận Boss {result.level}</span>
-          <h1 className="text-[32px] leading-tight text-white md:text-[44px]">Boss vẫn còn trụ!</h1>
-          <p className="font-display text-2xl font-bold uppercase md:text-3xl">
-            Đạt <span className="text-danger">{result.score}%</span> <span className="text-white/50">·</span> Cần {result.passPercent}%
-          </p>
+          <h1 className="text-[32px] leading-tight text-white md:text-[44px]">{cooldownOnly ? 'Boss đang hồi sức' : 'Boss vẫn còn trụ!'}</h1>
+          {!cooldownOnly && (
+            <p className="font-display text-2xl font-bold uppercase md:text-3xl">
+              Đạt <span className="text-danger">{result.score}%</span> <span className="text-white/50">·</span> Cần {result.passPercent}%
+            </p>
+          )}
         </div>
 
         <section className="flex w-full flex-col gap-4 rounded-panel border-thick border-line bg-surface p-5 text-left text-ink shadow-[6px_6px_0_0_var(--color-primary)] md:p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-h3">Chặng làm yếu nhất</h2>
-            <span className="hud-label whitespace-nowrap max-sm:hidden">% câu đúng</span>
+            {!cooldownOnly && <span className="hud-label whitespace-nowrap max-sm:hidden">% câu đúng</span>}
           </div>
           <ul className="flex flex-col gap-3.5">
             {result.weakStages.map((s, i) => (
-              <li key={s.title} className="grid grid-cols-[92px_1fr_44px] items-center gap-3">
+              <li key={s.title} className={cx('grid items-center gap-3', s.id ? 'grid-cols-[92px_1fr_44px] md:grid-cols-[110px_1fr_44px_auto]' : 'grid-cols-[92px_1fr_44px]')}>
                 <span className="truncate font-semibold">{s.title}</span>
-                <span className="relative h-5 overflow-hidden rounded-pill border-thick border-line bg-raised">
+                <span className={cx('relative h-5 overflow-hidden rounded-pill border-thick border-line bg-raised', s.percent == null && 'invisible')}>
                   <motion.span
                     className="absolute inset-y-0 left-0 border-r-thick border-line"
                     style={{ background: `var(--color-${s.color})` }}
@@ -383,25 +426,35 @@ function LoseResult({ result }) {
                   />
                   <span className="absolute inset-y-0 w-[3px] bg-ink" style={{ left: `${result.passPercent}%` }} />
                 </span>
-                <span className="font-num text-right text-base">{s.percent}%</span>
+                <span className="font-num text-right text-base">{s.percent != null ? `${s.percent}%` : '—'}</span>
+                {s.id && (
+                  <Button
+                    size="sm"
+                    variant={s.practiced ? 'secondary' : 'primary'}
+                    icon={Barbell}
+                    className="col-span-3 md:col-span-1"
+                    onClick={() => navigate(`/academy/practice?topic=${s.id}&level=${result.level}`)}
+                  >
+                    {s.practiced ? 'Đã luyện' : 'Luyện chặng yếu'}
+                  </Button>
+                )}
               </li>
             ))}
           </ul>
-          <p className="text-caption text-muted">Vạch đen là mức {result.passPercent}% cần đạt.</p>
+          {!cooldownOnly && <p className="text-caption text-muted">Vạch đen là mức {result.passPercent}% cần đạt.</p>}
         </section>
       </main>
 
-      <DarkActions
-        note={
-          <p className="flex items-center justify-center gap-2 text-caption font-medium text-white/80">
-            <Icon icon={Clock} size={18} color="gold" />
-            Có thể thử lại sau {result.retryInHours} giờ
-          </p>
-        }
-      >
-        <Button size="lg" icon={Barbell} className="md:min-w-72" onClick={() => navigate(`/academy?level=${result.level}`)}>
-          Luyện chặng yếu
-        </Button>
+      <DarkActions note={<RetryCountdown seconds={seconds} />}>
+        {result.weakStages[0]?.id ? (
+          <Button size="lg" icon={Barbell} className="md:min-w-72" onClick={() => navigate(`/academy/practice?topic=${(result.weakStages.find((w) => !w.practiced) ?? result.weakStages[0]).id}&level=${result.level}`)}>
+            Luyện chặng yếu
+          </Button>
+        ) : (
+          <Button size="lg" icon={Barbell} className="md:min-w-72" onClick={() => navigate(`/academy?level=${result.level}`)}>
+            Luyện chặng yếu
+          </Button>
+        )}
         <Button size="lg" variant="secondary" icon={MapTrifold} onClick={() => navigate('/academy')}>
           Về bản đồ
         </Button>
@@ -418,12 +471,12 @@ export default function BossBattle() {
   const [session, setSession] = useState(null)
   const [result, setResult] = useState(preview ?? null)
   const [exitOpen, setExitOpen] = useState(false)
+  const [error, setError] = useState(null)
 
-  useEffect(() => {
-    if (!preview) startBoss({ level, resumeAt: Number(params.get('q')) || 0 }).then(setSession)
-    // Chỉ bắt đầu một lần khi vào trang
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // Chỉ bắt đầu một lần khi vào trang (kể cả StrictMode)
+  useStartOnce(() => {
+    if (!preview) startBoss({ level, resumeAt: Number(params.get('q')) || 0 }).then(setSession).catch(setError)
+  }, [level])
 
   const finish = async () => {
     setResult(await finishBoss({ level }))
@@ -431,13 +484,23 @@ export default function BossBattle() {
   }
 
   let screen
-  if (result) screen = result.passed ? <WinResult result={result} /> : <LoseResult result={result} />
+  if (error?.code === 'BOSS_COOLDOWN') {
+    const cooldown = {
+      level,
+      passPercent: 85,
+      retryInSeconds: error.details.retry_in_seconds,
+      weakStages: error.details.weak_topics.map((w, i) => ({ id: w.id, title: w.title, practiced: w.practiced, percent: null, color: ['accent', 'danger'][i % 2] })),
+    }
+    screen = <LoseResult result={cooldown} cooldownOnly />
+  } else if (error) screen = <AcademyError error={error} onBack={() => navigate('/academy')} />
+  else if (result) screen = result.passed ? <WinResult result={result} /> : <LoseResult result={result} />
   else if (session) screen = <BattleStep session={session} onFinish={finish} onExit={() => setExitOpen(true)} />
   else screen = <div className="min-h-dvh bg-night" aria-busy="true" />
 
   return (
     <>
       {screen}
+      {result?.rewards && <RewardsLayer rewards={{ ...result.rewards, spins: result.rewards.spins.filter((s) => s.reason !== 'boss') }} />}
       <Modal
         open={exitOpen}
         onClose={() => setExitOpen(false)}

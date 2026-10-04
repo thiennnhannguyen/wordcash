@@ -48,6 +48,7 @@ function CardTitle({ id, icon, children }) {
 }
 
 function LandmarkThumb({ landmark, className }) {
+  if (!landmark) return null
   return (
     <figure className={cx('flex flex-col items-center', className)} aria-label={`${landmark.label}: ${landmark.name}`}>
       <div className="-mb-2">
@@ -124,7 +125,7 @@ export function AcademyCard({ academy }) {
             <Chip>
               Bài {academy.lessonNumber}/{academy.lessonsInStage} · Chặng {academy.stage}/{academy.stagesTotal}
             </Chip>
-            <Button size="lg" icon={Play} fullWidth onClick={() => navigate('/academy/lesson')}>
+            <Button size="lg" icon={Play} fullWidth onClick={() => navigate(academy.to ?? '/academy/lesson')}>
               Học tiếp
             </Button>
           </div>

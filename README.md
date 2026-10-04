@@ -714,6 +714,7 @@ pip install -r requirements.txt
 alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
 python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
+python -m seeds.seed_dev_roadmap           # lộ trình MẪU A1–A2: 20 chặng × 2 bài × 15 mục (~600 mục DEV_SAMPLE, gồm 60 mục trên); tự nạp địa danh
 python -m seeds.purge_dev_entries          # xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
@@ -732,14 +733,22 @@ cd ../frontend && npm install
 npm run e2e                          # tự bật backend (cổng 8100) và Vite (cổng 5180), chạy frontend/e2e/*.spec.js
 E2E_SHOTS=/tmp/wc-shots npm run e2e  # chụp ảnh các bước vào thư mục chỉ định
 npx playwright test e2e/auth.spec.js -g "hai tab"   # chạy một kịch bản
+npm run screenshots                  # KHÔNG phải test: chụp ảnh Học Viện với dữ liệu thật vào frontend/screenshots/
+E2E_SHOTS=/tmp/wc-shots npm run screenshots -- -g "Boss"   # đổi thư mục ảnh, chỉ chụp một kịch bản
 ```
 
 - Trình duyệt: Google Chrome cài trên máy (`channel: "chrome"`), không cần tải trình duyệt của Playwright.
-- `e2e/start-backend.sh`: `ENV=testing`, `TEST_DATABASE_URL` trỏ `wordclash_e2e` (đổi bằng `E2E_DATABASE_URL`), `alembic downgrade base` → `upgrade head`,
-  nạp `seeds.seed_dev_entries`, Redis db 15, `JWT_SECRET_KEY` cố định để test ký được access token hết hạn.
+- `e2e/start-backend.sh`: `ENV=e2e` (cho phép header `X-Debug-Now` giả lập ngày và route `/api/v1/dev/*`), `DATABASE_URL` trỏ
+  `wordclash_e2e` (đổi bằng `E2E_DATABASE_URL`), `alembic downgrade base` → `upgrade head`, nạp `seeds.seed_dev_roadmap`, Redis db 15,
+  `JWT_SECRET_KEY` cố định để test ký được access token hết hạn.
 - Kịch bản: đăng ký → onboarding → Sảnh; tải lại vẫn đăng nhập; đăng xuất bị chặn; khóa học (thêm từ kho, tự tạo, nhập 5 dòng có 1 lỗi,
-  học mới đến hết, thống kê đổi); hai tab cùng hết hạn token không bị đăng xuất; người B không xem được khóa học của A.
+  học mới đến hết, thống kê đổi); hai tab cùng hết hạn token không bị đăng xuất; người B không xem được khóa học của A;
+  6 kịch bản Học Viện trong `e2e/academy.spec.js` (học bài và mở bài, Cửa Ải và streak, Cửa Ải sai, con dấu chặng, Trận Boss, bỏ một ngày).
 - Kết quả lỗi (ảnh, trace) nằm ở `frontend/test-results/` (đã bỏ qua trong git).
+- Script chụp ảnh nằm ở `frontend/scripts/screenshots/` (`*.shots.js`, cấu hình riêng `scripts/screenshots/playwright.config.js`): dùng
+  lại backend và Vite của e2e, dựng tiến độ nhiều ngày bằng API + `X-Debug-Now` rồi chụp Cửa Ải (mốc 7 ngày, sai hết + rank lung lay),
+  Sảnh, bản đồ A1, Trận Boss. Không nằm trong `npm run e2e` và không chạy trên CI.
+
 Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session và `SIO_USE_REDIS=true` (Socket.IO). Production: `ENV=production`, `JWT_SECRET_KEY` dài ít nhất 32 ký tự, cookie tự bật `Secure`; chạy sau reverse proxy thì đặt `TRUST_PROXY=true`.
 
 Trước khi deploy: đi theo `docs/deploy-checklist.md`. Sau lần deploy đầu, không viết lại migration cũ, chỉ thêm migration mới.

@@ -23,6 +23,9 @@ import Onboarding from './pages/Onboarding/Onboarding'
 import DailyCheck from './pages/DailyCheck/DailyCheck'
 import RoadmapMap from './pages/Academy/RoadmapMap'
 import Lesson from './pages/Academy/Lesson'
+import AcademyLesson from './pages/Academy/AcademyLesson'
+import AcademyStudy from './pages/Academy/AcademyStudy'
+import { USE_MOCK } from './services/academyApi'
 import UnitTest from './pages/Academy/UnitTest'
 import BossBattle from './pages/Academy/BossBattle'
 import PlacementTest from './pages/Academy/PlacementTest'
@@ -103,11 +106,13 @@ export default function AppRoutes() {
       element: <RequireAuth />,
       children: [
         { path: '/daily-check', element: <DailyCheck /> },
-        { path: '/academy/lesson', element: <Lesson /> },
+        // Bản dữ liệu thật dùng phiên học của server; Lesson.jsx (chế độ học, ngữ cảnh) chỉ còn ở chế độ mock
+        { path: '/academy/lesson', element: USE_MOCK ? <Lesson /> : <AcademyLesson /> },
+        { path: '/academy/practice', element: <AcademyStudy kind="practice" /> },
         { path: '/academy/unit-test', element: <UnitTest /> },
         { path: '/academy/boss', element: <BossBattle /> },
         { path: '/academy/placement', element: <PlacementTest /> },
-        { path: '/academy/review/session', element: <ComingSoon title="Phiên ôn tập" standalone /> },
+        { path: '/academy/review/session', element: USE_MOCK ? <ComingSoon title="Phiên ôn tập" standalone /> : <AcademyStudy kind="review" /> },
         // Màn học của "Khóa học của tôi": toàn màn hình như Học bài
         { path: '/courses/:id/study', element: <CourseStudy /> },
         // Sảnh Đấu Trường tự vẽ nền tràn màn hình và tự gắn thanh điều hướng

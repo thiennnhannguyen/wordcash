@@ -13,13 +13,14 @@ DB chỉ lưu SHA-256 của refresh token. Băm/kiểm tra mật khẩu chạy t
 import asyncio
 import uuid
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 from redis.asyncio import Redis
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import clock
 from app.core.config import settings
 from app.core.errors import AppError, AuthError
 from app.core.security import (
@@ -52,7 +53,8 @@ class IssuedSession:
 
 
 def _now() -> datetime:
-    return datetime.now(UTC)
+    # Bảo mật (hạn refresh token, phiên) luôn dùng giờ thật, không theo X-Debug-Now
+    return clock.real_now()
 
 
 def _access_only(user: User) -> IssuedSession:

@@ -15,12 +15,13 @@ Phiên học (chọn từ, sinh câu hỏi, chấm) nằm ở services/study_ser
 
 import uuid
 from collections import Counter
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 from sqlalchemy import Select, and_, case, func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import clock
 from app.core.config import settings
 from app.core.errors import AppError
 from app.models import (
@@ -47,7 +48,7 @@ from app.services.progress_service import local_day
 
 
 def _now() -> datetime:
-    return datetime.now(UTC)
+    return clock.now()
 
 
 def limits() -> dict[str, int]:
@@ -204,7 +205,7 @@ async def new_words_left_today(session: AsyncSession, user: User, now: datetime)
     started = await session.scalar(
         select(func.count()).select_from(UserEntryProgress).where(UserEntryProgress.user_id == user.id, UserEntryProgress.first_seen_day == today)
     )
-    return max(settings.DAILY_NEW_WORDS_LIMIT - (started or 0), 0)
+    return max(settings.NEW_WORDS_DAILY_CAP - (started or 0), 0)
 
 
 async def course_stats(session: AsyncSession, user: User, course_id: uuid.UUID) -> dict:

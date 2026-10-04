@@ -5,6 +5,10 @@
 - `word_count` là bộ đếm cache, service cập nhật mỗi khi thêm/bớt từ.
 - Khóa học hiện luôn riêng tư; `visibility = shared` để sẵn cho tính năng chia sẻ sau này.
 - StudySession giữ bộ câu hỏi KÈM ĐÁP ÁN ở server (`questions`), client chỉ nhận phần đề; `answers` ghi câu đã nộp.
+  Dùng chung cho Khóa học của tôi và Học Viện: `kind` cho biết phiên thuộc đâu (course | unit_learn | unit_test | topic_test
+  | topic_practice | boss | review), `ref_id` là id bài / chặng / cấp tương ứng (course_id chỉ có ở phiên khóa học).
+  `mode` quyết định cách lộ đáp án (test: chỉ lộ khi nộp hết). `result` lưu kết quả cuối (điểm, phần vừa mở khóa, con dấu,
+  lượt quay, thay đổi rank) để nộp lại trả đúng kết quả cũ, không tính hai lần.
 """
 
 import enum
@@ -64,13 +68,26 @@ class UserCourseEntry(Base):
     added_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class SessionKind(enum.StrEnum):
+    COURSE = "course"
+    UNIT_LEARN = "unit_learn"
+    UNIT_TEST = "unit_test"
+    TOPIC_TEST = "topic_test"
+    TOPIC_PRACTICE = "topic_practice"
+    BOSS = "boss"
+    REVIEW = "review"
+
+
 class StudySession(Base):
     __tablename__ = "study_sessions"
     __mapper_args__ = {"eager_defaults": True}
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    course_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user_courses.id", ondelete="CASCADE"), index=True)
+    course_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("user_courses.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[SessionKind] = mapped_column(str_enum(SessionKind, "session_kind"), default=SessionKind.COURSE,
+                                              server_default=SessionKind.COURSE.value)
+    ref_id: Mapped[int | None] = mapped_column(Integer)
     mode: Mapped[StudyMode] = mapped_column(str_enum(StudyMode, "study_mode"))
     # [{id, entry_id, level, answer, ...}]: CHỈ ở server, không bao giờ trả nguyên văn cho client
     questions: Mapped[list[dict]] = mapped_column(JSONB)
@@ -79,3 +96,4 @@ class StudySession(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    result: Mapped[dict | None] = mapped_column(JSONB)

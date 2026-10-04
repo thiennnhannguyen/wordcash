@@ -65,7 +65,7 @@ daily_limit), `STUDY_SESSION_NOT_FOUND`, `STUDY_SESSION_EXPIRED`, `STUDY_SESSION
 
 | Chế độ | Chọn từ | Câu hỏi |
 |---|---|---|
-| `learn` Học mới | Từ `new`, tối đa `limit` (mặc định 10) và số từ mới còn lại trong ngày (`DAILY_NEW_WORDS_LIMIT` = 20, tính theo múi giờ người học, chung với Học Viện) | Thẻ học, rồi mỗi từ 1 câu mức 1 và 1 câu mức 3/4 |
+| `learn` Học mới | Từ `new`, tối đa `limit` (mặc định 10) và số từ mới còn lại trong ngày (hạn mức cứng `NEW_WORDS_DAILY_CAP` = 40, tính theo múi giờ người học, chung với Học Viện; mục tiêu ngày không chặn) | Thẻ học, rồi mỗi từ 1 câu mức 1 và 1 câu mức 3/4 |
 | `review` Ôn đến hạn | Từ có `due_at` ≤ bây giờ, hạn sớm nhất trước | Mỗi từ 1 câu: từ mới đúng < 2 lần dùng mức 1–2, còn lại mức 3–4 |
 | `quick` Ôn nhanh | Cả khóa, trộn ngẫu nhiên | 20 câu, mức ngẫu nhiên; vẫn cập nhật SRS |
 | `hard` Từ khó | Từ gắn sao, rồi từ sai nhiều nhất (sai − đúng) | Mức 3–4 |

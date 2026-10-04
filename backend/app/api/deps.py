@@ -1,7 +1,9 @@
 """
 Dependency dùng chung cho router: phiên DB, Redis, người dùng hiện tại từ JWT, IP/User-Agent, kiểm tra Origin.
 
-Mọi route cần đăng nhập dùng `CurrentUser` (= Depends(get_current_user)). Access token đọc từ header
+Mọi route cần đăng nhập dùng `CurrentUser` (= Depends(get_current_user)). Route HỌC (bắt đầu phiên, nộp bài ở Học Viện,
+Ôn tập, Khóa học) và Đấu Trường thêm `require_daily_check_done`: Cửa Ải hôm nay còn `pending` → DAILY_CHECK_REQUIRED (409).
+Không áp cho auth, users, /me/stats, /daily-check và các route GET. Access token đọc từ header
 `Authorization: Bearer …` qua OAuth2PasswordBearer (tokenUrl trỏ tới /auth/token để nút Authorize ở /docs dùng được).
 """
 
@@ -12,6 +14,7 @@ from fastapi.security import OAuth2PasswordBearer
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import clock
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.errors import AppError, AuthError
@@ -92,3 +95,14 @@ async def check_origin(request: Request) -> None:
         allowed.add(f"{request.url.scheme}://{request.url.netloc}")
     if origin.rstrip("/") not in allowed:
         raise AppError("FORBIDDEN_ORIGIN")
+
+
+async def require_daily_check_done(user: CurrentUser, session: DbSession) -> User:
+    """Chặn route học khi chưa vượt Cửa Ải hôm nay (ngày theo múi giờ người dùng). Lần đầu trong ngày tự tạo Cửa Ải."""
+    from app.services import daily_check_service  # tránh import vòng khi nạp model
+
+    await daily_check_service.require_done(session, user, clock.now())
+    return user
+
+
+DailyCheckDone = Depends(require_daily_check_done)

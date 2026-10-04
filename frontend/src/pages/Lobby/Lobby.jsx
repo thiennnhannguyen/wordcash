@@ -6,7 +6,8 @@
  * cột phải 4 (widget) — hai cột kết thúc gần bằng nhau. Hàng dưới trải hết 12 cột: Khóa học của tôi (7) + Hành trình (5)
  * (đặt cả hai trong cột trái làm cột trái dài hơn cột phải ~800px). Mobile xếp dọc: chào hỏi → Học Viện → Đấu Trường → Mục tiêu → Từ của ngày → Khóa học →
  * Hành trình → widget. Các khối hiện lần lượt (cách nhau 60ms); nền có họa tiết chấm và hình vẽ tay rất nhạt.
- * Dữ liệu mẫu ở data/mockLobby.js. Biến thể xem bằng `?variant=shaky` hoặc `?variant=new`;
+ * Số liệu thật từ GET /me/stats (pages/Lobby/useLobbyData.js); phần chưa có API vẫn lấy từ data/mockLobby.js.
+ * Biến thể dữ liệu mẫu (chỉ dev) xem bằng `?variant=shaky` hoặc `?variant=new`;
  * thanh chuyển biến thể chỉ hiện ở môi trường dev.
  */
 
@@ -21,7 +22,8 @@ import StatusBar from '../../components/layout/StatusBar'
 import cx from '../../utils/cx'
 import * as coursesApi from '../../services/coursesApi'
 import { useAuthStore } from '../../store/authStore'
-import { getLobbyMock, LOBBY_VARIANTS } from '../../data/mockLobby'
+import { LOBBY_VARIANTS } from '../../data/mockLobby'
+import useLobbyData from './useLobbyData'
 import { AcademyCard, ArenaCard } from './LobbyCards'
 import { DailyGoals, JourneyStrip, MyCourses, WordOfDay } from './LobbyBlocks'
 import { FriendsWidget, MascotWidget, NextRankWidget, NextSpinWidget } from './LobbyWidgets'
@@ -192,18 +194,19 @@ function useMyCourses(isNew) {
 
 export default function Lobby() {
   const [params, setParams] = useSearchParams()
-  const variant = params.get('variant') ?? 'default'
+  const variant = params.get('variant')
   const user = useAuthStore((s) => s.user)
-  const data = getLobbyMock(variant, user)
-  const isNew = Boolean(data.academy.isNew)
+  const data = useLobbyData(variant, user)
+  const isNew = Boolean(data?.academy.isNew)
   const courses = useMyCourses(isNew)
+  if (!data) return <div className="min-h-[60vh]" aria-busy="true" />
 
   return (
     <>
       <Backdrop />
       <div className="relative z-10 flex flex-col gap-6">
         {import.meta.env.DEV && (
-          <VariantSwitcher current={variant} onChange={(key) => setParams(key === 'default' ? {} : { variant: key })} />
+          <VariantSwitcher current={variant ?? 'default'} onChange={(key) => setParams(key === 'default' ? {} : { variant: key })} />
         )}
 
         <StatusBar stats={data.stats} mascot={{ ...data.mascot, bg: 'raised' }} />

@@ -19,7 +19,8 @@ function tokenColors(names) {
   return names.map((n) => style.getPropertyValue(`--color-${n}`).trim()).filter(Boolean)
 }
 
-export default function LessonDone({ summary }) {
+/** `lesson`: {id, level, topic, number} (mặc định bài mẫu khi chạy mock). */
+export default function LessonDone({ summary, lesson = LESSON }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
 
@@ -48,7 +49,7 @@ export default function LessonDone({ summary }) {
 
         <div className="flex flex-col gap-2">
           <span className="hud-label text-ink/70">
-            {LESSON.level} · {LESSON.topic} · Bài {LESSON.number}
+            {lesson.level} · {lesson.topic} · Bài {lesson.number}
           </span>
           <h1 className="text-[36px] leading-[1.05] md:text-[48px]">{summary.learned} từ mới đã vào sổ!</h1>
         </div>
@@ -72,7 +73,7 @@ export default function LessonDone({ summary }) {
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col gap-3 border-t-thick border-line bg-surface px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 md:static md:flex-row md:justify-center md:border-0 md:bg-transparent md:pb-12 md:pt-0">
-        <Button size="lg" icon={Exam} className="md:min-w-72" onClick={() => navigate(`/academy/unit-test?unit=${LESSON.id}`)}>
+        <Button size="lg" icon={Exam} className="md:min-w-72" onClick={() => navigate(`/academy/unit-test?unit=${lesson.id}`)}>
           Làm bài kiểm tra
         </Button>
         <Button size="lg" variant="secondary" icon={MapTrifold} onClick={() => navigate('/academy')}>
