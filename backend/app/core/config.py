@@ -115,6 +115,11 @@ class Settings(BaseSettings):
     # Vòng quay
     SPIN_EVERY_N_WORDS: int = 50
     PITY_EPIC: int = 20
+    # Phân bổ 100 linh vật theo vùng × độ hiếm (Thường, Hiếm, Sử Thi, Huyền Thoại); seed_mascots kiểm tra danh mục khớp bảng này
+    MASCOT_DISTRIBUTION: dict[str, list[int]] = {
+        "A1": [8, 5, 3, 1], "A2": [8, 5, 3, 1], "B1": [7, 5, 2, 1], "B2": [7, 4, 3, 1],
+        "C1": [6, 4, 3, 1], "C2": [6, 5, 3, 1], "SPECIAL": [3, 2, 1, 1],
+    }
 
     # Đấu Trường
     MATCH_HP: int = 100
