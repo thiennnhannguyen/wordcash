@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "e2e": "playwright test",
+    "screenshots": "playwright test --config scripts/screenshots/playwright.config.js",
     "test": "node --test 'tests/**/*.test.js'",
     "postbuild": "node scripts/check-dist.mjs"
   },
