@@ -175,6 +175,8 @@ Client gửi access token khi kết nối. Token thiếu, sai hoặc hết hạn
 
 ## Hướng dẫn tích hợp frontend
 
+Đã làm (03/10/2026): `frontend/src/services/api.js`, `store/authStore.js`, `utils/errorMessages.js`, `components/layout/RouteGuards.jsx`, `components/layout/UserMenu.jsx`, `services/socket.js`; kiểm thử đầu-cuối ở `frontend/e2e/auth.spec.js`.
+
 1. **Giữ access token trong bộ nhớ** (Zustand, `authStore`). **Không** lưu vào localStorage hay sessionStorage. Refresh token nằm trong cookie httpOnly, JavaScript không đọc và cũng không cần đọc.
 2. **Axios** dùng `baseURL: '/api/v1'`, `withCredentials: true`. Interceptor request gắn `Authorization: Bearer <accessToken>` khi có.
 3. **Interceptor response:** gặp 401 có `error.code === 'TOKEN_EXPIRED'` thì gọi `/auth/refresh` **đúng một lần** cho mọi request đang lỗi, rồi gửi lại các request đó. Các mã 401 khác (SESSION_REVOKED, TOKEN_INVALID…) thì xóa store và chuyển tới trang đăng nhập.

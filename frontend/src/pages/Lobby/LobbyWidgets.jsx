@@ -1,6 +1,6 @@
 /*
  * Các widget cột phải của Sảnh: tiến tới rank tiếp theo, lượt quay tiếp theo,
- * linh vật đang dùng, bảng xếp hạng bạn bè.
+ * linh vật đang dùng (dữ liệu từ data/mascots.js), bảng xếp hạng bạn bè (top 3 theo số từ học trong tuần).
  */
 
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ import RankBadge from '../../components/ui/RankBadge'
 import MascotBlob from '../../components/collection/MascotBlob'
 import MascotCard from '../../components/collection/MascotCard'
 import cx from '../../utils/cx'
-import { RANK_BY_KEY } from '../../utils/constants'
+import { RANK_BY_KEY, RARITIES } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
 
 function WidgetTitle({ children }) {
@@ -26,7 +26,7 @@ export function NextRankWidget({ nextRank, shaky }) {
   const remaining = Math.max(0, nextRank.target - nextRank.current)
 
   return (
-    <Card padding="sm" className={cx('p-5', shaky && 'border-danger')}>
+    <Card padding="sm" className={cx('lift p-5', shaky && 'border-danger')}>
       <WidgetTitle>Tiến tới rank tiếp theo</WidgetTitle>
       <div className="mb-4 flex items-center justify-between gap-2">
         <RankBadge rank={nextRank.from} size="sm" shaky={!!shaky} />
@@ -59,7 +59,7 @@ export function NextSpinWidget({ nextSpin, spins }) {
   const navigate = useNavigate()
 
   return (
-    <Card padding="sm" className="p-5">
+    <Card padding="sm" className="lift p-5">
       <WidgetTitle>Lượt quay tiếp theo</WidgetTitle>
       <div className="flex items-center gap-4">
         <ProgressRing value={nextSpin.current} max={nextSpin.target} size={104} stroke={14} tone="danger" label="Số từ tới lượt quay kế tiếp">
@@ -91,7 +91,7 @@ export function MascotWidget({ mascot }) {
   const navigate = useNavigate()
 
   return (
-    <Card padding="sm" className="p-5">
+    <Card padding="sm" className="lift p-5">
       <WidgetTitle>Linh vật đang dùng</WidgetTitle>
       <div className="flex items-center gap-4">
         <div className="w-32 shrink-0">
@@ -100,11 +100,14 @@ export function MascotWidget({ mascot }) {
             name={mascot.name}
             number={mascot.number}
             compact
-            art={<MascotBlob color={mascot.color} shape={mascot.shape} size={80} />}
+            art={<MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={80} blink />}
           />
         </div>
         <div className="flex min-w-0 flex-col gap-3">
-          <p className="text-caption text-muted">Linh vật chỉ để trang trí, không ảnh hưởng tới trận đấu.</p>
+          <p className="font-heading text-lg font-extrabold leading-tight">{mascot.name}</p>
+          <p className="text-caption text-muted">
+            {RARITIES[mascot.rarity].name} · Vùng {mascot.region}. Chỉ để trang trí, không ảnh hưởng tới trận đấu.
+          </p>
           <Button variant="secondary" size="sm" onClick={() => navigate('/collection')}>
             Đổi
           </Button>
@@ -116,14 +119,17 @@ export function MascotWidget({ mascot }) {
 
 const PODIUM = ['gold', 'rank-bac', 'rank-dong']
 
-export function FriendsWidget({ friends }) {
+export function FriendsWidget({ friends, className }) {
   const navigate = useNavigate()
+  const top = friends.slice(0, 3)
+  const myIndex = top.findIndex((f) => f.isMe)
+  const above = myIndex > 0 ? top[myIndex - 1] : null
 
   return (
-    <Card padding="sm" className="p-5">
+    <Card padding="sm" className={cx('lift flex flex-col p-5', className)}>
       <WidgetTitle>Bảng xếp hạng bạn bè</WidgetTitle>
       {friends.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-2 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-2 text-center">
           <span className="grid size-14 place-items-center rounded-pill border-thick border-line bg-raised">
             <Icon icon={UsersThree} size={28} color="muted" />
           </span>
@@ -133,29 +139,43 @@ export function FriendsWidget({ friends }) {
           </Button>
         </div>
       ) : (
-        <ol className="flex flex-col gap-2.5">
-          {friends.slice(0, 3).map((f, i) => (
-            <li
-              key={f.name}
-              className={cx(
-                'flex items-center gap-3 rounded-[16px] border-thick px-2.5 py-2',
-                f.isMe ? 'border-line bg-raised' : 'border-transparent',
-              )}
-            >
-              <span
-                className="grid size-8 shrink-0 place-items-center rounded-pill border-2 border-line font-num text-sm"
-                style={{ background: `var(--color-${PODIUM[i]})` }}
+        <>
+          <p className="-mt-3 mb-3 text-caption text-muted">Số từ học trong tuần này</p>
+          <ol className="flex flex-col gap-2.5">
+            {top.map((f, i) => (
+              <li
+                key={f.name}
+                className={cx(
+                  'flex items-center gap-3 rounded-[16px] border-thick px-2.5 py-2',
+                  f.isMe ? 'border-line bg-accent' : 'border-transparent',
+                )}
               >
-                {i + 1}
-              </span>
-              <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-pill border-2 border-line bg-surface">
-                <MascotBlob color={f.color} shape={f.shape} size={36} className="translate-y-0.5" />
-              </span>
-              <span className="min-w-0 flex-1 truncate font-semibold">{f.name}</span>
-              <span className="font-num text-sm">{formatNumber(f.words)}</span>
-            </li>
-          ))}
-        </ol>
+                <span
+                  className="grid size-8 shrink-0 place-items-center rounded-pill border-2 border-line font-num text-sm"
+                  style={{ background: `var(--color-${PODIUM[i]})` }}
+                >
+                  {i + 1}
+                </span>
+                <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-pill border-2 border-line bg-surface">
+                  <MascotBlob color={f.mascot.color} shape={f.mascot.shape} traits={f.mascot.traits} size={36} className="translate-y-0.5" />
+                </span>
+                <span className="min-w-0 flex-1 truncate font-semibold">{f.name}</span>
+                <span className="whitespace-nowrap font-num text-sm">+{formatNumber(f.weekWords)}</span>
+              </li>
+            ))}
+          </ol>
+          {above && (
+            <p className="mt-3 rounded-[14px] border-2 border-dashed border-line/40 px-3 py-2 text-caption">
+              Học thêm <span className="font-num">{formatNumber(above.weekWords - top[myIndex].weekWords + 1)}</span> từ để vượt{' '}
+              <b>{above.name}</b> tuần này.
+            </p>
+          )}
+          <div className="mt-auto pt-4">
+            <Button variant="secondary" size="sm" fullWidth onClick={() => navigate('/leaderboard?scope=friends')}>
+              Xem bảng xếp hạng
+            </Button>
+          </div>
+        </>
       )}
     </Card>
   )

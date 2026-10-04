@@ -30,6 +30,12 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
 - [ ] Chạy `alembic upgrade head` trước khi khởi động bản mới.
 - [ ] Sau lần deploy đầu tiên: **không viết lại migration cũ**, chỉ thêm migration mới.
 - [ ] Bật sao lưu tự động cho PostgreSQL.
+- [ ] **Không có dữ liệu mẫu dev:** database production phải có **0** mục từ `DEV_SAMPLE`. Không bao giờ chạy `seeds.seed_dev_entries` ở production (script tự từ chối). Kiểm tra:
+  ```sql
+  SELECT count(*) FROM entries WHERE exam_tags @> '["DEV_SAMPLE"]'::jsonb;  -- phải bằng 0
+  ```
+  hoặc `python -m seeds.purge_dev_entries --dry-run` (phải in `'entries': 0`). Nếu khác 0: `python -m seeds.purge_dev_entries --yes` (xóa mục từ cùng tiến độ, nhật ký, liên kết khóa học, phiên học đang mở và trừ lại `mastered_count`).
+- [ ] Bản build frontend đã qua `postbuild` (`scripts/check-dist.mjs`): không chứa `__wcAuthStore` hay `DEV_SAMPLE`.
 
 ## Sau khi deploy
 

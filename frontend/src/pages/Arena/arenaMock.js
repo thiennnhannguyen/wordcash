@@ -7,13 +7,15 @@
  * TODO: thay bằng services/arenaApi và sự kiện socket `create_room` / `join_room`.
  */
 
+import { getMascot } from '../../data/mascots'
+
 const LATENCY_MS = 350
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const PLAYER = {
   name: 'Nhân',
   rank: 'bach_kim',
-  mascot: { color: 'primary', shape: 'round', name: 'Mochi' },
+  mascot: getMascot(1),
   unlockedLevels: ['A1', 'A2', 'B1'],
 }
 
@@ -69,7 +71,7 @@ export const PLAYER_CARD = { ...PLAYER, accuracy: STATS.accuracy, avgSeconds: ST
 export const OPPONENT = {
   name: 'Minh Thư',
   rank: 'vang',
-  mascot: { color: 'orange', shape: 'tall', name: 'Lửa Nhỏ' },
+  mascot: getMascot(3),
   accuracy: 81,
   avgSeconds: 2.3,
 }
@@ -109,7 +111,7 @@ export async function getRoom(code) {
  */
 export function watchRoom({ onJoin, onFriendReady }, { joinMs = 4000, readyMs = 2500 } = {}) {
   const timers = [
-    setTimeout(() => onJoin({ ...OPPONENT, name: 'Khoa', rank: 'bac', mascot: { color: 'orange', shape: 'drop', name: 'Giọt Sương' }, accuracy: 79, avgSeconds: 2.1 }), joinMs),
+    setTimeout(() => onJoin({ ...OPPONENT, name: 'Khoa', rank: 'bac', mascot: getMascot(14), accuracy: 79, avgSeconds: 2.1 }), joinMs),
     setTimeout(onFriendReady, joinMs + readyMs),
   ]
   return () => timers.forEach(clearTimeout)

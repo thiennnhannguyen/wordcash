@@ -17,6 +17,7 @@ import MascotBlob from '../../components/collection/MascotBlob'
 import { formatClock } from '../../utils/format'
 import { EXPECTED_WAIT_SECONDS, LOBBY, PLAYER, PLAYER_CARD, WAITING_TIPS, joinQueue } from './arenaMock'
 import VersusIntro from './VersusIntro'
+import useSocket from '../../hooks/useSocket'
 
 const TIP_MS = 4000
 const FOUND_FLASH_MS = 900
@@ -68,6 +69,8 @@ function Radar({ found }) {
 }
 
 export default function Matchmaking() {
+  // Kết nối Socket.IO chỉ mở khi vào Đấu Trường (xác thực bằng access token, tự làm mới khi hết hạn)
+  useSocket()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const startAt = Number(params.get('t')) || 0

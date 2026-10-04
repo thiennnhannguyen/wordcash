@@ -15,6 +15,7 @@
   --color-bg: #fff8ec; /* kem */
   --color-surface: #ffffff;
   --color-raised: #f3eeff; /* bề mặt phụ, tím rất nhạt */
+  --color-gold-soft: #fff4c7; /* nền vàng nhạt (card Từ của ngày) */
   --color-white: #ffffff;
 
   /* Viền, bóng đổ và chữ chính dùng chung một màu mực */
@@ -137,6 +138,7 @@
   --shadow-hard: 4px 4px 0 0 var(--color-line);
   --shadow-hard-sm: 2px 2px 0 0 var(--color-line);
   --shadow-hard-lg: 6px 6px 0 0 var(--color-line);
+  --shadow-hard-xl: 8px 8px 0 0 var(--color-line);
 
   /* Vòng focus tím cho ô nhập liệu */
   --shadow-focus: 4px 4px 0 0 var(--color-line), 0 0 0 5px color-mix(in srgb, var(--color-primary) 35%, transparent);

@@ -17,11 +17,10 @@ export const TIMEZONES = [
   { value: 'America/Los_Angeles', label: 'GMT−8/−7 (Los Angeles)' },
 ]
 
-/** Múi giờ của trình duyệt nếu có trong danh sách, không thì mặc định Việt Nam. */
-export function detectTimezone() {
+/** Múi giờ IANA của trình duyệt (Intl.DateTimeFormat().resolvedOptions().timeZone), không có thì mặc định Việt Nam. */
+export function browserTimezone() {
   try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    return TIMEZONES.some((t) => t.value === tz) ? tz : DEFAULT_TIMEZONE
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULT_TIMEZONE
   } catch {
     return DEFAULT_TIMEZONE
   }

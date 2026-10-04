@@ -4,9 +4,10 @@ Mỗi request nhận một AsyncSession riêng qua `get_db`. `hide_parameters` �
 (email, mã băm mật khẩu, mã băm token).
 """
 
+import enum
 from collections.abc import AsyncIterator
 
-from sqlalchemy import MetaData, text
+from sqlalchemy import Enum, MetaData, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -24,6 +25,11 @@ NAMING_CONVENTION = {
 
 class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
+
+
+def str_enum(cls: type[enum.StrEnum], name: str, length: int = 16) -> Enum:
+    """Cột enum lưu dạng VARCHAR + CHECK (không dùng ENUM riêng của PostgreSQL) để migration lùi/tiến không vướng kiểu dữ liệu."""
+    return Enum(cls, name=name, native_enum=False, create_constraint=True, length=length, values_callable=lambda e: [m.value for m in e])
 
 
 engine = create_async_engine(

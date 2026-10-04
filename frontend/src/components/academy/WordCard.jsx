@@ -3,6 +3,8 @@
  *
  * `emphasis` đổi phần được đẩy lên nổi bật theo chế độ học: "word" (mặc định), "phrase" (cụm đi kèm),
  * "family" (họ từ). Từ đang học trong câu ví dụ được tô nền xanh chanh.
+ * Dùng chung cho Học Viện và "Khóa học của tôi": cấp độ, loại từ, định nghĩa, ví dụ đều có thể trống (từ tự tạo).
+ * `tag`: nhãn phụ cạnh cấp độ (vd. "Tự tạo"); `actions`: hàng nút cuối thẻ (vd. "+ Thêm vào khóa học của tôi").
  */
 
 import { Image, SpeakerHigh } from '@phosphor-icons/react'
@@ -13,7 +15,7 @@ import { speak } from '../../utils/speech'
 
 // Tô từ đang học trong câu (bắt cả dạng biến đổi: apply → applied, strength → strengths)
 function HighlightedExample({ sentence, word }) {
-  const stem = word.replace(/(e|y)$/, '')
+  const stem = word.replace(/(e|y)$/, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const parts = sentence.split(new RegExp(`(\\b${stem}\\w*)`, 'i'))
   return (
     <p className="text-lg font-medium md:text-xl">
@@ -79,21 +81,24 @@ function wordSizeClass(word) {
   return 'text-[44px] sm:text-[56px] md:text-[72px]'
 }
 
-export default function WordCard({ entry, level, emphasis = 'word', className }) {
+export default function WordCard({ entry, level, emphasis = 'word', tag, actions, className }) {
   const extras =
     emphasis === 'family'
-      ? [<Family key="f" word={entry.word} items={entry.family} big />, <Collocations key="c" items={entry.collocations} />]
-      : [<Collocations key="c" items={entry.collocations} big={emphasis === 'phrase'} />, <Family key="f" word={entry.word} items={entry.family} />]
+      ? [<Family key="f" word={entry.word} items={entry.family ?? []} big />, <Collocations key="c" items={entry.collocations ?? []} />]
+      : [<Collocations key="c" items={entry.collocations ?? []} big={emphasis === 'phrase'} />, <Family key="f" word={entry.word} items={entry.family ?? []} />]
 
   return (
     <article className={cx('flex flex-col gap-6 rounded-panel border-thick border-line bg-surface p-5 shadow-hard-lg md:p-8', className)}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <LevelTag level={level} size="sm" />
-            <span className="rounded-pill border-2 border-line bg-raised px-2.5 font-display text-xs font-bold uppercase leading-6">
-              {entry.pos}
-            </span>
+            {level && <LevelTag level={level} size="sm" />}
+            {tag}
+            {entry.pos && (
+              <span className="rounded-pill border-2 border-line bg-raised px-2.5 font-display text-xs font-bold uppercase leading-6">
+                {entry.pos}
+              </span>
+            )}
           </div>
           <h1 className={cx('break-words font-display font-bold uppercase leading-none tracking-wide', wordSizeClass(entry.word))}>
             {entry.word}
@@ -127,15 +132,18 @@ export default function WordCard({ entry, level, emphasis = 'word', className })
         <p className="self-start rounded-[12px] bg-gold px-3 py-1 font-heading text-[30px] font-black leading-tight tracking-tight md:text-[36px]">
           {entry.meaning}
         </p>
-        <p className="text-muted">{entry.definition}</p>
+        {entry.definition && <p className="text-muted">{entry.definition}</p>}
       </div>
 
-      <div className="flex flex-col gap-2 rounded-card border-thick border-line bg-bg p-4">
-        <span className="hud-label">Ví dụ</span>
-        <HighlightedExample sentence={entry.example} word={entry.word} />
-      </div>
+      {entry.example && (
+        <div className="flex flex-col gap-2 rounded-card border-thick border-line bg-bg p-4">
+          <span className="hud-label">Ví dụ</span>
+          <HighlightedExample sentence={entry.example} word={entry.word} />
+        </div>
+      )}
 
       {extras}
+      {actions && <div className="flex flex-wrap items-center gap-3 border-t-2 border-line/15 pt-4">{actions}</div>}
     </article>
   )
 }

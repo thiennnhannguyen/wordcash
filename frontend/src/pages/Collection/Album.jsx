@@ -6,7 +6,7 @@
  * thẻ chưa có là hình bóng trên nền kẻ sọc (Huyền Thoại giữ viền vàng mờ). Rê chuột: thẻ nghiêng 3D, Huyền Thoại lóe ánh kim.
  * Bấm thẻ đã có mở trang chi tiết; nút "Đổi" mở hộp thoại đổi mảnh. Dữ liệu do server trả (hiện lấy từ collectionMock.js).
  *
- * Dev: `?mascot=37` (mở chi tiết), `?exchange=1` (`&pick=8`, `&confirm=1`), `?odds=1`, `?rarity=legendary&owned=1`, `?sort=rarity|recent`.
+ * Dev: `?mascot=9` (mở chi tiết), `?exchange=1` (`&pick=19`, `&confirm=1`), `?odds=1`, `?rarity=legendary&owned=1`, `?sort=rarity|recent`.
  */
 
 import { useMemo, useState } from 'react'
@@ -23,7 +23,8 @@ import CollectionHeader, { OddsModal } from './CollectionHeader'
 import ExchangeModal from './ExchangeModal'
 import MascotArt from './MascotArt'
 import MascotDetail from './MascotDetail'
-import { MASCOTS, MASCOT_BY_ID, totalSpins, countByRarity, exchangeShards, fetchCollection, markSeen, setArenaMascot, setAvatar } from './collectionMock'
+import { MASCOTS, MASCOT_BY_ID } from '../../data/mascots'
+import { totalSpins, countByRarity, exchangeShards, fetchCollection, markSeen, setArenaMascot, setAvatar } from './collectionMock'
 
 const SORTS = [
   { value: 'number', label: 'Số thứ tự' },
@@ -121,6 +122,10 @@ export default function Album() {
       setData(markSeen(m.id))
       return
     }
+    if (m.status === 'coming_soon') {
+      pushToast({ variant: 'info', title: `${formatMascotNumber(m.number)} sắp ra mắt`, message: 'Linh vật này chưa phát hành, chưa thể nhận từ vòng quay.' })
+      return
+    }
     pushToast({
       variant: 'info',
       title: `${formatMascotNumber(m.number)} chưa có`,
@@ -155,7 +160,7 @@ export default function Album() {
                 <button
                   type="button"
                   onClick={() => openCard(m)}
-                  aria-label={entry ? `${formatMascotNumber(m.number)} ${m.name}, ${RARITIES[m.rarity].name}${entry.isNew ? ', mới' : ''}` : `${formatMascotNumber(m.number)}, ${RARITIES[m.rarity].name}, chưa có`}
+                  aria-label={entry ? `${formatMascotNumber(m.number)} ${m.name}, ${RARITIES[m.rarity].name}${entry.isNew ? ', mới' : ''}` : `${formatMascotNumber(m.number)}, ${RARITIES[m.rarity].name}, ${m.status === 'coming_soon' ? 'sắp ra mắt' : 'chưa có'}`}
                   className="block w-full rounded-[22px] text-left focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-primary"
                 >
                   <MascotCard
@@ -163,6 +168,7 @@ export default function Album() {
                     name={m.name}
                     number={m.number}
                     owned={Boolean(entry)}
+                    comingSoon={m.status === 'coming_soon'}
                     isNew={entry?.isNew}
                     count={entry?.count}
                     interactive

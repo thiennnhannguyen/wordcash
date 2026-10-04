@@ -104,3 +104,23 @@
 @utility bg-legend {
   background-image: var(--gradient-legend);
 }
+
+/* Card nổi nhẹ khi rê chuột: nhấc 2px, bóng cứng dày thêm. `lift` cho card bóng thường, `lift-lg` cho card bóng lớn.
+   Khi giảm chuyển động thì chỉ đổi bóng, không dịch chuyển. */
+@utility lift {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  &:hover { transform: translateY(-2px); box-shadow: var(--shadow-hard-lg); }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover { transform: none; }
+  }
+}
+
+@utility lift-lg {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  &:hover { transform: translateY(-2px); box-shadow: var(--shadow-hard-xl); }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover { transform: none; }
+  }
+}

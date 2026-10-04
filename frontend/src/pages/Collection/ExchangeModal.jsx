@@ -17,7 +17,7 @@ import MascotCard from '../../components/collection/MascotCard'
 import { formatMascotNumber } from '../../utils/format'
 import cx from '../../utils/cx'
 import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
-import { MASCOTS, MASCOT_BY_ID } from './collectionMock'
+import { MASCOT_BY_ID, OBTAINABLE_MASCOTS } from '../../data/mascots'
 import MascotArt from './MascotArt'
 
 function ShardTag({ cost, affordable }) {
@@ -68,7 +68,7 @@ export default function ExchangeModal({ open, onClose, shards, owned, initialPic
   const [received, setReceived] = useState(null)
   const [error, setError] = useState(null)
 
-  const candidates = useMemo(() => MASCOTS.filter((m) => !owned[m.id]), [owned])
+  const candidates = useMemo(() => OBTAINABLE_MASCOTS.filter((m) => !owned[m.id]), [owned])
   const picked = pick != null ? MASCOT_BY_ID[pick] : null
   const cost = picked ? GACHA.shardCost[picked.rarity] : 0
 

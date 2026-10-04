@@ -3,7 +3,7 @@
  * (1) mục tiêu học · (2) thời lượng mỗi ngày · (3) điểm xuất phát · (4) chọn linh vật đồng hành.
  * Mobile: card xếp dọc, nút chính dính ở đáy màn hình.
  *
- * TODO: gửi lựa chọn lên server (mục tiêu, số từ mới mỗi ngày, linh vật khởi đầu) khi có API hồ sơ.
+ * Bước cuối gửi PATCH /users/me/onboarding {goal, daily_minutes, starter_mascot_id, start_mode} rồi đi theo `next_step`.
  */
 
 import { useState } from 'react'
@@ -15,10 +15,14 @@ import Icon, { IconBadge } from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import { Wordmark } from '../../components/layout/NavBar'
+import { MASCOT_BY_ID, STARTER_MASCOT_IDS } from '../../data/mascots'
+import { useAuthStore } from '../../store/authStore'
+import { useToastStore } from '../../store/toastStore'
+import { messageFor } from '../../utils/errorMessages'
 import cx from '../../utils/cx'
 
 const GOALS = [
-  { value: 'daily', label: 'Giao tiếp hằng ngày', text: 'Nói chuyện, xem phim, đi du lịch tự tin hơn.', icon: ChatsCircle, bg: 'sky' },
+  { value: 'general', label: 'Giao tiếp hằng ngày', text: 'Nói chuyện, xem phim, đi du lịch tự tin hơn.', icon: ChatsCircle, bg: 'sky' },
   { value: 'ielts', label: 'Thi IELTS', text: 'Từ vựng học thuật theo band điểm.', icon: Exam, bg: 'primary' },
   { value: 'toeic', label: 'Thi TOEIC', text: 'Từ vựng công sở, kinh doanh.', icon: Briefcase, bg: 'orange' },
 ]
@@ -43,11 +47,8 @@ const STARTS = [
   },
 ]
 
-const STARTERS = [
-  { value: 'mochi', name: 'Mochi', color: 'primary', shape: 'round' },
-  { value: 'suong', name: 'Giọt Sương', color: 'sky', shape: 'drop' },
-  { value: 'lua', name: 'Lửa Nhỏ', color: 'orange', shape: 'tall' },
-]
+// Linh vật khởi đầu #001–#003 (data/mascots.js); `value` là id gửi lên server (starter_mascot_id)
+const STARTERS = STARTER_MASCOT_IDS.map((id) => ({ ...MASCOT_BY_ID[id], value: id }))
 
 const STEPS = [
   { key: 'goal', title: 'Bạn học để làm gì?', subtitle: 'Chọn một mục tiêu. Bạn có thể đổi sau trong Hồ Sơ.' },
@@ -193,7 +194,7 @@ function MascotStep({ value, onChange }) {
               transition={{ duration: 0.7, ease: 'easeOut' }}
               className="inline-flex"
             >
-              <MascotBlob color={m.color} shape={m.shape} size={140} className="h-auto w-[84px] md:w-[140px]" />
+              <MascotBlob color={m.color} shape={m.shape} traits={m.traits} size={140} className="h-auto w-[84px] md:w-[140px]" />
             </motion.span>
             <span
               className={cx(
@@ -210,8 +211,13 @@ function MascotStep({ value, onChange }) {
   )
 }
 
+// next_step của server → trang tiếp theo (docs/auth.md)
+const NEXT_ROUTES = { roadmap_a1: '/travel?variant=start', placement_test: '/academy/placement' }
+
 export default function Onboarding() {
   const navigate = useNavigate()
+  const completeOnboarding = useAuthStore((s) => s.completeOnboarding)
+  const [pending, setPending] = useState(false)
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState({ goal: null, pace: null, start: null, mascot: null })
 
@@ -220,15 +226,27 @@ export default function Onboarding() {
   const setValue = (v) => setAnswers((a) => ({ ...a, [current.key]: v }))
   const isLast = step === STEPS.length - 1
 
-  const next = () => {
+  const next = async () => {
     if (!isLast) {
       setStep((s) => s + 1)
       window.scrollTo({ top: 0 })
       return
     }
-    // TODO: lưu answers lên server trước khi chuyển trang
-    // Bắt đầu từ A1: màn "Hành trình 10.000 từ bắt đầu từ đây", rồi vào bản đồ A1
-    navigate(answers.start === 'placement' ? '/academy/placement' : '/travel?variant=start')
+    // Lưu lựa chọn lên server (PATCH /users/me/onboarding) rồi đi theo next_step.
+    // Bắt đầu từ A1: màn "Hành trình 10.000 từ bắt đầu từ đây", rồi vào bản đồ A1.
+    setPending(true)
+    try {
+      const nextStep = await completeOnboarding({
+        goal: answers.goal,
+        daily_minutes: answers.pace,
+        starter_mascot_id: answers.mascot,
+        start_mode: answers.start,
+      })
+      navigate(NEXT_ROUTES[nextStep] ?? '/lobby', { replace: true })
+    } catch (err) {
+      useToastStore.getState().push({ variant: 'error', title: 'Chưa lưu được lựa chọn', message: messageFor(err) })
+      setPending(false)
+    }
   }
 
   const StepBody = { goal: GoalStep, pace: PaceStep, start: StartStep, mascot: MascotStep }[current.key]
@@ -274,10 +292,10 @@ export default function Onboarding() {
             className="md:w-auto md:min-w-80"
             icon={isLast ? Rocket : undefined}
             iconRight={isLast ? undefined : ArrowRight}
-            disabled={value == null}
+            disabled={value == null || pending}
             onClick={next}
           >
-            {isLast ? 'Bắt đầu hành trình' : 'Tiếp tục'}
+            {isLast ? (pending ? 'Đang lưu…' : 'Bắt đầu hành trình') : 'Tiếp tục'}
           </Button>
         </div>
       </main>

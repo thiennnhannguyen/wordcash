@@ -16,6 +16,7 @@ import { IconBadge } from '../../components/ui/Icon'
 import LevelTag from '../../components/ui/LevelTag'
 import Modal from '../../components/ui/Modal'
 import WordCard from '../../components/academy/WordCard'
+import AddToCoursePopover from '../../components/courses/AddToCoursePopover'
 import { speak } from '../../utils/speech'
 import { ENTRIES, LESSON, PREVIEW_DONE } from './lessonMock'
 import LessonContext from './LessonContext'
@@ -122,7 +123,12 @@ function CardsStep({ mode, startAt, onFinish, onExit }) {
             }}
             className="touch-pan-y"
           >
-            <WordCard entry={entry} level={LESSON.level} emphasis={mode} />
+            <WordCard
+              entry={entry}
+              level={LESSON.level}
+              emphasis={mode}
+              actions={<AddToCoursePopover word={{ headword: entry.word, meaning_vi: entry.meaning }} />}
+            />
           </motion.div>
         </AnimatePresence>
         <p className="mt-4 text-center text-caption text-muted md:hidden">Vuốt ngang để chuyển thẻ</p>

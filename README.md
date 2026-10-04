@@ -6,6 +6,7 @@ Website học từ vựng kiểu game đối kháng. Bộ khung dự án này m�
 
 - **Học Viện**: học theo lộ trình A1–C2 từ kho khoảng 10.000 mục từ, ôn lặp lại ngắt quãng, Cửa Ải Hôm Nay.
 - **Đấu Trường**: ghép trận đối kháng thời gian thực, ai đúng và nhanh hơn thì bắn trừ máu đối thủ.
+- **Khóa học của tôi**: người học tự tạo bộ từ riêng (từ trong kho hoặc tự tạo) và học bằng thẻ học, 4 mức câu hỏi, SRS (xem `docs/courses.md`).
 
 ## Công nghệ
 
@@ -321,6 +322,7 @@ Kết hợp phương pháp ghi nhớ khoa học với game đối kháng online.
 | **Học Viện** | Học và ôn theo lộ trình | Lộ trình A1–C2, học theo từ/cụm/họ từ/ngữ cảnh, ôn SRS, Cửa Ải Hôm Nay, kiểm tra xếp lớp |
 | **Đấu Trường** | Thi đấu đối kháng | Ghép trận theo rank, phòng riêng bằng mã, bảng xếp hạng |
 | **Bộ Sưu Tập và Hồ Sơ** | Thể hiện thành tích | Rank, thẻ chứng nhận, album linh vật, vòng quay, streak |
+| **Khóa học của tôi** | Bộ từ vựng tự tạo (từ ngành IT, từ trong phim, từ trên lớp…) | Thêm từ từ kho (chỉ liên kết, tiến độ chung với Học Viện) hoặc tự tạo; nhập hàng loạt; 5 chế độ học (học mới, ôn đến hạn, ôn nhanh, từ khó, kiểm tra); dùng ở Phòng riêng của Đấu Trường. Từ tự tạo không tính rank, lượt quay, Cửa Ải. Chi tiết: `docs/courses.md` |
 
 **Nguyên tắc liên kết:** Học Viện tạo ra vốn từ, Đấu Trường sử dụng vốn từ. Câu hỏi trong trận chỉ lấy từ các cấp độ mà **cả hai người chơi đều đã mở khóa**.
 
@@ -711,10 +713,33 @@ cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
+python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
+python -m seeds.purge_dev_entries          # xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
-cd ../frontend && npm install && npm run dev   # proxy /api, /socket.io sang cổng 8000
+cd ../frontend && npm install && npm run dev   # gọi API thật qua proxy /api, /socket.io sang cổng 8000
+VITE_USE_MOCK=true npm run dev                 # chạy bằng dữ liệu giả khi không có backend (build production cấm mock)
 ```
+
+### Kiểm thử đầu-cuối (Playwright)
+
+Chạy với backend và PostgreSQL thật, trên database riêng `wordclash_e2e` (tự tạo và làm sạch mỗi lần chạy):
+
+```bash
+docker compose up -d                 # PostgreSQL 5433 + Redis 6379
+cd backend && source .venv/bin/activate && pip install -r requirements.txt   # backend/.venv phải có sẵn
+cd ../frontend && npm install
+npm run e2e                          # tự bật backend (cổng 8100) và Vite (cổng 5180), chạy frontend/e2e/*.spec.js
+E2E_SHOTS=/tmp/wc-shots npm run e2e  # chụp ảnh các bước vào thư mục chỉ định
+npx playwright test e2e/auth.spec.js -g "hai tab"   # chạy một kịch bản
+```
+
+- Trình duyệt: Google Chrome cài trên máy (`channel: "chrome"`), không cần tải trình duyệt của Playwright.
+- `e2e/start-backend.sh`: `ENV=testing`, `TEST_DATABASE_URL` trỏ `wordclash_e2e` (đổi bằng `E2E_DATABASE_URL`), `alembic downgrade base` → `upgrade head`,
+  nạp `seeds.seed_dev_entries`, Redis db 15, `JWT_SECRET_KEY` cố định để test ký được access token hết hạn.
+- Kịch bản: đăng ký → onboarding → Sảnh; tải lại vẫn đăng nhập; đăng xuất bị chặn; khóa học (thêm từ kho, tự tạo, nhập 5 dòng có 1 lỗi,
+  học mới đến hết, thống kê đổi); hai tab cùng hết hạn token không bị đăng xuất; người B không xem được khóa học của A.
+- Kết quả lỗi (ảnh, trace) nằm ở `frontend/test-results/` (đã bỏ qua trong git).
 Triển khai: `uvicorn app.main:asgi_app --host 0.0.0.0 --port $PORT`. Ban đầu chạy 1 worker; khi chạy nhiều worker phải bật sticky session và `SIO_USE_REDIS=true` (Socket.IO). Production: `ENV=production`, `JWT_SECRET_KEY` dài ít nhất 32 ký tự, cookie tự bật `Secure`; chạy sau reverse proxy thì đặt `TRUST_PROXY=true`.
 
 Trước khi deploy: đi theo `docs/deploy-checklist.md`. Sau lần deploy đầu, không viết lại migration cũ, chỉ thêm migration mới.

@@ -374,7 +374,28 @@
 .anim-wink-open { animation: wc-wink-open 5s linear infinite; }
 .anim-finger { animation: wc-finger 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 
+/* Sảnh: linh vật chớp mắt (nhóm mắt co theo trục dọc), ô "?" chờ đối thủ xoay, viền ngày hôm nay nhấp nháy */
+@keyframes wc-eye-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.anim-eye-blink { animation: wc-eye-blink 4.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes wc-spin-fast {
+  to { transform: rotate(360deg); }
+}
+.anim-spin { animation: wc-spin-fast 4s linear infinite; }
+
+@keyframes wc-ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 55%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-primary) 0%, transparent); }
+}
+.anim-ring-pulse { animation: wc-ring-pulse 1.6s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
+  .anim-eye-blink,
+  .anim-spin,
+  .anim-ring-pulse,
   .anim-showcase,
   .anim-wave,
   .anim-lm-bob,

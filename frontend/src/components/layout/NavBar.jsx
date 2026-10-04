@@ -10,6 +10,7 @@ import { NavLink } from 'react-router-dom'
 import { Cards, GraduationCap, House, Ranking, Sword, UserCircle } from '@phosphor-icons/react'
 import Icon, { IconBadge } from '../ui/Icon'
 import cx from '../../utils/cx'
+import { SidebarUser } from './UserMenu'
 
 // Mỗi khu một màu nhận diện: Học Viện xanh trời, Đấu Trường cam. `mobile: false` = chỉ có trên desktop.
 export const NAV_ITEMS = [
@@ -67,6 +68,8 @@ export function SidebarNav({ preview = false, activeIndex }) {
           </NavLink>
         ))}
       </nav>
+      {/* Menu tài khoản (đăng xuất) ở cuối thanh bên */}
+      {!preview && <SidebarUser />}
     </aside>
   )
 }

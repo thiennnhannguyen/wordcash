@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { MASCOT_BY_ID } from '../Collection/collectionMock'
+import { getMascot } from '../../data/mascots'
 import LevelTravel from './LevelTravel'
 import StartJourney from './StartJourney'
 import { fetchJourneyStart, fetchLevelComplete } from './travelMock'
@@ -18,7 +18,7 @@ export default function TravelPreview() {
   const variant = params.get('variant')
   const from = params.get('from') ?? 'B1'
   const [data] = useState(() => (variant === 'start' ? fetchJourneyStart() : fetchLevelComplete(from)))
-  const mascot = MASCOT_BY_ID[77]
+  const mascot = getMascot(1)
 
   if (variant === 'start') return <StartJourney data={data} mascot={mascot} onStart={() => navigate('/academy?level=A1')} />
   return <LevelTravel key={params.toString()} data={data} mascot={mascot} hold={params.get('hold')} onStart={() => navigate(`/academy?level=${data.to?.code ?? from}`)} />

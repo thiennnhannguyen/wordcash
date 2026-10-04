@@ -7,6 +7,7 @@
 import { BookOpenText, Fire, Gift, ShieldStar } from '@phosphor-icons/react'
 import Icon from '../ui/Icon'
 import MascotBlob from '../collection/MascotBlob'
+import UserMenu from './UserMenu'
 import cx from '../../utils/cx'
 import { RANK_BY_KEY } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
@@ -58,13 +59,17 @@ export default function StatusBar({ stats, mascot, className }) {
             />
           )}
         </Pill>
-        <span
-          className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-pill border-thick border-line shadow-hard-sm"
-          style={{ background: `var(--color-${mascot.bg})` }}
-          title={`Linh vật: ${mascot.name}`}
-        >
-          <MascotBlob color={mascot.color} shape={mascot.shape} size={44} className="translate-y-1" />
-        </span>
+        {/* Avatar linh vật đang dùng; bấm mở menu tài khoản (đăng xuất) */}
+        <UserMenu
+          trigger={
+            <span
+              className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-pill border-thick border-line bg-raised shadow-hard-sm"
+              title={`Linh vật: ${mascot.name}`}
+            >
+              <MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={44} className="translate-y-1" />
+            </span>
+          }
+        />
       </div>
     </div>
   )

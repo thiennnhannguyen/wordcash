@@ -43,6 +43,7 @@ import { formatDecimal, formatTimeAgo } from '../../utils/format'
 import { ArenaForeground, ArenaScene } from './ArenaScene'
 import PrivateRoomModal from './PrivateRoomModal'
 import { FRIENDS, LOBBY, PLAYER, RECENT_MATCHES, STATS, WEEKLY_BOARD } from './arenaMock'
+import useSocket from '../../hooks/useSocket'
 
 const MEDALS = { 1: 'gold', 2: 'rank-bac', 3: 'rank-dong' }
 
@@ -413,6 +414,8 @@ function MobileSheet({ openTab, onOpen, onClose, onChallenge }) {
 // ---------- Trang ----------
 
 export default function ArenaLobby() {
+  // Kết nối Socket.IO chỉ mở khi vào Đấu Trường (xác thực bằng access token, tự làm mới khi hết hạn)
+  useSocket()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const pushToast = useToastStore((s) => s.push)

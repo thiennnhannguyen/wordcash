@@ -5,14 +5,16 @@
 
 import MascotCard from '../../components/collection/MascotCard'
 import MascotBlob from '../../components/collection/MascotBlob'
+import { MASCOT_BY_ID } from '../../data/mascots'
 
+// Linh vật lấy từ data/mascots.js: Bánh Mì Bé, Tò He, Rồng Mây, Bánh Bao Sấm, Diều Sáo
 const FAN = [
-  { rarity: 'common', name: 'Bột Nếp', number: 12, color: 'gold', shape: 'round', rotate: -14, y: 34 },
-  { rarity: 'rare', name: 'Giọt Sương', number: 48, color: 'sky', shape: 'drop', rotate: -7, y: 10 },
-  { rarity: 'legendary', name: 'Đại Bánh Bao', number: 97, color: 'accent', shape: 'wide', rotate: 0, y: 0 },
-  { rarity: 'epic', name: 'Kẹo Dẻo', number: 77, color: 'danger', shape: 'tall', rotate: 7, y: 10 },
-  { rarity: 'rare', name: 'Bong Bóng', number: 31, color: 'primary', shape: 'round', rotate: 14, y: 34 },
-]
+  { id: 4, rotate: -14, y: 34 },
+  { id: 7, rotate: -7, y: 10 },
+  { id: 10, rotate: 0, y: 0 },
+  { id: 9, rotate: 7, y: 10 },
+  { id: 14, rotate: 14, y: 34 },
+].map((f) => ({ ...MASCOT_BY_ID[f.id], ...f }))
 
 export default function MascotFan() {
   return (
@@ -29,7 +31,7 @@ export default function MascotFan() {
             rarity={m.rarity}
             name={m.name}
             number={m.number}
-            art={<MascotBlob color={m.color} shape={m.shape} size={120} className="h-auto w-3/4" />}
+            art={<MascotBlob color={m.color} shape={m.shape} traits={m.traits} size={120} className="h-auto w-3/4" />}
           />
         </div>
       ))}
