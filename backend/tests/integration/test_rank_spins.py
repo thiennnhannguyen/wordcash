@@ -160,3 +160,17 @@ async def test_parallel_updates_to_user_stats_do_not_diverge(test_engine):
         async with AsyncSession(test_engine) as s:
             await s.execute(delete(User).where(User.id == user.id))
             await s.commit()
+
+
+async def test_me_stats_uses_effective_streak(db_session):
+    """/me/stats không trả streak cũ khi đã bỏ một ngày (dùng effective_streak), giữ nguyên streak tốt nhất."""
+    db = db_session
+    user = await make_user(db)
+    await stats_service.lock_stats(db, user.id)
+    await db.execute(update(UserStats).where(UserStats.user_id == user.id)
+                     .values(streak_current=6, streak_best=6, streak_last_date=date(2026, 10, 1)))
+    me = await me_service.get_stats(db, user, T0)  # T0 = 04/10, đã bỏ trọn 02 và 03/10
+    assert (me["streak"]["current"], me["streak"]["best"]) == (0, 6)
+    await db.execute(update(UserStats).where(UserStats.user_id == user.id)
+                     .values(streak_current=6, streak_last_date=date(2026, 10, 3)))
+    assert (await me_service.get_stats(db, user, T0))["streak"]["current"] == 6  # làm hôm qua: vẫn hiệu lực

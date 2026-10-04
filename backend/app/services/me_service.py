@@ -69,7 +69,7 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
             "shaky_seconds_left": max(int((deadline - now).total_seconds()), 0) if deadline else None,
             "words_to_recover": max(rank.threshold(stats.current_rank) - mastered, 0) if deadline else 0,
         },
-        "streak": {"current": stats.streak_current, "best": stats.streak_best, "last_date": stats.streak_last_date, "week": week},
+        "streak": {"current": stats_service.effective_streak(stats, today), "best": stats.streak_best, "last_date": stats.streak_last_date, "week": week},
         "spins": {"normal": stats.spins_normal, "special": stats.spins_special,
                   "progress": spins.next_spin_progress(mastered, stats.max_spin_milestone)},
         "today": {

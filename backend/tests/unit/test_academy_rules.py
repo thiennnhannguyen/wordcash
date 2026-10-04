@@ -7,7 +7,8 @@ from datetime import UTC, date, datetime, timedelta
 import pytest
 
 from app.models.academy import ProgressStatus as S
-from app.services import rank, spins, streak, unlock
+from app.models import UserStats
+from app.services import rank, spins, stats_service, streak, unlock
 from app.services.streak import DayOutcome, StreakState
 
 NOW = datetime(2026, 10, 4, 9, 0, tzinfo=UTC)
@@ -114,6 +115,18 @@ def test_streak_milestones_every_seven():
 def test_streak_same_day_twice_is_noop():
     state = StreakState(3, 3, D)
     assert streak.apply_day(state, D, DayOutcome.PASSED).state == state
+
+
+@pytest.mark.parametrize(
+    ("last", "expected"),
+    [(date(2026, 10, 5), 4), (date(2026, 10, 4), 4), (date(2026, 10, 3), 0), (None, 4)],
+)
+def test_effective_streak(last, expected):
+    """Hôm nay 05/10: làm hôm nay hoặc hôm qua thì còn hiệu lực; ngày cuối trước hôm qua (bỏ trọn 04/10) thì 0
+    dù cột streak_current chưa được đặt lại."""
+    stats = UserStats(streak_current=4, streak_best=9, streak_last_date=last)
+    assert stats_service.effective_streak(stats, date(2026, 10, 5)) == expected
+    assert stats_service.effective_streak(None, date(2026, 10, 5)) == 0
 
 
 def test_week_days():

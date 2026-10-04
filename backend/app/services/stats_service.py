@@ -5,6 +5,7 @@ Chỉ số game của người học: rank (kèm lung lay), lượt quay, streak
   Thứ tự khóa luôn là users (cập nhật mastered_count trong progress_service) → user_stats, tránh deadlock.
 - `on_mastered_changed`: gọi trong CÙNG transaction mỗi khi users.mastered_count đổi (lên hoặc xuống): đánh giá lại rank,
   cấp lượt đặc biệt khi lần đầu lên một rank, cấp lượt thường khi vượt mốc 50 cao nhất từng đạt.
+- `effective_streak`: streak hiệu lực để trả ra API (bỏ một ngày → 0), dùng ở mọi nơi hiển thị streak.
 - `refresh`: đánh giá "lười" khi đọc stats: rank lung lay quá hạn thì hạ, streak bỏ một ngày thì về 0.
 - `grant`: ghi sổ spin_grants (duy nhất theo user, reason, ref; trùng thì bỏ qua) rồi mới cộng lượt, nên chạy lại không cấp hai lần.
 - Từ tự tạo không bao giờ ảnh hưởng ở đây (mastered_count chỉ đếm từ hệ thống).
@@ -111,6 +112,16 @@ async def _evaluate(session: AsyncSession, stats: UserStats, mastered: int, now:
 async def on_mastered_changed(session: AsyncSession, user: User, now: datetime) -> Rewards:
     stats = await lock_stats(session, user.id)
     return await _evaluate(session, stats, await mastered_count(session, user.id), now)
+
+
+def effective_streak(stats: UserStats | None, today: date) -> int:
+    """Streak HIỆU LỰC để trả ra API (hàm thuần, chỉ đọc, không khóa dòng): ngày "còn sống" gần nhất trước hôm qua
+    (`streak_last_date` < today − 1) nghĩa là đã bỏ trọn một ngày → 0, kể cả khi cột `streak_current` chưa được đặt lại.
+    Mọi chỗ trả streak ra ngoài (/me/stats, sau này hồ sơ, bảng xếp hạng) PHẢI dùng hàm này, không đọc thẳng cột."""
+    if stats is None:
+        return 0
+    state = StreakState(stats.streak_current or 0, stats.streak_best or 0, stats.streak_last_date)
+    return 0 if streak.is_broken(state, today) else state.current
 
 
 async def refresh(session: AsyncSession, user: User, now: datetime, today: date) -> tuple[UserStats, Rewards]:
