@@ -324,6 +324,7 @@ cd frontend && VITE_USE_MOCK=true npm run dev   # chạy bằng dữ liệu gi�
 cd frontend && npm test                       # test dữ liệu thuần (node:test): phân bổ linh vật, hộ chiếu
 cd frontend && npm run e2e                    # Playwright với backend + PostgreSQL thật (tự bật backend cổng 8100, Vite cổng 5180)
 python -m seeds.seed_dev_entries              # (trong backend/) 60 mục từ A1 mẫu cho dev
+python -m seeds.seed_dev_roadmap              # (trong backend/) lộ trình mẫu A1–A2 cho dev: 20 chặng × 2 bài × 15 mục DEV_SAMPLE
 python -m seeds.purge_dev_entries             # (trong backend/) xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 cd frontend && npm run build                  # build production; postbuild (scripts/check-dist.mjs) làm build lỗi nếu dist còn __wcAuthStore hoặc DEV_SAMPLE
 ```

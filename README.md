@@ -714,6 +714,7 @@ pip install -r requirements.txt
 alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
 python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
+python -m seeds.seed_dev_roadmap           # lộ trình MẪU A1–A2: 20 chặng × 2 bài × 15 mục (~600 mục DEV_SAMPLE, gồm 60 mục trên); tự nạp địa danh
 python -m seeds.purge_dev_entries          # xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
