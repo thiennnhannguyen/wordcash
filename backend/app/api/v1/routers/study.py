@@ -21,7 +21,7 @@ router = APIRouter(prefix="/study-sessions", tags=["Khóa học của tôi"])
     description="Gửi một hoặc nhiều câu. Đáp án đúng trả về ngay sau khi chấm, trừ chế độ test (chỉ trả khi đã nộp hết). "
     "Gửi lại câu đã chấm thì nhận lại kết quả cũ.",
     responses=error_responses("TOKEN_INVALID", "TOKEN_EXPIRED", "VALIDATION_ERROR", "STUDY_SESSION_NOT_FOUND",
-                              "STUDY_SESSION_EXPIRED", "STUDY_SESSION_FINISHED"),
+                              "STUDY_SESSION_EXPIRED", "SESSION_FINISHED"),
 )
 async def submit_answers(session_id: uuid.UUID, data: AnswersIn, user: CurrentUser, session: DbSession):
     return await study_service.submit_answers(session, user, session_id, data.answers)

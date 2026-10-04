@@ -46,7 +46,15 @@ ERRORS: dict[str, tuple[int, str]] = {
     "NOTHING_TO_STUDY": (409, "Không có từ nào phù hợp với chế độ học này."),
     "STUDY_SESSION_NOT_FOUND": (404, "Không tìm thấy phiên học."),
     "STUDY_SESSION_EXPIRED": (410, "Phiên học đã hết hạn, bạn bắt đầu phiên mới nhé."),
-    "STUDY_SESSION_FINISHED": (409, "Phiên học này đã kết thúc."),
+    "SESSION_FINISHED": (409, "Phiên này đã kết thúc."),
+    # Học Viện, Cửa Ải
+    "UNIT_LOCKED": (403, "Bài học này chưa mở. Hoàn thành bài trước nhé."),
+    "TOPIC_LOCKED": (403, "Chặng này chưa mở."),
+    "LEVEL_LOCKED": (403, "Cấp này chưa mở. Hãy vượt Trận Boss của cấp trước."),
+    "BOSS_LOCKED": (403, "Trận Boss chỉ mở khi bạn hoàn thành mọi chặng của cấp."),
+    "BOSS_COOLDOWN": (409, "Bạn cần luyện các chặng yếu hoặc chờ hết thời gian để đánh lại Boss."),
+    "DAILY_CHECK_REQUIRED": (409, "Vượt Cửa Ải Hôm Nay trước đã nhé."),
+    "DAILY_CHECK_DONE": (409, "Bạn đã hoàn thành Cửa Ải hôm nay."),
     # Mã bổ sung cho các lỗi chung
     "FORBIDDEN": (403, "Bạn không có quyền thực hiện thao tác này."),
     "EMAIL_NOT_VERIFIED": (403, "Bạn cần xác thực email trước."),

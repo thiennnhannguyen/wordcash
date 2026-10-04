@@ -1,21 +1,26 @@
 """
-Phiên học trong "Khóa học của tôi": chọn từ theo chế độ, sinh câu hỏi 4 mức, chấm ở server, cập nhật SRS và mastery.
+Phiên học: dựng phiên cho "Khóa học của tôi" và NỘP BÀI dùng chung cho mọi loại phiên (khóa học, Học Viện, Ôn tập).
 
-Chế độ (StudyMode):
+Chế độ khóa học (StudyMode):
 - learn: thẻ học các từ `new` (tối đa `limit` và số từ mới còn lại trong ngày), rồi luyện ngay: mỗi từ một câu mức 1 và một câu mức 3/4.
 - review: các từ đến hạn ôn theo SRS, mỗi từ một câu (từ mới học dùng mức 1–2, còn lại mức 3–4).
 - quick: STUDY_QUICK_QUESTIONS câu trộn ngẫu nhiên từ cả khóa (vẫn cập nhật SRS).
 - hard: từ gắn sao hoặc sai nhiều nhất, mức 3–4.
 - test: STUDY_TEST_QUESTIONS câu, có điểm; không mở khóa gì. Đáp án đúng chỉ trả về khi đã nộp hết.
 
-Câu hỏi kèm đáp án lưu trong StudySession.questions (chỉ ở server). Client chỉ nhận phần đề (`public`).
-Đáp án nhiễu: ưu tiên nghĩa/từ của các mục khác trong cùng khóa; khóa có dưới 4 từ thì lấy thêm từ kho hệ thống cùng loại từ.
-Nộp lại một câu đã chấm trả lại đúng kết quả cũ, không ghi tiến độ lần hai (an toàn khi mạng chập chờn gửi lại).
+Câu hỏi kèm đáp án lưu trong StudySession.questions (chỉ ở server). Client chỉ nhận phần đề (services/session_engine.py).
+Nộp bài (`submit_answers`, mọi `kind`):
+- Chấm ở server, ghi tiến độ qua progress_service.record_answer (SRS, mastery, hoạt động ngày, rank, lượt quay theo mốc).
+- Chế độ test (kiểm tra bài, bài tổng hợp, Boss): mỗi câu chỉ biết đúng/sai; đáp án đúng chỉ lộ khi nộp hết.
+- Nộp xong câu cuối: tính tổng kết và gọi phần xử lý riêng của Học Viện (lesson_service.on_session_finished: mở khóa,
+  con dấu, Boss, lượt quay). Kết quả lưu ở StudySession.result.
+- IDEMPOTENT: nộp lại câu đã chấm trả lại đúng kết quả cũ, không ghi tiến độ lần hai; nộp lại cả phiên đã xong trả lại kết
+  quả cũ (kể cả phần mở khóa / phần thưởng) mà không tính lại. Gửi câu mới vào phiên đã xong → SESSION_FINISHED.
 """
 
 import random
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,9 +28,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import clock
 from app.core.config import settings
 from app.core.errors import AppError
-from app.models import Entry, EntryState, StudyMode, StudySession, User, UserCourseEntry, UserEntryProgress
-from app.services import course_service, question_builder
+from app.models import Entry, EntryState, SessionKind, StudyMode, StudySession, User, UserCourseEntry, UserEntryProgress
+from app.services import course_service, question_builder, session_engine
 from app.services.progress_service import record_answer
+from app.services.stats_service import Rewards
 
 QB = question_builder
 
@@ -35,7 +41,7 @@ def _now() -> datetime:
 
 
 def _data(entry: Entry) -> QB.EntryData:
-    return QB.EntryData(entry.id, entry.headword, entry.meaning_vi, entry.pos, entry.ipa, entry.example, entry.audio_url)
+    return session_engine.entry_data(entry)
 
 
 def _is_new(progress: UserEntryProgress | None) -> bool:
@@ -43,37 +49,7 @@ def _is_new(progress: UserEntryProgress | None) -> bool:
 
 
 def _card(link: UserCourseEntry, entry: Entry) -> dict:
-    return {
-        "entry_id": entry.id,
-        "headword": entry.headword,
-        "meaning_vi": entry.meaning_vi,
-        "pos": entry.pos,
-        "ipa": entry.ipa,
-        "audio_url": entry.audio_url,
-        "example": entry.example,
-        "image_url": entry.image_url,
-        "cefr": entry.cefr,
-        "source": entry.source.value,
-        "collocations": entry.collocations or [],
-        "word_family": entry.word_family or [],
-        "personal_note": link.personal_note,
-    }
-
-
-async def _extra_pool(session: AsyncSession, exclude_ids: list[int], pos_values: set[str | None], need: int) -> list[Entry]:
-    """Đáp án nhiễu bổ sung từ kho hệ thống: ưu tiên cùng loại từ, thiếu thì lấy loại khác."""
-    picked: list[Entry] = []
-    poses = [p for p in pos_values if p]
-    stmts = []
-    if poses:
-        stmts.append(select(Entry).where(Entry.system_approved(), Entry.pos.in_(poses)))
-    stmts.append(select(Entry).where(Entry.system_approved()))
-    for stmt in stmts:
-        if len(picked) >= need:
-            break
-        ids = exclude_ids + [e.id for e in picked]
-        picked += list(await session.scalars(stmt.where(Entry.id.not_in(ids)).order_by(func.random()).limit(need - len(picked))))
-    return picked
+    return session_engine.card(entry, link.personal_note)
 
 
 def _levels_for(mode: StudyMode, entry: QB.EntryData, progress: UserEntryProgress | None, rng: random.Random) -> list[int]:
@@ -151,24 +127,12 @@ async def build_study_session(session: AsyncSession, user: User, course_id: uuid
     ]
     pool_entries = list(course_entries)
     if len(pool_entries) < QB.OPTION_COUNT:
-        pool_entries += await _extra_pool(session, [e.id for e in pool_entries], {e.pos for e in pool_entries}, QB.OPTION_COUNT * 2)
-
-    questions_public, questions_key = [], []
-    for i, ((link, entry, _progress), level) in enumerate(pairs, start=1):
-        others = [e for e in pool_entries if e.id != entry.id]
-        same_pos = [e for e in others if entry.pos and e.pos == entry.pos]
-        ordered = same_pos if len(same_pos) >= QB.OPTION_COUNT - 1 else others
-        q = QB.build_question(
-            f"q{i}", _data(entry), level,
-            meaning_pool=[e.meaning_vi for e in ordered], word_pool=[e.headword for e in ordered], rng=rng,
-        )
-        questions_public.append(q.public)
-        questions_key.append({"id": q.public["id"], **q.key})
+        pool_entries += await session_engine.extra_pool(session, [e.id for e in pool_entries], {e.pos for e in pool_entries}, QB.OPTION_COUNT * 2)
+    questions_public, questions_key = session_engine.build_questions([(r[1], level) for r, level in pairs], pool_entries, rng)
 
     cards = [_card(link, entry) for link, entry, _ in chosen] if mode == StudyMode.LEARN else []
-    study = StudySession(user_id=user.id, course_id=course.id, mode=mode, questions=questions_key, answers={},
-                         expires_at=now + timedelta(hours=settings.STUDY_SESSION_TTL_HOURS))
-    session.add(study)
+    study = await session_engine.create_session(session, user, kind=SessionKind.COURSE, mode=mode, keys=questions_key, now=now,
+                                                course_id=course.id)
     await session.commit()
     return {
         "id": study.id,
@@ -188,6 +152,14 @@ def _reveal(key: dict, entry: Entry | None) -> dict:
     }
 
 
+SOURCES = {SessionKind.COURSE: "course", SessionKind.REVIEW: "review"}  # còn lại: "academy"
+
+
+def _rewards_of(stored: dict) -> Rewards:
+    saved = stored.get("rewards") or {}
+    return Rewards(list(saved.get("spins", [])), saved.get("rank"))
+
+
 async def submit_answers(session: AsyncSession, user: User, session_id: uuid.UUID, answers: list) -> dict:
     study = await session.scalar(
         select(StudySession).where(StudySession.id == session_id, StudySession.user_id == user.id).with_for_update()
@@ -197,17 +169,18 @@ async def submit_answers(session: AsyncSession, user: User, session_id: uuid.UUI
     now = _now()
     keys = {q["id"]: q for q in study.questions}
     recorded = dict(study.answers or {})
-    if study.finished_at is not None and all(a.question_id in recorded for a in answers):
-        pass  # gửi lại câu đã chấm: trả kết quả cũ bên dưới
-    elif study.finished_at is not None:
-        raise AppError("STUDY_SESSION_FINISHED")
-    elif now >= study.expires_at:
+    replay = study.finished_at is not None
+    if replay and not all(a.question_id in recorded for a in answers):
+        raise AppError("SESSION_FINISHED")
+    if not replay and now >= study.expires_at:
         raise AppError("STUDY_SESSION_EXPIRED")
 
     is_test = study.mode == StudyMode.TEST
+    source = SOURCES.get(study.kind, "academy")
     entry_ids = {keys[a.question_id]["entry_id"] for a in answers if a.question_id in keys}
     entries = {e.id: e for e in await session.scalars(select(Entry).where(Entry.id.in_(entry_ids), Entry.visible_to(user.id)))}
 
+    rewards = Rewards()
     results = []
     for item in answers:
         key = keys.get(item.question_id)
@@ -222,8 +195,9 @@ async def submit_answers(session: AsyncSession, user: User, session_id: uuid.UUI
             correct = QB.check_answer(key, item.answer)
             status, became = None, False
             if entry is not None:  # từ có thể vừa bị xóa khỏi kho trong lúc học
-                outcome = await record_answer(session, user, entry, key["level"], correct, now, source="course")
+                outcome = await record_answer(session, user, entry, key["level"], correct, now, source=source)
                 status, became = outcome.status, outcome.became_mastered
+                rewards.merge(outcome.rewards)
             recorded[item.question_id] = {"answer": item.answer, "correct": correct, "status": status, "became_mastered": became}
             result = {"question_id": item.question_id, "correct": correct, "status": status, "became_mastered": became}
         if not is_test:
@@ -232,13 +206,27 @@ async def submit_answers(session: AsyncSession, user: User, session_id: uuid.UUI
 
     finished = len(recorded) == len(keys)
     study.answers = recorded
+    stored = dict(study.result or {})
+    if not replay:
+        # Cộng dồn phần thưởng của cả phiên (lượt quay theo mốc, đổi rank) để nộp lại vẫn thấy đủ
+        stored["rewards"] = _rewards_of(stored).merge(rewards).as_dict()
     if finished and study.finished_at is None:
         study.finished_at = now
+        summary = await _summary(session, user, study, keys, recorded, is_test)
+        from app.services import lesson_service  # tránh import vòng
+
+        outcome = await lesson_service.on_session_finished(session, user, study, summary, keys, recorded, now)
+        hook_rewards = outcome.pop("rewards", None)  # vd. lượt đặc biệt khi lần đầu thắng Boss
+        rewards.merge(hook_rewards)
+        stored["rewards"] = _rewards_of(stored).merge(hook_rewards).as_dict()
+        stored["summary"], stored["outcome"] = summary, outcome
+    study.result = stored
     await session.commit()
 
-    out = {"results": results, "answered": len(recorded), "total": len(keys), "finished": finished, "summary": None}
+    out = {"results": results, "answered": len(recorded), "total": len(keys), "finished": finished, "summary": None,
+           "outcome": None, "rewards": stored.get("rewards") if replay or finished else rewards.as_dict()}
     if finished:
-        out["summary"] = await _summary(session, user, study, keys, recorded, is_test)
+        out["summary"], out["outcome"] = stored.get("summary"), stored.get("outcome")
         if is_test:
             # Kiểm tra: nộp hết rồi mới lộ đáp án của các câu vừa gửi
             for result in out["results"]:

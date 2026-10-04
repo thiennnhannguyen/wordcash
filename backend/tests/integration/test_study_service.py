@@ -121,7 +121,7 @@ async def test_test_mode_hides_answers_until_finished(db_session, clock):
     assert len(final["summary"]["review"]) == 14 and len(final["summary"]["wrong"]) == 1
     with pytest.raises(AppError) as exc:
         await study_service.submit_answers(db_session, user, out["id"], [AnswerIn(question_id="q99", answer="x")])
-    assert exc.value.code == "STUDY_SESSION_FINISHED"
+    assert exc.value.code == "SESSION_FINISHED"
 
 
 async def test_review_mode_uses_srs_due_dates(db_session, clock):
