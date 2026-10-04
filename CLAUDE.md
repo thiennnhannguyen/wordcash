@@ -321,7 +321,7 @@ cd frontend && VITE_USE_MOCK=true npm run dev   # chạy bằng dữ liệu gi�
 cd frontend && npm test                       # test dữ liệu thuần (node:test): phân bổ linh vật, hộ chiếu
 cd frontend && npm run e2e                    # Playwright với backend + PostgreSQL thật (tự bật backend cổng 8100, Vite cổng 5180)
 python -m seeds.seed_dev_entries              # (trong backend/) 60 mục từ A1 mẫu cho dev
-cd frontend && npm run build                  # kiểm tra build production
+cd frontend && npm run build                  # build production; postbuild (scripts/check-dist.mjs) làm build lỗi nếu dist còn __wcAuthStore hoặc DEV_SAMPLE
 ```
 
 Kho từ: chạy lần lượt các script `backend/data_pipeline/01_*.py` → `07_*.py`. Dữ liệu mẫu nằm trong `backend/seeds/`.
