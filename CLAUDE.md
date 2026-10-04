@@ -148,7 +148,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Chưa có trang: phiên ôn tập (`/academy/review/session` đang là trang tạm), kiểm tra chặng (nút trên bản đồ tạm mở giao diện kiểm tra cuối bài), quên mật khẩu. Các nút dẫn tới đó đang rơi vào trang "Không tìm thấy trang" hoặc trang tạm `ComingSoon`.
 - Chưa chặn vào Sảnh khi chưa làm Cửa Ải (cần server biết ngày theo múi giờ người dùng; TODO trong `App.jsx`).
 - Chưa có đăng nhập Google, trang Điều khoản/Chính sách.
-- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Frontend đã nối auth theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md`. Seed dev: `python -m seeds.seed_dev_entries` (60 mục từ A1 mẫu, `exam_tags` DEV_SAMPLE, `status = approved` chỉ để dev/e2e dùng được /bank/search; thay bằng kho thật trước khi ra mắt). Database e2e: `wordclash_e2e`. Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Seed có 22 địa danh: 10 chặng mỗi cấp trong `topics` + Boss lưu ở `levels.boss_landmark_*`; tên quái vật canh giữ (Rồng Vịnh, Bàn Tay Núi) chưa có cột trong DB. PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
+- Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Frontend đã nối auth theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md`. Seed dev: `python -m seeds.seed_dev_entries` (60 mục từ A1 mẫu, `exam_tags` DEV_SAMPLE, `status = approved` chỉ để dev/e2e dùng được /bank/search; xóa bằng `python -m seeds.purge_dev_entries` trước khi ra mắt; database production phải có 0 mục DEV_SAMPLE, xem `docs/deploy-checklist.md`). Database e2e: `wordclash_e2e`. Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Seed có 22 địa danh: 10 chặng mỗi cấp trong `topics` + Boss lưu ở `levels.boss_landmark_*`; tên quái vật canh giữ (Rồng Vịnh, Bàn Tay Núi) chưa có cột trong DB. PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
 - Repo đã khởi tạo git (02/10/2026). `feat/auth-phase1` đã gộp vào `main` (03/10/2026); Khóa học của tôi và việc nối frontend nằm trên `feat/my-courses` (rebase lên `main`); chưa có remote.
 
 ## Công nghệ
@@ -321,6 +321,7 @@ cd frontend && VITE_USE_MOCK=true npm run dev   # chạy bằng dữ liệu gi�
 cd frontend && npm test                       # test dữ liệu thuần (node:test): phân bổ linh vật, hộ chiếu
 cd frontend && npm run e2e                    # Playwright với backend + PostgreSQL thật (tự bật backend cổng 8100, Vite cổng 5180)
 python -m seeds.seed_dev_entries              # (trong backend/) 60 mục từ A1 mẫu cho dev
+python -m seeds.purge_dev_entries             # (trong backend/) xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 cd frontend && npm run build                  # build production; postbuild (scripts/check-dist.mjs) làm build lỗi nếu dist còn __wcAuthStore hoặc DEV_SAMPLE
 ```
 
