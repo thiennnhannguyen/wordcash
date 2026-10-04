@@ -2,7 +2,7 @@
 Cấu hình chung cho pytest: app test, DB test.
 
 - ENV=testing đặt trước khi import app → mọi thứ dùng TEST_DATABASE_URL (database test riêng, PostgreSQL thật).
-- Bảng tạo một lần cho cả phiên test; mỗi test chạy trong một transaction rồi rollback, nên dữ liệu không rò sang test khác.
+- Bảng tạo một lần cho cả phiên test, kèm danh mục 100 linh vật (seeds/seed_mascots.py); mỗi test chạy trong một transaction rồi rollback, nên dữ liệu không rò sang test khác.
   Service gọi session.commit() bình thường: commit chỉ đóng SAVEPOINT bên trong transaction đó.
 - `client`: httpx.AsyncClient(ASGITransport) gọi app, với get_db → session của test, get_redis → fakeredis.FakeAsyncRedis.
 - `auth_user`: tài khoản mẫu đăng ký qua API, trả kèm access token, refresh token và header Authorization.
@@ -24,6 +24,7 @@ from app.core.database import get_db  # noqa: E402
 from app.core.redis import get_redis  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base  # noqa: E402
+from seeds import seed_mascots  # noqa: E402
 
 PASSWORD = "Wordclash2026"
 
@@ -34,6 +35,9 @@ async def test_engine():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+    # Danh mục 100 linh vật (bảng tham chiếu, giống dữ liệu migration + seed_mascots): nạp một lần, mọi test dùng chung
+    async with AsyncSession(engine) as session:
+        await seed_mascots.seed(session)
     yield engine
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
