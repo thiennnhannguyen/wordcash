@@ -20,8 +20,9 @@ Phần game hóa gồm: rank theo số từ đã thuộc, Cửa Ải Hôm Nay b�
 - Khung thư mục đã có. Phần lớn file chỉ chứa docstring hoặc comment mô tả nhiệm vụ kèm TODO; `docs/` cũng mới là TODO, đặc tả thật nằm trong `README.md`.
 - **Backend chạy FastAPI.** Đã có code thật: khởi động (`app/main.py`, `app/core/`), **Auth giai đoạn 1** (02/10/2026, đã hoàn thiện sau review; xem `docs/auth.md`): đăng ký, đăng nhập email/username, refresh token xoay vòng trong cookie httpOnly có khoảng ân hạn 30 giây cho nhiều tab, đăng xuất, đăng xuất mọi thiết bị, hồ sơ (avatar chỉ 3 linh vật khởi đầu), onboarding, đổi mật khẩu, giới hạn đăng nhập sai (Redis, dự phòng trong bộ nhớ khi Redis hỏng), IP thật sau proxy, tắt /docs ở production, xác thực Socket.IO. Model `User` (UUID), `RefreshToken`, `Level`, `Topic` kèm migration; seed 22 địa danh A1–A2. Checklist triển khai: `docs/deploy-checklist.md`.
 - **Khóa học của tôi** (03/10/2026, đã gộp vào `main`; xem `docs/courses.md`): model `Entry` (từ hệ thống + từ tự tạo), `UserEntryProgress`, `ReviewLog`, `UserCourse`, `UserCourseEntry`, `StudySession`, `AudioJob`, bộ đếm `users.mastered_count` / `custom_mastered_count`; service thuần `srs.py` (SM-2), `mastery.py`, `question_builder.py` (4 mức), `course_import.py` dùng chung cho Học Viện sau này; `progress_service.py`, `course_service.py`, `study_service.py`; API `/courses`, `/bank/search`, `/study-sessions`, `/custom-entries`. Tổng 253 test pytest.
-- **Chưa có:** các model còn lại (Unit, UnitEntry, UserUnitProgress, linh vật, trận đấu, Cửa Ải), các service luật còn lại (unlock, rank, gacha, scoring) và test của chúng; kho từ hệ thống chưa có dữ liệu (chưa seed mục từ nào); các router ngoài health/auth/users/courses mới là khung rỗng; sự kiện trận đấu mới trả ack "đang phát triển"; worker TTS cho `audio_jobs`. Ngoài tài khoản và Khóa học của tôi, các màn frontend vẫn chạy trên dữ liệu mẫu.
-- **Frontend nối backend (03/10/2026):** đăng ký, đăng nhập, onboarding, đăng xuất / đăng xuất mọi thiết bị, khôi phục phiên khi tải trang, tự làm mới access token (một lần, khóa giữa các tab), bảo vệ route, Khóa học của tôi, Socket.IO trong Đấu Trường đều gọi API thật; tên và linh vật ở Sảnh lấy từ user thật. Các màn khác (Học Viện, Cửa Ải, Đấu Trường, Bộ Sưu Tập, Hồ Sơ, Bảng xếp hạng) vẫn dùng dữ liệu mẫu. Kiểm thử đầu-cuối bằng Playwright: `npm run e2e` (6 kịch bản).
+- **Lõi Học Viện** (05/10/2026, nhánh `feat/academy-core`, PR chờ duyệt; xem `docs/academy.md`, luật chốt ở `docs/game-rules.md`): `core/clock.py` + `X-Debug-Now`; model `Unit`, `UnitEntry`, tiến độ cấp/chặng/bài, `boss_attempts`, `topic_practice_log`, `user_stats`, `spin_grants`, `user_daily_activity`, `daily_checks` (migration `a027e19df0ee`); luật thuần `unlock.py`, `rank.py` (lung lay 3 ngày), `streak.py`, `spins.py`; service lộ trình, học bài, kiểm tra cuối bài, bài tổng hợp chặng, luyện chặng yếu, Trận Boss, Cửa Ải Hôm Nay, ôn tập, `/me/stats`; route học bị chặn khi chưa vượt Cửa Ải (`DAILY_CHECK_REQUIRED`). Frontend: bản đồ A1/A2, học bài, kiểm tra, Boss, Cửa Ải, Ôn tập, Sảnh chạy trên API thật (`services/academyApi.js`). 338 test pytest, 16 npm test, 11 kịch bản e2e. Seed dev `seed_dev_roadmap`.
+- **Chưa có:** linh vật và logic vòng quay (gacha), mảnh; kiểm tra xếp lớp; nhánh IELTS/TOEIC; trận đấu (model, scoring, sự kiện mới trả ack "đang phát triển"); kho từ hệ thống thật (chỉ có mục DEV_SAMPLE); worker TTS cho `audio_jobs`. Bộ Sưu Tập, Hồ Sơ, Bảng xếp hạng, Đấu Trường vẫn chạy trên dữ liệu mẫu.
+- **Frontend nối backend (03/10/2026):** đăng ký, đăng nhập, onboarding, đăng xuất / đăng xuất mọi thiết bị, khôi phục phiên khi tải trang, tự làm mới access token (một lần, khóa giữa các tab), bảo vệ route, Khóa học của tôi, Socket.IO trong Đấu Trường đều gọi API thật; tên và linh vật ở Sảnh lấy từ user thật. Các màn khác (Học Viện, Cửa Ải, Đấu Trường, Bộ Sưu Tập, Hồ Sơ, Bảng xếp hạng) vẫn dùng dữ liệu mẫu. Từ 05/10/2026 Học Viện, Cửa Ải, Ôn tập và số liệu Sảnh cũng chạy API thật (xem mục Lõi Học Viện). Kiểm thử đầu-cuối bằng Playwright: `npm run e2e` (11 kịch bản, gồm 6 kịch bản Học Viện giả lập nhiều ngày bằng `X-Debug-Now`).
 - **Frontend** có nền tảng giao diện bản sáng và 23 màn hình. Chi tiết xem mục **Báo cáo công việc** bên dưới.
 - Đang ở giai đoạn thiết kế giao diện, sau đó sẽ code **Giai đoạn 1: MVP Học Viện** (tài khoản, lộ trình A1–A2, mở khóa, SRS, Cửa Ải Hôm Nay, rank).
 - Khi code một file, hãy thay phần mô tả placeholder bằng code thật nhưng giữ lại docstring hoặc comment đầu file.
@@ -124,7 +125,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Màu rank, dải màu cấp độ A1→C2; màu nhận diện Sảnh (tím), Bộ Sưu Tập (vàng), Hồ Sơ (xanh chanh), Bảng xếp hạng (hồng).
 - Logo tạm: chữ WORDCLASH nghiêng, chữ W tím.
 - Câu chữ tự viết: tiêu đề các phần landing, mô tả onboarding, mẹo học. Linh vật khởi đầu là #001–#003 trong `data/mascots.js` (Bông Tím, Bé Thính, Ớt Hiểm).
-- Mức trừ khi quên từ tạm là 1; lượt quay streak tặng ở mọi bội số của 7 ngày.
+- Mức trừ khi quên từ tạm là 1 (lượt quay streak ở mọi bội số của 7 ngày đã chốt 04/10/2026).
 - Ngưỡng thanh máu đổi màu (50% / 25%); ngưỡng qua bài kiểm tra chặng chưa có con số.
 - Kiểm tra và Trận Boss: điểm mẫu đổi thành 70% (14/20) thay vì 72%, và 92% / 78% (trên 50 câu) thay vì 91% / 79%, vì các con số gốc không chia hết cho 20 hoặc 50 câu. Ngoài ra còn tạm đặt: chờ 24 giờ mới được đánh lại Boss, thắng Boss được +1 lượt quay đặc biệt, bỏ dở bài không được lưu. Các điểm này cần chốt thành luật.
 - Số liệu giả: "12.400+ người đang luyện từ mỗi ngày" trên landing phải thay bằng số thật hoặc bỏ trước khi ra mắt.
@@ -146,7 +147,6 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Cảnh bay (đặt tạm): B2 đổi tên vùng thành "Mỹ & Canada" (cờ vẫn là cờ Mỹ); nút "Khám phá" ở màn thắng Boss đổi thành "Bay tới …" dẫn vào `/travel`; onboarding chọn "Bắt đầu từ A1" giờ đi qua màn "Hành trình bắt đầu từ đây" rồi vào bản đồ A1 thay vì về Sảnh; hoạt cảnh mới vẽ cho chặng B1 → B2 (hồ Loch Ness, New York), các cấp khác chưa có cảnh riêng; nút Bắt đầu hành trình dẫn tới `/academy?level=B2` (dữ liệu mẫu vẫn khóa B2).
 - Khóa học của tôi (đặt tạm, chi tiết ở cuối `docs/courses.md`): `quick`/`test` cũng cập nhật SRS; giới hạn 20 từ mới/ngày (`DAILY_NEW_WORDS_LIMIT`) áp cho chế độ học mới và tính chung với Học Viện; câu nghe (mức 2) chỉ có khi mục từ có `audio_url`, không thì đổi sang mức 1; khóa nhỏ thì phiên ôn nhanh/kiểm tra có ít hơn 20 câu (mỗi cặp từ–mức chỉ hỏi một lần); "Từ của tôi đã thuộc" = số từ khác nhau đã thuộc trong các khóa đang học (gồm cả từ kho); tạo từ trùng chữ với kho thì gợi ý dùng bản kho, gửi `force` vẫn tạo từ riêng; 24 icon và 6 màu khóa học; xóa hẳn khóa giữ nguyên tiến độ và từ tự tạo; 54 mục từ mẫu ở `data/mockCourses.js` là nội dung nháp.
 - Chưa có trang: phiên ôn tập (`/academy/review/session` đang là trang tạm), kiểm tra chặng (nút trên bản đồ tạm mở giao diện kiểm tra cuối bài), quên mật khẩu. Các nút dẫn tới đó đang rơi vào trang "Không tìm thấy trang" hoặc trang tạm `ComingSoon`.
-- Chưa chặn vào Sảnh khi chưa làm Cửa Ải (cần server biết ngày theo múi giờ người dùng; TODO trong `App.jsx`).
 - Chưa có đăng nhập Google, trang Điều khoản/Chính sách.
 - Backend: phần lớn model, route, service và test của Giai đoạn 1 vẫn chưa viết (đã có auth, `levels`/`topics`, seed địa danh). Frontend đã nối auth theo mục "Hướng dẫn tích hợp frontend" trong `docs/auth.md`. Seed dev: `python -m seeds.seed_dev_entries` (60 mục từ A1 mẫu, `exam_tags` DEV_SAMPLE, `status = approved` chỉ để dev/e2e dùng được /bank/search; xóa bằng `python -m seeds.purge_dev_entries` trước khi ra mắt; database production phải có 0 mục DEV_SAMPLE, xem `docs/deploy-checklist.md`). Database e2e: `wordclash_e2e`. Tên cấp A1/A2 trong seed lấy theo `LEVEL_NAMES` (đặt tạm). Seed có 22 địa danh: 10 chặng mỗi cấp trong `topics` + Boss lưu ở `levels.boss_landmark_*`; tên quái vật canh giữ (Rồng Vịnh, Bàn Tay Núi) chưa có cột trong DB. PostgreSQL của Docker mở ở cổng **5433** trên máy (tránh PostgreSQL cài sẵn ở 5432).
 - CI: `.github/workflows/ci.yml` chạy khi push / pull request: PostgreSQL + Redis (service containers) → `alembic upgrade head` → kiểm tra một head → `pytest`; frontend `npm ci` → `npm test` → `npm run build`. Chưa chạy e2e trên CI.
@@ -215,6 +215,8 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Qua cấp: vượt Trận Boss (khoảng 50 câu, đạt ≥ 85%).
 - Kiểm tra xếp lớp mở thẳng tới cấp phù hợp, nhưng từ ở các cấp bỏ qua **không** tự tính là `mastered`.
 - Phần đã mở thì không bao giờ khóa lại.
+- **Mở tuần tự** (đã chốt): bài trong chặng, chặng trong cấp; không chọn thứ tự. Bài tổng hợp chặng đạt ≥ 80%.
+- Trận Boss 50 câu. Thua → 2 chặng yếu nhất; đánh lại được khi chờ đủ 12 giờ **hoặc** đã luyện xong (trả lời hết câu) mọi chặng yếu. Lần đầu thắng mỗi cấp +1 lượt quay đặc biệt.
 
 ### Khóa học của tôi (chi tiết ở `docs/courses.md`)
 - Từ có sẵn trong kho chỉ được **liên kết** vào khóa học, không sao chép; tiến độ dùng chung với Học Viện và tính rank, lượt quay như bình thường.
@@ -229,16 +231,17 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 
 ### Cửa Ải Hôm Nay
 - Bắt buộc ở lần mở web đầu tiên trong ngày, **tính theo múi giờ của người dùng**.
-- Hỏi 2–5 từ đã học, ưu tiên từ đến hạn ôn và trộn thêm ngẫu nhiên.
+- Hỏi 2–5 từ **hệ thống** đã học, chỉ câu mức 3–4, ưu tiên từ đến hạn ôn và trộn thêm 2 từ ngẫu nhiên. Dưới 2 từ hệ thống đã học thì được miễn (streak giữ nguyên).
+- Chưa xong thì server chặn mọi route bắt đầu phiên học (`DAILY_CHECK_REQUIRED`); frontend đưa mọi trang trong app tới `/daily-check`.
 - Trả lời sai: từ chuyển sang `forgotten`, số từ thuộc −1 (giá trị này lấy từ config), từ vào danh sách ôn gấp.
-- Đúng hết: streak +1. Streak 7 ngày được +1 lượt quay.
+- Đúng hết: streak +1; có câu sai: giữ nguyên; bỏ trọn một ngày: về 0. Mỗi bội số của 7 ngày được +1 lượt quay thường.
 
 ### Rank (theo số từ đã thuộc)
 Tân Binh 0–99 · Đồng 100–299 · Bạc 300–599 · Vàng 600–999 · Bạch Kim 1.000–1.999 · Kim Cương 2.000–3.499 · Cao Thủ 3.500–4.999 · Huyền Thoại 5.000+.
-Khi rơi dưới mốc, người dùng có **vùng đệm 3 ngày** trước khi bị tụt rank thật.
+Khi rơi dưới mốc, người dùng có **vùng đệm 3 ngày** trước khi bị tụt rank thật (gỡ lại kịp thì giữ rank). Lần đầu đạt mỗi rank +1 lượt đặc biệt.
 
 ### Vòng quay
-- Mỗi 50 từ thuộc được +1 lượt; lên rank được 1 lượt **đặc biệt** (tỉ lệ ra thẻ hiếm cao hơn); streak 7 ngày được +1 lượt.
+- Mỗi 50 từ thuộc được +1 lượt (chỉ khi vượt mốc cao nhất từng đạt, `max_spin_milestone`; mọi lượt ghi sổ `spin_grants` duy nhất theo người–lý do–mốc); lên rank được 1 lượt **đặc biệt** (tỉ lệ ra thẻ hiếm cao hơn); streak 7 ngày được +1 lượt.
 - Tỉ lệ: Thường 60% (45 con) · Hiếm 28% (30 con) · Sử Thi 10% (18 con) · Huyền Thoại 2% (7 con).
 - Phân bổ linh vật theo vùng (Thường / Hiếm / Sử Thi / Huyền Thoại): A1 8/5/3/1 · A2 8/5/3/1 · B1 7/5/2/1 · B2 7/4/3/1 · C1 6/4/3/1 · C2 6/5/3/1 · Đặc biệt 3/2/1/1 (bảng ở `docs/game-rules.md`, dữ liệu `DISTRIBUTION` trong `data/mascots.js`, kiểm tra bằng `npm test`). Mỗi vùng A1–C2 có đúng 1 Huyền Thoại ("con của Boss"). 7 linh vật Đặc biệt có `obtain = achievement` (nhận qua thành tích), còn lại `obtain = gacha`; vòng quay và đổi mảnh không bao giờ trả linh vật `achievement` hay ô `coming_soon`.
 - Vòng quay chỉ lấy linh vật thuộc các vùng người dùng đã mở; trong cùng một độ hiếm, các con có khả năng ra ngang nhau.
@@ -296,12 +299,12 @@ Chuẩn hiện tại là **bản sáng** (đã thay hẳn bản dark mode cũ). 
 
 ## Khi chưa rõ
 
+Đã chốt 04/10/2026: mở chặng tuần tự, ngưỡng 80% / 80% / 85% (xem `docs/game-rules.md`).
+
 Các điểm sau **chưa được chốt**. Hãy hỏi trước thay vì tự quyết:
 
 - tên chính thức và logo;
 - mức trừ khi quên từ;
-- có cho chọn thứ tự chặng trong cùng một cấp hay không;
-- ngưỡng 80% và 85%;
 - mô hình kiếm tiền (đã chốt một điểm: không bán lượt quay bằng tiền);
 - nguồn danh sách từ cụ thể.
 
