@@ -1,5 +1,6 @@
 /*
  * Hàng đợi thông báo (toast). Gọi `useToastStore.getState().push({...})` từ bất cứ đâu.
+ * `action: {label, onClick}` thêm một nút hành động (vd. "Quay ngay"); bấm xong toast tự đóng.
  */
 
 import { create } from 'zustand'
@@ -10,9 +11,9 @@ let nextId = 1
 export const useToastStore = create((set, get) => ({
   toasts: [],
 
-  push: ({ variant = 'info', title, message, duration = AUTO_DISMISS_MS }) => {
+  push: ({ variant = 'info', title, message, action, duration = action ? AUTO_DISMISS_MS * 2 : AUTO_DISMISS_MS }) => {
     const id = nextId++
-    set((state) => ({ toasts: [...state.toasts, { id, variant, title, message }].slice(-4) }))
+    set((state) => ({ toasts: [...state.toasts, { id, variant, title, message, action }].slice(-4) }))
     if (duration > 0) setTimeout(() => get().dismiss(id), duration)
     return id
   },

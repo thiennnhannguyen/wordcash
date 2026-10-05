@@ -26,6 +26,9 @@ export const useAuthStore = create((set, get) => ({
 
   clear: () => set({ accessToken: null, user: null, status: 'anonymous' }),
 
+  // Cập nhật user sau khi server trả bản mới (vd. PATCH /users/me đổi avatar, linh vật Đấu Trường)
+  setUser: (user) => set({ user }),
+
   expire: () => {
     if (get().status === 'authenticated') set({ accessToken: null, user: null, status: 'anonymous', expired: true })
   },

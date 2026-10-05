@@ -27,7 +27,16 @@ export const ERROR_MESSAGES = {
   WRONG_PASSWORD: 'Mật khẩu hiện tại không đúng.',
   ACCOUNT_DISABLED: 'Tài khoản này đã bị khóa.',
   FORBIDDEN_ORIGIN: 'Yêu cầu bị từ chối vì không đến từ trang WORDCLASH.',
-  MASCOT_NOT_OWNED: 'Bạn chưa sở hữu linh vật này nên chưa thể đặt làm ảnh đại diện.',
+  MASCOT_NOT_OWNED: 'Bạn chưa sở hữu linh vật này nên chưa thể chọn nó.',
+  // Bộ Sưu Tập (docs/collection.md)
+  MASCOT_NOT_FOUND: 'Không tìm thấy linh vật.',
+  NO_SPINS_LEFT: 'Bạn không đủ lượt quay. Học thêm ở Học Viện để nhận lượt mới nhé.',
+  INVALID_SPIN_COUNT: 'Mỗi lần chỉ mở được từ 1 tới 10 lượt.',
+  NOT_ENOUGH_SHARDS: 'Bạn chưa đủ mảnh để đổi linh vật này.',
+  MASCOT_ALREADY_OWNED: 'Bạn đã có linh vật này rồi.',
+  MASCOT_NOT_EXCHANGEABLE: 'Linh vật này chưa đổi được bằng mảnh.',
+  IDEMPOTENCY_KEY_REQUIRED: 'Yêu cầu chưa hợp lệ, bạn tải lại trang rồi thử lại nhé.',
+  IDEMPOTENCY_KEY_REUSED: 'Yêu cầu bị trùng, bạn tải lại trang rồi thử lại nhé.',
   EMAIL_NOT_VERIFIED: 'Bạn cần xác thực email trước.',
   // Khóa học của tôi (docs/courses.md)
   COURSE_NOT_FOUND: 'Không tìm thấy khóa học.',

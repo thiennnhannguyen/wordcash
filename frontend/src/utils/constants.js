@@ -33,8 +33,9 @@ export const GACHA = {
   pityEpic: 20, // 20 lượt liên tiếp không ra Sử Thi thì lượt kế tiếp chắc chắn ra Sử Thi
   shardCost: { common: 20, rare: 40, epic: 60, legendary: 150 }, // giá đổi 1 linh vật chưa có
   shardsPerDuplicate: { common: 2, rare: 4, epic: 8, legendary: 20 }, // theo đề thiết kế màn Quay thẻ
-  // Tỉ lệ lượt đặc biệt (khi lên rank): luật chỉ nói "cao hơn", các con số này TẠM ĐẶT, cần chốt
-  specialRates: { common: 30, rare: 45, epic: 20, legendary: 5 },
+  // Tỉ lệ lượt đặc biệt (lên rank, thắng Boss), đã chốt 05/10/2026; chế độ thường lấy từ GET /collection/rates
+  specialRates: { common: 0, rare: 70, epic: 24, legendary: 6 },
+  maxBatch: 10, // "Mở tất cả" tối đa 10 lượt mỗi lần
 }
 
 // Cấp độ CEFR và tên gọi tiếng Việt

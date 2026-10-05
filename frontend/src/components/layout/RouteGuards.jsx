@@ -13,13 +13,13 @@
 import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import MascotBlob from '../collection/MascotBlob'
-import { getMascot } from '../../data/mascots'
+import { FALLBACK_MASCOT } from '../../store/mascotStore'
 import { useAuthStore } from '../../store/authStore'
 import { useDailyCheckStore } from '../../store/dailyCheckStore'
 import { Wordmark } from './NavBar'
 
 export function BootSplash() {
-  const mascot = getMascot(1)
+  const mascot = FALLBACK_MASCOT // màn chờ trước khi đăng nhập: chưa gọi được API danh mục
   return (
     <div className="grid min-h-dvh place-items-center bg-bg px-4" role="status" aria-live="polite">
       <div className="flex flex-col items-center gap-5 text-center">

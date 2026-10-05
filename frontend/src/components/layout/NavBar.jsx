@@ -4,13 +4,16 @@
  * Desktop (≥ md): thanh bên trái cố định, mục đang chọn nền tím điện.
  * Mobile: tab dưới đáy gồm Sảnh, Học Viện, Đấu Trường (nút giữa to, nổi lên, màu cam), Bộ Sưu Tập, Hồ Sơ.
  * `preview` hiển thị tại chỗ (không cố định, không ẩn theo màn hình), dùng cho trang Design System.
+ * Mục Bộ Sưu Tập có chấm đỏ khi còn lượt quay chưa dùng hoặc có thẻ MỚI chưa xem (store/collectionStore.js, số liệu server).
  */
 
+import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Cards, GraduationCap, House, Ranking, Sword, UserCircle } from '@phosphor-icons/react'
 import Icon, { IconBadge } from '../ui/Icon'
 import cx from '../../utils/cx'
 import { SidebarUser } from './UserMenu'
+import { useCollectionStore } from '../../store/collectionStore'
 
 // Mỗi khu một màu nhận diện: Học Viện xanh trời, Đấu Trường cam. `mobile: false` = chỉ có trên desktop.
 export const NAV_ITEMS = [
@@ -24,6 +27,19 @@ export const NAV_ITEMS = [
 
 const MOBILE_ITEMS = NAV_ITEMS.filter((item) => item.mobile !== false)
 
+function useCollectionDot(preview) {
+  const dot = useCollectionStore((s) => s.spins > 0 || s.newCount > 0)
+  return !preview && dot
+}
+
+function Dot({ label = 'Có lượt quay hoặc thẻ mới' }) {
+  return (
+    <span className="absolute -right-1 -top-1 size-3.5 rounded-pill border-2 border-line bg-danger" role="status" aria-label={label}>
+      <span className="anim-beacon absolute inset-0 rounded-pill" aria-hidden="true" />
+    </span>
+  )
+}
+
 export function Wordmark({ className }) {
   return (
     <div className={cx('font-heading text-2xl font-black italic tracking-tight text-ink', className)}>
@@ -33,6 +49,7 @@ export function Wordmark({ className }) {
 }
 
 export function SidebarNav({ preview = false, activeIndex }) {
+  const dot = useCollectionDot(preview)
   return (
     <aside
       className={cx(
@@ -60,7 +77,10 @@ export function SidebarNav({ preview = false, activeIndex }) {
                       : 'border-transparent text-ink hover:bg-raised',
                   )}
                 >
-                  <IconBadge icon={item.icon} bg={active ? 'surface' : item.color} size="sm" shape="square" shadow={false} />
+                  <span className="relative">
+                    <IconBadge icon={item.icon} bg={active ? 'surface' : item.color} size="sm" shape="square" shadow={false} />
+                    {dot && item.to === '/collection' && <Dot />}
+                  </span>
                   {item.label}
                 </span>
               )
@@ -75,6 +95,7 @@ export function SidebarNav({ preview = false, activeIndex }) {
 }
 
 export function BottomTabs({ preview = false, activeIndex }) {
+  const dot = useCollectionDot(preview)
   return (
     <nav
       aria-label="Điều hướng chính"
@@ -115,12 +136,13 @@ export function BottomTabs({ preview = false, activeIndex }) {
                   <span className="flex h-[72px] flex-col items-center justify-center gap-1">
                     <span
                       className={cx(
-                        'grid h-8 w-13 place-items-center rounded-pill border-thick transition-colors',
+                        'relative grid h-8 w-13 place-items-center rounded-pill border-thick transition-colors',
                         active ? 'border-line' : 'border-transparent text-muted',
                       )}
                       style={active ? { background: `var(--color-${item.color})` } : undefined}
                     >
                       <Icon icon={item.icon} size={22} color={active ? (item.color === 'primary' ? 'white' : 'ink') : 'current'} />
+                      {dot && item.to === '/collection' && <Dot />}
                     </span>
                     <span
                       className={cx(
@@ -142,6 +164,10 @@ export function BottomTabs({ preview = false, activeIndex }) {
 }
 
 export default function NavBar() {
+  const refresh = useCollectionStore((s) => s.refresh)
+  useEffect(() => {
+    refresh()
+  }, [refresh])
   return (
     <>
       <SidebarNav />

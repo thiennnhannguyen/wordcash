@@ -1,7 +1,7 @@
 /*
  * Thông báo ngắn (toast): thành công, lỗi, thông tin, phần thưởng.
  *
- * `Toast` là một thông báo đơn lẻ; `Toaster` đặt một lần trong App để hiển thị hàng đợi từ toastStore.
+ * `Toast` là một thông báo đơn lẻ (có thể kèm một nút `action`); `Toaster` đặt một lần trong App để hiển thị hàng đợi từ toastStore.
  */
 
 import { AnimatePresence, motion } from 'framer-motion'
@@ -17,7 +17,7 @@ const VARIANTS = {
   reward: { icon: Gift, bg: 'gold' },
 }
 
-export function Toast({ variant = 'info', title, message, onClose, className }) {
+export function Toast({ variant = 'info', title, message, action, onClose, className }) {
   const v = VARIANTS[variant]
 
   return (
@@ -32,6 +32,18 @@ export function Toast({ variant = 'info', title, message, onClose, className }) 
       <div className="min-w-0 flex-1 pt-0.5">
         {title && <div className="font-heading text-lg font-extrabold leading-tight">{title}</div>}
         {message && <p className="text-caption text-muted">{message}</p>}
+        {action && (
+          <button
+            type="button"
+            onClick={() => {
+              action.onClick()
+              onClose?.()
+            }}
+            className="pressable mt-2 inline-flex min-h-11 items-center rounded-btn border-thick border-line bg-danger px-4 font-display text-sm font-bold uppercase tracking-wider text-ink shadow-hard-sm"
+          >
+            {action.label}
+          </button>
+        )}
       </div>
       {onClose && (
         <button
