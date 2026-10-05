@@ -18,6 +18,7 @@ from app.models import RefreshToken, User
 from app.schemas.auth import RegisterIn
 from app.schemas.user import OnboardingIn, UserUpdateIn
 from app.services import auth_service as svc
+from app.services import collection_service
 
 PASSWORD = "Wordclash2026"
 
@@ -284,6 +285,7 @@ async def test_update_profile_only_sent_fields(db_session):
     issued = await _register(db_session)
     user = await svc.update_profile(db_session, issued.user, UserUpdateIn(display_name="  Nhân WC "))
     assert user.display_name == "Nhân WC" and user.timezone == settings.DEFAULT_TIMEZONE
+    await collection_service.grant_starter(db_session, user, 2, datetime.now(UTC))
     user = await svc.update_profile(db_session, user, UserUpdateIn(timezone="Europe/London", avatar_mascot_id=2))
     assert (user.display_name, user.timezone, user.avatar_mascot_id) == ("Nhân WC", "Europe/London", 2)
 

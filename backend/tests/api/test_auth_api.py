@@ -299,7 +299,13 @@ async def test_onboarding_invalid_values(client, auth_user, overrides):
     assert [d["field"] for d in res.json()["error"]["details"]] == list(overrides)
 
 
+async def _onboard(client, auth_user, starter: int = 3):
+    payload = {"goal": "general", "daily_minutes": 10, "start_mode": "a1", "starter_mascot_id": starter}
+    assert (await client.patch(f"{API}/users/me/onboarding", headers=auth_user["headers"], json=payload)).status_code == 200
+
+
 async def test_update_profile(client, auth_user):
+    await _onboard(client, auth_user, 3)  # sở hữu #003 → đặt làm avatar được
     res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"display_name": " Nhân WC ", "avatar_mascot_id": 3})
     assert res.status_code == 200
     assert (res.json()["display_name"], res.json()["avatar_mascot_id"], res.json()["timezone"]) == ("Nhân WC", 3, "Asia/Ho_Chi_Minh")
@@ -310,9 +316,16 @@ async def test_update_profile(client, auth_user):
 
 
 @pytest.mark.parametrize("mascot_id", [1, 2, 3])
-async def test_avatar_starter_mascots_allowed(client, auth_user, mascot_id):
-    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": mascot_id})
-    assert res.status_code == 200 and res.json()["avatar_mascot_id"] == mascot_id
+async def test_avatar_requires_real_ownership(client, auth_user, mascot_id):
+    """Quy tắc tạm "linh vật 1–3 luôn được" đã bỏ: chỉ linh vật đang sở hữu (vd. khởi đầu chọn ở onboarding)."""
+    other = 1 if mascot_id != 1 else 2
+    await _onboard(client, auth_user, mascot_id)
+    res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": mascot_id, "arena_mascot_id": mascot_id})
+    assert res.status_code == 200 and (res.json()["avatar_mascot_id"], res.json()["arena_mascot_id"]) == (mascot_id, mascot_id)
+    for field in ("avatar_mascot_id", "arena_mascot_id"):
+        res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={field: other})
+        error = res.json()["error"]
+        assert res.status_code == 403 and (error["code"], error["details"]) == ("MASCOT_NOT_OWNED", {"field": field})
 
 
 @pytest.mark.parametrize("mascot_id", [4, 37, 100])
@@ -327,6 +340,7 @@ async def test_avatar_not_owned(client, auth_user, mascot_id):
 
 
 async def test_avatar_can_be_cleared(client, auth_user):
+    await _onboard(client, auth_user, 2)
     await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": 2})
     res = await client.patch(f"{API}/users/me", headers=auth_user["headers"], json={"avatar_mascot_id": None})
     assert res.status_code == 200 and res.json()["avatar_mascot_id"] is None
