@@ -115,3 +115,16 @@ async def test_exchange_route(client, db_session, auth_user):
     assert res.status_code == 200 and (res.json()["cost"], res.json()["shards"]) == (20, 0)
     res = await client.post(f"{API}/collection/exchange", headers={**h, **idem()}, json={"mascot_id": 31})
     assert res.json()["error"]["code"] == "MASCOT_NOT_EXCHANGEABLE"
+
+
+async def test_cors_preflight_allows_idempotency_key_and_etag(client):
+    """Frontend khác origin (production): preflight cho POST /collection/spins phải cho phép header Idempotency-Key."""
+    res = await client.options(f"{API}/collection/spins", headers={
+        "Origin": settings.FRONTEND_URL, "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "authorization,content-type,idempotency-key",
+    })
+    assert res.status_code == 200
+    allowed = res.headers["access-control-allow-headers"].lower()
+    assert "idempotency-key" in allowed and "if-none-match" in allowed
+    got = await client.get(f"{API}/collection/rates", headers={"Origin": settings.FRONTEND_URL})
+    assert "etag" in got.headers.get("access-control-expose-headers", "").lower()

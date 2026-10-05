@@ -64,7 +64,9 @@ def create_app() -> FastAPI:
         allow_origins=[settings.FRONTEND_URL],
         allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type"],
+        # Idempotency-Key (quay thẻ, đổi mảnh) và If-None-Match (ETag danh mục) phải qua được preflight khi frontend khác origin
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "If-None-Match"],
+        expose_headers=["ETag"],
     )
     # Chỉ đọc X-Debug-Now khi ENV development/e2e; production bỏ qua (xem core/debug_time.py)
     application.add_middleware(DebugNowMiddleware)
