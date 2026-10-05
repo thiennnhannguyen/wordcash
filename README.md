@@ -715,12 +715,36 @@ alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
 python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
 python -m seeds.seed_dev_roadmap           # lộ trình MẪU A1–A2: 20 chặng × 2 bài × 15 mục (~600 mục DEV_SAMPLE, gồm 60 mục trên); tự nạp địa danh
+python -m seeds.seed_mascots               # danh mục 100 linh vật (seeds/data/mascots.json + hồ sơ docs/mascots-lore.md); chạy lại an toàn, dùng cả production
 python -m seeds.purge_dev_entries          # xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
 cd ../frontend && npm install && npm run dev   # gọi API thật qua proxy /api, /socket.io sang cổng 8000
 VITE_USE_MOCK=true npm run dev                 # chạy bằng dữ liệu giả khi không có backend (build production cấm mock)
 ```
+
+### Linh vật: danh mục và hồ sơ
+
+- Nguồn chính của 100 linh vật là `backend/seeds/data/mascots.json` (id, mã, tên, độ hiếm, vùng, `status`, `obtain`,
+  `is_starter`, hình khối, màu, phụ kiện). Sửa danh mục ở đây rồi chạy `python -m seeds.seed_mascots`; seed dừng nếu phân bổ
+  vùng × độ hiếm sai (bảng ở `docs/game-rules.md`), id trùng hoặc ô `coming_soon` có tên. Seed không bao giờ đổi id.
+- Hồ sơ linh vật điền trong `docs/mascots-lore.md`, mỗi linh vật một mục:
+
+  ```markdown
+  ## #031 · Tên Linh Vật
+  - birthday_text: 01/01
+  - hometown: Hội An
+  - personality: Vui vẻ, tò mò
+  - likes: Đèn lồng
+  - dislikes: Mưa dầm
+  - favorite_word: lantern
+  - catchphrase: Sáng lên nào!
+  - bio: Một đoạn tiểu sử ngắn.
+  ```
+
+  Chỉ dùng 8 khóa trên; khóa nào bỏ trống thì giao diện ẩn. Tên ở tiêu đề phải trùng tên trong `mascots.json` (ô
+  `coming_soon` cần có tên trong JSON trước khi viết hồ sơ). Viết xong chạy lại `python -m seeds.seed_mascots`.
+- Frontend `src/data/mascots.js` chỉ là bản mock; `npm test` báo lỗi nếu mock lệch với JSON.
 
 ### Kiểm thử đầu-cuối (Playwright)
 

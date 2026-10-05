@@ -28,6 +28,7 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
 ## Database
 
 - [ ] Chạy `alembic upgrade head` trước khi khởi động bản mới.
+- [ ] Chạy `python -m seeds.seed_mascots` sau migration để nạp hồ sơ và hình dạng linh vật (migration chỉ ghi các trường gốc). Không có route `/api/v1/dev/*` ở production (ENV=production).
 - [ ] Sau lần deploy đầu tiên: **không viết lại migration cũ**, chỉ thêm migration mới.
 - [ ] Bật sao lưu tự động cho PostgreSQL.
 - [ ] **Không có dữ liệu mẫu dev:** database production phải có **0** mục từ `DEV_SAMPLE`. Không bao giờ chạy `seeds.seed_dev_entries` ở production (script tự từ chối). Kiểm tra:
