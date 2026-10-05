@@ -2,8 +2,10 @@
 Bộ Sưu Tập và vòng quay trên DB: danh mục, bộ sưu tập của người dùng, quay thẻ, đổi mảnh, chọn avatar / linh vật Đấu
 Trường, đánh dấu đã xem, cấp linh vật khởi đầu. Luật quay thuần ở services/gacha.py.
 
+- Thứ tự khóa thống nhất toàn backend: khởi tạo lộ trình (khóa advisory trong roadmap_service.ensure_initialized) →
+  users → user_stats. Vì vậy mọi hàm ở đây đọc vùng đã mở (có thể khởi tạo lộ trình) TRƯỚC khi khóa user_stats.
 - Quay (`spin`) và đổi mảnh (`exchange`) đều tiêu tài nguyên nên:
-  1. khóa dòng user_stats (SELECT … FOR UPDATE, `stats_service.lock_stats`) TRƯỚC mọi thứ khác: hai request của cùng người
+  1. khóa dòng user_stats (SELECT … FOR UPDATE, `stats_service.lock_stats`) trước khi tra idempotency: hai request của cùng người
      (kể cả cùng Idempotency-Key) chạy lần lượt, không tiêu trùng lượt / mảnh;
   2. tra `idempotency_keys` (user, key, endpoint): đã có cùng body → trả đúng kết quả cũ, không trừ thêm; khác body →
      IDEMPOTENCY_KEY_REUSED; bản ghi quá IDEMPOTENCY_TTL_HOURS bị dọn trước khi tra;
@@ -212,6 +214,7 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
     if not 1 <= count <= settings.GACHA_MAX_BATCH:
         raise AppError("INVALID_SPIN_COUNT", details={"min": 1, "max": settings.GACHA_MAX_BATCH})
     kind = SpinKind(kind).value
+    regions = await unlocked_regions(session, user, now)  # trước khi khóa user_stats (thứ tự khóa)
     stats = await stats_service.lock_stats(session, user.id)
     digest = request_hash({"kind": kind, "count": count})
     if (replay := await _replay(session, user, idempotency_key, SPIN_ENDPOINT, digest, now)) is not None:
@@ -224,7 +227,7 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
     rng = rng or gacha.system_rng()
     catalog = await load_catalog(session)
     by_id = {m.id: m for m in catalog}
-    pool = gacha.build_pool(catalog, await unlocked_regions(session, user, now))
+    pool = gacha.build_pool(catalog, regions)
     owned = await owned_map(session, user.id)
     batch_id = uuid.uuid4()
     results = []
@@ -274,6 +277,7 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
 # ---------- Đổi mảnh ----------
 
 async def exchange(session: AsyncSession, user: User, mascot_id: int, idempotency_key: str, now: datetime) -> dict:
+    regions = await unlocked_regions(session, user, now)  # trước khi khóa user_stats (thứ tự khóa)
     stats = await stats_service.lock_stats(session, user.id)
     digest = request_hash({"mascot_id": mascot_id})
     if (replay := await _replay(session, user, idempotency_key, EXCHANGE_ENDPOINT, digest, now)) is not None:
@@ -282,7 +286,7 @@ async def exchange(session: AsyncSession, user: User, mascot_id: int, idempotenc
     mascot = await session.get(Mascot, mascot_id)
     if mascot is None:
         raise AppError("MASCOT_NOT_FOUND")
-    if not gacha.obtainable(mascot, await unlocked_regions(session, user, now)):
+    if not gacha.obtainable(mascot, regions):
         raise AppError("MASCOT_NOT_EXCHANGEABLE")
     if await session.scalar(select(UserMascot.id).where(UserMascot.user_id == user.id, UserMascot.mascot_id == mascot_id)):
         raise AppError("MASCOT_ALREADY_OWNED")
