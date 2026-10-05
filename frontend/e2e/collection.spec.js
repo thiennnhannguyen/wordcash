@@ -8,12 +8,13 @@
  * 6. /dev/set-pity 20: lượt kế ra Sử Thi.
  * 7. Đủ mảnh thì đổi được linh vật A1 chưa có; linh vật A2 không có trong danh sách đổi khi chưa mở A2.
  * 8. Bấm MỞ THẺ hai lần thật nhanh: chỉ trừ 1 lượt.
+ * 9. Qua nửa đêm khi đang ở màn quay (Cửa Ải mới còn pending): MỞ THẺ → chuyển tới Cửa Ải, không trừ lượt; vượt Cửa Ải xong thì quay được.
  * Hầu hết kịch bản bật giảm chuyển động (đi thẳng tới kết quả); kịch bản 5 chạy đủ hiệu ứng để thấy thẻ lật lần lượt.
  */
 
 import { expect, test } from '@playwright/test'
 import { createUserViaApi, newUser, onboardViaUI, registerViaUI, shot } from './helpers.js'
-import { api } from './academy-helpers.js'
+import { api, dailyCheckViaApi, learnUnitViaApi, roadmap, setDay } from './academy-helpers.js'
 
 test.setTimeout(120_000)
 
@@ -165,4 +166,30 @@ test('8. bấm MỞ THẺ hai lần thật nhanh: chỉ trừ 1 lượt', async 
   await expect(page.getByRole('button', { name: /Mở tiếp/ })).toBeVisible()
   expect(requests).toBe(1)
   expect((await collection(page)).spins.normal).toBe(2)
+})
+
+test('9. chưa vượt Cửa Ải: MỞ THẺ chuyển tới Cửa Ải, không trừ lượt', async ({ page, context }) => {
+  await setDay(context, 0)
+  await start(page, context)
+  await learnUnitViaApi(page, (await roadmap(page)).levels[0].topics[0].units[0].id) // có từ đã học → ngày mai phải qua Cửa Ải
+  await grant(page, 2)
+  await openSpinScreen(page)
+
+  await setDay(context, 1) // qua nửa đêm khi đang mở màn quay (không tải lại trang)
+  const blocked = page.waitForResponse((r) => r.url().includes('/collection/spins') && r.request().method() === 'POST')
+  await page.getByRole('button', { name: 'Mở thẻ' }).click()
+  const res = await blocked
+  expect(res.status()).toBe(409)
+  expect((await res.json()).error.code).toBe('DAILY_CHECK_REQUIRED')
+  await page.waitForURL('**/daily-check')
+  await expect(page.getByRole('button', { name: 'Mở cửa ải' })).toBeVisible()
+  const c = await collection(page) // GET vẫn mở
+  expect(c.spins.normal).toBe(2)
+  expect(c.owned_count).toBe(1)
+
+  expect((await dailyCheckViaApi(page)).status).toBe('passed')
+  await openSpinScreen(page)
+  await page.getByRole('button', { name: 'Mở thẻ' }).click()
+  await expect(page.getByRole('button', { name: /Mở tiếp/ })).toBeVisible()
+  expect((await collection(page)).spins.normal).toBe(1)
 })

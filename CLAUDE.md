@@ -234,7 +234,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 ### Cửa Ải Hôm Nay
 - Bắt buộc ở lần mở web đầu tiên trong ngày, **tính theo múi giờ của người dùng**.
 - Hỏi 2–5 từ **hệ thống** đã học, chỉ câu mức 3–4, ưu tiên từ đến hạn ôn và trộn thêm 2 từ ngẫu nhiên. Dưới 2 từ hệ thống đã học thì được miễn (streak giữ nguyên).
-- Chưa xong thì server chặn mọi route bắt đầu phiên học (`DAILY_CHECK_REQUIRED`); frontend đưa mọi trang trong app tới `/daily-check`.
+- Chưa xong thì server chặn mọi route bắt đầu phiên học, Đấu Trường, quay thẻ và đổi mảnh (`DAILY_CHECK_REQUIRED`; các route GET vẫn mở); frontend đưa mọi trang trong app tới `/daily-check`.
 - Trả lời sai: từ chuyển sang `forgotten`, số từ thuộc −1 (giá trị này lấy từ config), từ vào danh sách ôn gấp.
 - Đúng hết: streak +1; có câu sai: giữ nguyên; bỏ trọn một ngày: về 0. Mỗi bội số của 7 ngày được +1 lượt quay thường.
 - Mọi chỗ trả streak ra API (`/me/stats`, sau này hồ sơ, bảng xếp hạng) dùng `stats_service.effective_streak(user_stats, today)` (ngày cuối còn sống trước hôm qua → 0), không đọc thẳng cột `streak_current`.

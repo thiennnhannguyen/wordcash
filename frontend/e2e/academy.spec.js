@@ -17,6 +17,7 @@ import {
   api,
   dailyCheckViaApi,
   flipAllCards,
+  learnUnitViaApi,
   roadmap,
   sessionKey,
   setDay,
@@ -31,12 +32,6 @@ async function start(page, context, day = 0) {
   await createUserViaApi(context.request)
   await page.goto('/lobby')
   await expect(page.getByRole('heading', { name: /Chào .+!/ })).toBeVisible()
-}
-
-/** Học bài 1 bằng API (đúng hết) để có từ đã học. */
-async function learnUnitViaApi(page, unitId) {
-  const s = (await api(page, 'POST', `/academy/units/${unitId}/learn-sessions`)).body
-  return answerViaApi(page, s.id)
 }
 
 test('1. người mới: miễn Cửa Ải → học bài 1 → kiểm tra ≥ 80% → bài 2 mở', async ({ page, context }) => {

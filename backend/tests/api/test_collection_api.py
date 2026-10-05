@@ -1,10 +1,11 @@
 """
 API Bộ Sưu Tập qua httpx (PostgreSQL test thật, Redis giả): danh mục có ETag / 304, ô coming_soon chỉ lộ thông tin tối thiểu,
 bộ sưu tập sau onboarding, tỉ lệ công khai, quay (Idempotency-Key bắt buộc, gửi lại trả kết quả cũ), giới hạn 30 lượt/phút,
-đổi mảnh, đã xem. Luật chi tiết ở tests/integration/test_collection_service.py.
+đổi mảnh, đã xem, chặn quay / đổi mảnh khi chưa vượt Cửa Ải (GET vẫn mở). Luật chi tiết ở tests/integration/test_collection_service.py.
 """
 
 import uuid
+from datetime import UTC, datetime
 
 from app.core.config import settings
 from app.services import stats_service
@@ -128,3 +129,33 @@ async def test_cors_preflight_allows_idempotency_key_and_etag(client):
     assert "idempotency-key" in allowed and "if-none-match" in allowed
     got = await client.get(f"{API}/collection/rates", headers={"Origin": settings.FRONTEND_URL})
     assert "etag" in got.headers.get("access-control-expose-headers", "").lower()
+
+
+async def test_spin_and_exchange_blocked_until_daily_check_done(client, db_session, auth_user, clock_at):
+    """Cửa Ải hôm nay còn pending: POST /spins và /exchange → DAILY_CHECK_REQUIRED, không tiêu gì; GET vẫn dùng được."""
+    from app.models import DailyCheckStatus, User
+    from app.services import daily_check_service
+
+    clock_at(datetime(2026, 10, 5, 3, 0, tzinfo=UTC))
+    await H.seeded(db_session)
+    await onboard(client, auth_user)
+    h = auth_user["headers"]
+    user = await db_session.get(User, uuid.UUID(auth_user["user"]["id"]))
+    stats = await stats_service.lock_stats(db_session, user.id)
+    stats.spins_normal, stats.shards = 3, 20
+    row = await daily_check_service.get_or_create_today(db_session, user, datetime(2026, 10, 5, 3, 0, tzinfo=UTC))
+    row.status = DailyCheckStatus.PENDING  # như người đã học ≥ 2 từ hệ thống, mở app ngày mới
+    await db_session.commit()
+
+    for path, body in (("/collection/spins", {"kind": "normal", "count": 1}), ("/collection/exchange", {"mascot_id": 5})):
+        res = await client.post(f"{API}{path}", headers={**h, **idem()}, json=body)
+        assert res.status_code == 409 and res.json()["error"]["code"] == "DAILY_CHECK_REQUIRED", path
+    for path in ("/collection", "/collection/rates", "/mascots"):
+        assert (await client.get(f"{API}{path}", headers=h)).status_code == 200, path
+    col = (await client.get(f"{API}/collection", headers=h)).json()
+    assert col["spins"]["normal"] == 3 and col["shards"] == 20 and col["owned_count"] == 1  # không tiêu gì
+
+    row.status = DailyCheckStatus.PASSED
+    await db_session.commit()
+    assert (await client.post(f"{API}/collection/exchange", headers={**h, **idem()}, json={"mascot_id": 5})).status_code == 200
+    assert (await client.post(f"{API}/collection/spins", headers={**h, **idem()}, json={"kind": "normal", "count": 1})).status_code == 200

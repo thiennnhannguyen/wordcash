@@ -32,7 +32,9 @@ Chi tiết cài đặt, API, mã lỗi: `docs/academy.md`. Hằng số trong `ba
 4. **Trận Boss** 50 câu trộn đều mọi chặng. Thua → 2 chặng yếu nhất; được đánh lại khi đã chờ 12 giờ **hoặc** đã luyện xong
    (trả lời hết câu) mọi chặng yếu của lần thua gần nhất. Lần đầu thắng mỗi cấp +1 lượt quay đặc biệt.
 5. **Cửa Ải Hôm Nay**: 2–5 từ hệ thống đã học, chỉ câu mức 3 (gõ từ) và mức 4 (điền câu), ưu tiên từ đến hạn ôn và trộn
-   2 từ ngẫu nhiên. Dưới 2 từ hệ thống đã học → được miễn hôm đó. Chặn mọi trang trong app cho tới khi xong.
+   2 từ ngẫu nhiên. Dưới 2 từ hệ thống đã học → được miễn hôm đó. Chặn mọi trang trong app cho tới khi xong. Server chặn
+   (`DAILY_CHECK_REQUIRED`) mọi route bắt đầu phiên học, Đấu Trường, và quay thẻ / đổi mảnh (`POST /collection/spins`,
+   `/collection/exchange`); các route chỉ đọc vẫn mở.
 6. **Chỉ Cửa Ải làm mất "đã thuộc"**: sai → từ thành `forgotten`, số từ thuộc −1 (`DAILY_FORGET_PENALTY`), vào ôn gấp.
    Ôn tập, kiểm tra, Boss, Khóa học, Đấu Trường trả lời sai chỉ đặt lại lịch SRS.
 7. **Streak**: đúng hết +1; có câu sai hoặc được miễn thì giữ nguyên; bỏ trọn một ngày thì về 0. Mỗi bội số của 7 (7, 14…) +1 lượt quay thường.

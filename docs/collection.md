@@ -101,6 +101,8 @@ Chỉ đổi được linh vật **chưa sở hữu**, `released`, `obtain = gac
 
 ## API (`/api/v1`, cần đăng nhập)
 
+`POST /collection/spins` và `POST /collection/exchange` bị chặn khi chưa vượt Cửa Ải hôm nay (`DAILY_CHECK_REQUIRED`, như các route học); các route GET vẫn mở. Giao diện nhận mã này thì chuyển tới `/daily-check` (xử lý chung ở `services/api.js` + route guard), không trừ lượt hay mảnh.
+
 | Method | Đường dẫn | Mô tả |
 |---|---|---|
 | GET | `/mascots` | 100 ô; header `ETag`, gửi `If-None-Match` trùng thì nhận 304. Ô coming_soon chỉ có id, code, region, rarity, status |
@@ -132,6 +134,7 @@ Route `/dev/*` chỉ được đăng ký khi `ENV` là development hoặc e2e; c
 | `IDEMPOTENCY_KEY_REQUIRED` | 400 | Thiếu hoặc sai định dạng (không phải UUID) header `Idempotency-Key` |
 | `IDEMPOTENCY_KEY_REUSED` | 409 | Cùng key nhưng body khác |
 | `TOO_MANY_ATTEMPTS` | 429 | Quá 30 request quay mỗi phút |
+| `DAILY_CHECK_REQUIRED` | 409 | Quay / đổi mảnh khi Cửa Ải hôm nay còn `pending` |
 
 ## Frontend
 

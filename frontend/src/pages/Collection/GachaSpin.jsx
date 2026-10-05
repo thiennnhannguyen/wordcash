@@ -304,7 +304,8 @@ function SpinScreen({ initial, byId }) {
         else if (hold !== 'charge') setPhase('burst')
       } catch (err) {
         setPhase('ready')
-        pushToast({ variant: 'error', title: 'Không mở được thẻ', message: err?.code ? messageFor(err) : 'Số lượt đã thay đổi, hãy thử lại.' })
+        // DAILY_CHECK_REQUIRED: services/api.js đánh dấu Cửa Ải pending, route guard chuyển sang /daily-check (không cần báo lỗi)
+        if (err?.code !== 'DAILY_CHECK_REQUIRED') pushToast({ variant: 'error', title: 'Không mở được thẻ', message: err?.code ? messageFor(err) : 'Số lượt đã thay đổi, hãy thử lại.' })
         fetchCollection().then(setData).catch(() => {})
       } finally {
         busyRef.current = false

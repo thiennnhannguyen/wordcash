@@ -4,6 +4,7 @@ Bộ sưu tập của tôi và vòng quay: xem bộ sưu tập, tỉ lệ công 
 - POST /collection/spins và /collection/exchange bắt buộc header `Idempotency-Key` (UUID do client sinh cho mỗi lần bấm,
   giữ nguyên khi thử lại vì lỗi mạng): gửi lại cùng key trả đúng kết quả cũ, không tiêu thêm; cùng key khác body →
   IDEMPOTENCY_KEY_REUSED. Quay thẻ giới hạn SPIN_RATE_LIMIT_PER_MINUTE request mỗi phút mỗi người.
+- Quay và đổi mảnh bị chặn khi chưa vượt Cửa Ải hôm nay (DAILY_CHECK_REQUIRED, như các route học); các route GET vẫn mở.
 - Kết quả quay do server quyết định (secrets.SystemRandom) và đã ghi DB trước khi trả về.
 - Không có bất kỳ route mua lượt quay hay mảnh nào. Nghiệp vụ: services/collection_service.py, services/gacha.py.
 """
@@ -13,7 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Header
 
-from app.api.deps import CurrentUser, DbSession, RedisClient
+from app.api.deps import CurrentUser, DailyCheckDone, DbSession, RedisClient
 from app.api.responses import error_responses
 from app.core import clock
 from app.core.errors import AppError
@@ -48,16 +49,16 @@ async def rates(user: CurrentUser, session: DbSession):
     return await collection_service.get_rates(session, user, clock.now())
 
 
-@router.post("/spins", response_model=SpinOut, summary="Mở thẻ (1–10 lượt cùng loại)",
-             responses=error_responses(*AUTH, *IDEMPOTENCY, "NO_SPINS_LEFT", "INVALID_SPIN_COUNT", "TOO_MANY_ATTEMPTS", "VALIDATION_ERROR"))
+@router.post("/spins", response_model=SpinOut, summary="Mở thẻ (1–10 lượt cùng loại)", dependencies=[DailyCheckDone],
+             responses=error_responses(*AUTH, *IDEMPOTENCY, "DAILY_CHECK_REQUIRED", "NO_SPINS_LEFT", "INVALID_SPIN_COUNT", "TOO_MANY_ATTEMPTS", "VALIDATION_ERROR"))
 async def spin(data: SpinIn, user: CurrentUser, session: DbSession, redis: RedisClient, idempotency_key: IdempotencyKey = None):
     key = _key(idempotency_key)
     await rate_limit.hit_spin(redis, user.id)
     return await collection_service.spin(session, user, data.kind, data.count, key, clock.now())
 
 
-@router.post("/exchange", response_model=ExchangeOut, summary="Đổi mảnh lấy linh vật chưa có",
-             responses=error_responses(*AUTH, *IDEMPOTENCY, "MASCOT_NOT_FOUND", "MASCOT_NOT_EXCHANGEABLE", "MASCOT_ALREADY_OWNED",
+@router.post("/exchange", response_model=ExchangeOut, summary="Đổi mảnh lấy linh vật chưa có", dependencies=[DailyCheckDone],
+             responses=error_responses(*AUTH, *IDEMPOTENCY, "DAILY_CHECK_REQUIRED", "MASCOT_NOT_FOUND", "MASCOT_NOT_EXCHANGEABLE", "MASCOT_ALREADY_OWNED",
                                        "NOT_ENOUGH_SHARDS", "VALIDATION_ERROR"))
 async def exchange(data: ExchangeIn, user: CurrentUser, session: DbSession, idempotency_key: IdempotencyKey = None):
     return await collection_service.exchange(session, user, data.mascot_id, _key(idempotency_key), clock.now())
