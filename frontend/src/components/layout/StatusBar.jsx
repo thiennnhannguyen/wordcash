@@ -4,6 +4,7 @@
  * Mọi con số do server trả về; component chỉ hiển thị.
  */
 
+import { useNavigate } from 'react-router-dom'
 import { BookOpenText, Fire, Gift, ShieldStar } from '@phosphor-icons/react'
 import Icon from '../ui/Icon'
 import MascotBlob from '../collection/MascotBlob'
@@ -12,12 +13,16 @@ import cx from '../../utils/cx'
 import { RANK_BY_KEY } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
 
-function Pill({ bg, icon, children, className, style, title }) {
+function Pill({ bg, icon, children, className, style, title, onClick }) {
+  const Tag = onClick ? 'button' : 'div'
   return (
-    <div
+    <Tag
+      type={onClick ? 'button' : undefined}
+      onClick={onClick}
       title={title}
       className={cx(
         'relative inline-flex h-12 shrink-0 items-center gap-2 rounded-pill border-thick border-line pl-2 pr-4 shadow-hard-sm',
+        onClick && 'pressable',
         className,
       )}
       style={{ background: bg, ...style }}
@@ -26,11 +31,12 @@ function Pill({ bg, icon, children, className, style, title }) {
         <Icon icon={icon} size={18} color="ink" />
       </span>
       <span className="whitespace-nowrap font-display text-sm font-bold uppercase tracking-wide text-ink">{children}</span>
-    </div>
+    </Tag>
   )
 }
 
 export default function StatusBar({ stats, mascot, className }) {
+  const navigate = useNavigate()
   const rank = RANK_BY_KEY[stats.rank] ?? RANK_BY_KEY.tan_binh
 
   return (
@@ -50,7 +56,7 @@ export default function StatusBar({ stats, mascot, className }) {
         >
           {rank.name}
         </Pill>
-        <Pill bg="var(--color-danger)" icon={Gift} title="Lượt quay còn lại">
+        <Pill bg="var(--color-danger)" icon={Gift} title="Lượt quay còn lại · mở màn quay thẻ" onClick={() => navigate('/collection/spin')}>
           {stats.spins} lượt quay
           {stats.spins > 0 && (
             <span

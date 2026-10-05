@@ -2,6 +2,7 @@
  * Dữ liệu Sảnh: số liệu thật từ GET /me/stats (streak + lịch tuần, số từ đã thuộc, rank + lung lay, lượt quay + tiến độ x/50,
  * mục tiêu hôm nay, Cửa Ải hôm nay, bài đang học, Hành trình + Hộ chiếu) ghép lên khung data/mockLobby.js.
  *
+ * Linh vật đang dùng: avatar_mascot_id của user (authStore) tra trong danh mục GET /mascots (store/mascotStore.js).
  * CÒN MOCK (TODO, chưa có API): Đấu Trường (thắng/thua tuần, số người online), Từ của ngày, bảng bạn bè, mục tiêu Đấu Trường.
  * Chế độ mock (VITE_USE_MOCK=true) hoặc `?variant=` khi dev: dùng nguyên getLobbyMock.
  */
@@ -10,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { journeyRegions } from '../../data/roadmap'
 import { getLobbyMock } from '../../data/mockLobby'
 import { USE_MOCK, daysLeft, getMeStats, getUnit } from '../../services/academyApi'
+import { useMascot } from '../../store/mascotStore'
 
 const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 const ALIVE = new Set(['passed', 'partial', 'exempt'])
@@ -78,5 +80,7 @@ export default function useLobbyData(variant, user) {
     }
   }, [mock, user])
 
-  return mock ? getLobbyMock(variant ?? 'default', user) : data
+  const mascot = useMascot(user?.avatar_mascot_id)
+  if (mock) return getLobbyMock(variant ?? 'default', user)
+  return data && { ...data, mascot }
 }

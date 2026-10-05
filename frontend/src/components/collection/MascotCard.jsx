@@ -7,7 +7,8 @@
  * Thẻ chưa sở hữu: hình bóng trên nền xám kẻ sọc chéo, dấu "?"; riêng Huyền Thoại giữ viền vàng mờ.
  * `interactive` bật nghiêng 3D theo con trỏ (tắt khi giảm chuyển động). `isNew` gắn nhãn "MỚI", `count` > 1 gắn huy hiệu "x3".
  * Linh vật chỉ để trang trí, không có chỉ số sức mạnh. `compact` ẩn số thứ tự và sao cho thẻ cỡ nhỏ.
- * `comingSoon`: ô linh vật chưa phát hành (data/mascots.js): như thẻ chưa có, bóng đen, dấu "?" và nhãn "Sắp ra mắt".
+ * `comingSoon`: ô linh vật chưa phát hành: như thẻ chưa có, bóng đen, dấu "?" và nhãn "Sắp ra mắt".
+ * `lockedLabel`: thẻ chưa có thuộc vùng chưa mở, hiện thay tên (vd. "Mở khóa ở B1").
  */
 
 import { useRef } from 'react'
@@ -88,6 +89,7 @@ export default function MascotCard({
   interactive = false,
   holo = false,
   comingSoon = false,
+  lockedLabel,
   className,
 }) {
   if (comingSoon) owned = false
@@ -172,7 +174,7 @@ export default function MascotCard({
 
         {/* Tên */}
         <figcaption className="relative z-10 mx-1.5 mt-1 truncate rounded-[10px] border-2 border-line bg-surface px-1 text-center font-heading text-[13px] font-extrabold leading-5 text-ink @[150px]:mx-2.5 @[150px]:mt-1.5 @[150px]:text-[15px] @[150px]:leading-7">
-          {owned ? name : comingSoon ? 'Sắp ra mắt' : '???'}
+          {owned ? name : comingSoon ? 'Sắp ra mắt' : (lockedLabel ?? '???')}
         </figcaption>
 
         {/* Dải nhãn độ hiếm */}

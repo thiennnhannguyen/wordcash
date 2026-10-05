@@ -1,6 +1,8 @@
 /*
  * Hộp thoại đổi mảnh: chọn 1 linh vật chưa có.
  *
+ * Chỉ liệt kê linh vật đổi được (khớp kiểm tra của server, quyết định 8): đã ra mắt, nhận qua vòng quay, thuộc vùng đã mở,
+ * chưa sở hữu. Ô "Sắp ra mắt", linh vật thành tích, linh vật vùng chưa mở không xuất hiện.
  * Giá theo độ hiếm (Thường 20, Hiếm 40, Sử Thi 60, Huyền Thoại 150 mảnh); thẻ chưa đủ mảnh bị làm mờ và không chọn được.
  * Nút "ĐỔI" mở hộp xác nhận; server kiểm tra đủ mảnh rồi trả thẻ mới, sau đó thẻ lật ra kèm pháo giấy.
  * Thẻ chưa có vẫn chỉ hiện hình bóng, số thứ tự và độ hiếm (như trong album).
@@ -17,7 +19,7 @@ import MascotCard from '../../components/collection/MascotCard'
 import { formatMascotNumber } from '../../utils/format'
 import cx from '../../utils/cx'
 import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
-import { MASCOT_BY_ID, OBTAINABLE_MASCOTS } from '../../data/mascots'
+import { messageFor } from '../../utils/errorMessages'
 import MascotArt from './MascotArt'
 
 function ShardTag({ cost, affordable }) {
@@ -61,15 +63,18 @@ function Reveal({ mascot }) {
   )
 }
 
-export default function ExchangeModal({ open, onClose, shards, owned, initialPick, initialConfirm = false, onExchange }) {
+export default function ExchangeModal({ open, onClose, shards, owned, mascots, byId, unlockedRegions, initialPick, initialConfirm = false, onExchange }) {
   const [pick, setPick] = useState(initialPick ?? null)
   const [confirming, setConfirming] = useState(initialConfirm && initialPick != null)
   const [busy, setBusy] = useState(false)
   const [received, setReceived] = useState(null)
   const [error, setError] = useState(null)
 
-  const candidates = useMemo(() => OBTAINABLE_MASCOTS.filter((m) => !owned[m.id]), [owned])
-  const picked = pick != null ? MASCOT_BY_ID[pick] : null
+  const candidates = useMemo(
+    () => mascots.filter((m) => m.status === 'available' && m.obtain === 'gacha' && unlockedRegions.includes(m.region) && !owned[m.id]),
+    [mascots, owned, unlockedRegions],
+  )
+  const picked = pick != null ? byId[pick] : null
   const cost = picked ? GACHA.shardCost[picked.rarity] : 0
 
   const close = () => {
@@ -87,8 +92,8 @@ export default function ExchangeModal({ open, onClose, shards, owned, initialPic
       await onExchange(pick)
       setReceived(pick)
       setConfirming(false)
-    } catch {
-      setError('Không đổi được. Có thể số mảnh đã thay đổi, hãy thử lại.')
+    } catch (err) {
+      setError(err?.code ? messageFor(err) : 'Không đổi được. Có thể số mảnh đã thay đổi, hãy thử lại.')
     } finally {
       setBusy(false)
     }
@@ -99,7 +104,7 @@ export default function ExchangeModal({ open, onClose, shards, owned, initialPic
       <Modal open={open} onClose={close} mobileSheet title={received ? 'Đổi thành công' : 'Đổi mảnh'} className="max-w-5xl">
         {received ? (
           <div className="flex flex-col items-center gap-4">
-            <Reveal mascot={MASCOT_BY_ID[received]} />
+            <Reveal mascot={byId[received]} />
             <Button onClick={close} className="w-full sm:w-auto">
               Tuyệt!
             </Button>
@@ -107,7 +112,10 @@ export default function ExchangeModal({ open, onClose, shards, owned, initialPic
         ) : (
           <div className="flex flex-col gap-4 text-ink">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="font-heading text-lg font-extrabold leading-snug md:text-xl">Chọn 1 linh vật chưa có</p>
+              <div>
+                <p className="font-heading text-lg font-extrabold leading-snug md:text-xl">Chọn 1 linh vật chưa có</p>
+                <p className="text-caption text-muted">Chỉ đổi được linh vật thuộc vùng bạn đã mở.</p>
+              </div>
               <span className="inline-flex items-center gap-2 rounded-pill border-thick border-line bg-gold px-3 font-display text-sm font-bold uppercase leading-9 shadow-hard-sm">
                 <Icon icon={PuzzlePiece} size={20} /> Bạn có <span className="font-num text-base">{shards}</span> mảnh
               </span>
@@ -127,6 +135,7 @@ export default function ExchangeModal({ open, onClose, shards, owned, initialPic
             </ul>
 
             <div className="-mx-1 max-h-[52dvh] overflow-y-auto px-1 pb-2 pt-3 md:max-h-[46dvh]">
+              {candidates.length === 0 && <p className="py-6 text-center font-medium text-muted">Bạn đã có mọi linh vật đổi được ở các vùng đã mở.</p>}
               <ul className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 md:grid-cols-6">
                 {candidates.map((m) => {
                   const price = GACHA.shardCost[m.rarity]

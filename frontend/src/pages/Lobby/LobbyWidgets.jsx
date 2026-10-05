@@ -1,8 +1,9 @@
 /*
  * Các widget cột phải của Sảnh: tiến tới rank tiếp theo, lượt quay tiếp theo,
- * linh vật đang dùng (dữ liệu từ data/mascots.js), bảng xếp hạng bạn bè (top 3 theo số từ học trong tuần).
+ * linh vật đang dùng (avatar thật từ danh mục GET /mascots; nút ĐỔI mở bộ chọn linh vật đang sở hữu), bảng xếp hạng bạn bè (top 3 theo số từ học trong tuần).
  */
 
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Gift, UsersThree, WarningCircle } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
@@ -13,6 +14,7 @@ import ProgressRing from '../../components/ui/ProgressRing'
 import RankBadge from '../../components/ui/RankBadge'
 import MascotBlob from '../../components/collection/MascotBlob'
 import MascotCard from '../../components/collection/MascotCard'
+import MascotPicker from '../../components/collection/MascotPicker'
 import cx from '../../utils/cx'
 import { RANK_BY_KEY, RARITIES } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
@@ -88,7 +90,7 @@ export function NextSpinWidget({ nextSpin, spins }) {
 }
 
 export function MascotWidget({ mascot }) {
-  const navigate = useNavigate()
+  const [picking, setPicking] = useState(false)
 
   return (
     <Card padding="sm" className="lift p-5">
@@ -106,13 +108,14 @@ export function MascotWidget({ mascot }) {
         <div className="flex min-w-0 flex-col gap-3">
           <p className="font-heading text-lg font-extrabold leading-tight">{mascot.name}</p>
           <p className="text-caption text-muted">
-            {RARITIES[mascot.rarity].name} · Vùng {mascot.region}. Chỉ để trang trí, không ảnh hưởng tới trận đấu.
+            {RARITIES[mascot.rarity].name} · {mascot.region === 'special' ? 'Đặc biệt' : `Vùng ${mascot.region}`}. Chỉ để trang trí, không ảnh hưởng tới trận đấu.
           </p>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/collection')}>
+          <Button variant="secondary" size="sm" onClick={() => setPicking(true)}>
             Đổi
           </Button>
         </div>
       </div>
+      <MascotPicker open={picking} onClose={() => setPicking(false)} />
     </Card>
   )
 }
