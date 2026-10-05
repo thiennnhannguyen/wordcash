@@ -86,11 +86,11 @@ async def get_mascot(session: AsyncSession, mascot_id: int) -> dict:
 async def unlocked_regions(session: AsyncSession, user: User, now: datetime) -> list[str]:
     """Vùng đã mở = mã các cấp có tiến độ unlocked | completed (chỉ A1…C2)."""
     await roadmap_service.ensure_initialized(session, user, now)
-    codes = await session.scalars(
+    codes = set(await session.scalars(
         select(Level.code).join(UserLevelProgress, UserLevelProgress.level_id == Level.id)
         .where(UserLevelProgress.user_id == user.id, UserLevelProgress.status.in_([ProgressStatus.UNLOCKED, ProgressStatus.COMPLETED]))
-    )
-    return [c for c in REGIONS if c in set(codes)]
+    ))
+    return [c for c in REGIONS if c in codes]
 
 
 async def owned_map(session: AsyncSession, user_id: uuid.UUID) -> dict[int, UserMascot]:
