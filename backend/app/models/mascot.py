@@ -8,7 +8,8 @@ khóa chống gửi lặp IdempotencyKey. Số mảnh, bộ đếm pity, tổng 
 - UserMascot: duy nhất theo (user_id, mascot_id); `copies` ≥ 1 đếm mọi bản đã nhận (bản trùng vẫn cộng copies, đồng
   thời đổi thành mảnh); `is_new` tắt khi người dùng xem (POST /collection/seen).
 - SpinHistory: mỗi lượt quay một dòng, các lượt của cùng một lần bấm chung `batch_id`; lưu cả độ hiếm quay được
-  (`rolled_rarity`) và độ hiếm cuối (`final_rarity`, sau pity / hạ bậc khi pool thiếu).
+  (`rolled_rarity`) và độ hiếm cuối (`final_rarity`, sau pity / hạ bậc khi pool thiếu); `forced` = kết quả do
+  POST /dev/force-next ép ra (chỉ có thể true ở dev/e2e), để thống kê và điều tra loại được các lượt bị ép.
 - IdempotencyKey: kết quả của thao tác tiêu tài nguyên (quay, đổi mảnh) theo (user_id, key, endpoint); gửi lại cùng key
   trả đúng kết quả cũ, cùng key mà body khác (`request_hash`) thì IDEMPOTENCY_KEY_REUSED. Bản ghi quá 24 giờ bị dọn.
 """
@@ -17,7 +18,7 @@ import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import BigInteger, Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, false, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -113,6 +114,7 @@ class SpinHistory(Base):
     final_rarity: Mapped[MascotRarity] = mapped_column(str_enum(MascotRarity, "spin_final_rarity"))
     rarity_fallback: Mapped[bool] = mapped_column(Boolean, default=False)
     pity_triggered: Mapped[bool] = mapped_column(Boolean, default=False)
+    forced: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())  # do /dev/force-next ép (chỉ dev/e2e)
     mascot_id: Mapped[int] = mapped_column(ForeignKey("mascots.id"))
     was_duplicate: Mapped[bool] = mapped_column(Boolean)
     shards_gained: Mapped[int] = mapped_column(Integer, default=0)

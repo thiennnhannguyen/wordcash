@@ -16,7 +16,7 @@ cảnh theo kết quả nhận được. Linh vật chỉ để trang trí, khô
 | `mascots` | Danh mục trong DB (`python -m seeds.seed_mascots`, chạy lại an toàn, không đổi id) |
 | `user_mascots` | Sở hữu: `copies` ≥ 1, `source` (starter, gacha, exchange, achievement) của bản đầu, `is_new` |
 | `user_stats` | `spins_normal`, `spins_special`, `shards`, `pity_counter`, `total_spins` |
-| `spin_history` | Mỗi lượt một dòng: `batch_id`, `rolled_rarity`, `final_rarity`, `rarity_fallback`, `pity_triggered`, trùng / mảnh, pity trước / sau |
+| `spin_history` | Mỗi lượt một dòng: `batch_id`, `rolled_rarity`, `final_rarity`, `rarity_fallback`, `pity_triggered`, `forced` (lượt do `/dev/force-next` ép ra; production luôn false), trùng / mảnh, pity trước / sau |
 | `shard_exchanges` | Lịch sử đổi mảnh |
 | `idempotency_keys` | Kết quả theo (user, key, endpoint) + `request_hash` của body; dọn bản ghi cũ hơn 24 giờ |
 | `users.avatar_mascot_id`, `users.arena_mascot_id` | Khóa ngoại tới `mascots`; `arena_mascot_id = null` thì Đấu Trường dùng avatar |
@@ -107,14 +107,14 @@ Chỉ đổi được linh vật **chưa sở hữu**, `released`, `obtain = gac
 | GET | `/mascots/{id}` | Chi tiết (kèm `profile`); ô coming_soon tối thiểu |
 | GET | `/collection` | Sở hữu, tiến độ theo độ hiếm và vùng, vùng đã mở, mảnh, pity, lượt, tiến độ tới lượt kế, avatar, linh vật Đấu Trường, số thẻ mới |
 | GET | `/collection/rates` | Tỉ lệ hai loại lượt, `pity_epic`, `pity_counter`, `pool_size` theo độ hiếm, bảng mảnh, giá đổi, `max_batch` |
-| POST | `/collection/spins` | `{kind: normal \| special, count: 1..10}` + `Idempotency-Key`; trả `results` theo thứ tự (mascot, `rarity`, `hint` cho màu ánh sáng, `is_new_mascot`, `was_duplicate`, `shards_gained`, `copies`, `pity_triggered`, `rarity_fallback`), lượt còn lại, mảnh, pity, `replayed` |
+| POST | `/collection/spins` | `{kind: normal \| special, count: 1..10}` + `Idempotency-Key`; trả `results` theo thứ tự (mascot, `rarity`, `hint` cho màu ánh sáng, `is_new_mascot`, `was_duplicate`, `shards_gained`, `copies`, `pity_triggered`, `rarity_fallback`, `forced`), lượt còn lại, mảnh, pity, `replayed` (true = trả lại kết quả của lần gửi trước cùng key, không trừ thêm; giao diện báo "Kết quả lần mở trước") |
 | POST | `/collection/exchange` | `{mascot_id}` + `Idempotency-Key` |
 | POST | `/collection/seen` | `{mascot_ids}`: tắt nhãn MỚI |
 | PATCH | `/users/me` | `avatar_mascot_id`, `arena_mascot_id` (null = dùng avatar); cả hai kiểm tra sở hữu |
 | PATCH | `/users/me/onboarding` | `starter_mascot_id` ∈ {1, 2, 3}: sở hữu ngay (source = starter) rồi đặt làm avatar |
 | POST | `/dev/grant-spins` | (chỉ dev/e2e) `{normal, special}` |
 | POST | `/dev/set-pity` | (chỉ dev/e2e) `{value}` |
-| POST | `/dev/force-next` | (chỉ dev/e2e) `{rarity, mascot_id?}`: ép ĐÚNG lượt kế tiếp (lưu trong bộ nhớ tiến trình) |
+| POST | `/dev/force-next` | (chỉ dev/e2e) `{rarity, mascot_id?}`: ép ĐÚNG lượt kế tiếp (lưu trong bộ nhớ tiến trình); lượt bị ép ghi `forced = true` |
 
 Route `/dev/*` chỉ được đăng ký khi `ENV` là development hoặc e2e; có test xác nhận ở production và testing chúng không tồn tại.
 
@@ -143,3 +143,10 @@ Route `/dev/*` chỉ được đăng ký khi `ENV` là development hoặc e2e; c
 - Sảnh: viên lượt quay mở màn quay; "Linh vật đang dùng" lấy avatar thật, nút ĐỔI mở bộ chọn linh vật đang sở hữu.
   Học Viện: toast phần thưởng có nút "Quay ngay".
 - Ảnh chụp: `npm run screenshots -- -g "Bộ Sưu Tập"` (`scripts/screenshots/collection.shots.js`).
+
+## Log và điều tra kết quả quay (dev/e2e)
+
+- Logger `wordclash.collection`, mức INFO, chỉ được bật khi `ENV` là development / e2e (`configure_dev_logging` trong `app/main.py`). Ghi mỗi lần `force-next` được đặt / ghi đè / áp dụng, `set-pity`, `grant-spins`, và mỗi lần trả lại kết quả theo Idempotency-Key (`replayed`). Không bao giờ ghi giá trị key.
+- Phân biệt lượt thật với lượt bị ép: `spin_history.forced`. Phân biệt lần quay mới với lần gửi lại: lần gửi lại KHÔNG ghi thêm dòng `spin_history` và trả `replayed: true`.
+- Truy vấn mẫu: `select batch_id, rolled_rarity, final_rarity, pity_triggered, rarity_fallback, forced, mascot_id, pity_before, pity_after from spin_history where user_id = … order by id;`
+- Điều tra 05/10/2026 (4 thẻ Sử Thi #009 trong một lần "Mở tất cả" 7 lượt khi chụp ảnh): không phải lỗi code. Các lượt bị ép đều là 5 lượt đơn trước đó; batch 7 lượt không có pity, không hạ bậc, không phải gửi lại. Tái hiện đúng chuỗi request 4.000 lần: 0 lượt ép rò sang batch, tỉ lệ khớp lý thuyết. Đây là một kết quả ngẫu nhiên hiếm (khoảng 1/10.000).

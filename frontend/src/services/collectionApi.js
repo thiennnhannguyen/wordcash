@@ -146,17 +146,18 @@ export const fetchRates = USE_MOCK
     })
   : async () => toRates(await request({ url: '/collection/rates' }))
 
-/** Một kết quả quay từ API → dạng màn quay dùng: {id, rarity, hint, duplicate, shards, isNew, pity}. */
+/** Một kết quả quay từ API → dạng màn quay dùng: {id, rarity, hint, duplicate, shards, isNew, pity, forced}. `forced` chỉ có thể true ở dev/e2e (/dev/force-next). */
 function toResult(r) {
-  return { id: r.mascot.id, rarity: r.rarity, hint: r.hint, duplicate: r.was_duplicate, shards: r.shards_gained, isNew: r.is_new_mascot, copies: r.copies, pity: r.pity_triggered }
+  return { id: r.mascot.id, rarity: r.rarity, hint: r.hint, duplicate: r.was_duplicate, shards: r.shards_gained, isNew: r.is_new_mascot, copies: r.copies, pity: r.pity_triggered, forced: Boolean(r.forced) }
 }
 
 async function realOpenPack(kind, count) {
   const res = await withIdempotency('spin', { kind, count }, (key) =>
     request({ url: '/collection/spins', method: 'POST', data: { kind, count }, headers: { 'Idempotency-Key': key } }),
   )
-  // Kết quả đã nằm trong DB; đọc lại bộ sưu tập để album, lượt, mảnh khớp server
-  return { results: res.results.map(toResult), state: await fetchCollection() }
+  // Kết quả đã nằm trong DB; đọc lại bộ sưu tập để album, lượt, mảnh khớp server.
+  // replayed = server trả lại kết quả của lần gửi trước cùng Idempotency-Key (thử lại sau lỗi mạng), không trừ thêm lượt.
+  return { results: res.results.map(toResult), replayed: Boolean(res.replayed), state: await fetchCollection() }
 }
 
 export const openPack = USE_MOCK

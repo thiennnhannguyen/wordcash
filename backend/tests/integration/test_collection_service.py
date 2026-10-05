@@ -299,3 +299,43 @@ async def test_dev_force_next_applies_to_exactly_one_spin_and_only_in_dev(world,
     assert out["results"][0]["mascot"]["id"] == 10 and user.id not in svc._forced
     out = await svc.spin(db, user, "normal", 10, key(), NOW, rng=Rng(0.0))  # không còn ép: tỉ lệ gốc (0.0 → Thường)
     assert {r["rarity"] for r in out["results"]} == {"common"}
+    assert not any(r["forced"] for r in out["results"])
+
+
+async def test_forced_spins_are_marked_in_history_and_logged(world, monkeypatch, caplog):
+    """Lượt bị ép ghi spin_history.forced = true (các lượt khác false); đặt / áp dụng lệnh ép và set-pity đều có log INFO."""
+    import logging
+
+    from app.api.v1.routers import dev
+    from app.core.config import settings
+    from app.schemas.collection import SetPityIn
+
+    db, user = world
+    monkeypatch.setattr(settings, "ENV", "e2e")
+    caplog.set_level(logging.INFO, logger="wordclash.collection")
+    await give(db, user, normal=7)
+    svc.force_next(user.id, "epic", 9)
+    out = await svc.spin(db, user, "normal", 7, key(), NOW, rng=Rng(0.0))
+    assert [r["forced"] for r in out["results"]] == [True] + [False] * 6
+    rows = (await db.scalars(select(SpinHistory).where(SpinHistory.user_id == user.id).order_by(SpinHistory.id))).all()
+    assert [(r.mascot_id, r.forced) for r in rows] == [(9, True)] + [(1, False)] * 6
+    await dev.set_pity(SetPityIn(value=20), user, db)
+    messages = [r.getMessage() for r in caplog.records if r.name == "wordclash.collection"]
+    assert any(m.startswith("force-next user=") and "rarity=epic mascot_id=9" in m for m in messages)
+    assert any(m.startswith("force-next áp dụng") for m in messages)
+    assert any(m.startswith("set-pity") and "→ 20" in m for m in messages)
+
+
+async def test_replay_is_flagged_and_logged_without_key(world, caplog):
+    import logging
+
+    db, user = world
+    caplog.set_level(logging.INFO, logger="wordclash.collection")
+    await give(db, user, normal=1)
+    k = key()
+    first = await svc.spin(db, user, "normal", 1, k, NOW)
+    again = await svc.spin(db, user, "normal", 1, k, NOW)
+    assert first["replayed"] is False and again["replayed"] is True
+    assert (await db.scalar(select(func.count()).select_from(SpinHistory).where(SpinHistory.user_id == user.id))) == 1
+    replays = [r.getMessage() for r in caplog.records if r.getMessage().startswith("replayed")]
+    assert len(replays) == 1 and k not in replays[0]

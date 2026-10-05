@@ -14,12 +14,16 @@ Trường, đánh dấu đã xem, cấp linh vật khởi đầu. Luật quay th
   (roadmap_service.ensure_initialized). Ô coming_soon và linh vật achievement không bao giờ quay ra hay đổi được.
 - Số ngẫu nhiên: `gacha.system_rng()` (secrets.SystemRandom); test truyền `rng` có seed.
 - `force_next` (chỉ dev/e2e, qua POST /dev/force-next): ép độ hiếm / linh vật của lượt kế tiếp của một người để dựng hiệu
-  ứng. Lưu trong bộ nhớ tiến trình, chỉ có tác dụng khi `settings.debug_time_enabled`.
+  ứng. Lưu trong bộ nhớ tiến trình, chỉ có tác dụng khi `settings.debug_time_enabled`, ép đúng MỘT lượt; lượt bị ép ghi
+  `spin_history.forced = true` và `"forced": true` trong kết quả.
+- Log (logger `wordclash.collection`, mức INFO, chỉ in ở dev/e2e — xem app/main.py): mỗi lần đặt / áp dụng lệnh ép, đặt
+  pity, cộng lượt (route dev) và mỗi lần trả lại kết quả cũ theo Idempotency-Key (`replayed: true`). Không log key.
 - Thời gian luôn do nơi gọi truyền vào (core/clock.now()).
 """
 
 import hashlib
 import json
+import logging
 import uuid
 from datetime import datetime, timedelta
 
@@ -45,6 +49,8 @@ from app.models import (
 )
 from app.services import gacha, roadmap_service, spins, stats_service
 from app.services.mascot_catalog import PROFILE_FIELDS, RARITIES, REGIONS, SPECIAL
+
+log = logging.getLogger("wordclash.collection")
 
 TOTAL_SLOTS = 100
 SPIN_ENDPOINT = "collection.spins"
@@ -181,6 +187,7 @@ async def _replay(session: AsyncSession, user: User, key: str, endpoint: str, di
         return None
     if row.request_hash != digest:
         raise AppError("IDEMPOTENCY_KEY_REUSED")
+    log.info("replayed endpoint=%s user=%s (gửi lại cùng Idempotency-Key, không tiêu thêm)", endpoint, user.id)
     return {**row.response_json, "replayed": True}
 
 
@@ -193,14 +200,18 @@ def _remember(session: AsyncSession, user: User, key: str, endpoint: str, digest
 # ---------- Quay ----------
 
 def force_next(user_id: uuid.UUID, rarity: str, mascot_id: int | None = None) -> None:
-    """Chỉ dev/e2e: ép lượt quay kế tiếp của người dùng."""
+    """Chỉ dev/e2e: ép lượt quay kế tiếp của người dùng (ghi đè lệnh ép chưa dùng trước đó)."""
+    if user_id in _forced:
+        log.info("force-next user=%s: ghi đè lệnh ép chưa dùng %s", user_id, _forced[user_id])
     _forced[user_id] = {"rarity": rarity, "mascot_id": mascot_id}
+    log.info("force-next user=%s rarity=%s mascot_id=%s", user_id, rarity, mascot_id)
 
 
 def _forced_result(user_id: uuid.UUID, kind: str, pity: int, pool: dict, by_id: dict[int, Mascot], rng) -> gacha.SpinResult | None:
     if not settings.debug_time_enabled or user_id not in _forced:
         return None
     wanted = _forced.pop(user_id)
+    log.info("force-next áp dụng user=%s kind=%s %s", user_id, kind, wanted)
     if wanted["mascot_id"] is not None and wanted["mascot_id"] in by_id:
         mascot = by_id[wanted["mascot_id"]]
         rarity, fallback = mascot.rarity.value, False
@@ -233,7 +244,8 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
     results = []
     pity = stats.pity_counter
     for index in range(count):
-        res = _forced_result(user.id, kind, pity, pool, by_id, rng) or gacha.spin_once(kind, pity, pool, rng)
+        forced_res = _forced_result(user.id, kind, pity, pool, by_id, rng)
+        res = forced_res or gacha.spin_once(kind, pity, pool, rng)
         mascot: Mascot = res.mascot
         rarity = res.final_rarity
         um = owned.get(mascot.id)
@@ -248,13 +260,13 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
                                                 first_obtained_at=now, last_obtained_at=now, is_new=True)
             session.add(um)
         session.add(SpinHistory(user_id=user.id, batch_id=batch_id, kind=SpinKind(kind), rolled_rarity=res.rolled_rarity,
-                                final_rarity=rarity, rarity_fallback=res.rarity_fallback, pity_triggered=res.pity_triggered,
+                                final_rarity=rarity, rarity_fallback=res.rarity_fallback, pity_triggered=res.pity_triggered, forced=forced_res is not None,
                                 mascot_id=mascot.id, was_duplicate=shards > 0, shards_gained=shards, pity_before=res.pity_before,
                                 pity_after=res.pity_after, created_at=now))
         results.append({
             "index": index, "mascot": mascot_out(mascot), "rarity": rarity, "hint": rarity,  # hint: màu ánh sáng trước khi lật
             "is_new_mascot": shards == 0, "was_duplicate": shards > 0, "shards_gained": shards, "copies": um.copies,
-            "pity_triggered": res.pity_triggered, "rarity_fallback": res.rarity_fallback,
+            "pity_triggered": res.pity_triggered, "rarity_fallback": res.rarity_fallback, "forced": forced_res is not None,
         })
         pity = res.pity_after
 

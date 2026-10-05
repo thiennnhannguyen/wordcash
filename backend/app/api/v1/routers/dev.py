@@ -9,6 +9,7 @@ Công cụ CHỈ dành cho dev và e2e (router chỉ được gắn khi ENV deve
   POST /dev/force-next {rarity, mascot_id?}: ép kết quả lượt quay KẾ TIẾP của chính người dùng (dựng hiệu ứng trong e2e).
 """
 
+import logging
 import uuid
 
 from fastapi import APIRouter
@@ -23,6 +24,7 @@ from app.schemas.collection import ForceNextIn, GrantSpinsIn, SetPityIn
 from app.services import collection_service, roadmap_service, stats_service
 
 router = APIRouter(prefix="/dev", tags=["Dev"])
+log = logging.getLogger("wordclash.collection")
 
 
 @router.post("/academy/fast-forward", summary="(dev) Tới thẳng Trận Boss của một cấp")
@@ -61,14 +63,17 @@ async def grant_spins(data: GrantSpinsIn, user: CurrentUser, session: DbSession)
     stats.spins_special += data.special
     out = {"normal": stats.spins_normal, "special": stats.spins_special}
     await session.commit()
+    log.info("grant-spins user=%s +normal=%s +special=%s → %s", user.id, data.normal, data.special, out)
     return out
 
 
 @router.post("/set-pity", summary="(dev) Đặt bộ đếm pity")
 async def set_pity(data: SetPityIn, user: CurrentUser, session: DbSession):
     stats = await stats_service.lock_stats(session, user.id)
+    before = stats.pity_counter
     stats.pity_counter = data.value
     await session.commit()
+    log.info("set-pity user=%s %s → %s", user.id, before, data.value)
     return {"pity_counter": data.value}
 
 

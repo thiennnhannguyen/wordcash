@@ -296,6 +296,7 @@ function SpinScreen({ initial, byId }) {
         const [res] = await Promise.all([openPack(type, n, force), wait(reduceMotion ? 0 : T.charge)])
         latestRef.current = res.state
         useCollectionStore.getState().setFrom(res.state)
+        if (res.replayed) pushToast({ variant: 'info', title: 'Kết quả lần mở trước', message: 'Mạng chập chờn nên đây là kết quả đã mở, không trừ thêm lượt.' })
         setResults(res.results)
         setFeatured(rarest(res.results))
         setData(res.state)
