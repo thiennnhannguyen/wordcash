@@ -723,6 +723,40 @@ cd ../frontend && npm install && npm run dev   # gọi API thật qua proxy /api
 VITE_USE_MOCK=true npm run dev                 # chạy bằng dữ liệu giả khi không có backend (build production cấm mock)
 ```
 
+### Sao lưu và khôi phục database
+
+**Không bao giờ chạy `alembic downgrade` trên DB dev có dữ liệu cần giữ hay trên production.** Chỉ thử nâng / hạ migration
+trên DB e2e (`wordclash_e2e`) hoặc DB test. Trước mỗi lần `alembic upgrade` trên production phải sao lưu.
+
+```bash
+sh backend/scripts/backup_db.sh                  # DATABASE_URL lấy từ biến môi trường hoặc .env ở gốc repo
+sh backend/scripts/backup_db.sh "$PROD_DB_URL"   # hoặc truyền URL
+# → backups/<tên-db>_<YYYYmmdd-HHMMSS>.dump (định dạng custom của pg_dump; thư mục backups/ không đưa lên Git)
+```
+
+Script dùng `pg_dump` trên máy (cài `postgresql-client`, cùng phiên bản lớn với server hoặc mới hơn); máy dev không có
+`pg_dump` thì tự chạy trong container `wordclash_postgres`. Sao lưu production nên chép thêm ra nơi lưu trữ ngoài máy chủ.
+
+Khôi phục (ghi đè toàn bộ dữ liệu của DB đích; dừng backend trước):
+
+```bash
+# 1. Nên khôi phục thử vào một DB mới để kiểm tra trước
+createdb -h <host> -p <port> -U <user> wordclash_restore_check
+pg_restore --clean --if-exists --no-owner --dbname="postgresql://<user>:<mật khẩu>@<host>:<port>/wordclash_restore_check" backups/<file>.dump
+
+# 2. Khôi phục vào DB thật
+pg_restore --clean --if-exists --no-owner --dbname="postgresql://<user>:<mật khẩu>@<host>:<port>/<tên-db>" backups/<file>.dump
+
+# Dev cục bộ không có pg_restore: chạy trong container (thử vào DB nháp, kiểm tra xong mới làm với wordclash_db)
+docker exec wordclash_postgres createdb -U wordclash wordclash_restore_check
+docker exec -i wordclash_postgres pg_restore --clean --if-exists --no-owner -U wordclash -d wordclash_restore_check < backups/<file>.dump
+docker exec -i wordclash_postgres pg_restore --clean --if-exists --no-owner -U wordclash -d wordclash_db < backups/<file>.dump
+docker exec wordclash_postgres dropdb -U wordclash wordclash_restore_check
+```
+
+Sau khi khôi phục: `alembic current` phải trùng phiên bản lúc sao lưu. Nếu cần lên bản mới thì chạy `alembic upgrade head`
+(không downgrade), rồi `python -m seeds.seed_mascots`.
+
 ### Linh vật: danh mục và hồ sơ
 
 - Nguồn chính của 100 linh vật là `backend/seeds/data/mascots.json` (id, mã, tên, độ hiếm, vùng, `status`, `obtain`,

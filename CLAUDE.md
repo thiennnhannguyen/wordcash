@@ -171,6 +171,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - **Mọi truy vấn `entries` phía người học phải lọc bằng `Entry.visible_to(user_id)`** (từ hệ thống đã duyệt, hoặc từ tự tạo của chính người đó). Gợi ý từ kho, đáp án nhiễu bổ sung và Cửa Ải Hôm Nay chỉ dùng `Entry.system_approved()`.
 - `models/`: SQLAlchemy 2.0 (`Mapped[]`, `mapped_column`), kế thừa `core.database.Base`. Mọi model mới phải import trong `app/models/__init__.py` để Alembic thấy. Model có cột do DB sinh (`server_default`, `onupdate`) đặt `__mapper_args__ = {"eager_defaults": True}` để tránh lazy load trong async. Enum lưu dạng VARCHAR + CHECK (`native_enum=False`) để migration lùi/tiến không vướng kiểu ENUM của PostgreSQL.
 - Thay đổi schema phải có migration Alembic (`backend/alembic/versions/`, `env.py` dạng async, URL lấy từ settings). **Sau khi deploy lần đầu, KHÔNG viết lại migration cũ, chỉ thêm migration mới.** (Trước lần deploy đầu đã viết lại một lần khi đổi id người dùng sang UUID.)
+- **An toàn migration (bắt buộc):** TUYỆT ĐỐI không chạy `alembic downgrade` trên DB dev có dữ liệu cần giữ (`wordclash_db`) hay trên production; chỉ thử nâng/hạ trên DB e2e (`wordclash_e2e`) hoặc DB test (`wordclash_test`). Không nối lệnh hạ migration sau lệnh khác (`upgrade && downgrade`) trên DB thật. Trước mỗi lần nâng migration trên production: sao lưu bằng `sh backend/scripts/backup_db.sh` (pg_dump → `backups/`, nằm trong `.gitignore`; khôi phục: README mục "Sao lưu và khôi phục database"). Trước thao tác rủi ro trên DB dev cũng chạy script này.
 - `game/`: `sio_server.py` tạo `sio = AsyncServer(async_mode="asgi")` (thêm `AsyncRedisManager` khi `SIO_USE_REDIS`) và xác thực access token trong `connect` (`auth.token`; sai/hết hạn thì từ chối với mã TOKEN_INVALID/TOKEN_EXPIRED), lưu `{user_id, role}` vào session socket, vào room `user:{id}`; `events.py` đăng ký các sự kiện trận đấu. Trạng thái trận lưu trong Redis; chỉ ghi PostgreSQL khi trận kết thúc. Đo thời gian bằng `game/timing.py` (`time.monotonic()`).
 - **Thời gian:** mọi chỗ cần "bây giờ" trong luật game gọi `core/clock.now()`, KHÔNG gọi `datetime.now()` trực tiếp trong service. Bảo mật (JWT, hạn refresh token) dùng `clock.real_now()`. Ngày của người học tính bằng `utils/time.py` (`local_date`, `day_bounds`, zoneinfo theo `users.timezone`). Test cố định giờ bằng fixture `clock_at`.
 - **`X-Debug-Now`** (ISO 8601) ghi đè `clock.now()` cho một request, CHỈ khi `ENV` là `development` hoặc `e2e` (`core/debug_time.py`); production và testing bỏ qua hoàn toàn (có test). E2E chạy backend với `ENV=e2e`.
@@ -320,7 +321,8 @@ docker compose up -d                          # PostgreSQL ở localhost:5433 (+
 cp .env.example .env                          # lần đầu (file .env đặt ở gốc repo)
 cd backend && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-alembic upgrade head                          # áp dụng migration
+alembic upgrade head                          # áp dụng migration (KHÔNG downgrade trên DB dev/production)
+sh scripts/backup_db.sh                       # (trong backend/) sao lưu DB bằng pg_dump vào backups/ ở gốc repo
 alembic revision --autogenerate -m "..."      # sinh migration sau khi sửa model
 python -m seeds.seed_landmarks                # nạp địa danh A1, A2 (chạy lại được)
 uvicorn app.main:asgi_app --reload            # API + Socket.IO, cổng 8000; tài liệu API tại /docs

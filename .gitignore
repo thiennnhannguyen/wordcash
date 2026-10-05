@@ -42,3 +42,6 @@ backend/data_pipeline/raw/*
 frontend/test-results/
 frontend/playwright-report/
 frontend/screenshots/
+
+# Bản sao lưu database (backend/scripts/backup_db.sh)
+backups/
