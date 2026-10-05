@@ -12,6 +12,7 @@ from app.api.v1.routers import (
     arena,
     auth,
     bank,
+    collection,
     courses,
     daily_check,
     dev,
@@ -28,8 +29,8 @@ from app.api.v1.routers import (
 
 # 422 dùng định dạng lỗi chung {"error": {...}} thay cho mẫu mặc định của FastAPI
 api_router = APIRouter(prefix="/api/v1", responses={422: {"model": ErrorOut, "description": "VALIDATION_ERROR"}})
-for module in (health, auth, users, me, academy, review, daily_check, placement, profile, mascots, leaderboard, arena, courses, study, bank):
+for module in (health, auth, users, me, academy, review, daily_check, placement, profile, mascots, collection, leaderboard, arena, courses, study, bank):
     api_router.include_router(module.router)
-# Công cụ dev/e2e (vd. tới thẳng Trận Boss): KHÔNG có ở production
+# Công cụ dev/e2e (tới thẳng Trận Boss, khóa đáp án, cấp lượt quay, ép kết quả quay): KHÔNG có ở production
 if settings.debug_time_enabled:
     api_router.include_router(dev.router)
