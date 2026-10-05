@@ -25,6 +25,17 @@ from app.game.sio_server import sio
 logger = logging.getLogger(__name__)
 
 
+def configure_dev_logging() -> None:
+    """Chỉ dev/e2e: in log INFO của công cụ dev và vòng quay (force-next, set-pity, grant-spins, replay Idempotency-Key)."""
+    dev_log = logging.getLogger("wordclash.collection")
+    if not settings.debug_time_enabled or dev_log.handlers:
+        return
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+    dev_log.addHandler(handler)
+    dev_log.setLevel(logging.INFO)
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     if not await ping_database():
@@ -38,6 +49,7 @@ async def lifespan(_: FastAPI):
 def create_app() -> FastAPI:
     """Dựng app theo settings hiện tại. Ở production tắt /docs, /redoc, /openapi.json trừ khi ENABLE_DOCS=true."""
     docs = settings.docs_enabled
+    configure_dev_logging()
     application = FastAPI(
         title="WORDCLASH API",
         description="API cho WORDCLASH: Học Viện, Đấu Trường, Bộ Sưu Tập.",
@@ -52,7 +64,9 @@ def create_app() -> FastAPI:
         allow_origins=[settings.FRONTEND_URL],
         allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type"],
+        # Idempotency-Key (quay thẻ, đổi mảnh) và If-None-Match (ETag danh mục) phải qua được preflight khi frontend khác origin
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "If-None-Match"],
+        expose_headers=["ETag"],
     )
     # Chỉ đọc X-Debug-Now khi ENV development/e2e; production bỏ qua (xem core/debug_time.py)
     application.add_middleware(DebugNowMiddleware)

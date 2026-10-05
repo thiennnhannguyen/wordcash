@@ -715,12 +715,70 @@ alembic upgrade head                       # tạo bảng
 python -m seeds.seed_landmarks             # địa danh A1, A2
 python -m seeds.seed_dev_entries           # 60 mục từ A1 MẪU cho dev (đánh dấu DEV_SAMPLE, không chạy ở production)
 python -m seeds.seed_dev_roadmap           # lộ trình MẪU A1–A2: 20 chặng × 2 bài × 15 mục (~600 mục DEV_SAMPLE, gồm 60 mục trên); tự nạp địa danh
+python -m seeds.seed_mascots               # danh mục 100 linh vật (seeds/data/mascots.json + hồ sơ docs/mascots-lore.md); chạy lại an toàn, dùng cả production
 python -m seeds.purge_dev_entries          # xóa mọi mục DEV_SAMPLE + tiến độ liên quan (--dry-run chỉ đếm; production cần --yes)
 uvicorn app.main:asgi_app --reload         # API + Socket.IO ở cổng 8000, tài liệu API tại /docs
 pytest -q                                  # test: cần PostgreSQL wordclash_test (TEST_DATABASE_URL)
 cd ../frontend && npm install && npm run dev   # gọi API thật qua proxy /api, /socket.io sang cổng 8000
 VITE_USE_MOCK=true npm run dev                 # chạy bằng dữ liệu giả khi không có backend (build production cấm mock)
 ```
+
+### Sao lưu và khôi phục database
+
+**Không bao giờ chạy `alembic downgrade` trên DB dev có dữ liệu cần giữ hay trên production.** Chỉ thử nâng / hạ migration
+trên DB e2e (`wordclash_e2e`) hoặc DB test. Trước mỗi lần `alembic upgrade` trên production phải sao lưu.
+
+```bash
+sh backend/scripts/backup_db.sh                  # DATABASE_URL lấy từ biến môi trường hoặc .env ở gốc repo
+sh backend/scripts/backup_db.sh "$PROD_DB_URL"   # hoặc truyền URL
+# → backups/<tên-db>_<YYYYmmdd-HHMMSS>.dump (định dạng custom của pg_dump; thư mục backups/ không đưa lên Git)
+```
+
+Script dùng `pg_dump` trên máy (cài `postgresql-client`, cùng phiên bản lớn với server hoặc mới hơn); máy dev không có
+`pg_dump` thì tự chạy trong container `wordclash_postgres`. Sao lưu production nên chép thêm ra nơi lưu trữ ngoài máy chủ.
+
+Khôi phục (ghi đè toàn bộ dữ liệu của DB đích; dừng backend trước):
+
+```bash
+# 1. Nên khôi phục thử vào một DB mới để kiểm tra trước
+createdb -h <host> -p <port> -U <user> wordclash_restore_check
+pg_restore --clean --if-exists --no-owner --dbname="postgresql://<user>:<mật khẩu>@<host>:<port>/wordclash_restore_check" backups/<file>.dump
+
+# 2. Khôi phục vào DB thật
+pg_restore --clean --if-exists --no-owner --dbname="postgresql://<user>:<mật khẩu>@<host>:<port>/<tên-db>" backups/<file>.dump
+
+# Dev cục bộ không có pg_restore: chạy trong container (thử vào DB nháp, kiểm tra xong mới làm với wordclash_db)
+docker exec wordclash_postgres createdb -U wordclash wordclash_restore_check
+docker exec -i wordclash_postgres pg_restore --clean --if-exists --no-owner -U wordclash -d wordclash_restore_check < backups/<file>.dump
+docker exec -i wordclash_postgres pg_restore --clean --if-exists --no-owner -U wordclash -d wordclash_db < backups/<file>.dump
+docker exec wordclash_postgres dropdb -U wordclash wordclash_restore_check
+```
+
+Sau khi khôi phục: `alembic current` phải trùng phiên bản lúc sao lưu. Nếu cần lên bản mới thì chạy `alembic upgrade head`
+(không downgrade), rồi `python -m seeds.seed_mascots`.
+
+### Linh vật: danh mục và hồ sơ
+
+- Nguồn chính của 100 linh vật là `backend/seeds/data/mascots.json` (id, mã, tên, độ hiếm, vùng, `status`, `obtain`,
+  `is_starter`, hình khối, màu, phụ kiện). Sửa danh mục ở đây rồi chạy `python -m seeds.seed_mascots`; seed dừng nếu phân bổ
+  vùng × độ hiếm sai (bảng ở `docs/game-rules.md`), id trùng hoặc ô `coming_soon` có tên. Seed không bao giờ đổi id.
+- Hồ sơ linh vật điền trong `docs/mascots-lore.md`, mỗi linh vật một mục:
+
+  ```markdown
+  ## #031 · Tên Linh Vật
+  - birthday_text: 01/01
+  - hometown: Hội An
+  - personality: Vui vẻ, tò mò
+  - likes: Đèn lồng
+  - dislikes: Mưa dầm
+  - favorite_word: lantern
+  - catchphrase: Sáng lên nào!
+  - bio: Một đoạn tiểu sử ngắn.
+  ```
+
+  Chỉ dùng 8 khóa trên; khóa nào bỏ trống thì giao diện ẩn. Tên ở tiêu đề phải trùng tên trong `mascots.json` (ô
+  `coming_soon` cần có tên trong JSON trước khi viết hồ sơ). Viết xong chạy lại `python -m seeds.seed_mascots`.
+- Frontend `src/data/mascots.js` chỉ là bản mock; `npm test` báo lỗi nếu mock lệch với JSON.
 
 ### Kiểm thử đầu-cuối (Playwright)
 

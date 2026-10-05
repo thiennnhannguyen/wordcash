@@ -92,6 +92,12 @@ export async function flipAllCards(page) {
   await done.click()
 }
 
+/** Học một bài bằng API (đúng hết) để có từ đã học. */
+export async function learnUnitViaApi(page, unitId) {
+  const s = (await api(page, 'POST', `/academy/units/${unitId}/learn-sessions`)).body
+  return answerViaApi(page, s.id)
+}
+
 /** Cửa Ải qua API: trả lời đúng hết (hoặc `wrong` câu đầu sai). */
 export async function dailyCheckViaApi(page, { wrong = 0 } = {}) {
   const today = (await api(page, 'GET', '/daily-check/today')).body

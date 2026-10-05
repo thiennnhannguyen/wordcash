@@ -28,6 +28,9 @@ def daily_goal(minutes: int | None) -> int:
 
 async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
     today = local_date(user, now)
+    # Thứ tự khóa thống nhất: khởi tạo lộ trình (khóa advisory) → users → user_stats, tránh deadlock với /collection
+    st = await roadmap_service.load_structure(session)
+    await roadmap_service.ensure_initialized(session, user, now, st)
     stats, _ = await stats_service.refresh(session, user, now, today)
     counters = (await session.execute(select(User.mastered_count, User.custom_mastered_count).where(User.id == user.id))).one()
     mastered, custom = counters
@@ -54,8 +57,6 @@ async def get_stats(session: AsyncSession, user: User, now: datetime) -> dict:
     ) or 0
     reviewed = activity.reviews if activity else 0
 
-    st = await roadmap_service.load_structure(session)
-    await roadmap_service.ensure_initialized(session, user, now, st)
     progress = await roadmap_service.load_progress(session, user.id)
     deadline = stats.rank_shaky_deadline
     out = {

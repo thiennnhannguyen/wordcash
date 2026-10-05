@@ -1,6 +1,7 @@
 /*
  * Phần đầu album: tiêu đề "BỘ SƯU TẬP", số lớn "37/100", thanh tiến độ sưu tầm chia 4 màu độ hiếm kèm chú thích,
- * viên "LƯỢT QUAY" (hồng, có chấm thông báo) và viên "MẢNH" (nút "Đổi"). Nút "Tỉ lệ quay" mở bảng tỉ lệ công khai và bộ đếm pity.
+ * viên "LƯỢT QUAY" (hồng, có chấm thông báo) và viên "MẢNH" (nút "Đổi"). Nút "Tỉ lệ quay" mở bảng tỉ lệ công khai và bộ đếm pity
+ * (`rates` từ GET /collection/rates: tỉ lệ hai loại lượt, PITY_EPIC, số con có thể ra theo độ hiếm với vùng đã mở).
  * Không có mua lượt quay bằng tiền. Mobile: thu gọn thành một khối, hai viên nằm cạnh nhau.
  */
 
@@ -102,8 +103,11 @@ function ShardPill({ shards, onExchange }) {
   )
 }
 
-export function OddsModal({ open, onClose, pity }) {
-  const left = GACHA.pityEpic - pity
+export function OddsModal({ open, onClose, pity, rates }) {
+  const pityEpic = rates?.pityEpic ?? GACHA.pityEpic
+  const normalRate = (r) => rates?.normal[r] ?? RARITIES[r].rate
+  const specialRate = (r) => rates?.special[r] ?? GACHA.specialRates[r]
+  const left = Math.max(pityEpic - pity, 0)
   return (
     <Modal open={open} onClose={onClose} title="Tỉ lệ quay" className="max-w-lg">
       <div className="flex flex-col gap-5 text-ink">
@@ -117,27 +121,31 @@ export function OddsModal({ open, onClose, pity }) {
             <li key={r} className="flex items-center gap-3 rounded-[16px] border-2 border-line px-3 py-2" style={{ background: `color-mix(in srgb, ${RARITIES[r].color} 25%, var(--color-surface))` }}>
               <span className="size-5 shrink-0 rounded-[6px] border-2 border-line" style={{ background: RARITIES[r].color }} aria-hidden="true" />
               <span className="flex-1 font-heading font-extrabold">
-                {RARITIES[r].name} <span className="whitespace-nowrap font-medium text-muted">· {RARITIES[r].total} con</span>
+                {RARITIES[r].name}{' '}
+                <span className="whitespace-nowrap font-medium text-muted">
+                  · {rates?.poolSize ? `${rates.poolSize[r]} con có thể ra` : `${RARITIES[r].total} con`}
+                </span>
               </span>
               <Stars count={RARITIES[r].stars} size={14} className="max-sm:hidden" />
-              <span className="w-16 text-right font-num text-xl" aria-label={`Lượt thường ${RARITIES[r].rate}%`}>{RARITIES[r].rate}%</span>
-              <span className="w-16 text-right font-num text-xl text-muted" aria-label={`Lượt đặc biệt ${GACHA.specialRates[r]}%`}>{GACHA.specialRates[r]}%</span>
+              <span className="w-16 text-right font-num text-xl" aria-label={`Lượt thường ${normalRate(r)}%`}>{normalRate(r)}%</span>
+              <span className="w-16 text-right font-num text-xl text-muted" aria-label={`Lượt đặc biệt ${specialRate(r)}%`}>{specialRate(r)}%</span>
             </li>
           ))}
         </ul>
         <div className="flex flex-col gap-2 rounded-card border-thick border-line bg-raised p-4">
           <p className="font-display text-sm font-bold uppercase tracking-wide">Bảo đảm Sử Thi</p>
           <div className="h-4 overflow-hidden rounded-pill border-2 border-line bg-surface">
-            <div className="h-full bg-primary" style={{ width: `${(pity / GACHA.pityEpic) * 100}%` }} />
+            <div className="h-full bg-primary" style={{ width: `${Math.min(pity / pityEpic, 1) * 100}%` }} />
           </div>
           <p className="text-caption font-medium text-muted">
-            <span className="font-num text-ink">{pity}</span>/{GACHA.pityEpic} lượt chưa ra Sử Thi. Sau {GACHA.pityEpic} lượt liên tiếp không ra Sử Thi, lượt kế tiếp chắc chắn ra Sử Thi (còn{' '}
+            <span className="font-num text-ink">{pity}</span>/{pityEpic} lượt chưa ra Sử Thi (tính chung cả lượt thường và lượt đặc biệt). Sau {pityEpic} lượt liên tiếp không ra Sử Thi, lượt kế tiếp chắc chắn ra Sử Thi (còn{' '}
             <span className="font-num text-ink">{left}</span> lượt).
           </p>
         </div>
         <ul className="flex flex-col gap-1.5 text-caption font-medium text-muted">
           <li>• Mỗi {GACHA.wordsPerSpin} từ đã thuộc được 1 lượt; streak 7 ngày được 1 lượt.</li>
-          <li>• Lên rank được 1 lượt đặc biệt, tỉ lệ ra thẻ hiếm cao hơn.</li>
+          <li>• Lần đầu lên mỗi rank và lần đầu thắng Boss mỗi cấp được 1 lượt đặc biệt (không ra Thường).</li>
+          <li>• Chỉ ra linh vật thuộc vùng bạn đã mở; cùng độ hiếm thì mỗi con có khả năng ngang nhau.</li>
           <li>• Thẻ trùng đổi thành mảnh. Không bán lượt quay bằng tiền.</li>
         </ul>
       </div>

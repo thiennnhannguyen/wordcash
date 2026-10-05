@@ -33,11 +33,10 @@ from app.core.security import (
 from app.models import RefreshToken, User
 from app.schemas.auth import RegisterIn, password_matches_identity
 from app.schemas.user import OnboardingIn, UserUpdateIn
-from app.services import rate_limit
+from app.services import collection_service, rate_limit
 
 CLEANUP_AFTER = timedelta(days=7)
 # 3 linh vật khởi đầu (chọn ở onboarding). Hiện là những linh vật duy nhất người dùng chắc chắn có.
-STARTER_MASCOT_IDS = frozenset({1, 2, 3})
 NEXT_STEPS = {"a1": "roadmap_a1", "placement": "placement_test"}
 
 
@@ -285,6 +284,8 @@ async def change_password(
 async def complete_onboarding(session: AsyncSession, user: User, data: OnboardingIn) -> tuple[User, str]:
     user.goal = data.goal
     user.daily_minutes = data.daily_minutes
+    # Linh vật khởi đầu: sở hữu ngay (user_mascots, source=starter) rồi mới đặt làm avatar
+    await collection_service.grant_starter(session, user, data.starter_mascot_id, clock.now())
     user.avatar_mascot_id = data.starter_mascot_id
     user.onboarding_completed_at = _now()
     await session.commit()
@@ -292,11 +293,13 @@ async def complete_onboarding(session: AsyncSession, user: User, data: Onboardin
 
 
 async def update_profile(session: AsyncSession, user: User, data: UserUpdateIn) -> User:
-    mascot_id = data.avatar_mascot_id
-    # TODO: khi có bảng user_mascots, kiểm tra quyền sở hữu thật thay cho danh sách linh vật khởi đầu
-    if "avatar_mascot_id" in data.model_fields_set and mascot_id is not None and mascot_id not in STARTER_MASCOT_IDS:
-        raise AppError("MASCOT_NOT_OWNED", details={"field": "avatar_mascot_id"})
-    for field in data.model_fields_set:
+    # Avatar và linh vật Đấu Trường chỉ được là linh vật đang sở hữu (MASCOT_NOT_OWNED); kiểm tra trước khi đổi gì
+    fields = data.model_fields_set
+    if "avatar_mascot_id" in fields:
+        await collection_service.set_avatar(session, user, data.avatar_mascot_id)
+    if "arena_mascot_id" in fields:
+        await collection_service.set_arena_mascot(session, user, data.arena_mascot_id)
+    for field in fields - {"avatar_mascot_id", "arena_mascot_id"}:
         setattr(user, field, getattr(data, field))
     await session.commit()
     return user

@@ -5,6 +5,7 @@ Giới hạn tần suất (chống dò mật khẩu, chống spam đăng ký). B
   Trước khi kiểm tra mật khẩu, một trong hai bộ ≥ LOGIN_MAX_ATTEMPTS thì từ chối (TOO_MANY_ATTEMPTS), kể cả khi mật khẩu đúng.
   Đăng nhập đúng thì xóa bộ đếm của identifier.
 - Đăng ký: tối đa REGISTER_MAX_PER_HOUR lần mỗi IP mỗi giờ (`rl:register:ip:{ip}`).
+- Quay thẻ: tối đa SPIN_RATE_LIMIT_PER_MINUTE request POST /collection/spins mỗi người mỗi phút (`rl:spin:{user_id}`).
 - Trên Redis, tăng bộ đếm bằng INCR + EXPIRE NX trong một pipeline MULTI (nguyên tử; NX = chỉ đặt hạn khi khóa vừa được tạo).
 
 Khi Redis không có hoặc lỗi: vẫn cho đăng nhập, nhưng chuyển sang bộ đếm dự phòng trong bộ nhớ (dict có thời hạn,
@@ -172,6 +173,23 @@ async def hit_register(redis: Redis | None, ip: str | None) -> None:
 
     async def hit(counters) -> AppError | None:
         if await counters.incr(key, REGISTER_WINDOW_SECONDS) > settings.REGISTER_MAX_PER_HOUR:
+            return await _too_many(counters, [key])
+        return None
+
+    error = await _run(redis, hit)
+    if error is not None:
+        raise error
+
+
+SPIN_WINDOW_SECONDS = 60
+
+
+async def hit_spin(redis: Redis | None, user_id) -> None:
+    """Đếm một request quay thẻ của người dùng; vượt SPIN_RATE_LIMIT_PER_MINUTE thì TOO_MANY_ATTEMPTS."""
+    key = f"rl:spin:{user_id}"
+
+    async def hit(counters) -> AppError | None:
+        if await counters.incr(key, SPIN_WINDOW_SECONDS) > settings.SPIN_RATE_LIMIT_PER_MINUTE:
             return await _too_many(counters, [key])
         return None
 

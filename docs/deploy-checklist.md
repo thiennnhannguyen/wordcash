@@ -27,7 +27,16 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
 
 ## Database
 
+- [ ] **Sao lưu trước khi nâng migration:** `sh backend/scripts/backup_db.sh "$DATABASE_URL"` (pg_dump, file
+  `backups/<tên-db>_<ngày-giờ>.dump`); kiểm tra file khác rỗng và chép ra nơi lưu trữ ngoài máy chủ. Cách khôi phục: README,
+  mục "Sao lưu và khôi phục database".
 - [ ] Chạy `alembic upgrade head` trước khi khởi động bản mới.
+- [ ] **TUYỆT ĐỐI không chạy `alembic downgrade`** trên production hay trên DB dev có dữ liệu cần giữ (downgrade xóa bảng
+  và dữ liệu). Thử nâng / hạ migration chỉ trên DB e2e (`wordclash_e2e`) hoặc DB test. Bản mới lỗi thì sửa bằng migration
+  mới, hoặc khôi phục từ bản sao lưu.
+- [ ] Không chạy nối tiếp `alembic upgrade … && alembic downgrade …` (hay lệnh nào hạ migration) trong cùng một câu lệnh
+  hoặc script trên DB thật.
+- [ ] Chạy `python -m seeds.seed_mascots` sau migration để nạp hồ sơ và hình dạng linh vật (migration chỉ ghi các trường gốc). Không có route `/api/v1/dev/*` ở production (ENV=production).
 - [ ] Sau lần deploy đầu tiên: **không viết lại migration cũ**, chỉ thêm migration mới.
 - [ ] Bật sao lưu tự động cho PostgreSQL.
 - [ ] **Không có dữ liệu mẫu dev:** database production phải có **0** mục từ `DEV_SAMPLE`. Không bao giờ chạy `seeds.seed_dev_entries` ở production (script tự từ chối). Kiểm tra:

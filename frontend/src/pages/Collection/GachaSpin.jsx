@@ -5,31 +5,39 @@
  * thanh pity "Đảm bảo Sử Thi", nút "i" mở bảng tỉ lệ công khai, "MỞ THẺ" và "Mở tất cả", dòng tiến độ tới lượt kế tiếp.
  * Chuỗi mở: hộp rung 800ms, nứt sáng → bật tung, thẻ úp bay lên (400ms, nảy) → ánh sáng viền gợi ý độ hiếm (600ms; Huyền Thoại
  * tối màn và tia vàng xoáy 1.500ms) → chạm để lật (500ms) → công bố theo độ hiếm (pháo giấy 2s) → kết quả.
- * Mở tất cả: các thẻ bay ra xếp hàng, lật lần lượt, thẻ hiếm nhất được đẩy lên giữa. Hết lượt: hộp xám có khóa, không có nút mua.
- * Kết quả quay do server sinh (hiện lấy từ collectionMock.js); client chỉ diễn hoạt cảnh. Có nút "Bỏ qua hiệu ứng";
- * khi người dùng bật giảm chuyển động thì đi thẳng tới kết quả.
+ * Mở tất cả (tối đa 10 lượt, cùng loại): các thẻ bay ra xếp hàng, lật lần lượt, thẻ hiếm nhất được đẩy lên giữa.
+ * Hết lượt: hộp xám có khóa, nút "Vào Học Viện", không có nút mua.
+ * Kết quả quay do SERVER quyết định (POST /collection/spins, services/collectionApi.js): màn hình nhận đủ kết quả và kết quả
+ * đã nằm trong album TRƯỚC khi bắt đầu hiệu ứng, nên tải lại trang giữa chừng không mất thẻ. Client chỉ diễn hoạt cảnh.
+ * Nút MỞ THẺ bị khóa ngay khi bấm (ref, không chờ React vẽ lại) để bấm hai lần chỉ tiêu một lượt; Idempotency-Key
+ * giữ nguyên khi thử lại vì lỗi mạng. Có nút "Bỏ qua hiệu ứng"; khi người dùng bật giảm chuyển động thì đi thẳng tới kết quả.
  *
- * Dev: `?result=legendary` (ép độ hiếm; `common-dupe` = thẻ trùng; nhiều thẻ cách nhau dấu phẩy), `?type=special`,
- * `?pity=18`, `?state=empty`, `?auto=1|all` (tự mở), `?hold=charge|burst|hint|await|reveal|flipping|featured` (dừng ở một khung).
+ * Dev: `?type=special`, `?auto=1|all` (tự mở), `?hold=charge|burst|hint|await|reveal|flipping|featured` (dừng ở một khung).
+ * Chỉ bản mock: `?result=legendary` (ép độ hiếm; `common-dupe` = thẻ trùng), `?pity=18`, `?state=empty`. Với backend thật,
+ * ép kết quả bằng POST /api/v1/dev/force-next (chỉ có ở dev/e2e).
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import confetti from 'canvas-confetti'
-import { ArrowsClockwise, BookOpen, CheckFat, DownloadSimple, Gift, ShareNetwork, Stack, UserCircle } from '@phosphor-icons/react'
+import { ArrowsClockwise, BookOpen, CheckFat, DownloadSimple, Gift, ShareNetwork, Stack, Sword, UserCircle } from '@phosphor-icons/react'
 import Button, { IconButton } from '../../components/ui/Button'
 import Icon from '../../components/ui/Icon'
 import Modal from '../../components/ui/Modal'
 import CardPack from '../../components/collection/CardPack'
 import { Stars } from '../../components/collection/MascotCard'
+import { useAuthStore } from '../../store/authStore'
+import { useCollectionStore } from '../../store/collectionStore'
+import { useMascotCatalog } from '../../store/mascotStore'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
-import { RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { messageFor } from '../../utils/errorMessages'
 import { formatMascotNumber } from '../../utils/format'
+import { USE_MOCK, fetchCollection, fetchRates, openPack, updateMascots } from '../../services/collectionApi'
+import { devEmptySpins } from './collectionMock'
 import { OddsModal } from './CollectionHeader'
-import { MASCOT_BY_ID } from '../../data/mascots'
-import { devEmptySpins, fetchCollection, openPack, setAvatar, totalSpins } from './collectionMock'
 import RevealCard from './spin/RevealCard'
 import { NextSpinLine, PityBar, Rays, SpinHud, TypeTabs } from './spin/SpinParts'
 import { drawSpinShareCard } from './spin/shareSpinCard'
@@ -48,6 +56,7 @@ const T = {
 }
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const totalSpins = (spins) => spins.normal + spins.special
 
 function rarest(results) {
   let best = 0
@@ -104,7 +113,7 @@ function ShareModal({ open, onClose, image }) {
   )
 }
 
-function ResultPanel({ mascot, result, isAvatar, spinsLeft, onAvatar, onAlbum, onAgain, onShare }) {
+function ResultPanel({ mascot, result, isAvatar, isArena, spinsLeft, onAvatar, onArena, onAlbum, onAgain, onShare }) {
   const info = RARITIES[result.rarity]
   return (
     <motion.div
@@ -147,13 +156,23 @@ function ResultPanel({ mascot, result, isAvatar, spinsLeft, onAvatar, onAlbum, o
         </div>
         <div className="flex gap-2 md:contents">
           {isAvatar ? (
-            <Button variant="accent" icon={CheckFat} disabled className="flex-1 px-3 disabled:opacity-100 md:flex-none">
-              Đang là avatar
+            <Button variant="accent" icon={CheckFat} disabled aria-label="Đang dùng làm avatar" className="flex-1 px-3 disabled:opacity-100 md:flex-none">
+              Avatar
             </Button>
           ) : (
             <Button variant="secondary" icon={UserCircle} className="flex-1 whitespace-nowrap px-3 md:flex-none md:px-6" onClick={onAvatar}>
               <span className="md:hidden">Làm avatar</span>
               <span className="max-md:hidden">Đặt làm avatar</span>
+            </Button>
+          )}
+          {isArena ? (
+            <Button variant="accent" icon={CheckFat} disabled aria-label="Đang dùng trong Đấu Trường" className="flex-1 px-3 disabled:opacity-100 md:flex-none">
+              Đấu Trường
+            </Button>
+          ) : (
+            <Button variant="orange" icon={Sword} className="flex-1 whitespace-nowrap px-3 md:flex-none md:px-6" onClick={onArena}>
+              <span className="md:hidden">Đấu Trường</span>
+              <span className="max-md:hidden">Dùng trong Đấu Trường</span>
             </Button>
           )}
           <Button variant="secondary" icon={BookOpen} className="flex-1 whitespace-nowrap px-3 md:flex-none md:px-6" onClick={onAlbum}>
@@ -167,7 +186,7 @@ function ResultPanel({ mascot, result, isAvatar, spinsLeft, onAvatar, onAlbum, o
 }
 
 function EmptyState({ nextSpin, onAcademy }) {
-  const left = nextSpin.target - nextSpin.current
+  const left = nextSpin.left ?? nextSpin.target - nextSpin.current
   return (
     <div className="flex flex-col items-center gap-6 pt-6 text-center md:pt-10">
       <CardPack variant="locked" className="w-[200px] md:w-[240px]" />
@@ -188,14 +207,43 @@ function EmptyState({ nextSpin, onAcademy }) {
 }
 
 export default function GachaSpin() {
+  const [params] = useSearchParams()
+  const catalog = useMascotCatalog()
+  const [initial, setInitial] = useState(null)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const load = USE_MOCK && params.get('state') === 'empty' ? Promise.resolve({ ...devEmptySpins(), nextSpin: { current: 38, target: 50, left: 12 } }) : fetchCollection()
+    load
+      .then((c) => {
+        useCollectionStore.getState().setFrom(c)
+        setInitial(c)
+      })
+      .catch(setError)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (error || catalog.error)
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-bg px-4 text-center">
+        <p className="font-heading text-xl font-extrabold">Chưa tải được lượt quay</p>
+        <Button onClick={() => window.location.reload()}>Thử lại</Button>
+      </div>
+    )
+  if (!initial || !catalog.ready) return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Đang tải" />
+  return <SpinScreen initial={initial} byId={catalog.byId} />
+}
+
+function SpinScreen({ initial, byId }) {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const reduceMotion = useReducedMotion()
   const pushToast = useToastStore((s) => s.push)
+  const setUser = useAuthStore((s) => s.setUser)
   const hold = params.get('hold')
-  const force = params.get('result')?.split(',') ?? []
+  const force = USE_MOCK ? (params.get('result')?.split(',') ?? []) : []
 
-  const [data, setData] = useState(() => (params.get('state') === 'empty' ? devEmptySpins() : fetchCollection()))
+  const [data, setData] = useState(initial)
   const [type, setType] = useState(() => {
     const wanted = params.get('type') === 'special' ? 'special' : 'normal'
     return data.spins[wanted] > 0 ? wanted : data.spins.normal > 0 ? 'normal' : 'special'
@@ -211,6 +259,8 @@ export default function GachaSpin() {
   const [oddsOpen, setOddsOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [shareImage, setShareImage] = useState(null)
+  const [rates, setRates] = useState(null)
+  const busyRef = useRef(false) // khóa ngay khi bấm: hai cú bấm liên tiếp chỉ gửi một yêu cầu
 
   const shardRef = useRef(null)
   const featuredRef = useRef(null)
@@ -218,9 +268,9 @@ export default function GachaSpin() {
   const latestRef = useRef(data)
   const autoRef = useRef(false)
 
-  const pity = params.get('pity') ? Number(params.get('pity')) : data.pity
+  const pity = USE_MOCK && params.get('pity') ? Number(params.get('pity')) : data.pity
   const spinsLeft = totalSpins(data.spins)
-  const count = data.spins[type]
+  const count = Math.min(data.spins[type], GACHA.maxBatch) // "Mở tất cả" tối đa 10 lượt mỗi lần
   const opening = phase !== 'ready' && phase !== 'result'
 
   const finish = useCallback(() => {
@@ -233,6 +283,8 @@ export default function GachaSpin() {
 
   const open = useCallback(
     async (n) => {
+      if (busyRef.current) return
+      busyRef.current = true
       skipRef.current = Boolean(reduceMotion)
       setPackVariant(type)
       setMulti(n > 1)
@@ -240,16 +292,23 @@ export default function GachaSpin() {
       setShareImage(null)
       setPhase('charge')
       try {
+        // Đủ kết quả (đã ghi ở server) rồi mới diễn hiệu ứng
         const [res] = await Promise.all([openPack(type, n, force), wait(reduceMotion ? 0 : T.charge)])
         latestRef.current = res.state
+        useCollectionStore.getState().setFrom(res.state)
+        if (res.replayed) pushToast({ variant: 'info', title: 'Kết quả lần mở trước', message: 'Mạng chập chờn nên đây là kết quả đã mở, không trừ thêm lượt.' })
         setResults(res.results)
         setFeatured(rarest(res.results))
         setData(res.state)
         if (skipRef.current) finish()
         else if (hold !== 'charge') setPhase('burst')
-      } catch {
+      } catch (err) {
         setPhase('ready')
-        pushToast({ variant: 'error', title: 'Không mở được thẻ', message: 'Số lượt đã thay đổi, hãy thử lại.' })
+        // DAILY_CHECK_REQUIRED: services/api.js đánh dấu Cửa Ải pending, route guard chuyển sang /daily-check (không cần báo lỗi)
+        if (err?.code !== 'DAILY_CHECK_REQUIRED') pushToast({ variant: 'error', title: 'Không mở được thẻ', message: err?.code ? messageFor(err) : 'Số lượt đã thay đổi, hãy thử lại.' })
+        fetchCollection().then(setData).catch(() => {})
+      } finally {
+        busyRef.current = false
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -326,7 +385,22 @@ export default function GachaSpin() {
   useEffect(() => setShareImage(null), [featured])
 
   const featuredResult = results[featured]
-  const featuredMascot = featuredResult ? MASCOT_BY_ID[featuredResult.id] : null
+  const featuredMascot = featuredResult ? byId[featuredResult.id] : null
+
+  useEffect(() => {
+    if (oddsOpen && !rates) fetchRates().then(setRates).catch(() => {})
+  }, [oddsOpen, rates])
+
+  const choose = async (patch, toast) => {
+    try {
+      const user = await updateMascots(patch)
+      if (user) setUser(user)
+      setData(await fetchCollection())
+      pushToast({ variant: 'success', ...toast })
+    } catch (err) {
+      pushToast({ variant: 'error', title: 'Chưa đổi được', message: messageFor(err) })
+    }
+  }
 
   const openShare = () => {
     setShareOpen(true)
@@ -390,11 +464,11 @@ export default function GachaSpin() {
             {/* Nút: dính đáy trên mobile */}
             <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col items-center gap-2 border-t-thick border-line bg-surface px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 md:static md:border-0 md:bg-transparent md:p-0">
               <div className="flex w-full max-w-md gap-2 md:gap-3">
-                <Button size="lg" variant={type === 'special' ? 'gold' : 'primary'} icon={Gift} className="flex-1 text-xl md:h-[72px] md:text-2xl" onClick={() => open(1)}>
+                <Button size="lg" variant={type === 'special' ? 'gold' : 'primary'} icon={Gift} className="flex-1 text-xl md:h-[72px] md:text-2xl" disabled={opening} onClick={() => open(1)}>
                   Mở thẻ
                 </Button>
                 {count > 1 && (
-                  <Button size="lg" variant="secondary" icon={Stack} className="whitespace-nowrap px-4 md:h-[72px] md:px-6" onClick={() => open(count)}>
+                  <Button size="lg" variant="secondary" icon={Stack} className="whitespace-nowrap px-4 md:h-[72px] md:px-6" disabled={opening} onClick={() => open(count)}>
                     Mở tất cả ({count})
                   </Button>
                 )}
@@ -417,7 +491,7 @@ export default function GachaSpin() {
             {!multi && results[0] && phase !== 'charge' && (
               <>
                 <RevealCard
-                  mascot={MASCOT_BY_ID[results[0].id]}
+                  mascot={byId[results[0].id]}
                   result={results[0]}
                   stage={singleStage}
                   onFlip={() => setPhase('flip')}
@@ -445,7 +519,7 @@ export default function GachaSpin() {
                   <div className="flex flex-wrap justify-center gap-4 md:gap-8">
                     {results.map((r, i) => (
                       <motion.div key={i} layoutId={`spin-card-${i}`} className="w-[150px] md:w-[210px]">
-                        <RevealCard mascot={MASCOT_BY_ID[r.id]} result={r} stage={multiStage(i)} compact />
+                        <RevealCard mascot={byId[r.id]} result={r} stage={multiStage(i)} compact />
                       </motion.div>
                     ))}
                   </div>
@@ -465,7 +539,7 @@ export default function GachaSpin() {
                         i === featured ? null : (
                           <motion.div key={i} layoutId={`spin-card-${i}`} className="w-[88px] md:w-[110px]">
                             <RevealCard
-                              mascot={MASCOT_BY_ID[r.id]}
+                              mascot={byId[r.id]}
                               result={r}
                               stage="result"
                               compact
@@ -485,11 +559,10 @@ export default function GachaSpin() {
                 mascot={featuredMascot}
                 result={featuredResult}
                 isAvatar={data.avatarId === featuredMascot.id}
+                isArena={(data.arenaId ?? data.avatarId) === featuredMascot.id}
                 spinsLeft={spinsLeft}
-                onAvatar={async () => {
-                  setData(await setAvatar(featuredMascot.id))
-                  pushToast({ variant: 'success', title: 'Đã đổi avatar', message: `${featuredMascot.name} giờ là ảnh đại diện của bạn.` })
-                }}
+                onAvatar={() => choose({ avatarId: featuredMascot.id }, { title: 'Đã đổi avatar', message: `${featuredMascot.name} giờ là ảnh đại diện của bạn.` })}
+                onArena={() => choose({ arenaId: featuredMascot.id }, { title: 'Sẵn sàng ra trận', message: `${featuredMascot.name} sẽ đấu cùng bạn ở Đấu Trường.` })}
                 onAlbum={() => navigate(`/collection?mascot=${featuredMascot.id}`)}
                 onAgain={again}
                 onShare={openShare}
@@ -499,7 +572,7 @@ export default function GachaSpin() {
         )}
       </main>
 
-      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} pity={pity} />
+      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} pity={rates?.pity ?? pity} rates={rates} />
       <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} image={shareImage} />
     </div>
   )

@@ -15,7 +15,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import AppError
@@ -144,10 +144,21 @@ async def unlock_level(session, user, st: Structure, level: Level, now) -> list[
     return events
 
 
+async def _has_progress(session: AsyncSession, user_id: uuid.UUID) -> bool:
+    return bool(await session.scalar(select(func.count()).select_from(UserLevelProgress).where(UserLevelProgress.user_id == user_id)))
+
+
 async def ensure_initialized(session: AsyncSession, user: User, now: datetime, st: Structure | None = None) -> None:
-    """Người mới: mở cấp đầu, chặng 1, bài 1. Đã có tiến độ thì không làm gì."""
-    exists = await session.scalar(select(func.count()).select_from(UserLevelProgress).where(UserLevelProgress.user_id == user.id))
-    if exists:
+    """Người mới: mở cấp đầu, chặng 1, bài 1. Đã có tiến độ thì không làm gì.
+
+    Nhiều request đầu tiên của cùng một người có thể chạy song song (Sảnh gọi /me/stats, menu gọi /collection…): khóa
+    advisory theo người dùng (tới hết transaction) để chỉ một request khởi tạo, các request khác chờ rồi thấy đã có tiến độ.
+    Không khóa dòng users nên không ảnh hưởng thứ tự khóa users → user_stats ở nơi khác (tránh deadlock).
+    """
+    if await _has_progress(session, user.id):
+        return
+    await session.execute(text("SELECT pg_advisory_xact_lock(hashtextextended(:key, 0))"), {"key": f"roadmap-init:{user.id}"})
+    if await _has_progress(session, user.id):
         return
     st = st or await load_structure(session)
     if st.levels:

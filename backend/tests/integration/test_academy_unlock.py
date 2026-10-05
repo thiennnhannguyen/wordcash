@@ -173,3 +173,52 @@ async def test_goal_does_not_block_five_minute_learner(world):
     await H.answer(db, user, second)
     today = (await me_service.get_stats(db, user, NOW))["today"]
     assert (today["new_words"], today["new_words_goal"], today["new_words_cap"]) == (30, 10, settings.NEW_WORDS_DAILY_CAP)
+
+
+async def test_parallel_first_requests_initialize_once_without_deadlock(test_engine):
+    """Người mới mở Sảnh: /me/stats và /collection cùng khởi tạo lộ trình song song (kết nối riêng, commit thật):
+    không deadlock (thứ tự khóa khởi tạo → users → user_stats), chỉ một bộ tiến độ (cấp, chặng, bài) được tạo."""
+    import asyncio
+    import uuid
+
+    from sqlalchemy import delete, func, select
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from app.models import Level, Topic, Unit, User, UserLevelProgress, UserTopicProgress, UserUnitProgress
+
+    async with AsyncSession(test_engine, expire_on_commit=False) as s:
+        level = Level(code="Z9", name="Thử song song", order=-99)
+        s.add(level)
+        await s.flush()
+        topic = Topic(level_id=level.id, order=1, title="Chặng thử")
+        s.add(topic)
+        await s.flush()
+        s.add(Unit(topic_id=topic.id, position=1, title="Bài thử"))
+        user = User(email=f"par-{uuid.uuid4().hex[:6]}@wordclash.vn", username=f"par{uuid.uuid4().hex[:6]}", display_name="Par", password_hash="x")
+        s.add(user)
+        await s.commit()
+
+    from app.models import UserStats
+    from app.services import collection_service, me_service
+
+    async def first_request(i):
+        async with AsyncSession(test_engine, expire_on_commit=False) as s:
+            if i % 2:
+                await me_service.get_stats(s, user, NOW)  # Sảnh
+            else:
+                await collection_service.get_collection(s, user, NOW)  # chấm đỏ ở menu
+            await s.commit()
+
+    try:
+        await asyncio.gather(*(first_request(i) for i in range(6)))
+        async with AsyncSession(test_engine) as s:
+            counts = [await s.scalar(select(func.count()).select_from(m).where(m.user_id == user.id))
+                      for m in (UserLevelProgress, UserTopicProgress, UserUnitProgress)]
+            assert counts == [1, 1, 1]
+    finally:
+        async with AsyncSession(test_engine) as s:
+            for m in (UserUnitProgress, UserTopicProgress, UserLevelProgress, UserStats):
+                await s.execute(delete(m).where(m.user_id == user.id))
+            await s.execute(delete(User).where(User.id == user.id))
+            await s.execute(delete(Level).where(Level.id == level.id))
+            await s.commit()

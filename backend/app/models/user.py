@@ -2,16 +2,15 @@
 Bảng users: tài khoản, mật khẩu (băm), hồ sơ, lựa chọn onboarding, vai trò.
 Email và username luôn lưu chữ thường (duy nhất). Múi giờ dùng để tính "ngày" cho Cửa Ải Hôm Nay và streak.
 
-TODO:
-- `avatar_mascot_id` thêm khóa ngoại tới bảng mascots khi model Mascot được viết.
-- streak, số lượt quay còn lại: thêm khi làm Cửa Ải và vòng quay (lượt quay chỉ tính theo `mastered_count`, không tính từ tự tạo).
+Avatar (`avatar_mascot_id`) và linh vật dùng ở Đấu Trường (`arena_mascot_id`, null = dùng avatar) chỉ được là linh vật
+đang sở hữu (user_mascots); kiểm tra ở services/collection_service.py. Streak, lượt quay, mảnh nằm ở user_stats.
 """
 
 import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Integer, String, func, true
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func, true
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.core.config import settings
@@ -41,7 +40,8 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     timezone: Mapped[str] = mapped_column(String(64), default=lambda: settings.DEFAULT_TIMEZONE)
-    avatar_mascot_id: Mapped[int | None] = mapped_column(Integer)  # TODO: FK mascots.id
+    avatar_mascot_id: Mapped[int | None] = mapped_column(ForeignKey("mascots.id"))
+    arena_mascot_id: Mapped[int | None] = mapped_column(ForeignKey("mascots.id"))
     goal: Mapped[Goal | None] = mapped_column(str_enum(Goal, "user_goal"))
     daily_minutes: Mapped[int | None] = mapped_column(Integer)
     onboarding_completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

@@ -5,10 +5,12 @@ Công cụ CHỈ dành cho dev và e2e (router chỉ được gắn khi ENV deve
 - GET /dev/study-sessions/{sid}/key, GET /dev/daily-check/key: khóa đáp án (theo thứ tự câu) của phiên / Cửa Ải hôm nay của
   chính người dùng, để e2e trả lời đúng hoặc sai có chủ đích qua giao diện. Ở production các route này không tồn tại (404),
   nên không thể dùng để lộ đáp án (có test).
+- POST /dev/grant-spins {normal, special}: cộng lượt quay; POST /dev/set-pity {value}: đặt bộ đếm pity;
+  POST /dev/force-next {rarity, mascot_id?}: ép kết quả lượt quay KẾ TIẾP của chính người dùng (dựng hiệu ứng trong e2e).
 """
 
+import logging
 import uuid
-
 
 from fastapi import APIRouter
 from sqlalchemy import select
@@ -18,9 +20,11 @@ from app.core import clock
 from app.models import DailyCheck, ProgressStatus, StudySession, UserLevelProgress
 from app.utils.time import local_date
 from app.schemas.academy import FastForwardIn
-from app.services import roadmap_service
+from app.schemas.collection import ForceNextIn, GrantSpinsIn, SetPityIn
+from app.services import collection_service, roadmap_service, stats_service
 
 router = APIRouter(prefix="/dev", tags=["Dev"])
+log = logging.getLogger("wordclash.collection")
 
 
 @router.post("/academy/fast-forward", summary="(dev) Tới thẳng Trận Boss của một cấp")
@@ -50,3 +54,30 @@ async def session_key(session_id: uuid.UUID, user: CurrentUser, session: DbSessi
 async def daily_key(user: CurrentUser, session: DbSession):
     row = await session.scalar(select(DailyCheck).where(DailyCheck.user_id == user.id, DailyCheck.local_date == local_date(user, clock.now())))
     return [{"id": q["id"], "answer": q["answer"]} for q in row.questions] if row else []
+
+
+@router.post("/grant-spins", summary="(dev) Cộng lượt quay")
+async def grant_spins(data: GrantSpinsIn, user: CurrentUser, session: DbSession):
+    stats = await stats_service.lock_stats(session, user.id)
+    stats.spins_normal += data.normal
+    stats.spins_special += data.special
+    out = {"normal": stats.spins_normal, "special": stats.spins_special}
+    await session.commit()
+    log.info("grant-spins user=%s +normal=%s +special=%s → %s", user.id, data.normal, data.special, out)
+    return out
+
+
+@router.post("/set-pity", summary="(dev) Đặt bộ đếm pity")
+async def set_pity(data: SetPityIn, user: CurrentUser, session: DbSession):
+    stats = await stats_service.lock_stats(session, user.id)
+    before = stats.pity_counter
+    stats.pity_counter = data.value
+    await session.commit()
+    log.info("set-pity user=%s %s → %s", user.id, before, data.value)
+    return {"pity_counter": data.value}
+
+
+@router.post("/force-next", summary="(dev) Ép kết quả lượt quay kế tiếp")
+async def force_next(data: ForceNextIn, user: CurrentUser):
+    collection_service.force_next(user.id, data.rarity, data.mascot_id)
+    return {"ok": True}

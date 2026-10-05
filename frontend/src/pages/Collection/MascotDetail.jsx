@@ -2,8 +2,9 @@
  * Chi tiết một linh vật đã sở hữu: hộp thoại lớn trên desktop, tấm trượt toàn màn hình trên mobile.
  *
  * Trái: thẻ cỡ lớn xoay chậm trên bệ trưng bày, nút "Lật thẻ" xem mặt sau (logo WORDCLASH và họa tiết).
- * Phải: số thứ tự và tên, nhãn độ hiếm, tiểu sử vui, ngày và nguồn nhận, số bản đang sở hữu (bản trùng đã đổi thành mảnh),
- * hai nút "Đặt làm avatar" và "Dùng trong Đấu Trường", dải xem trước 4 trạng thái chuyển động.
+ * Phải: số thứ tự và tên, nhãn độ hiếm, hồ sơ (ngày sinh, quê, tính cách, thích, ghét, từ yêu thích, câu cửa miệng, tiểu sử;
+ * lấy từ docs/mascots-lore.md qua API, trường nào trống thì ẩn), ngày và nguồn nhận, số bản đang sở hữu (bản trùng đã đổi
+ * thành mảnh), hai nút "Đặt làm avatar" và "Dùng trong Đấu Trường" (đang dùng thì "Đang dùng ✓"), dải 4 tư thế (ShapeMascot).
  * Linh vật chỉ để trang trí: không hiện chỉ số sức mạnh nào.
  */
 
@@ -60,6 +61,46 @@ function Showcase({ mascot, entry }) {
   )
 }
 
+const PROFILE = [
+  ['birthday_text', 'Ngày sinh'],
+  ['hometown', 'Quê'],
+  ['personality', 'Tính cách'],
+  ['likes', 'Thích'],
+  ['dislikes', 'Ghét'],
+  ['favorite_word', 'Từ yêu thích'],
+]
+
+function Profile({ mascot }) {
+  const profile = mascot.profile ?? {}
+  const rows = PROFILE.filter(([key]) => profile[key])
+  return (
+    <div className="flex flex-col gap-3">
+      {profile.catchphrase && (
+        <p className="relative rounded-card border-thick border-line bg-raised px-4 py-3 font-heading font-extrabold leading-snug">“{profile.catchphrase}”</p>
+      )}
+      {rows.length > 0 && (
+        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1.5">
+          {rows.map(([key, label]) => (
+            <div key={key} className="contents">
+              <dt className="font-display text-[13px] font-bold uppercase leading-6 tracking-wide text-muted">{label}</dt>
+              <dd className={key === 'favorite_word' ? 'font-num leading-6' : 'font-medium leading-6'}>{profile[key]}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {(profile.bio ?? mascot.bio) && <p className="font-medium leading-relaxed text-ink">{profile.bio ?? mascot.bio}</p>}
+    </div>
+  )
+}
+
+function InUse({ label }) {
+  return (
+    <Button variant="accent" icon={CheckFat} disabled aria-label={label} className="disabled:opacity-100">
+      Đang dùng
+    </Button>
+  )
+}
+
 function Fact({ icon, children }) {
   return (
     <li className="flex items-start gap-2.5">
@@ -107,9 +148,7 @@ export default function MascotDetail({ mascot, entry, isAvatar, isArena, onSetAv
                 </span>
               </div>
 
-              <p className="relative rounded-card border-thick border-line bg-raised px-4 py-3 font-medium leading-relaxed">
-                “{mascot.bio}”
-              </p>
+              <Profile mascot={mascot} />
 
               <ul className="flex flex-col gap-2.5">
                 <Fact icon={CalendarBlank}>Ngày nhận: {formatDate(entry.receivedAt)}</Fact>
@@ -127,18 +166,14 @@ export default function MascotDetail({ mascot, entry, isAvatar, isArena, onSetAv
 
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 {isAvatar ? (
-                  <Button variant="accent" icon={CheckFat} disabled className="disabled:opacity-100">
-                    Đang là avatar
-                  </Button>
+                  <InUse label="Đang dùng làm avatar" />
                 ) : (
                   <Button variant="secondary" icon={UserCircle} disabled={busy === 'avatar'} onClick={() => run('avatar', onSetAvatar)}>
                     Đặt làm avatar
                   </Button>
                 )}
                 {isArena ? (
-                  <Button variant="accent" icon={CheckFat} disabled className="disabled:opacity-100">
-                    Đang dùng
-                  </Button>
+                  <InUse label="Đang dùng trong Đấu Trường" />
                 ) : (
                   <Button variant="orange" icon={Sword} disabled={busy === 'arena'} onClick={() => run('arena', onSetArena)} className="whitespace-nowrap">
                     Dùng trong Đấu Trường

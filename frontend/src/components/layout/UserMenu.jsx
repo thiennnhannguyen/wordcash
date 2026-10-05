@@ -11,7 +11,7 @@ import { Devices, SignOut, UserCircle } from '@phosphor-icons/react'
 import Icon from '../ui/Icon'
 import Modal from '../ui/Modal'
 import MascotBlob from '../collection/MascotBlob'
-import { getMascot } from '../../data/mascots'
+import { useMascot } from '../../store/mascotStore'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAuthStore } from '../../store/authStore'
 import { useToastStore } from '../../store/toastStore'
@@ -19,7 +19,7 @@ import cx from '../../utils/cx'
 import { messageFor } from '../../utils/errorMessages'
 
 export function UserAvatar({ user, size = 44, className }) {
-  const mascot = getMascot(user?.avatar_mascot_id ?? 1)
+  const mascot = useMascot(user?.avatar_mascot_id)
   return (
     <span className={cx('grid shrink-0 place-items-center overflow-hidden rounded-pill border-thick border-line bg-raised', className)} style={{ width: size + 4, height: size + 4 }}>
       <MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={size} shadow={false} className="translate-y-1" />

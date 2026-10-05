@@ -32,6 +32,7 @@ class UserOut(BaseModel):
     display_name: str
     timezone: str
     avatar_mascot_id: int | None
+    arena_mascot_id: int | None = None  # null = Đấu Trường dùng avatar
     goal: Goal | None
     daily_minutes: int | None
     onboarding_completed: bool
@@ -53,6 +54,7 @@ class UserOut(BaseModel):
                 "display_name": data.display_name,
                 "timezone": data.timezone,
                 "avatar_mascot_id": data.avatar_mascot_id,
+                "arena_mascot_id": data.arena_mascot_id,
                 "goal": data.goal,
                 "daily_minutes": data.daily_minutes,
                 "onboarding_completed": data.onboarding_completed_at is not None,
@@ -74,6 +76,7 @@ class UserUpdateIn(BaseModel):
     timezone: str | None = None
     # Quyền sở hữu kiểm tra ở service (MASCOT_NOT_OWNED); null = bỏ ảnh đại diện
     avatar_mascot_id: int | None = Field(default=None, ge=1, le=100)
+    arena_mascot_id: int | None = Field(default=None, ge=1, le=100)  # null = dùng avatar ở Đấu Trường
 
     _strip = field_validator("display_name", mode="before")(clean_display_name)
 

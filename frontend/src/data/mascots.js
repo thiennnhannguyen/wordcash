@@ -1,6 +1,7 @@
 /*
- * Danh sách DUY NHẤT 100 linh vật (Từ Linh) của frontend. Bộ Sưu Tập, vòng quay, Sảnh, Hồ Sơ, Đấu Trường, Onboarding,
- * Landing đều import từ đây; không giữ danh sách linh vật ở nơi khác.
+ * Danh mục 100 linh vật (Từ Linh) BẢN MOCK. Nguồn chính là backend/seeds/data/mascots.json (seed vào bảng mascots,
+ * frontend chế độ thường lấy qua GET /api/v1/mascots). File này chỉ phục vụ VITE_USE_MOCK và các trang xem thử;
+ * tests/mascotsCatalog.test.js bắt lệch so với JSON. Không giữ danh sách linh vật ở nơi khác.
  *
  * - #001–#030: linh vật đã có tên (tên do người dùng đặt; tiểu sử là nội dung nháp tự viết, status = draft).
  * - #031–#100: ô trống `status: "coming_soon"`, `name: null`, đã có vùng đất và độ hiếm theo bảng phân bổ (DISTRIBUTION,
@@ -17,7 +18,6 @@
  * `shape` + `color` + `traits` để vẽ tạm bằng MascotBlob
  * (tác giả sẽ vẽ linh vật thật). `color` là tên token màu trong styles/tokens.css.
  * Linh vật khởi đầu (chọn ở Onboarding, backend chỉ cho đặt avatar 1–3): #001–#003.
- * TODO: lấy từ API khi có bảng mascots.
  */
 
 const A1_IDS = new Set([1, 5, 7, 9, 10, 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26, 27])

@@ -114,7 +114,20 @@ class Settings(BaseSettings):
 
     # Vòng quay
     SPIN_EVERY_N_WORDS: int = 50
-    PITY_EPIC: int = 20
+    PITY_EPIC: int = 20  # pity_counter (chung mọi loại lượt) đạt mức này → lượt kế chắc chắn Sử Thi (Huyền Thoại thì giữ)
+    # Tỉ lệ công khai theo độ hiếm (tổng = 1). Lượt đặc biệt (lên rank, thắng Boss) không ra Thường.
+    GACHA_RATES_NORMAL: dict[str, float] = {"common": 0.60, "rare": 0.28, "epic": 0.10, "legendary": 0.02}
+    GACHA_RATES_SPECIAL: dict[str, float] = {"common": 0.0, "rare": 0.70, "epic": 0.24, "legendary": 0.06}
+    GACHA_SHARDS_PER_DUPLICATE: dict[str, int] = {"common": 2, "rare": 4, "epic": 8, "legendary": 20}
+    GACHA_EXCHANGE_COST: dict[str, int] = {"common": 20, "rare": 40, "epic": 60, "legendary": 150}
+    GACHA_MAX_BATCH: int = 10  # "Mở tất cả" tối đa 10 lượt mỗi lần, cùng một loại lượt
+    SPIN_RATE_LIMIT_PER_MINUTE: int = 30  # POST /collection/spins mỗi người
+    IDEMPOTENCY_TTL_HOURS: int = 24
+    # Phân bổ 100 linh vật theo vùng × độ hiếm (Thường, Hiếm, Sử Thi, Huyền Thoại); seed_mascots kiểm tra danh mục khớp bảng này
+    MASCOT_DISTRIBUTION: dict[str, list[int]] = {
+        "A1": [8, 5, 3, 1], "A2": [8, 5, 3, 1], "B1": [7, 5, 2, 1], "B2": [7, 4, 3, 1],
+        "C1": [6, 4, 3, 1], "C2": [6, 5, 3, 1], "SPECIAL": [3, 2, 1, 1],
+    }
 
     # Đấu Trường
     MATCH_HP: int = 100

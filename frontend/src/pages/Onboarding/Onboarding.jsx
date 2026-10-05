@@ -15,7 +15,7 @@ import Icon, { IconBadge } from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import { Wordmark } from '../../components/layout/NavBar'
-import { MASCOT_BY_ID, STARTER_MASCOT_IDS } from '../../data/mascots'
+import { useMascotCatalog } from '../../store/mascotStore'
 import { useAuthStore } from '../../store/authStore'
 import { useToastStore } from '../../store/toastStore'
 import { messageFor } from '../../utils/errorMessages'
@@ -47,8 +47,8 @@ const STARTS = [
   },
 ]
 
-// Linh vật khởi đầu #001–#003 (data/mascots.js); `value` là id gửi lên server (starter_mascot_id)
-const STARTERS = STARTER_MASCOT_IDS.map((id) => ({ ...MASCOT_BY_ID[id], value: id }))
+// Linh vật khởi đầu = các linh vật `is_starter` trong danh mục GET /mascots (#001–#003); id gửi lên server (starter_mascot_id),
+// server cấp sở hữu ngay (source=starter) nên album hiện 1/100.
 
 const STEPS = [
   { key: 'goal', title: 'Bạn học để làm gì?', subtitle: 'Chọn một mục tiêu. Bạn có thể đổi sau trong Hồ Sơ.' },
@@ -171,9 +171,19 @@ function StartStep({ value, onChange }) {
 }
 
 function MascotStep({ value, onChange }) {
+  const { mascots, ready } = useMascotCatalog()
+  const starters = mascots.filter((m) => m.isStarter || (!('isStarter' in m) && m.id <= 3)).map((m) => ({ ...m, value: m.id }))
+  if (!ready)
+    return (
+      <div className="grid grid-cols-3 gap-3 md:gap-6" aria-busy="true" aria-label="Đang tải linh vật">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-56 animate-pulse rounded-card bg-raised md:h-72" />
+        ))}
+      </div>
+    )
   return (
     <div role="radiogroup" aria-label="Linh vật đồng hành" className="grid grid-cols-3 gap-3 md:gap-6">
-      {STARTERS.map((m) => {
+      {starters.map((m) => {
         const selected = value === m.value
         return (
           <button
