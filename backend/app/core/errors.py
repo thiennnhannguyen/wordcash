@@ -31,7 +31,7 @@ ERRORS: dict[str, tuple[int, str]] = {
     "WRONG_PASSWORD": (400, "Mật khẩu hiện tại không đúng"),
     "ACCOUNT_DISABLED": (403, "Tài khoản này đã bị khóa."),
     "FORBIDDEN_ORIGIN": (403, "Yêu cầu bị từ chối vì không đến từ trang WORDCLASH."),
-    "MASCOT_NOT_OWNED": (403, "Bạn chưa sở hữu linh vật này nên chưa thể đặt làm ảnh đại diện."),
+    "MASCOT_NOT_OWNED": (403, "Bạn chưa sở hữu linh vật này nên chưa thể chọn nó."),
     # Khóa học của tôi
     "COURSE_NOT_FOUND": (404, "Không tìm thấy khóa học."),
     "COURSE_LIMIT_REACHED": (409, "Bạn đã có tối đa số khóa học cho phép. Lưu trữ hoặc xóa bớt một khóa nhé."),
@@ -55,6 +55,15 @@ ERRORS: dict[str, tuple[int, str]] = {
     "BOSS_COOLDOWN": (409, "Bạn cần luyện các chặng yếu hoặc chờ hết thời gian để đánh lại Boss."),
     "DAILY_CHECK_REQUIRED": (409, "Vượt Cửa Ải Hôm Nay trước đã nhé."),
     "DAILY_CHECK_DONE": (409, "Bạn đã hoàn thành Cửa Ải hôm nay."),
+    # Bộ Sưu Tập, vòng quay
+    "MASCOT_NOT_FOUND": (404, "Không tìm thấy linh vật."),
+    "NO_SPINS_LEFT": (409, "Bạn không đủ lượt quay. Học thêm ở Học Viện để nhận lượt mới nhé."),
+    "INVALID_SPIN_COUNT": (422, "Mỗi lần chỉ mở được từ 1 tới 10 lượt."),
+    "NOT_ENOUGH_SHARDS": (409, "Bạn chưa đủ mảnh để đổi linh vật này."),
+    "MASCOT_ALREADY_OWNED": (409, "Bạn đã có linh vật này rồi."),
+    "MASCOT_NOT_EXCHANGEABLE": (409, "Linh vật này không đổi bằng mảnh được (chưa ra mắt, nhận qua thành tích hoặc vùng chưa mở)."),
+    "IDEMPOTENCY_KEY_REQUIRED": (400, "Thiếu header Idempotency-Key."),
+    "IDEMPOTENCY_KEY_REUSED": (409, "Idempotency-Key này đã dùng cho một yêu cầu khác."),
     # Mã bổ sung cho các lỗi chung
     "FORBIDDEN": (403, "Bạn không có quyền thực hiện thao tác này."),
     "EMAIL_NOT_VERIFIED": (403, "Bạn cần xác thực email trước."),
