@@ -129,6 +129,8 @@ async def test_dev_router_absent_outside_dev(client, auth_user):
     assert res.status_code == 404
     for path in (f"/dev/study-sessions/{uuid.uuid4()}/key", "/dev/daily-check/key"):
         assert (await client.get(f"{API}{path}", headers=auth_user["headers"])).status_code == 404
+    for path, body in (("/dev/grant-spins", {"normal": 5}), ("/dev/set-pity", {"value": 20}), ("/dev/force-next", {"rarity": "legendary"})):
+        assert (await client.post(f"{API}{path}", json=body, headers=auth_user["headers"])).status_code == 404
 
 
 def test_dev_router_only_registered_in_dev_and_e2e():
@@ -150,7 +152,9 @@ def test_dev_router_only_registered_in_dev_and_e2e():
         for env, expected in (("production", False), ("testing", False), ("development", True), ("e2e", True)):
             settings.ENV = env
             module = importlib.reload(v1)
-            assert ("/api/v1/dev/daily-check/key" in paths(module.api_router)) is expected, env
+            found = paths(module.api_router)
+            for path in ("/api/v1/dev/daily-check/key", "/api/v1/dev/grant-spins", "/api/v1/dev/set-pity", "/api/v1/dev/force-next"):
+                assert (path in found) is expected, (env, path)
     finally:
         settings.ENV = original
         importlib.reload(v1)

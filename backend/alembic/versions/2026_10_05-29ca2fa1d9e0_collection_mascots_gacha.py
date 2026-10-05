@@ -123,6 +123,14 @@ BASE_MASCOTS = [
     (100, '100', None, 'legendary', 'SPECIAL', 'coming_soon', 'achievement', False),
 ]
 
+# Bù sở hữu linh vật khởi đầu cho người dùng cũ (tests/integration/test_collection_service.py chạy đúng câu này)
+BACKFILL_STARTERS_SQL = (
+    "INSERT INTO user_mascots (user_id, mascot_id, copies, source, first_obtained_at, last_obtained_at, is_new) "
+    "SELECT id, avatar_mascot_id, 1, 'starter', COALESCE(onboarding_completed_at, created_at), "
+    "COALESCE(onboarding_completed_at, created_at), false FROM users WHERE avatar_mascot_id IN (1, 2, 3) "
+    "ON CONFLICT (user_id, mascot_id) DO NOTHING"
+)
+
 # revision identifiers, used by Alembic.
 revision: str = '29ca2fa1d9e0'
 down_revision: Union[str, Sequence[str], None] = 'a027e19df0ee'
@@ -232,12 +240,7 @@ def upgrade() -> None:
                        sa.column('obtain', sa.String), sa.column('is_starter', sa.Boolean))
     op.bulk_insert(mascots, [dict(zip(('id', 'code', 'name', 'rarity', 'region', 'status', 'obtain', 'is_starter'), row)) for row in BASE_MASCOTS])
     op.execute("UPDATE users SET avatar_mascot_id = NULL WHERE avatar_mascot_id IS NOT NULL AND avatar_mascot_id NOT IN (SELECT id FROM mascots)")
-    op.execute(
-        "INSERT INTO user_mascots (user_id, mascot_id, copies, source, first_obtained_at, last_obtained_at, is_new) "
-        "SELECT id, avatar_mascot_id, 1, 'starter', COALESCE(onboarding_completed_at, created_at), "
-        "COALESCE(onboarding_completed_at, created_at), false FROM users WHERE avatar_mascot_id IN (1, 2, 3) "
-        "ON CONFLICT (user_id, mascot_id) DO NOTHING"
-    )
+    op.execute(BACKFILL_STARTERS_SQL)
     op.create_foreign_key(op.f('fk_users_avatar_mascot_id_mascots'), 'users', 'mascots', ['avatar_mascot_id'], ['id'])
     op.create_foreign_key(op.f('fk_users_arena_mascot_id_mascots'), 'users', 'mascots', ['arena_mascot_id'], ['id'])
     # ### end Alembic commands ###
