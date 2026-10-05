@@ -1,7 +1,7 @@
 #!/bin/sh
 # Backend cho kiểm thử đầu-cuối (Playwright gọi qua webServer trong playwright.config.js).
 # - Database riêng `wordclash_e2e` (tạo nếu chưa có), làm sạch bằng `alembic downgrade base` rồi `upgrade head` mỗi lần chạy.
-# - Nạp lộ trình mẫu A1–A2 (seeds/seed_dev_roadmap.py, gồm 60 mục của seed_dev_entries.py), Redis db 15 được xóa để bộ đếm giới hạn không rò giữa các lần chạy.
+# - Nạp lộ trình mẫu A1–A2 (seeds/seed_dev_roadmap.py, gồm 60 mục của seed_dev_entries.py) và danh mục linh vật (seed_mascots), Redis db 15 được xóa để bộ đếm giới hạn không rò giữa các lần chạy.
 # - uvicorn ở cổng 8100; FRONTEND_URL là Vite của e2e (cổng 5180); JWT_SECRET_KEY cố định để test ký được token hết hạn.
 set -e
 cd "$(dirname "$0")/../../backend"
@@ -42,4 +42,5 @@ PY
 .venv/bin/alembic downgrade base > /dev/null
 .venv/bin/alembic upgrade head > /dev/null
 .venv/bin/python -m seeds.seed_dev_roadmap > /dev/null
+.venv/bin/python -m seeds.seed_mascots > /dev/null
 exec .venv/bin/uvicorn app.main:asgi_app --port "${E2E_API_PORT:-8100}" --log-level warning
