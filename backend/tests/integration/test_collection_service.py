@@ -283,3 +283,19 @@ async def test_two_parallel_spins_with_one_left_only_one_succeeds(test_engine, m
                 await s.execute(delete(model).where(model.user_id == user.id))
             await s.execute(delete(User).where(User.id == user.id))
             await s.commit()
+
+
+async def test_dev_force_next_applies_to_exactly_one_spin_and_only_in_dev(world, monkeypatch):
+    """POST /dev/force-next chỉ ép ĐÚNG lượt kế tiếp (các lượt sau quay ngẫu nhiên bình thường) và chỉ có tác dụng ở dev/e2e."""
+    from app.core.config import settings
+
+    db, user = world
+    await give(db, user, normal=12)
+    svc.force_next(user.id, "legendary", 10)
+    out = await svc.spin(db, user, "normal", 1, key(), NOW, rng=Rng(0.0))  # ENV testing: lệnh ép bị bỏ qua
+    assert out["results"][0]["mascot"]["id"] == 1 and user.id in svc._forced
+    monkeypatch.setattr(settings, "ENV", "development")
+    out = await svc.spin(db, user, "normal", 1, key(), NOW, rng=Rng(0.0))
+    assert out["results"][0]["mascot"]["id"] == 10 and user.id not in svc._forced
+    out = await svc.spin(db, user, "normal", 10, key(), NOW, rng=Rng(0.0))  # không còn ép: tỉ lệ gốc (0.0 → Thường)
+    assert {r["rarity"] for r in out["results"]} == {"common"}
