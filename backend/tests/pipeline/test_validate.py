@@ -92,6 +92,6 @@ def test_run_on_files_recomputes_flags_and_reports(tmp_path):
     assert saved["a1.food.rice.noun"].flags == ["phrase"]  # cờ cũ không còn đúng bị bỏ, giữ origin_flags
     assert "example_missing_headword" in saved["a1.food.egg.noun"].flags
     assert saved["a1.food.egg.noun"].flag_details["example_missing_headword"] == "We eat rice for dinner here."
-    assert report["by_flag"]["example_missing_headword"] == 1 and report["by_topic"]["food"]["flagged"] == 2
+    assert report["by_flag"]["example_missing_headword"] == 1 and report["by_topic"]["food"]["flagged"] == 1  # "phrase" chỉ là thông tin
     assert report["hard_words_checked"] is True
     assert set(validate.FLAG_HELP) >= set(report["by_flag"])  # mọi cờ đều có giải thích cho người duyệt

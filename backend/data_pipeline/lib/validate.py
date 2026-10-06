@@ -46,6 +46,8 @@ FLAG_HELP = {
     "needs_topic_review": "AI không chắc chủ đề — xem lại chủ đề của mục này.",
     "ai_suggested_headword": "Từ do AI đề xuất thêm (không có trong nguồn) — duyệt kỹ.",
 }
+# Cờ chỉ mang tính thông tin (không tính là "có cờ" cần xử lý)
+INFO_FLAGS = {"phrase"}
 NUMBER_TOKEN = re.compile(r"^\d+(?:[:.,]\d+)*$")
 
 
@@ -164,16 +166,18 @@ def build_whitelist(level: str, candidates: list[dict] | None, topics: list[Topi
 
 
 def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | None = None) -> dict:
+    """Kiểm tra cả cấp; chỉ ghi lại file nào thật sự đổi (diff git gọn, công cụ duyệt gọi sau mỗi lần sửa)."""
     level = level.upper()
     paths = content.level_files(level, content_root)
     topics = [content.load_topic(p) for p in paths]
+    before = [content.dump(t) for t in topics]
     candidates = read_json(Path(processed) / "candidates.json")
     whitelist = build_whitelist(level, candidates, topics)
     keywords = config.read_word_list(config.SENSITIVE_KEYWORDS)
     dupes = rule_duplicates(topics)
     by_flag: Counter = Counter()
     by_topic: dict[str, dict] = {}
-    for t in topics:
+    for t, old in zip(topics, before):
         topic_counts: Counter = Counter()
         for e in t.entries:
             if e.status == "rejected":
@@ -184,8 +188,9 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
             e.flag_details = details
             topic_counts.update(e.flags)
         by_flag.update(topic_counts)
-        by_topic[t.topic_code] = {"entries": len(t.entries), "flagged": sum(1 for e in t.entries if e.flags),
+        by_topic[t.topic_code] = {"entries": len(t.entries), "flagged": sum(1 for e in t.entries if set(e.flags) - INFO_FLAGS),
                                   "flags": dict(topic_counts)}
-        content.save_topic(t, content_root)
+        if content.dump(t) != old:
+            content.save_topic(t, content_root)
     return {"level": level, "files": len(paths), "entries": sum(len(t.entries) for t in topics), "by_flag": dict(by_flag),
             "by_topic": by_topic, "hard_words_checked": whitelist is not None}

@@ -6,7 +6,7 @@
  * Bảo vệ route (components/layout/RouteGuards.jsx): công khai (landing) · chỉ khách (/login, /register)
  * · cần đăng nhập (/onboarding) · cần đăng nhập và xong onboarding (mọi trang còn lại).
  *
- * Trang dev và trang xem thử (/design-system, /dev/landmarks, /arena/vs, /rank-up, /certificates) CHỈ được đăng ký khi
+ * Trang dev và trang xem thử (/design-system, /dev/landmarks, /dev/content, /arena/vs, /rank-up, /certificates) CHỈ được đăng ký khi
  * `import.meta.env.DEV`: chúng được import động bên trong nhánh DEV nên bản build production không chứa các module này.
  * `/travel` không phải trang xem thử (Onboarding và màn thắng Boss dẫn tới đó) nên luôn có.
  */
@@ -55,6 +55,7 @@ const DEV_PAGES = DEV
       VersusPreview: lazy(() => import('./pages/Arena/VersusPreview')),
       RankUpPreview: lazy(() => import('./pages/RankUp/RankUpPreview')),
       CertificateGallery: lazy(() => import('./pages/Profile/CertificateGallery')),
+      ContentReview: lazy(() => import('./pages/Dev/ContentReview/ContentReview')),
     }
   : {}
 
@@ -120,6 +121,8 @@ export default function AppRoutes() {
         { path: '/arena/matchmaking', element: <Matchmaking /> },
         { path: '/arena/room/:code', element: <RoomLobby /> },
         ...(DEV ? [{ path: '/arena/vs', element: <DevPage name="VersusPreview" /> }] : []),
+        // Công cụ duyệt nội dung kho từ (API backend chỉ có khi ENV=development)
+        ...(DEV ? [{ path: '/dev/content', element: <DevPage name="ContentReview" /> }] : []),
         { path: '/arena/battle', element: <Battle /> },
         { path: '/arena/result', element: <MatchResult /> },
         // Quay thẻ: màn toàn màn hình, tự gắn thanh trên

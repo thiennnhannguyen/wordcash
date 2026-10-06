@@ -16,6 +16,7 @@ from app.api.v1.routers import (
     courses,
     daily_check,
     dev,
+    dev_content,
     health,
     leaderboard,
     mascots,
@@ -34,3 +35,6 @@ for module in (health, auth, users, me, academy, review, daily_check, placement,
 # Công cụ dev/e2e (tới thẳng Trận Boss, khóa đáp án, cấp lượt quay, ép kết quả quay): KHÔNG có ở production
 if settings.debug_time_enabled:
     api_router.include_router(dev.router)
+# Công cụ duyệt nội dung (ghi thẳng file backend/content/): CHỈ khi ENV=development, kể cả e2e cũng không có
+if settings.ENV == "development":
+    api_router.include_router(dev_content.router)
