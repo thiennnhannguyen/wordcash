@@ -71,7 +71,14 @@ def _enrich(user: str) -> str:
     return json.dumps(out, ensure_ascii=False)
 
 
+def _unit_titles(user: str) -> str:
+    n = len([l for l in user.splitlines() if l.startswith("Lesson ")])
+    return json.dumps([{"position": i, "title": f"Bài học số {i}"} for i in range(1, n + 1)], ensure_ascii=False)
+
+
 def handler(system: str, user: str) -> str:
+    if "You name lessons" in system:
+        return _unit_titles(user)
     if "writing DRAFT vocabulary cards" in system:
         return _enrich(user)
     if "You classify English vocabulary" in system:
