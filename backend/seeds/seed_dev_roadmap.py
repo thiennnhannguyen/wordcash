@@ -6,6 +6,8 @@ mỗi chặng 2 bài × 15 mục từ (khoảng 600 mục).
   (không tạo trùng). Mọi mục có `exam_tags = ["DEV_SAMPLE"]`, `status = approved` (ngoại lệ chỉ cho dev/e2e, giống
   seed_dev_entries) để Học Viện có dữ liệu. Xóa bằng `python -m seeds.purge_dev_entries` (xóa luôn bài và tiến độ liên quan).
 - Code Học Viện KHÔNG giả định 2 bài mỗi chặng: kho thật sẽ có 4–5 bài.
+- Cấp đã có nội dung thật (bài có `content_key`, nạp bằng data_pipeline/07_load_to_db.py) thì BỎ QUA cấp đó (A1 thật → bỏ
+  luôn 60 mục mẫu của seed_dev_entries). Muốn quay lại dữ liệu mẫu phải xóa nội dung thật trước.
 - Chạy lại nhiều lần vẫn an toàn: mục từ trùng chữ thì cập nhật; bài trùng (chặng, vị trí) thì cập nhật tên và danh sách từ.
   Tự nạp địa danh (seed_landmarks) trước nếu chưa có. Từ chối chạy khi ENV=production.
 - Chạy trong backend/: `python -m seeds.seed_dev_roadmap`.
@@ -13,7 +15,7 @@ mỗi chặng 2 bài × 15 mục từ (khoảng 600 mục).
 
 import asyncio
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,6 +37,7 @@ class RoadmapSeedResult:
     entries_updated: int = 0
     units: int = 0
     unit_entries: int = 0
+    skipped_levels: list[str] = field(default_factory=list)
 
 
 def roadmap_plan() -> dict[str, dict[str, tuple[list[str], list[tuple]]]]:
@@ -46,16 +49,27 @@ def roadmap_plan() -> dict[str, dict[str, tuple[list[str], list[tuple]]]]:
     return {"A1": a1, "A2": dict(words.A2)}
 
 
+async def levels_with_real_content(session: AsyncSession) -> set[str]:
+    rows = await session.scalars(select(Level.code).join(Topic, Topic.level_id == Level.id).join(Unit, Unit.topic_id == Topic.id)
+                                 .where(Unit.content_key.is_not(None)).distinct())
+    return set(rows)
+
+
 async def seed(session: AsyncSession) -> RoadmapSeedResult:
     await seed_landmarks(session)
-    await seed_dev_entries(session)  # 60 mục A1 có sẵn (kèm định nghĩa tiếng Anh)
     result = RoadmapSeedResult()
+    real = await levels_with_real_content(session)
+    result.skipped_levels = sorted(real)
+    if "A1" not in real:
+        await seed_dev_entries(session)  # 60 mục A1 có sẵn (kèm định nghĩa tiếng Anh)
 
     existing = {
         e.headword.lower(): e
         for e in await session.scalars(select(Entry).where(Entry.source == EntrySource.SYSTEM, Entry.exam_tags.contains([DEV_TAG])))
     }
     for code, topics in roadmap_plan().items():
+        if code in real:
+            continue
         level = await session.scalar(select(Level).where(Level.code == code))
         topic_rows = {t.title: t for t in await session.scalars(select(Topic).where(Topic.level_id == level.id))}
         for title, (unit_titles, rows) in topics.items():
@@ -111,7 +125,8 @@ async def main() -> None:
         result = await seed(session)
     await engine.dispose()
     print(f"Lộ trình mẫu A1–A2: tạo {result.entries_created} mục từ, cập nhật {result.entries_updated}; "
-          f"{result.units} bài, {result.unit_entries} liên kết bài–mục từ.")
+          f"{result.units} bài, {result.unit_entries} liên kết bài–mục từ."
+          + (f" Bỏ qua (đã có nội dung thật): {', '.join(result.skipped_levels)}." if result.skipped_levels else ""))
 
 
 if __name__ == "__main__":
