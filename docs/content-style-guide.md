@@ -1,0 +1,125 @@
+# Hướng dẫn soạn nội dung kho từ
+
+Áp dụng cho mọi mục từ trong `backend/content/<cấp>/*.json`, dù do AI soạn nháp hay người viết tay. Prompt AI
+(`backend/data_pipeline/prompts/enrich_v1.md`) chèn nguyên khối "Quy tắc cho AI" ở cuối trang này. Sửa khối đó thì prompt
+đổi theo, và cache AI tự hết hiệu lực vì mã băm của prompt đổi.
+
+Chuẩn tiếng Anh: Anh-Mỹ (en-US). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`.
+
+## 1. Chọn nghĩa
+
+Mỗi mục là **một nghĩa chính**, và đó phải là nghĩa hợp với chủ đề được gán. Nghĩa khác của cùng từ, nếu cần, là một mục riêng
+ở chủ đề hợp với nghĩa đó (khác `content_key`).
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `orange` ở chủ đề Đồ ăn → "quả cam" |
+| SAI | `orange` ở chủ đề Đồ ăn → "quả cam; màu cam" (hai nghĩa trong một thẻ) |
+| ĐÚNG | `table` ở chủ đề Nhà cửa → "cái bàn" |
+| SAI | `table` ở chủ đề Nhà cửa → "bảng (số liệu)" (không hợp chủ đề) |
+
+## 2. Văn phong `meaning_vi`
+
+Viết nghĩa tự nhiên, ngắn (tối đa 6 từ), đúng cách người Việt nói. Không dịch máy, không kèm chú thích dài hay ngoặc giải
+thích. Danh từ chỉ đồ vật có thể dùng loại từ quen thuộc ("quả", "cái", "con") khi người Việt thường nói như vậy.
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `breakfast` → "bữa sáng" |
+| SAI | `breakfast` → "bữa ăn đầu tiên trong ngày (thường vào buổi sáng)" |
+| ĐÚNG | `excuse me` → "xin lỗi (cho tôi hỏi)" — chấp nhận ngoặc ngắn khi cần phân biệt cách dùng |
+| SAI | `excuse me` → "miễn thứ cho tôi" (dịch máy, không ai nói) |
+| ĐÚNG | `busy` → "bận" |
+| SAI | `busy` → "bận rộn, nhiều việc, không rảnh" (liệt kê nhiều nghĩa) |
+
+## 3. Định nghĩa tiếng Anh `definition_en`
+
+Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword.
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `kitchen` → "the room where you cook food" |
+| SAI | `kitchen` → "a kitchen is a culinary area" (dùng headword, từ khó) |
+
+## 4. Câu ví dụ `example_en` / `example_vi`
+
+- 5–12 từ, trình độ của cấp đang soạn; chứa headword hoặc dạng biến đổi (số nhiều, chia thì).
+- Thì hiện tại đơn là chính; dùng thì khác chỉ khi nghĩa của từ cần (vd. `yesterday`).
+- Ngữ cảnh đời sống Việt Nam: chợ, xe máy, phở, Tết, trường học, gia đình.
+- Tránh tên thật và người nổi tiếng; dùng tên phổ biến (Lan, Nam, Minh, Mai) hoặc "my mom", "my friend".
+- Không thương hiệu, rượu bia, thuốc lá, bạo lực, tôn giáo, chính trị; không định kiến giới tính, vùng miền, nghề nghiệp,
+  ngoại hình.
+- `example_vi` dịch tự nhiên, không dịch từng chữ.
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `market` → "My mom buys vegetables at the market." / "Mẹ tôi mua rau ở chợ." |
+| SAI | `market` → "The market was crowded because of the festival." (từ khó, thì quá khứ không cần) |
+| ĐÚNG | `motorbike` → "Nam goes to school by motorbike." |
+| SAI | `motorbike` → "He drives a Honda motorbike." (thương hiệu) |
+| SAI | `cook` → "Women always cook for the family." (định kiến giới) |
+| SAI | `drink` → "My dad drinks beer every night." (rượu bia) |
+
+## 5. Cụm từ cố định
+
+Khoảng 10% mục mỗi cấp là cụm cố định thông dụng (`pos = phrase`): `good morning`, `thank you`, `how much`, `excuse me`.
+Cụm dài 2–4 từ, dùng thật trong giao tiếp. `meaning_vi` là cách người Việt nói cùng ý đó; câu ví dụ đặt cụm vào một tình huống
+nhỏ, có thật.
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `how much` → "bao nhiêu (tiền)"; "How much is this hat?" |
+| SAI | `how much is it that you want` (không phải cụm cố định) |
+| ĐÚNG | `see you later` → "hẹn gặp lại" |
+| SAI | `see you later` → "nhìn thấy bạn muộn hơn" (dịch từng chữ) |
+
+## 6. Mẹo nhớ `mnemonic_vi`
+
+Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; không thô tục, không chế giễu ai. Không có mẹo hay thì để trống.
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `bee` → "Con ong kêu 'bi bi' bay quanh hoa." |
+| SAI | `fat` → "Như ông hàng xóm béo phì." (chế giễu ngoại hình) |
+
+## 7. Cụm đi kèm, họ từ, từ đồng nghĩa, từ khóa ảnh
+
+- `collocations`: 2–3 cụm thông dụng, mỗi cụm **có chứa headword** (`rice` → "cook rice", "a bowl of rice").
+- `word_family`: 0–3 từ cùng họ hữu ích (`teach` → "teacher").
+- `synonyms`: 0–2, chỉ khi giúp người học (`big` → "large"); không thì để trống.
+- `image_keyword`: 1–4 từ tiếng Anh để tìm hoặc vẽ ảnh (`rice` → "bowl of rice").
+
+<!-- ai-rules:start -->
+- ONE card = ONE main meaning, the meaning that matches the topic. Right: "orange" in Food → "quả cam". Wrong: "quả cam; màu cam".
+- meaning_vi: natural, short Vietnamese (max 6 words), the way Vietnamese people really say it; no machine translation,
+  no long notes. Right: "breakfast" → "bữa sáng". Wrong: "bữa ăn đầu tiên trong ngày (thường vào buổi sáng)".
+- definition_en: only A1–A2 words, max 12 words, never use the headword. Right: "kitchen" → "the room where you cook food".
+- example_en: 5–12 words at the target level, contains the headword or its inflected form, mostly present simple, everyday
+  life in Vietnam (market, motorbike, pho, Tet, school, family). Right: "My mom buys vegetables at the market."
+  Wrong: "The market was crowded because of the festival."
+- No real people, celebrities or brands (Wrong: "He drives a Honda motorbike."). Use common names (Lan, Nam, Minh, Mai)
+  or "my mom", "my friend".
+- No alcohol, smoking, violence, religion, politics; no stereotypes about gender, regions, jobs or looks
+  (Wrong: "Women always cook for the family.", "My dad drinks beer every night.").
+- example_vi: natural Vietnamese, not word-for-word.
+- Fixed phrases (pos "phrase"): 2–4 words really used in conversation; meaning_vi is how Vietnamese people say the same
+  thing (Right: "see you later" → "hẹn gặp lại"; Wrong: "nhìn thấy bạn muộn hơn").
+- mnemonic_vi: optional, max 20 words, sound or image based, never vulgar or mocking anyone; "" if nothing good.
+- collocations: 2–3 common partners, EACH contains the headword ("rice" → "cook rice", "a bowl of rice").
+- word_family 0–3 useful words; synonyms 0–2 only when helpful; image_keyword 1–4 English words.
+<!-- ai-rules:end -->
+
+## 8. Danh sách kiểm tra cho người duyệt
+
+Trả lời từng câu. Có câu "Không" thì sửa trực tiếp, nhờ AI viết lại trường đó, hoặc từ chối kèm lý do.
+
+1. Từ này có thật sự cần cho người học ở cấp này và hợp với chủ đề không?
+2. `meaning_vi` có đúng một nghĩa chính, hợp chủ đề, tự nhiên, không dài quá 6 từ không?
+3. Phát âm (bấm loa) và IPA có đúng giọng Mỹ không? Mục có cờ `ipa_unverified` đã kiểm IPA chưa?
+4. Câu ví dụ có chứa từ, dùng đúng nghĩa, đúng ngữ pháp và đủ dễ không?
+5. Câu ví dụ có gần gũi đời sống Việt Nam, không tên thật, không thương hiệu, không chủ đề nhạy cảm hay định kiến không?
+6. `example_vi` có dịch tự nhiên và khớp nghĩa câu tiếng Anh không?
+7. Định nghĩa tiếng Anh có đơn giản, đúng, không dùng chính từ đó không?
+8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không?
+9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không?
+10. Mọi cờ của mục đã được xử lý (đã sửa, hoặc đã xem và chấp nhận) chưa?

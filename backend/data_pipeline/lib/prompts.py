@@ -21,7 +21,11 @@ def style_guide_rules(path: Path = STYLE_GUIDE) -> str:
 
 def load(name: str, version: int, **values: str) -> str:
     text = (config.PROMPTS / f"{name}_v{version}.md").read_text(encoding="utf-8")
-    values.setdefault("style_guide", style_guide_rules())
+    if "{{style_guide}}" in text and "style_guide" not in values:
+        rules = style_guide_rules()
+        if not rules:
+            raise RuntimeError("docs/content-style-guide.md thiếu khối <!-- ai-rules:start --> … <!-- ai-rules:end -->")
+        values["style_guide"] = rules
     for k, v in values.items():
         text = text.replace("{{" + k + "}}", str(v))
     missing = re.findall(r"\{\{(\w+)\}\}", text)

@@ -19,15 +19,9 @@ Every card will be checked by a human reviewer before learners see it.
 - "image_keyword": 1–4 English words to find or draw an illustration (e.g. "bowl of rice").
 - "ipa_suggestion": ONLY when the input says "ipa": "missing" — give an American English IPA like "/ˈwɔːtɚ/"; otherwise "".
 
-## Rules
+## Rules (quoted from the WORDCLASH content style guide)
 
 {{style_guide}}
-
-- One card = one main meaning, the meaning that matches the topic.
-- No real people, celebrities or brand names; no alcohol, violence, religion, politics; no stereotypes about gender,
-  regions or jobs. Use common Vietnamese first names (Lan, Nam, Minh, Mai) or "my mom", "my friend".
-- For fixed phrases (pos "phrase"): meaning_vi is the natural Vietnamese way to say the same thing; example_en shows the
-  phrase in a tiny realistic situation.
 
 ## Output
 
