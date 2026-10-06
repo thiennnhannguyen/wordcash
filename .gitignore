@@ -45,3 +45,9 @@ frontend/screenshots/
 
 # Bản sao lưu database (backend/scripts/backup_db.sh)
 backups/
+
+# Quy trình kho từ: kết quả trung gian, cache AI, âm thanh tạm (nội dung đã soạn nằm ở backend/content/, có đưa lên Git)
+backend/data_pipeline/processed/*
+!backend/data_pipeline/processed/.gitkeep
+backend/data_pipeline/cache/
+backend/data_pipeline/audio_out/

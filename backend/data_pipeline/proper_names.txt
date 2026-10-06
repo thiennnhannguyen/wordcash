@@ -1,0 +1,44 @@
+# Tên riêng thông dụng được phép trong câu ví dụ (danh sách trắng của 04_validate). Chữ thường.
+vietnam
+vietnamese
+hanoi
+saigon
+ho chi minh city
+da nang
+hue
+hoi an
+sapa
+ha long
+mekong
+english
+monday
+tuesday
+wednesday
+thursday
+friday
+saturday
+sunday
+january
+february
+march
+april
+may
+june
+july
+august
+september
+october
+november
+december
+lan
+nam
+minh
+mai
+hoa
+an
+binh
+linh
+tuan
+huong
+tom
+anna

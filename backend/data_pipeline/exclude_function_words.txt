@@ -1,0 +1,87 @@
+# Từ chức năng KHÔNG làm thẻ học (quyết định 3). Một từ mỗi dòng, chữ thường; '#' là chú thích.
+# Vẫn được phép xuất hiện trong câu ví dụ (danh sách trắng của 04_validate). Sửa file này rồi chạy lại từ bước 02.
+
+# Mạo từ
+a
+an
+the
+
+# Trợ động từ, động từ khuyết thiếu
+be
+am
+is
+are
+was
+were
+been
+being
+do
+does
+did
+have
+has
+had
+will
+would
+shall
+should
+can
+could
+may
+might
+must
+
+# Đại từ nhân xưng cơ bản (và dạng tân ngữ, sở hữu)
+i
+me
+my
+mine
+you
+your
+yours
+he
+him
+his
+she
+her
+hers
+it
+its
+we
+us
+our
+ours
+they
+them
+their
+theirs
+
+# Giới từ đơn
+at
+in
+on
+of
+to
+for
+from
+with
+by
+about
+into
+onto
+up
+down
+over
+under
+off
+out
+as
+
+# Liên từ đơn
+and
+or
+but
+so
+if
+because
+than
