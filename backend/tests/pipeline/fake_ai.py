@@ -53,7 +53,27 @@ def _generated(system: str, kind: str) -> str:
                         "reason": "fake"} for i in range(count)])
 
 
+VI = {"rice": "cơm", "apple": "quả táo", "water": "nước", "egg": "quả trứng", "noodle": "mì", "eat": "ăn", "drink": "uống"}
+
+
+def _enrich(user: str) -> str:
+    out = []
+    for line in user.splitlines()[1:]:
+        d = json.loads(line)
+        head, pos = d["headword"], d["pos"]
+        out.append({
+            "headword": head, "pos": pos, "meaning_vi": VI.get(head, f"nghĩa của {head}"),
+            "definition_en": f"a simple thing called {head}" if pos != "verb" else "to do a simple daily action",
+            "example_en": f"My mom and I {head} every day." if pos == "verb" else f"Lan sees the {head} at home today.",
+            "example_vi": f"Câu ví dụ có {head}.", "collocations": [f"a {head}", f"my {head}"], "word_family": [],
+            "synonyms": [], "mnemonic_vi": "", "image_keyword": head, "ipa_suggestion": "/tɛst/" if d.get("ipa") == "missing" else "",
+        })
+    return json.dumps(out, ensure_ascii=False)
+
+
 def handler(system: str, user: str) -> str:
+    if "writing DRAFT vocabulary cards" in system:
+        return _enrich(user)
     if "You classify English vocabulary" in system:
         return _classify(user)
     if "FIXED PHRASES" in system:
