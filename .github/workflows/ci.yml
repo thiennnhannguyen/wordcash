@@ -1,5 +1,6 @@
 # CI: chạy khi push hoặc mở pull request.
-# - backend: PostgreSQL + Redis (service containers) → alembic upgrade head → pytest (database test riêng wordclash_test).
+# - backend: kiểm tra schema backend/content/**/*.json → PostgreSQL + Redis (service containers) → alembic upgrade head →
+#   pytest (database test riêng wordclash_test).
 # - frontend: npm ci → npm test (dữ liệu thuần) → npm run build (postbuild kiểm tra dist không chứa chuỗi dev).
 # Chưa chạy e2e (Playwright) trên CI.
 
@@ -61,6 +62,8 @@ jobs:
           cache-dependency-path: backend/requirements.txt
       - name: Cài thư viện
         run: pip install -r requirements.txt
+      - name: Kiểm tra schema nội dung kho từ (content/**/*.json)
+        run: python -m data_pipeline.check_content
       - name: Tạo database test
         env:
           PGPASSWORD: wordclash_ci
