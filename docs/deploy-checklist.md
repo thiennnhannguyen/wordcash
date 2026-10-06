@@ -39,6 +39,9 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
 - [ ] Chạy `python -m seeds.seed_mascots` sau migration để nạp hồ sơ và hình dạng linh vật (migration chỉ ghi các trường gốc). Không có route `/api/v1/dev/*` ở production (ENV=production).
 - [ ] Sau lần deploy đầu tiên: **không viết lại migration cũ**, chỉ thêm migration mới.
 - [ ] Bật sao lưu tự động cho PostgreSQL.
+- [ ] **Kho từ:** nội dung chỉ nạp từ `backend/content/` đã qua review. Sao lưu → `python -m data_pipeline.check_content` →
+  `python -m data_pipeline.07_load_to_db --level A1 --dry-run` (xem bảng thêm / sửa / ngừng dùng) → chạy lại với `--yes`.
+  Không sửa nội dung trực tiếp trong DB production. Router `/api/v1/dev/content` không tồn tại ở production (có test).
 - [ ] **Không có dữ liệu mẫu dev:** database production phải có **0** mục từ `DEV_SAMPLE`. Không bao giờ chạy `seeds.seed_dev_entries` ở production (script tự từ chối). Kiểm tra:
   ```sql
   SELECT count(*) FROM entries WHERE exam_tags @> '["DEV_SAMPLE"]'::jsonb;  -- phải bằng 0

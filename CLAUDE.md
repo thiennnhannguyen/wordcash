@@ -22,6 +22,7 @@ Phần game hóa gồm: rank theo số từ đã thuộc, Cửa Ải Hôm Nay b�
 - **Khóa học của tôi** (03/10/2026, đã gộp vào `main`; xem `docs/courses.md`): model `Entry` (từ hệ thống + từ tự tạo), `UserEntryProgress`, `ReviewLog`, `UserCourse`, `UserCourseEntry`, `StudySession`, `AudioJob`, bộ đếm `users.mastered_count` / `custom_mastered_count`; service thuần `srs.py` (SM-2), `mastery.py`, `question_builder.py` (4 mức), `course_import.py` dùng chung cho Học Viện sau này; `progress_service.py`, `course_service.py`, `study_service.py`; API `/courses`, `/bank/search`, `/study-sessions`, `/custom-entries`. Tổng 253 test pytest.
 - **Lõi Học Viện** (05/10/2026, đã gộp vào `main` qua PR #1; xem `docs/academy.md`, luật chốt ở `docs/game-rules.md`): `core/clock.py` + `X-Debug-Now`; model `Unit`, `UnitEntry`, tiến độ cấp/chặng/bài, `boss_attempts`, `topic_practice_log`, `user_stats`, `spin_grants`, `user_daily_activity`, `daily_checks` (migration `a027e19df0ee`); luật thuần `unlock.py`, `rank.py` (lung lay 3 ngày), `streak.py`, `spins.py`; service lộ trình, học bài, kiểm tra cuối bài, bài tổng hợp chặng, luyện chặng yếu, Trận Boss, Cửa Ải Hôm Nay, ôn tập, `/me/stats`; route học bị chặn khi chưa vượt Cửa Ải (`DAILY_CHECK_REQUIRED`). Frontend: bản đồ A1/A2, học bài, kiểm tra, Boss, Cửa Ải, Ôn tập, Sảnh chạy trên API thật (`services/academyApi.js`). Seed dev `seed_dev_roadmap`.
 - **Bộ Sưu Tập & vòng quay** (05/10/2026, nhánh `feat/collection`, PR chờ duyệt; xem `docs/collection.md`, luật chốt ở `docs/game-rules.md`): danh mục 100 linh vật lấy từ `backend/seeds/data/mascots.json` + hồ sơ `docs/mascots-lore.md` (`seed_mascots`); model `Mascot`, `UserMascot`, `SpinHistory`, `ShardExchange`, `IdempotencyKey`, `user_stats` thêm `shards`/`pity_counter`/`total_spins`, `users.arena_mascot_id` (migration `29ca2fa1d9e0`, bù sở hữu linh vật khởi đầu cho người dùng cũ; `7f3c1b2a9d40` thêm `spin_history.forced`); luật quay thuần `services/gacha.py` (tỉ lệ, pity, hạ bậc, mảnh); `collection_service` (khóa dòng + Idempotency-Key, một transaction); API `/mascots` (ETag), `/collection`, `/collection/rates`, `/spins`, `/exchange` (hai route này bị chặn khi chưa vượt Cửa Ải), `/seen`, `/dev/grant-spins|set-pity|force-next` (log INFO `wordclash.collection` chỉ ở dev/e2e); onboarding cấp linh vật khởi đầu; avatar và linh vật Đấu Trường kiểm tra sở hữu thật. Frontend: Album, Quay thẻ, Chi tiết, Đổi mảnh, linh vật ở Sảnh và menu chạy trên API thật (`services/collectionApi.js`, `store/mascotStore.js`), `ShapeMascot`, chấm đỏ Bộ Sưu Tập, toast "Quay ngay". Đã sửa deadlock khi người mới mở Sảnh (khóa advisory khởi tạo lộ trình, thứ tự khóa khởi tạo → users → user_stats). 393 test pytest, 20 npm test, 20 kịch bản e2e.
+- **Quy trình kho từ A1** (07/10/2026, nhánh `feat/content-a1`, PR chờ duyệt; xem `backend/data_pipeline/README.md`, `docs/content-style-guide.md`, `docs/data-sources.md`): các bước 01–08 trong `backend/data_pipeline/` (nguồn CEFR-J qua bộ đọc kiểu plugin, IPA từ CMUdict, AI soạn nháp có cache + Pydantic, kiểm tra tự động gắn cờ, chia bài, nạp DB theo `content_key`, âm thanh mới chuẩn bị với provider giả); công cụ duyệt `/dev/content` (chỉ `ENV=development`); migration `7aa06e6fca5b` (entries `content_key`, `content_version`, `retired_at`, `example_vi`, `mnemonic_vi`, `image_keyword`, `ipa_unverified`; units `content_key`; `entry_type` thêm `phrase`); `seeds.refresh_dev_content`. Chưa có nội dung A1 thật: chờ file CEFR-J trong `raw/`, API key và lệnh chạy AI.
 - **Chưa có:** linh vật nhận qua thành tích (achievement); kiểm tra xếp lớp; nhánh IELTS/TOEIC; trận đấu (model, scoring, sự kiện mới trả ack "đang phát triển"); kho từ hệ thống thật (chỉ có mục DEV_SAMPLE); worker TTS cho `audio_jobs`. Hồ Sơ, Bảng xếp hạng, Đấu Trường vẫn chạy trên dữ liệu mẫu.
 - **Frontend nối backend (03/10/2026):** đăng ký, đăng nhập, onboarding, đăng xuất / đăng xuất mọi thiết bị, khôi phục phiên khi tải trang, tự làm mới access token (một lần, khóa giữa các tab), bảo vệ route, Khóa học của tôi, Socket.IO trong Đấu Trường đều gọi API thật; tên và linh vật ở Sảnh lấy từ user thật. Các màn khác (Học Viện, Cửa Ải, Đấu Trường, Bộ Sưu Tập, Hồ Sơ, Bảng xếp hạng) vẫn dùng dữ liệu mẫu. Từ 05/10/2026 Học Viện, Cửa Ải, Ôn tập và số liệu Sảnh cũng chạy API thật (xem mục Lõi Học Viện). Kiểm thử đầu-cuối bằng Playwright: `npm run e2e` (20 kịch bản: 6 Học Viện giả lập nhiều ngày bằng `X-Debug-Now`, 9 Bộ Sưu Tập).
 - **Frontend** có nền tảng giao diện bản sáng và 23 màn hình. Chi tiết xem mục **Báo cáo công việc** bên dưới.
@@ -229,6 +230,10 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Khóa học luôn riêng tư (cột `visibility` để sẵn). Khóa học, phiên học, từ tự tạo của người khác trả 404.
 
 ### Kho từ
+- **Nội dung là code:** nguồn chính của nội dung đã duyệt là `backend/content/<cấp>/<mã-chủ-đề>.json`; DB CHỈ được nạp từ các file này (`python -m data_pipeline.07_load_to_db`), production không sửa nội dung trực tiếp.
+- **Không xóa entry đã có tiến độ, chỉ retire:** mục bị bỏ khỏi file thì loader đặt `retired_at` (không dạy mới, vẫn ôn được, giữ mastered). Bài đã có người học thì không xóa.
+- **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05); chỉ mục `approved` được nạp.
+- Chuẩn en-US; IPA từ CMUdict (AI không ghi đè, từ thiếu thì `ipa_unverified`). Chỉ dùng nguồn có trong `docs/data-sources.md`. Prompt AI trích từ `docs/content-style-guide.md`.
 - Chỉ các mục có `status = approved` mới được hiện cho người học.
 - Ba nhánh dùng chung mục từ: tiến độ gắn với mục từ, không gắn với nhánh.
 
@@ -312,7 +317,7 @@ Các điểm sau **chưa được chốt**. Hãy hỏi trước thay vì tự qu
 - tên chính thức và logo;
 - mức trừ khi quên từ;
 - mô hình kiếm tiền (đã chốt một điểm: không bán lượt quay bằng tiền);
-- nguồn danh sách từ cụ thể.
+- nguồn danh sách từ cụ thể cho A2 trở lên và cho IELTS/TOEIC (A1 đã chốt 06/10/2026: CEFR-J, chưa dùng NGSL vì điều khoản ShareAlike).
 
 ## Lệnh thường dùng
 
@@ -341,6 +346,18 @@ python -m seeds.purge_dev_entries             # (trong backend/) xóa mọi mụ
 cd frontend && npm run build                  # build production; postbuild (scripts/check-dist.mjs) làm build lỗi nếu dist còn __wcAuthStore hoặc DEV_SAMPLE
 ```
 
-Kho từ: chạy lần lượt các script `backend/data_pipeline/01_*.py` → `07_*.py`. Dữ liệu mẫu nằm trong `backend/seeds/`.
+Kho từ (trong backend/, chi tiết `backend/data_pipeline/README.md`):
+
+```bash
+python -m data_pipeline.01_import_wordlist                       # raw/ → processed/candidates.json
+python -m data_pipeline.02_select_and_tag --level A1 --limit 40  # AI chia chủ đề (hỏi xác nhận chi phí; --yes bỏ hỏi)
+python -m data_pipeline.03_enrich_entries --level A1 --limit 40  # AI soạn nháp → content/a1/*.json (draft)
+python -m data_pipeline.04_validate --level A1                   # gắn cờ
+python -m data_pipeline.06_build_units --level A1                # chia bài (chỉ mục approved)
+python -m data_pipeline.07_load_to_db --level A1 --dry-run       # rồi bỏ --dry-run; production: backup trước + --yes
+python -m data_pipeline.check_content                            # CI: schema mọi content/**/*.json
+python -m seeds.refresh_dev_content                              # dev: thay lộ trình mẫu bằng kho thật, giữ vị trí học
+```
+Duyệt nội dung: `/dev/content` (backend `ENV=development`). Dữ liệu mẫu nằm trong `backend/seeds/`.
 
 Luôn trả lời lại cho tôi bằng tiếng Việt nhé

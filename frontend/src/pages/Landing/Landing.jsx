@@ -25,6 +25,7 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import { Wordmark } from '../../components/layout/NavBar'
 import cx from '../../utils/cx'
+import { DATA_CREDITS } from '../../utils/constants'
 import HeroBattle from './HeroBattle'
 import LandingHeader, { LANDING_LINKS } from './LandingHeader'
 import MascotFan from './MascotFan'
@@ -359,7 +360,12 @@ export default function Landing() {
           </nav>
         </Container>
         <div className="border-t-2 border-line/10">
-          <Container className="py-5 text-caption text-muted">© 2026 WORDCLASH</Container>
+          <Container className="flex flex-col gap-1 py-5 text-caption text-muted">
+            <span>© 2026 WORDCLASH</span>
+            {DATA_CREDITS.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </Container>
         </div>
       </footer>
     </div>

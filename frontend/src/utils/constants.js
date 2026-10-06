@@ -80,3 +80,9 @@ export const SOCKET_EVENTS = {
   ROUND_RESULT: 'round_result',
   MATCH_END: 'match_end',
 }
+
+// Ghi công nguồn dữ liệu kho từ theo yêu cầu giấy phép (docs/data-sources.md). Hiện ở chân trang Landing.
+export const DATA_CREDITS = [
+  'Danh sách từ dựa trên CEFR-J Wordlist (Tono Laboratory, Tokyo University of Foreign Studies).',
+  'Phiên âm dựa trên CMU Pronouncing Dictionary (Carnegie Mellon University).',
+]
