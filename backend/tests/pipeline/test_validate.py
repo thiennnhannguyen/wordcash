@@ -136,3 +136,10 @@ def test_negative_contractions_are_not_hard_words():
     allowed = {"do", "put", "your", "bag", "on", "the", "floor", "can", "find", "my", "key", "i"}
     assert validate.rule_hard_words(entry(headword="floor", example_en="Don't put your bag on the floor."), allowed) is None
     assert validate.rule_hard_words(entry(headword="key", example_en="I can't find my key."), allowed) is None
+
+
+def test_hyphenated_headwords_are_allowed_in_other_examples():
+    tshirt = entry(content_key="a1.shopping.t_shirt.noun", headword="T-shirt", example_en="I like this T-shirt.")
+    whitelist = validate.build_whitelist("A1", [], [TopicFile(level="A1", topic_code="shopping", topic_title="Mua sắm", entries=[tshirt])])
+    green = entry(headword="green", pos="adjective", example_en="I like the green T-shirt.")
+    assert validate.rule_hard_words(green, whitelist | {"i", "like", "the"}) is None

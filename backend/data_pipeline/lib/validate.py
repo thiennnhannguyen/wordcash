@@ -222,6 +222,7 @@ def build_whitelist(level: str, candidates: list[dict] | None, topics: list[Topi
     base |= {t for name in config.read_word_list(config.PROPER_NAMES) for t in morph.tokens(name)}
     base |= {t for term in config.read_word_list(config.VN_CONTEXT_ALLOWLIST) for t in morph.tokens(term)}
     base |= {e.headword.lower() for t in topics for e in t.entries if e.status != "rejected"}
+    base |= {tok for t in topics for e in t.entries if e.status != "rejected" for tok in morph.tokens(e.headword)}  # T-shirt → t, shirt
     out = set()
     for w in base:
         for part in w.split():
