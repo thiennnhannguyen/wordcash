@@ -161,7 +161,7 @@ def rule_duplicates(topics: list[TopicFile]) -> dict[str, list[tuple[str, str]]]
         for e in t.entries:
             if e.status == "rejected":
                 continue
-            heads[(e.headword, e.pos)].append(e)
+            heads[(e.headword.lower(), e.pos)].append(e)
             if e.example_en.strip():
                 examples[norm_text(e.example_en)].append(e)
             if e.meaning_vi.strip():
@@ -190,7 +190,7 @@ def build_whitelist(level: str, candidates: list[dict] | None, topics: list[Topi
     base |= config.read_word_list(config.EXCLUDE_FUNCTION_WORDS)
     base |= {t for name in config.read_word_list(config.PROPER_NAMES) for t in morph.tokens(name)}
     base |= {t for term in config.read_word_list(config.VN_CONTEXT_ALLOWLIST) for t in morph.tokens(term)}
-    base |= {e.headword for t in topics for e in t.entries if e.status != "rejected"}
+    base |= {e.headword.lower() for t in topics for e in t.entries if e.status != "rejected"}
     out = set()
     for w in base:
         for part in w.split():

@@ -32,7 +32,8 @@ def test_enrich_writes_drafts_with_cmudict_ipa(tmp_path):
     report = step03.run("A1", client, **paths)
     assert report["written"] == {"food": 4} and report["failed"] == 0
     topic = content.load_topic(content.topic_path("A1", "food", paths["content_root"]))
-    by = {e.headword: e for e in topic.entries}
+    by = {e.headword.lower(): e for e in topic.entries}
+    assert by["thank you"].headword == "Thank you"  # chữ hoa hiển thị, content_key vẫn viết thường
     assert all(e.status == "draft" for e in topic.entries) and topic.topic_title == "Đồ ăn" and topic.landmark_key == "a1_pho_co"
     assert by["rice"].ipa == "/raɪs/" and not by["rice"].ipa_unverified and by["rice"].meaning_vi == "cơm"
     assert by["zzqxbanh"].ipa == "/tɛst/" and by["zzqxbanh"].ipa_unverified  # không có trong CMUdict
@@ -82,3 +83,33 @@ def test_stable_file_format(tmp_path):
     text = content.topic_path("A1", "food", paths["content_root"]).read_text(encoding="utf-8")
     assert text.endswith("}\n") and '\n  "level": "A1"' in text and "Đồ ăn" in text  # indent 2, giữ dấu tiếng Việt
     assert list(json.loads(text)) == ["schema_version", "level", "topic_code", "topic_title", "landmark_key", "entries", "units"]
+
+
+def test_display_headword_casing():
+    from data_pipeline.lib.casing import display_headword as d
+
+    assert d("i'm hungry", "phrase") == "I'm hungry" and d("good morning", "interjection") == "Good morning"
+    assert d("tet", "noun") == "Tet" and d("ho chi minh city", "noun") == "Ho Chi Minh City" and d("monday", "noun") == "Monday"
+    assert d("it's hot", "phrase") == "It's hot" and d("thank you", "phrase", True) == "Thank you"
+    assert d("happy tet", "phrase") == "Happy Tet" and d("tv", "noun") == "TV"
+    # cụm thường, từ đơn, món ăn Việt giữ chữ thường; tên người không viết hoa giữa cụm
+    assert d("fried rice", "phrase") == "fried rice" and d("a cup of", "phrase") == "a cup of" and d("hello", "noun") == "hello"
+    assert d("pho", "noun") == "pho" and d("an apple", "phrase") == "an apple"
+    assert d(d("i'm hungry", "phrase"), "phrase") == "I'm hungry"  # lũy đẳng
+
+
+def test_drafts_keep_case_but_keys_lowercase_and_refresh(tmp_path):
+    paths = setup(tmp_path, {"food": [("i'm hungry", "phrase"), ("rice", "noun")]})
+    step03.run("A1", fake_ai.client(), **paths)
+    by = {e.content_key: e for e in content.load_topic(content.topic_path("A1", "food", paths["content_root"])).entries}
+    assert by["a1.food.i_m_hungry.phrase"].headword == "I'm hungry" and by["a1.food.rice.noun"].headword == "rice"
+    # mục cũ (soạn trước khi có quy tắc chữ hoa) được sửa bằng refresh_derived, mục đã duyệt giữ nguyên
+    topic = content.load_topic(content.topic_path("A1", "food", paths["content_root"]))
+    for e in topic.entries:
+        e.headword = e.headword.lower()
+    content.save_topic(topic, paths["content_root"])
+    out = step03.refresh_derived("A1", content_root=paths["content_root"])
+    assert "a1.food.i_m_hungry.phrase" in out["changed"]["food"]
+    by = {e.content_key: e for e in content.load_topic(content.topic_path("A1", "food", paths["content_root"])).entries}
+    assert by["a1.food.i_m_hungry.phrase"].headword == "I'm hungry"
+    assert step03.refresh_derived("A1", content_root=paths["content_root"])["changed"] == {}  # chạy lại không đổi gì

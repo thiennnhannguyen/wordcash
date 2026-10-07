@@ -20,8 +20,13 @@ def main() -> None:
     parser.add_argument("--per-topic", type=int, default=None, help="N mục đầu mỗi chủ đề (theo thứ tự dạy)")
     parser.add_argument("--limit", type=int, default=None, help="chỉ soạn N mục đầu (chạy thử)")
     parser.add_argument("--redo-drafts", action="store_true", help="soạn lại mục draft chưa từng duyệt (sau khi đổi prompt)")
+    parser.add_argument("--refresh-derived", action="store_true",
+                        help="không gọi AI: tính lại headword hiển thị (chữ hoa) và IPA CMUdict cho mục chưa duyệt")
     cli.add_ai_args(parser)
     args = parser.parse_args()
+    if args.refresh_derived:
+        print(json.dumps(step03.refresh_derived(args.level), ensure_ascii=False, indent=2))
+        return
     scope = ("topic", "per_topic", "limit", "redo_drafts")
     client = cli.make_client("03_enrich", args, lambda: step03.estimate(
         args.level, limit=args.limit, redo_drafts=args.redo_drafts, topics=args.topic, per_topic=args.per_topic), "03 soạn nháp")

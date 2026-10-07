@@ -9,6 +9,8 @@ Bước 03 — AI soạn nháp mục từ (gọi từ data_pipeline/03_enrich_en
   đặt `ipa_unverified = true`.
 - File nội dung đã có: mục đã có (theo content_key) GIỮ NGUYÊN (người duyệt có thể đã sửa); chỉ thêm mục mới. `--redo-drafts`:
   soạn lại các mục còn `draft` và chưa từng được duyệt (vd. sau khi sửa prompt).
+- `refresh_derived`: KHÔNG gọi AI — tính lại phần suy ra được (headword hiển thị đúng chữ hoa — lib/casing.py; IPA từ CMUdict)
+  cho các mục chưa từng được duyệt, sau khi đổi quy tắc chữ hoa / IPA. Từ không có trong CMUdict giữ IPA cũ và ipa_unverified.
 - Chọn phạm vi: `topics` (chỉ các chủ đề này), `per_topic` (N mục đầu mỗi chủ đề, theo `rank_in_topic`), `limit` (N mục đầu).
 - Chế độ agent: lô chưa có output là "đang chờ" (`pending`), không vào failed_03.json; mục đã có output thì vẫn được ghi.
 """
@@ -18,7 +20,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from data_pipeline import config
-from data_pipeline.lib import content, ipa, prompts
+from data_pipeline.lib import casing, content, ipa, prompts
 from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
@@ -91,7 +93,8 @@ def build_entry(level: str, job: Job, got: EnrichItem, prompt_tag: str, cmu: dic
     item = job.item
     cmu_ipa = ipa.lookup(item["headword"], cmu)
     return ContentEntry(
-        content_key=job.key, headword=item["headword"], pos=item["pos"], entry_type=content.entry_type(item["headword"], item["pos"]),
+        content_key=job.key, headword=casing.display_headword(item["headword"], item["pos"], bool(item.get("basic_communication"))),
+        pos=item["pos"], entry_type=content.entry_type(item["headword"], item["pos"]),
         ipa=cmu_ipa or _clean_ipa(got.ipa_suggestion), ipa_unverified=cmu_ipa is None,
         meaning_vi=got.meaning_vi.strip(), definition_en=got.definition_en.strip(), example_en=got.example_en.strip(),
         example_vi=got.example_vi.strip(), collocations=[c.strip() for c in got.collocations if c.strip()],
@@ -172,6 +175,25 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
               "failed": len(result.failed), "pending": len(result.pending), "ai": result.usage.as_dict()}
     write_json(Path(processed) / "report_03.json", report)
     return report
+
+
+def refresh_derived(level: str, *, content_root: Path | None = None) -> dict:
+    cmu = ipa.load_cmudict()
+    changed: dict[str, list[str]] = {}
+    for path in content.level_files(level.upper(), content_root):
+        topic = content.load_topic(path)
+        before = content.dump(topic)
+        for e in topic.entries:
+            if e.reviewed_at is not None:
+                continue
+            e.headword = casing.display_headword(e.headword, e.pos, e.basic_communication)
+            cmu_ipa = ipa.lookup(e.headword, cmu)
+            e.ipa, e.ipa_unverified = (cmu_ipa, False) if cmu_ipa else (e.ipa, True)
+        if content.dump(topic) != before:
+            content.save_topic(topic, content_root)
+            old = {o["content_key"]: (o["headword"], o["ipa"]) for o in before["entries"]}
+            changed[topic.topic_code] = [e.content_key for e in topic.entries if (e.headword, e.ipa) != old[e.content_key]]
+    return {"level": level.upper(), "changed": changed}
 
 
 def estimate(level: str, *, limit: int | None, processed: Path = config.PROCESSED, content_root: Path | None = None,

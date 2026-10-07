@@ -7,7 +7,7 @@
   "entries": [
     {
       "content_key": "a1.weather.it_s_hot.phrase",
-      "headword": "it's hot",
+      "headword": "It's hot",
       "pos": "phrase",
       "entry_type": "phrase",
       "ipa": "/ɪts hɑːt/",
@@ -48,7 +48,7 @@
     },
     {
       "content_key": "a1.weather.it_s_cold.phrase",
-      "headword": "it's cold",
+      "headword": "It's cold",
       "pos": "phrase",
       "entry_type": "phrase",
       "ipa": "/ɪts koʊld/",
@@ -165,7 +165,7 @@
     },
     {
       "content_key": "a1.weather.it_s_raining.phrase",
-      "headword": "it's raining",
+      "headword": "It's raining",
       "pos": "phrase",
       "entry_type": "phrase",
       "ipa": "/ɪts ˈreɪnɪŋ/",

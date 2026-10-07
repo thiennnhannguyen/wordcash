@@ -112,9 +112,10 @@ class ContentEntry(_Model):
 
     @field_validator("headword")
     @classmethod
-    def _lower(cls, v: str) -> str:
-        if v != v.strip().lower():
-            raise ValueError("headword phải viết thường, không có khoảng trắng thừa")
+    def _clean(cls, v: str) -> str:
+        # Giữ chữ hoa hiển thị ("I'm hungry", "Tet" — lib/casing.py); content_key luôn viết thường
+        if v != " ".join(v.split()):
+            raise ValueError("headword không được có khoảng trắng thừa")
         return v
 
 
