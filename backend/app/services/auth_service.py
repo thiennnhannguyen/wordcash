@@ -299,7 +299,11 @@ async def update_profile(session: AsyncSession, user: User, data: UserUpdateIn) 
         await collection_service.set_avatar(session, user, data.avatar_mascot_id)
     if "arena_mascot_id" in fields:
         await collection_service.set_arena_mascot(session, user, data.arena_mascot_id)
-    for field in fields - {"avatar_mascot_id", "arena_mascot_id"}:
+    if "showcase_mascot_ids" in fields:
+        for mascot_id in data.showcase_mascot_ids or []:
+            await collection_service.require_owned(session, user, mascot_id, "showcase_mascot_ids")
+        user.showcase_mascot_ids = data.showcase_mascot_ids
+    for field in fields - {"avatar_mascot_id", "arena_mascot_id", "showcase_mascot_ids"}:
         setattr(user, field, getattr(data, field))
     await session.commit()
     return user

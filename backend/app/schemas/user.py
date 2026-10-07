@@ -41,6 +41,9 @@ class UserOut(BaseModel):
     # Số từ đã thuộc: mastered_count chỉ tính từ hệ thống (rank, lượt quay); custom_mastered_count là từ tự tạo
     mastered_count: int = 0
     custom_mastered_count: int = 0
+    # Tủ trưng bày hồ sơ (null = mặc định 3 con hiếm nhất) và cài đặt hiện trên bảng xếp hạng
+    showcase_mascot_ids: list[int] | None = None
+    show_on_leaderboard: bool = True
     created_at: datetime
 
     @model_validator(mode="before")
@@ -62,6 +65,8 @@ class UserOut(BaseModel):
                 "role": data.role,
                 "mastered_count": data.mastered_count or 0,
                 "custom_mastered_count": data.custom_mastered_count or 0,
+                "showcase_mascot_ids": data.showcase_mascot_ids,
+                "show_on_leaderboard": data.show_on_leaderboard is not False,
                 "created_at": data.created_at,
             }
         return data
@@ -77,6 +82,9 @@ class UserUpdateIn(BaseModel):
     # Quyền sở hữu kiểm tra ở service (MASCOT_NOT_OWNED); null = bỏ ảnh đại diện
     avatar_mascot_id: int | None = Field(default=None, ge=1, le=100)
     arena_mascot_id: int | None = Field(default=None, ge=1, le=100)  # null = dùng avatar ở Đấu Trường
+    # Tủ trưng bày: tối đa 3 linh vật khác nhau, đang sở hữu (MASCOT_NOT_OWNED); null = về mặc định (3 con hiếm nhất)
+    showcase_mascot_ids: list[int] | None = Field(default=None, max_length=3)
+    show_on_leaderboard: bool | None = None
 
     _strip = field_validator("display_name", mode="before")(clean_display_name)
 
@@ -84,6 +92,20 @@ class UserUpdateIn(BaseModel):
     @classmethod
     def _not_null(cls, value: str | None) -> str:
         # Chỉ chạy khi trường được gửi lên: gửi null cho tên hoặc múi giờ là không hợp lệ
+        if value is None:
+            raise ValueError("Không được để trống")
+        return value
+
+    @field_validator("showcase_mascot_ids")
+    @classmethod
+    def _showcase(cls, value: list[int] | None) -> list[int] | None:
+        if value is not None and (len(set(value)) != len(value) or any(not 1 <= v <= 100 for v in value)):
+            raise ValueError("Tủ trưng bày gồm tối đa 3 linh vật khác nhau")
+        return value
+
+    @field_validator("show_on_leaderboard")
+    @classmethod
+    def _bool_not_null(cls, value: bool | None) -> bool:
         if value is None:
             raise ValueError("Không được để trống")
         return value

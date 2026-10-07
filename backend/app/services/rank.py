@@ -39,6 +39,17 @@ def rank_for(mastered: int) -> str:
     return best
 
 
+def effective(current: str, shaky_deadline: datetime | None, mastered: int, now: datetime) -> str:
+    """Rank hiển thị cho người KHÁC (hồ sơ công khai, bảng xếp hạng), chỉ đọc, không ghi DB: lung lay đã quá hạn thì là rank
+    theo số từ (giống kết quả `evaluate` sẽ ghi lần tới người đó mở app); số từ đã vượt rank hiện tại thì là rank theo số từ."""
+    target = rank_for(mastered)
+    if index_of(target) > index_of(current):
+        return target
+    if shaky_deadline is not None and now >= shaky_deadline and index_of(target) < index_of(current):
+        return target
+    return current
+
+
 def next_rank(code: str) -> str | None:
     order = ranks()
     i = order.index(code)

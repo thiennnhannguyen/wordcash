@@ -129,6 +129,13 @@ class Settings(BaseSettings):
         "C1": [6, 4, 3, 1], "C2": [6, 5, 3, 1], "SPECIAL": [3, 2, 1, 1],
     }
 
+    # Bảng xếp hạng và số liệu công khai
+    LEADERBOARD_TIMEZONE: str = "Asia/Ho_Chi_Minh"  # tuần ISO (thứ Hai 00:00) của bảng tuần tính theo múi giờ này
+    LEADERBOARD_CACHE_SECONDS: int = 60
+    LEADERBOARD_MAX_LIMIT: int = 100
+    PUBLIC_STATS_CACHE_SECONDS: int = 600
+    PUBLIC_LEARNERS_MIN: int = 100  # dưới mức này /public/stats không trả số người học (Landing không hiện số)
+
     # Đấu Trường
     MATCH_HP: int = 100
     MATCH_QUESTIONS: int = 20

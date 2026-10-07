@@ -27,7 +27,11 @@ class EntryState(enum.StrEnum):
 
 class UserEntryProgress(Base):
     __tablename__ = "user_entry_progress"
-    __table_args__ = (Index("ix_user_entry_progress_user_due", "user_id", "due_at"),)
+    __table_args__ = (
+        Index("ix_user_entry_progress_user_due", "user_id", "due_at"),
+        # Bảng xếp hạng tuần: từ mới đạt "đã thuộc" trong tuần
+        Index("ix_user_entry_progress_status_mastered_at", "status", "mastered_at"),
+    )
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     entry_id: Mapped[int] = mapped_column(ForeignKey("entries.id", ondelete="CASCADE"), primary_key=True, index=True)
