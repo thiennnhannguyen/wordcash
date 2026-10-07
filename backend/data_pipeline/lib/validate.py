@@ -101,11 +101,22 @@ def rule_example_length(e: ContentEntry):
         return "example_length", f"{n} từ"
 
 
+NEGATIVE_STEMS = {"ca": "can", "wo": "will", "sha": "shall"}  # can't, won't, shan't
+
+
+def contraction_base(token: str) -> str:
+    """Gốc của dạng rút gọn: don't → do, can't → can, won't → will; it's → it, I'm → i."""
+    if token.endswith("n't"):
+        stem = token[:-3]
+        return NEGATIVE_STEMS.get(stem, stem)
+    return token.split("'")[0]
+
+
 def rule_hard_words(e: ContentEntry, whitelist: set[str] | None):
     if whitelist is None:
         return None
     allowed = whitelist | morph.headword_forms(e.headword, e.pos) | {t for c in e.collocations for t in morph.tokens(c)}
-    hard = sorted({t for t in morph.tokens(e.example_en) if t not in allowed and t.split("'")[0] not in allowed})
+    hard = sorted({t for t in morph.tokens(e.example_en) if t not in allowed and contraction_base(t) not in allowed})
     if hard:
         return "hard_words", ", ".join(hard)
 

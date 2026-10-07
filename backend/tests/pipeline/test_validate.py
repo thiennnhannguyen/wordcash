@@ -129,3 +129,10 @@ def test_meaning_vi_pronoun():
     assert validate.rule_meaning_pronoun(entry(meaning_vi="tôi đói rồi")) == ("meaning_vi_pronoun", "tôi đói rồi")
     assert validate.rule_meaning_pronoun(entry(meaning_vi="Tôi tên là")) is not None
     assert validate.rule_meaning_pronoun(entry(meaning_vi="tối nay")) is None  # "tối" ≠ "tôi"
+
+
+def test_negative_contractions_are_not_hard_words():
+    assert [validate.contraction_base(t) for t in ("don't", "can't", "won't", "isn't", "it's")] == ["do", "can", "will", "is", "it"]
+    allowed = {"do", "put", "your", "bag", "on", "the", "floor", "can", "find", "my", "key", "i"}
+    assert validate.rule_hard_words(entry(headword="floor", example_en="Don't put your bag on the floor."), allowed) is None
+    assert validate.rule_hard_words(entry(headword="key", example_en="I can't find my key."), allowed) is None
