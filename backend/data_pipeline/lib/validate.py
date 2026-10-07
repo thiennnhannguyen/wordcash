@@ -15,7 +15,11 @@ Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
   collocations là 2–3 cụm liên quan: biến thể, câu đáp lại, cụm cùng nhóm — không phải chính cụm đó thêm một chữ).
 Quy tắc so sánh nhiều mục (bỏ qua mục rejected):
 - duplicate_headword: trùng (headword, pos) trong cùng cấp; duplicate_example: trùng câu ví dụ trong cùng cấp;
-- same_meaning_vi: trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).
+- same_meaning_vi: trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm);
+- duplicate_meaning_in_level: hai mục trong cùng cấp có meaning_vi trùng hoặc là biến thể của nhau (`meaning_senses`: bỏ loại từ
+  đứng đầu như "cái", "quả", "người"; trùng một nghĩa, hoặc nghĩa ≥ 2 chữ này là phần đầu của nghĩa kia: "áo khoác" ~ "áo khoác
+  dày"). Ghi chú trong ngoặc khác nhau ở cả hai bên thì coi là đã phân biệt ("năm (số)" ≠ "năm (mười hai tháng)"). Bỏ qua cặp
+  cùng headword khác từ loại và cặp headword nằm trong cụm (thank ~ thank you); cặp trùng hệt cùng chủ đề đã có same_meaning_vi.
 
 `flags` = `origin_flags` (bước 02) ∪ cờ vi phạm, tính lại mỗi lần chạy; `flag_details` giải thích từng cờ.
 """
@@ -50,6 +54,8 @@ FLAG_HELP = {
     "duplicate_headword": "Trùng từ + từ loại với mục khác trong cùng cấp.",
     "duplicate_example": "Trùng câu ví dụ với mục khác trong cùng cấp.",
     "same_meaning_vi": "Trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).",
+    "duplicate_meaning_in_level": "Nghĩa tiếng Việt trùng hoặc là biến thể của nghĩa một mục khác trong cùng cấp — giữ một mục, "
+                                  "hoặc sửa nghĩa cho phân biệt được.",
     "phrase": "Cụm từ cố định (do AI đề xuất ở bước 02).",
     "needs_topic_review": "AI không chắc chủ đề — xem lại chủ đề của mục này.",
     "ai_suggested_headword": "Từ do AI đề xuất thêm (đã kiểm có trong CEFR-J A1–A2) — duyệt kỹ. Chỉ là nhãn thông tin.",
@@ -212,6 +218,72 @@ def rule_duplicates(topics: list[TopicFile]) -> dict[str, list[tuple[str, str]]]
     return out
 
 
+VI_CLASSIFIERS = {"cái", "quả", "chiếc", "người", "ngôi", "căn", "bức", "tấm"}
+VI_NUMBERS = {"một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười", "mươi", "trăm", "nghìn"}
+
+
+def meaning_senses(meaning: str) -> set[tuple[tuple[str, ...], str]]:
+    """Các nghĩa đã chuẩn hóa của meaning_vi: tách theo dấu phẩy / chấm phẩy NGOÀI ngoặc; mỗi nghĩa = (bộ chữ chính, ghi chú
+    trong ngoặc); chữ thường, bỏ loại từ đứng đầu ("quả trứng" → trứng, "người mẹ" → mẹ). "bà (nội, ngoại)" → (("bà",), "nội ngoại")."""
+    parts, depth, cur = [], 0, ""
+    for ch in (meaning or "").lower():
+        depth += {"(": 1, ")": -1}.get(ch, 0)
+        if ch in ",;" and depth == 0:
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    parts.append(cur)
+    out = set()
+    for part in parts:
+        note = " ".join(re.findall(r"\w+", " ".join(re.findall(r"\(([^)]*)\)", part))))
+        w = re.findall(r"\w+", re.sub(r"\([^)]*\)", " ", part))
+        if len(w) > 1 and w[0] in VI_CLASSIFIERS:
+            w = w[1:]
+        if w:
+            out.add((tuple(w), note))
+    return out
+
+
+def senses_overlap(a: set, b: set) -> bool:
+    """Trùng hoặc biến thể: chữ chính bằng nhau, hoặc nghĩa ≥ 2 chữ là phần đầu của nghĩa kia (phần thêm không phải số đếm:
+    "tháng mười" ≠ "tháng mười một"); KHÔNG tính khi cả hai có ghi chú trong ngoặc và ghi chú khác nhau ("năm (số)" ≠ "năm
+    (mười hai tháng)")."""
+    for x, nx in a:
+        for y, ny in b:
+            if nx and ny and nx != ny:
+                continue
+            short, long_ = sorted((x, y), key=len)
+            extra = long_[len(short):]
+            if x == y or (len(short) >= 2 and long_[:len(short)] == short and not set(extra) <= VI_NUMBERS):
+                return True
+    return False
+
+
+def contains_words(a: str, b: str) -> bool:
+    """Headword này nằm trọn trong headword kia (thank ⊂ thank you, family ⊂ my family): nghĩa giống nhau là đương nhiên."""
+    x, y = a.lower().split(), b.lower().split()
+    short, long_ = sorted((x, y), key=len)
+    return any(long_[i:i + len(short)] == short for i in range(len(long_) - len(short) + 1))
+
+
+def rule_duplicate_meaning_in_level(topics: list[TopicFile]) -> dict[str, list[tuple[str, str]]]:
+    """content_key → [("duplicate_meaning_in_level", "các mục trùng")] cho cặp khác headword trong cùng cấp."""
+    rows = [(t.topic_code, e, meaning_senses(e.meaning_vi)) for t in topics for e in t.entries
+            if e.status != "rejected" and e.meaning_vi.strip()]
+    hits: dict[str, list[str]] = defaultdict(list)
+    for i, (ta, a, sa) in enumerate(rows):
+        for tb, b, sb in rows[i + 1:]:
+            if contains_words(a.headword, b.headword):
+                continue  # cùng headword (khác từ loại) hoặc headword nằm trong cụm
+            if ta == tb and norm_text(a.meaning_vi) == norm_text(b.meaning_vi):
+                continue  # đã có same_meaning_vi
+            if senses_overlap(sa, sb):
+                hits[a.content_key].append(f"{b.content_key} ({b.meaning_vi})")
+                hits[b.content_key].append(f"{a.content_key} ({a.meaning_vi})")
+    return {k: [("duplicate_meaning_in_level", "; ".join(v))] for k, v in hits.items()}
+
+
 def build_whitelist(level: str, candidates: list[dict] | None, topics: list[TopicFile]) -> set[str] | None:
     """Từ được phép trong câu ví dụ; None nếu chưa có candidates.json (bỏ qua quy tắc hard_words, báo trong report)."""
     if candidates is None:
@@ -241,6 +313,8 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
     keywords = config.read_word_list(config.SENSITIVE_KEYWORDS)
     vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST)
     dupes = rule_duplicates(topics)
+    for key, found in rule_duplicate_meaning_in_level(topics).items():
+        dupes[key] = dupes.get(key, []) + found
     by_flag: Counter = Counter()
     by_topic: dict[str, dict] = {}
     for t, old in zip(topics, before):

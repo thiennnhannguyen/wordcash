@@ -148,3 +148,31 @@ def test_hyphenated_headwords_are_allowed_in_other_examples():
 def test_info_flags_are_not_counted():
     assert {"phrase", "ai_suggested_headword"} <= validate.INFO_FLAGS
     assert {"phrase", "ai_suggested_headword"} <= set(validate.FLAG_HELP)
+
+
+def test_duplicate_meaning_in_level():
+    def e(key, head, meaning, pos="noun"):
+        return entry(content_key=key, headword=head, pos=pos, meaning_vi=meaning)
+    food = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
+        e("a1.food.cookie.noun", "cookie", "bánh quy"), e("a1.food.biscuit.noun", "biscuit", "bánh quy giòn"),
+        e("a1.food.cup.noun", "cup", "cái cốc"), e("a1.food.drink.noun", "drink", "đồ uống"),
+        e("a1.food.drink.verb", "drink", "uống", "verb")])
+    family = TopicFile(level="A1", topic_code="family", topic_title="Gia đình", entries=[
+        e("a1.family.mom.noun", "mom", "mẹ"), e("a1.family.mother.noun", "mother", "người mẹ"),
+        e("a1.family.grandma.noun", "grandma", "bà (gọi thân mật)"), e("a1.family.mrs.noun", "Mrs.", "bà (danh xưng)"),
+        e("a1.family.only_child.phrase", "only child", "con một", "phrase"), e("a1.family.one.number", "one", "một", "number"),
+        e("a1.family.family.noun", "family", "gia đình"), e("a1.family.my_family.phrase", "my family", "gia đình mình", "phrase"),
+        e("a1.family.oct.noun", "October", "tháng Mười"), e("a1.family.nov.noun", "November", "tháng Mười Một"),
+        e("a1.family.mug.noun", "mug", "cốc")])
+    hits = validate.rule_duplicate_meaning_in_level([food, family])
+    flagged = set(hits)
+    assert {"a1.food.cookie.noun", "a1.food.biscuit.noun"} <= flagged  # biến thể: "bánh quy" là phần đầu của "bánh quy giòn"
+    assert {"a1.family.mom.noun", "a1.family.mother.noun"} <= flagged  # bỏ loại từ "người"
+    assert {"a1.food.cup.noun", "a1.family.mug.noun"} <= flagged  # khác chủ đề, cùng cấp; bỏ loại từ "cái"
+    for ok in ("a1.family.grandma.noun", "a1.family.mrs.noun",  # ghi chú trong ngoặc khác nhau: đã phân biệt
+               "a1.family.only_child.phrase", "a1.family.one.number",  # "con" không phải loại từ bị bỏ
+               "a1.family.my_family.phrase", "a1.family.family.noun",  # headword nằm trong cụm
+               "a1.family.oct.noun", "a1.family.nov.noun",  # phần thêm chỉ là số
+               "a1.food.drink.noun", "a1.food.drink.verb"):
+        assert ok not in flagged, ok
+    assert "duplicate_meaning_in_level" in validate.FLAG_HELP

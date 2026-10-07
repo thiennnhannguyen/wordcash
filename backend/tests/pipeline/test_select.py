@@ -65,14 +65,17 @@ def test_a1_tone_words_go_to_reserve(tmp_path, monkeypatch):
     tone = tmp_path / "tone.txt"
     tone.write_text("# thử\nwar\nghost\nfat | body_shaming\n", encoding="utf-8")
     monkeypatch.setattr(config, "A1_EXCLUDED_TONE", tone)
+    dupes = tmp_path / "dupes.txt"
+    dupes.write_text("rice  # giữ mục khác\n", encoding="utf-8")
+    monkeypatch.setattr(config, "A1_EXCLUDED_DUPLICATES", dupes)
     write_json(tmp_path / "candidates.json", candidates(["hello", "war", "ghost", "rice", "fat"]))
     client = fake_ai.client()
     step02.run("A1", client, limit=5, processed=tmp_path, cache_root=tmp_path / "cache")
     sel = read_json(tmp_path / "a1_selection.json")
     assert {(r["headword"], r["reserve_reason"]) for r in sel["reserve"]} == {("war", "tone_a1"), ("ghost", "tone_a1"),
-                                                                               ("fat", "body_shaming")}
+                                                                               ("fat", "body_shaming"), ("rice", "duplicate_meaning")}
     assert "war" not in client.calls[0][1] and "ghost" not in client.calls[0][1]  # không gửi đi phân loại
-    assert {i["headword"] for items in sel["topics"].values() for i in items} == {"hello", "rice"}
+    assert {i["headword"] for items in sel["topics"].values() for i in items} == {"hello"}
 
 
 def test_missing_and_invalid_answers_are_retried_then_failed(tmp_path):

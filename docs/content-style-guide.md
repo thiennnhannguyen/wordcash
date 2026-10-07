@@ -31,6 +31,10 @@ Mỗi mục là **một nghĩa chính**, và đó phải là nghĩa hợp với 
 Viết nghĩa tự nhiên, ngắn (tối đa 6 từ), đúng cách người Việt nói. Không dịch máy, không kèm chú thích dài hay ngoặc giải
 thích. Danh từ chỉ đồ vật có thể dùng loại từ quen thuộc ("quả", "cái", "con") khi người Việt thường nói như vậy.
 Tránh đại từ khi có thể: cụm `I'm hungry` → "đói rồi", không phải "tôi đói rồi" (cờ `meaning_vi_pronoun` khi có "tôi").
+Nghĩa phải phân biệt được với mọi mục khác trong cùng cấp (cờ `duplicate_meaning_in_level`). Từ đồng âm trong tiếng Việt thì
+thêm ghi chú ngắn trong ngoặc: `five` → "năm (số)", `year` → "năm (mười hai tháng)"; từ gần nghĩa khác cách dùng thì ghi cách
+dùng: `mom` → "mẹ (gọi hằng ngày)", `mommy` → "mẹ (trẻ nhỏ gọi)". Hai từ đồng nghĩa hoàn toàn (`burger` / `hamburger`) thì
+giữ một mục, ghi từ kia vào `synonyms`, thêm từ bỏ vào `data_pipeline/a1_excluded_duplicates.txt`.
 
 | | Ví dụ |
 |---|---|

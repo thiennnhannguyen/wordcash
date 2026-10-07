@@ -31,6 +31,7 @@ BR_US_SPELLING = PIPELINE / "br_us_spelling.tsv"
 SENSITIVE_KEYWORDS = PIPELINE / "sensitive_keywords.txt"
 PROPER_NAMES = PIPELINE / "proper_names.txt"
 A1_EXCLUDED_TONE = PIPELINE / "a1_excluded_tone.txt"  # bước 02: vào dự phòng, lý do tone_a1 (hoặc lý do ghi sau " | ")
+A1_EXCLUDED_DUPLICATES = PIPELINE / "a1_excluded_duplicates.txt"  # bước 02: trùng nghĩa với mục được giữ → dự phòng
 VN_CONTEXT_ALLOWLIST = PIPELINE / "vn_context_allowlist.txt"  # từ đời sống Việt Nam được phép trong câu ví dụ
 VN_CONTEXT_MAX_PER_EXAMPLE = 1
 

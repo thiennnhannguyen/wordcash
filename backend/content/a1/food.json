@@ -350,7 +350,7 @@
       "entry_type": "phrase",
       "ipa": "/ə ˈkʌp əv/",
       "ipa_unverified": false,
-      "meaning_vi": "một tách, một cốc",
+      "meaning_vi": "một tách",
       "definition_en": "an amount in a small cup",
       "example_en": "My dad drinks a cup of tea after lunch.",
       "example_vi": "Bố mình uống một tách trà sau bữa trưa.",
@@ -424,7 +424,7 @@
       "entry_type": "phrase",
       "ipa": "/ə ˈɡlæs əv/",
       "ipa_unverified": false,
-      "meaning_vi": "một ly, một cốc",
+      "meaning_vi": "một ly",
       "definition_en": "an amount in a glass",
       "example_en": "Can I have a glass of water, please?",
       "example_vi": "Cho mình xin một ly nước nhé?",
@@ -1679,8 +1679,12 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [],
-      "flag_details": {},
+      "flags": [
+        "duplicate_meaning_in_level"
+      ],
+      "flag_details": {
+        "duplicate_meaning_in_level": "a1.food.biscuit.noun (bánh quy giòn)"
+      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -2418,44 +2422,6 @@
       "ai_prompt": "enrich_v2#8e7f99160cc2"
     },
     {
-      "content_key": "a1.food.burger.noun",
-      "headword": "burger",
-      "pos": "noun",
-      "entry_type": "word",
-      "ipa": "/ˈbɝːɡɚ/",
-      "ipa_unverified": false,
-      "meaning_vi": "bánh mì kẹp thịt",
-      "definition_en": "meat in a round bread, often with vegetables",
-      "example_en": "Nam orders a burger and some fries.",
-      "example_vi": "Nam gọi một cái bánh kẹp thịt và khoai chiên.",
-      "collocations": [
-        "a chicken burger",
-        "burger and fries"
-      ],
-      "word_family": [
-        "hamburger"
-      ],
-      "synonyms": [],
-      "mnemonic_vi": "",
-      "image_keyword": "burger",
-      "commonness": 3,
-      "basic_communication": false,
-      "subgroup": "rice and bread",
-      "rank_in_topic": 66,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [],
-      "flag_details": {},
-      "status": "draft",
-      "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#8e7f99160cc2"
-    },
-    {
       "content_key": "a1.food.butter.noun",
       "headword": "butter",
       "pos": "noun",
@@ -2616,10 +2582,10 @@
         "a big hamburger",
         "hamburger and fries"
       ],
-      "word_family": [
+      "word_family": [],
+      "synonyms": [
         "burger"
       ],
-      "synonyms": [],
       "mnemonic_vi": "",
       "image_keyword": "hamburger",
       "commonness": 3,
@@ -2705,8 +2671,12 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [],
-      "flag_details": {},
+      "flags": [
+        "duplicate_meaning_in_level"
+      ],
+      "flag_details": {
+        "duplicate_meaning_in_level": "a1.food.cookie.noun (bánh quy)"
+      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

@@ -275,7 +275,7 @@
       "entry_type": "word",
       "ipa": "/faɪv/",
       "ipa_unverified": false,
-      "meaning_vi": "năm",
+      "meaning_vi": "năm (số)",
       "definition_en": "the number 5",
       "example_en": "School finishes at five in the afternoon.",
       "example_vi": "Trường tan học lúc năm giờ chiều.",
@@ -351,7 +351,7 @@
       "entry_type": "word",
       "ipa": "/ˈaʊɚ/",
       "ipa_unverified": false,
-      "meaning_vi": "giờ, tiếng đồng hồ",
+      "meaning_vi": "tiếng đồng hồ, giờ (60 phút)",
       "definition_en": "a time of sixty minutes",
       "example_en": "I study English for one hour every day.",
       "example_vi": "Mỗi ngày mình học tiếng Anh một tiếng.",
@@ -425,7 +425,7 @@
       "entry_type": "word",
       "ipa": "/taɪm/",
       "ipa_unverified": false,
-      "meaning_vi": "thời gian, giờ",
+      "meaning_vi": "thời gian, giờ giấc",
       "definition_en": "what we measure in hours and minutes",
       "example_en": "What time is it? It is eight.",
       "example_vi": "Mấy giờ rồi? Tám giờ.",
@@ -1020,7 +1020,7 @@
       "entry_type": "word",
       "ipa": "/ˈmʌndi/",
       "ipa_unverified": false,
-      "meaning_vi": "thứ Hai",
+      "meaning_vi": "thứ Hai (trong tuần)",
       "definition_en": "the day after Sunday",
       "example_en": "School starts again on Monday.",
       "example_vi": "Thứ Hai lại đi học rồi.",
@@ -2212,8 +2212,12 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [],
-      "flag_details": {},
+      "flags": [
+        "duplicate_meaning_in_level"
+      ],
+      "flag_details": {
+        "duplicate_meaning_in_level": "a1.numbers_time.start.verb (bắt đầu)"
+      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -2548,8 +2552,12 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [],
-      "flag_details": {},
+      "flags": [
+        "duplicate_meaning_in_level"
+      ],
+      "flag_details": {
+        "duplicate_meaning_in_level": "a1.numbers_time.begin.verb (khởi đầu, bắt đầu)"
+      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -2599,7 +2607,7 @@
       "entry_type": "word",
       "ipa": "/wɑːtʃ/",
       "ipa_unverified": false,
-      "meaning_vi": "đồng hồ đeo tay",
+      "meaning_vi": "đồng hồ (đeo tay)",
       "definition_en": "a small clock you wear on your arm",
       "example_en": "My dad gives me a new watch.",
       "example_vi": "Bố tặng mình một chiếc đồng hồ đeo tay mới.",
