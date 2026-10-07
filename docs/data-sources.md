@@ -14,7 +14,8 @@ soạn nháp theo `docs/content-style-guide.md` rồi người duyệt (không c
 
 ## Dòng ghi công hiển thị trong app
 
-Chân trang (Landing, trang Giới thiệu nguồn dữ liệu): "Danh sách từ dựa trên CEFR-J Wordlist (Tono Laboratory, Tokyo
+Chân trang Landing và chân trang mọi trang trong app (PageShell), kèm trang Giới thiệu `/about` (mở từ menu tài khoản; chi
+tiết từng nguồn trong `DATA_SOURCES`, `frontend/src/utils/constants.js`): "Danh sách từ dựa trên CEFR-J Wordlist (Tono Laboratory, Tokyo
 University of Foreign Studies). Phiên âm dựa trên CMU Pronouncing Dictionary (Carnegie Mellon University)."
 
 ## Nguồn để dành (chưa dùng)
