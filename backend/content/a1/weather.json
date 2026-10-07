@@ -16,8 +16,8 @@
       "example_en": "It's hot today. Let's drink some water.",
       "example_vi": "Hôm nay trời nóng. Mình uống chút nước đi.",
       "collocations": [
-        "It's hot today",
-        "It's hot outside"
+        "It's cold",
+        "It's warm"
       ],
       "word_family": [],
       "synonyms": [],
@@ -54,8 +54,8 @@
       "example_en": "It's cold in Hanoi in January.",
       "example_vi": "Tháng Một ở Hà Nội trời lạnh.",
       "collocations": [
-        "It's cold today",
-        "It's cold at night"
+        "It's hot",
+        "It's cool"
       ],
       "word_family": [],
       "synonyms": [],
@@ -92,8 +92,8 @@
       "example_en": "On a sunny day, we play in the park.",
       "example_vi": "Vào ngày nắng, chúng mình chơi ở công viên.",
       "collocations": [
-        "a sunny day",
-        "a hot sunny day"
+        "rainy day",
+        "cloudy day"
       ],
       "word_family": [],
       "synonyms": [],
@@ -130,8 +130,8 @@
       "example_en": "The dry season in Saigon starts in December.",
       "example_vi": "Mùa khô ở Sài Gòn bắt đầu vào tháng Mười Hai.",
       "collocations": [
-        "the dry season",
-        "in the dry season"
+        "rainy season",
+        "hot summer"
       ],
       "word_family": [],
       "synonyms": [],
@@ -168,8 +168,8 @@
       "example_en": "It's raining. Take your raincoat.",
       "example_vi": "Trời đang mưa. Mang áo mưa theo nhé.",
       "collocations": [
-        "it's raining hard",
-        "it's raining again"
+        "It's snowing",
+        "It's sunny"
       ],
       "word_family": [],
       "synonyms": [],
@@ -206,8 +206,8 @@
       "example_en": "In the rainy season, it rains every afternoon.",
       "example_vi": "Vào mùa mưa, chiều nào cũng mưa.",
       "collocations": [
-        "the rainy season",
-        "in the rainy season"
+        "dry season",
+        "rainy day"
       ],
       "word_family": [],
       "synonyms": [],
@@ -244,8 +244,8 @@
       "example_en": "It is very windy at the beach today.",
       "example_vi": "Hôm nay ở bãi biển gió rất to.",
       "collocations": [
-        "very windy today",
-        "very windy weather"
+        "a strong wind",
+        "very cold"
       ],
       "word_family": [],
       "synonyms": [],
@@ -282,8 +282,8 @@
       "example_en": "I watch the weather forecast on TV.",
       "example_vi": "Mình xem dự báo thời tiết trên TV.",
       "collocations": [
-        "watch the weather forecast",
-        "check the weather forecast"
+        "weather report",
+        "the news"
       ],
       "word_family": [],
       "synonyms": [],

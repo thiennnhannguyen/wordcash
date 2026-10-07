@@ -16,8 +16,8 @@
       "example_en": "Happy birthday, Mai! This gift is for you.",
       "example_vi": "Chúc mừng sinh nhật Mai! Quà này tặng bạn.",
       "collocations": [
-        "say happy birthday",
-        "sing happy birthday"
+        "Happy New Year",
+        "Thank you"
       ],
       "word_family": [],
       "synonyms": [],
@@ -54,8 +54,8 @@
       "example_en": "Nam looks like his father.",
       "example_vi": "Nam trông giống bố.",
       "collocations": [
-        "look like your mom",
-        "look like a baby"
+        "look the same",
+        "look different"
       ],
       "word_family": [],
       "synonyms": [],
@@ -87,13 +87,13 @@
       "entry_type": "phrase",
       "ipa": "/maɪ ˈfæməli/",
       "ipa_unverified": false,
-      "meaning_vi": "gia đình tôi",
+      "meaning_vi": "gia đình mình",
       "definition_en": "the people in your home: parents, brothers and sisters",
       "example_en": "There are five people in my family.",
       "example_vi": "Gia đình mình có năm người.",
       "collocations": [
-        "love my family",
-        "my family photo"
+        "my parents",
+        "my brother and sister"
       ],
       "word_family": [],
       "synonyms": [],
@@ -130,8 +130,8 @@
       "example_en": "Lan is my best friend at school.",
       "example_vi": "Lan là bạn thân của mình ở trường.",
       "collocations": [
-        "my best friend",
-        "best friend forever"
+        "good friend",
+        "old friend"
       ],
       "word_family": [],
       "synonyms": [],
@@ -165,11 +165,11 @@
       "ipa_unverified": false,
       "meaning_vi": "lớn lên",
       "definition_en": "to become older, from a child to an adult",
-      "example_en": "I grow up in a small town in Vietnam.",
-      "example_vi": "Mình lớn lên ở một thị trấn nhỏ ở Việt Nam.",
+      "example_en": "Kids grow up very fast.",
+      "example_vi": "Trẻ con lớn nhanh lắm.",
       "collocations": [
-        "grow up fast",
-        "grow up in"
+        "be born",
+        "grow old"
       ],
       "word_family": [
         "grown-up"
@@ -208,8 +208,8 @@
       "example_en": "Minh is an only child.",
       "example_vi": "Minh là con một.",
       "collocations": [
-        "an only child",
-        "the only child"
+        "big family",
+        "twin sister"
       ],
       "word_family": [],
       "synonyms": [],
@@ -246,8 +246,8 @@
       "example_en": "My aunt gets married in spring.",
       "example_vi": "Dì mình cưới vào mùa xuân.",
       "collocations": [
-        "get married soon",
-        "get married in May"
+        "have a wedding",
+        "have a baby"
       ],
       "word_family": [
         "marriage"
@@ -286,8 +286,8 @@
       "example_en": "My grandma takes care of my baby brother.",
       "example_vi": "Bà mình chăm em trai nhỏ của mình.",
       "collocations": [
-        "take care of a baby",
-        "take care of your family"
+        "look after",
+        "help out"
       ],
       "word_family": [],
       "synonyms": [

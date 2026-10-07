@@ -16,8 +16,8 @@
       "example_en": "We have lunch at school at eleven.",
       "example_vi": "Chúng mình ăn trưa ở trường lúc mười một giờ.",
       "collocations": [
-        "have lunch together",
-        "have lunch at home"
+        "have breakfast",
+        "have dinner"
       ],
       "word_family": [],
       "synonyms": [],
@@ -54,8 +54,8 @@
       "example_en": "My family has dinner at seven o'clock.",
       "example_vi": "Nhà mình ăn tối lúc bảy giờ.",
       "collocations": [
-        "have dinner together",
-        "have dinner at home"
+        "have lunch",
+        "cook dinner"
       ],
       "word_family": [],
       "synonyms": [],
@@ -92,8 +92,8 @@
       "example_en": "I have breakfast with bread and milk.",
       "example_vi": "Mình ăn sáng bằng bánh mì và sữa.",
       "collocations": [
-        "have breakfast early",
-        "have breakfast at home"
+        "eat breakfast",
+        "have lunch"
       ],
       "word_family": [],
       "synonyms": [],
@@ -130,8 +130,8 @@
       "example_en": "My mom makes fried rice on Sunday.",
       "example_vi": "Mẹ mình làm cơm chiên vào Chủ nhật.",
       "collocations": [
-        "egg fried rice",
-        "a plate of fried rice"
+        "fried noodles",
+        "fried chicken"
       ],
       "word_family": [],
       "synonyms": [],
@@ -163,13 +163,13 @@
       "entry_type": "phrase",
       "ipa": "/aɪm ˈhʌŋɡri/",
       "ipa_unverified": false,
-      "meaning_vi": "tôi đói rồi",
+      "meaning_vi": "đói rồi",
       "definition_en": "words you say when you want to eat",
       "example_en": "I'm hungry. Let's eat pho now.",
       "example_vi": "Mình đói rồi. Mình đi ăn phở đi.",
       "collocations": [
-        "I'm hungry now",
-        "I'm hungry again"
+        "I'm thirsty",
+        "I'm full"
       ],
       "word_family": [],
       "synonyms": [],
@@ -206,8 +206,8 @@
       "example_en": "I drink orange juice every morning.",
       "example_vi": "Sáng nào mình cũng uống nước cam.",
       "collocations": [
-        "a glass of orange juice",
-        "fresh orange juice"
+        "apple juice",
+        "fresh juice"
       ],
       "word_family": [],
       "synonyms": [],
@@ -244,8 +244,8 @@
       "example_en": "My dad drinks a cup of tea after lunch.",
       "example_vi": "Bố mình uống một tách trà sau bữa trưa.",
       "collocations": [
-        "a cup of tea",
-        "a cup of coffee"
+        "a glass of",
+        "a bowl of"
       ],
       "word_family": [],
       "synonyms": [],
@@ -282,8 +282,8 @@
       "example_en": "Can I have a glass of water, please?",
       "example_vi": "Cho mình xin một ly nước nhé?",
       "collocations": [
-        "a glass of water",
-        "a glass of milk"
+        "a cup of",
+        "a bottle of"
       ],
       "word_family": [],
       "synonyms": [],
