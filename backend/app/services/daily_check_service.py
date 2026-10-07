@@ -3,7 +3,8 @@ Cửa Ải Hôm Nay: bắt buộc ở lần đầu hoạt động trong ngày (n
 
 - `get_or_create_today`: mỗi người một dòng daily_checks mỗi ngày địa phương (unique; hai request song song không tạo hai dòng).
   Có dưới DAILY_CHECK_MIN_WORDS từ HỆ THỐNG đã học → MIỄN hôm đó (`exempt`): streak giữ nguyên, không tăng.
-  Ngược lại hỏi 2–5 từ hệ thống đã học (KHÔNG dùng từ tự tạo): ưu tiên từ sắp đến hạn ôn, trộn DAILY_CHECK_RANDOM_WORDS từ
+  Ngược lại hỏi 2–5 từ hệ thống đã học (KHÔNG dùng từ tự tạo, KHÔNG dùng mục đã ngừng dùng — `Entry.teachable()`; mục
+  ngừng dùng vẫn ôn được ở ôn tập cá nhân và giữ mastered): ưu tiên từ sắp đến hạn ôn, trộn DAILY_CHECK_RANDOM_WORDS từ
   ngẫu nhiên. Chỉ câu mức 3 (gõ từ) và mức 4 (điền vào câu). Đáp án chỉ lưu ở server.
 - `submit`: chấm từng câu (có thể gửi từng câu một). Sai → progress_service.forget_entry (mất "đã thuộc", trừ
   DAILY_FORGET_PENALTY, từ vào danh sách ôn gấp vì đến hạn ngay hôm sau); đúng → record_answer. Câu đã chấm thì lộ đáp án,
@@ -62,7 +63,7 @@ async def _learned_system_words(session: AsyncSession, user: User) -> list[tuple
     rows = await session.execute(
         select(UserEntryProgress.entry_id, UserEntryProgress.due_at)
         .join(Entry, Entry.id == UserEntryProgress.entry_id)
-        .where(UserEntryProgress.user_id == user.id, UserEntryProgress.status.in_(LEARNED), Entry.system_approved())
+        .where(UserEntryProgress.user_id == user.id, UserEntryProgress.status.in_(LEARNED), Entry.teachable())
     )
     return [tuple(r) for r in rows]
 
@@ -183,5 +184,5 @@ async def week_status(session: AsyncSession, user: User, days: list[date]) -> di
 async def learned_count(session: AsyncSession, user: User) -> int:
     return await session.scalar(
         select(func.count()).select_from(UserEntryProgress).join(Entry, Entry.id == UserEntryProgress.entry_id)
-        .where(and_(UserEntryProgress.user_id == user.id, UserEntryProgress.status.in_(LEARNED), Entry.system_approved()))
+        .where(and_(UserEntryProgress.user_id == user.id, UserEntryProgress.status.in_(LEARNED), Entry.teachable()))
     ) or 0

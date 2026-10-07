@@ -231,7 +231,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 
 ### Kho từ
 - **Nội dung là code:** nguồn chính của nội dung đã duyệt là `backend/content/<cấp>/<mã-chủ-đề>.json`; DB CHỈ được nạp từ các file này (`python -m data_pipeline.07_load_to_db`), production không sửa nội dung trực tiếp.
-- **Không xóa entry đã có tiến độ, chỉ retire:** mục bị bỏ khỏi file thì loader đặt `retired_at` (không dạy mới, vẫn ôn được, giữ mastered). Bài đã có người học thì không xóa.
+- **Không xóa entry đã có tiến độ, chỉ retire:** mục bị bỏ khỏi file thì loader đặt `retired_at`: không dạy mới, không vào Cửa Ải Hôm Nay và Đấu Trường (`Entry.teachable()`), vẫn ôn được trong ôn tập cá nhân, giữ mastered và `mastered_count`. Bài đã có người học thì không xóa.
 - **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05); chỉ mục `approved` được nạp.
 - Chuẩn en-US; IPA từ CMUdict (AI không ghi đè, từ thiếu thì `ipa_unverified`). Chỉ dùng nguồn có trong `docs/data-sources.md`. Prompt AI trích từ `docs/content-style-guide.md`.
 - Chỉ các mục có `status = approved` mới được hiện cho người học.

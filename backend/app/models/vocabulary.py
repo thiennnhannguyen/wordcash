@@ -166,12 +166,13 @@ class Entry(Base):
 
     @staticmethod
     def system_approved():
-        """Chỉ kho hệ thống đã duyệt (đáp án nhiễu bổ sung, Cửa Ải Hôm Nay — gồm cả mục đã ngừng dùng vì vẫn được ôn)."""
+        """Chỉ kho hệ thống đã duyệt, gồm cả mục đã ngừng dùng (đáp án nhiễu bổ sung, chấm câu trả lời của mục đã giao)."""
         return and_(Entry.source == EntrySource.SYSTEM, Entry.status == EntryStatus.APPROVED)
 
     @staticmethod
     def teachable():
-        """Kho hệ thống đã duyệt và CHƯA ngừng dùng (`retired_at` rỗng): tìm trong kho, gợi ý dùng từ kho, thêm vào khóa học."""
+        """Kho hệ thống đã duyệt và CHƯA ngừng dùng (`retired_at` rỗng): tìm trong kho, gợi ý dùng từ kho, thêm vào khóa học,
+        Cửa Ải Hôm Nay, câu hỏi Đấu Trường. Mục đã ngừng dùng vẫn ôn được trong ôn tập cá nhân (`visible_to`) và giữ mastered."""
         return and_(Entry.system_approved(), Entry.retired_at.is_(None))
 
 
