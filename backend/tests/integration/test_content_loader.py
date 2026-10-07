@@ -4,7 +4,8 @@ Nạp nội dung vào DB (data_pipeline/lib/loader.py) trên PostgreSQL test, qu
 - mục bị bỏ khỏi file → retired_at, KHÔNG xóa, tiến độ học giữ nguyên; approved trở lại → bỏ retired_at;
 - --dry-run không ghi; kiểm tra trước khi nạp (thiếu file, tên bài chưa duyệt, còn bài DEV_SAMPLE, bài có tiến độ bị bỏ);
 - dev: purge(keep_position) + nạp kho thật → người đang học dở được mở bài đầu của chặng hiện tại (ensure_initialized);
-- seed_dev_roadmap bỏ qua cấp đã có nội dung thật.
+- seed_dev_roadmap bỏ qua cấp đã có nội dung thật;
+- địa danh chỉ là trang trí: đổi landmark của một chặng rồi nạp lại → không mục / bài nào bị sửa hay retired, tiến độ giữ nguyên.
 """
 
 from datetime import UTC, datetime
@@ -44,7 +45,7 @@ def write_level(root, extra=0, approve_titles=True):
         keys = [e.content_key for e in entries[:PER_TOPIC]]
         units = [ContentUnit(content_key=f"a1.{t.code}.u{p}", position=p, title=f"Bài {p}",
                              title_status="approved" if approve_titles else "draft", entries=keys[(p - 1) * 3:p * 3]) for p in (1, 2)]
-        content.save_topic(TopicFile(level="A1", topic_code=t.code, topic_title=t.title, landmark_key=t.landmark_key,
+        content.save_topic(TopicFile(level="A1", topic_code=t.code, topic_title=t.title,
                                      entries=entries, units=units), root)
 
 
@@ -54,6 +55,26 @@ async def load(db, root, **kw):
 
 async def count(db, model, *where):
     return await db.scalar(select(func.count()).select_from(model).where(*where))
+
+
+async def test_changing_landmark_changes_nothing(db_session, tmp_path, small):
+    db, root = db_session, tmp_path / "content"
+    await seed_landmarks(db)
+    write_level(root)
+    await load(db, root)
+    food = await db.scalar(select(Topic).where(Topic.topic_code == "food"))
+    unit = await db.scalar(select(Unit).where(Unit.content_key == "a1.food.u1"))
+    user = await make_user(db)
+    db.add(UserUnitProgress(user_id=user.id, unit_id=unit.id, status=ProgressStatus.UNLOCKED))
+    await db.flush()
+    before = {(e.content_key, e.content_version, e.retired_at) for e in await db.scalars(select(Entry))}
+    food.landmark_key, food.landmark_name, food.landmark_image = "a1_cho_moi", "Chợ mới", "/img/cho-moi.png"
+    await db.flush()
+    diff = await load(db, root)
+    assert not diff.changed and diff.retired == [] and diff.updated == {}
+    assert {(e.content_key, e.content_version, e.retired_at) for e in await db.scalars(select(Entry))} == before
+    assert await count(db, UserUnitProgress, UserUnitProgress.unit_id == unit.id) == 1
+    assert (await db.scalar(select(Unit).where(Unit.content_key == "a1.food.u1"))).topic_id == food.id
 
 
 async def test_load_twice_update_and_retire(db_session, tmp_path, small):

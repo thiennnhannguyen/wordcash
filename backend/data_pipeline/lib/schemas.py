@@ -132,7 +132,6 @@ class TopicFile(_Model):
     schema_version: Literal[1] = 1
     level: Literal["A1", "A2", "B1", "B2", "C1", "C2"]
     topic_code: str
-    topic_title: str
-    landmark_key: str
+    topic_title: str  # tên chủ đề; KHÔNG có địa danh (địa danh chỉ là trang trí ở bảng topics)
     entries: list[ContentEntry] = Field(default_factory=list)
     units: list[ContentUnit] = Field(default_factory=list)

@@ -8,7 +8,7 @@ seeds/refresh_dev_content.py).
   dạy mới vì không còn trong bài nào, vẫn ôn được, giữ mastered đã có). Mục approved trở lại → bỏ `retired_at`.
 - Bài: cập nhật tên, vị trí, danh sách mục (unit_entries thay mới). Bài có trong DB mà không còn trong file: xóa nếu chưa ai
   có tiến độ, có tiến độ thì dừng với lỗi (không làm mất tiến độ của người học).
-- Kiểm tra trước khi nạp (LoadError, không ghi gì): đủ file cho mọi chủ đề của cấp, chủ đề có trong DB (landmark_key), mỗi
+- Kiểm tra trước khi nạp (LoadError, không ghi gì): đủ file cho mọi chủ đề của cấp, chủ đề có trong DB (`topics.topic_code`; địa danh không tham gia nối — đổi địa danh không đổi gì ở đây), mỗi
   chủ đề có bài hợp lệ (lib/units.check_units: 16–20 mục, không mục nào thuộc 2 bài), tên bài đã duyệt, cấp không còn bài mẫu
   DEV_SAMPLE (chạy seeds.refresh_dev_content ở dev / seeds.purge_dev_entries trước).
 - Mỗi cấp một transaction. `dry_run`: làm hết rồi rollback, trả bảng khác biệt.
@@ -92,17 +92,17 @@ async def precheck(session: AsyncSession, level: str, topics: list[TopicFile]) -
     db_level = await session.scalar(select(Level).where(Level.code == level))
     if db_level is None:
         raise LoadError([f"Cấp {level} chưa có trong DB (chạy python -m seeds.seed_landmarks)"])
-    db_topics = {t.landmark_key: t for t in await session.scalars(select(Topic).where(Topic.level_id == db_level.id))}
+    db_topics = {t.topic_code: t for t in await session.scalars(select(Topic).where(Topic.level_id == db_level.id)) if t.topic_code}
     mapped: dict[str, Topic] = {}
     for cfg in config.topics(level):
         t = by_code.get(cfg.code)
         if t is None:
             problems.append(f"Thiếu file content/{level.lower()}/{cfg.code}.json")
             continue
-        if t.landmark_key not in db_topics:
-            problems.append(f"{cfg.code}: chặng {t.landmark_key} không có trong DB")
+        if cfg.code not in db_topics:
+            problems.append(f"{cfg.code}: chủ đề chưa có trong DB (topics.topic_code — chạy python -m seeds.seed_landmarks)")
             continue
-        mapped[cfg.code] = db_topics[t.landmark_key]
+        mapped[cfg.code] = db_topics[cfg.code]
         problems += units.check_units(t)
         problems += [f"{u.content_key}: tên bài chưa duyệt" for u in t.units if u.title_status != "approved" or not u.title.strip()]
         problems += [f"{e.content_key}: mục từ nguồn DEV_SAMPLE" for e in t.entries if DEV_TAG in e.sources]

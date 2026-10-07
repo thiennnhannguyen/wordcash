@@ -41,7 +41,7 @@ def load_or_new(level: str, code: str, root: Path | None = None) -> TopicFile:
     if path.exists():
         return load_topic(path)
     t = config.topic(level, code)
-    return TopicFile(level=level.upper(), topic_code=code, topic_title=t.title, landmark_key=t.landmark_key)
+    return TopicFile(level=level.upper(), topic_code=code, topic_title=t.title)
 
 
 def sort_topic(topic: TopicFile) -> TopicFile:

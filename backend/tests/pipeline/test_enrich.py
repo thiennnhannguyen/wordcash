@@ -34,7 +34,7 @@ def test_enrich_writes_drafts_with_cmudict_ipa(tmp_path):
     topic = content.load_topic(content.topic_path("A1", "food", paths["content_root"]))
     by = {e.headword.lower(): e for e in topic.entries}
     assert by["thank you"].headword == "Thank you"  # chữ hoa hiển thị, content_key vẫn viết thường
-    assert all(e.status == "draft" for e in topic.entries) and topic.topic_title == "Đồ ăn" and topic.landmark_key == "a1_pho_co"
+    assert all(e.status == "draft" for e in topic.entries) and topic.topic_title == "Đồ ăn"
     assert by["rice"].ipa == "/raɪs/" and not by["rice"].ipa_unverified and by["rice"].meaning_vi == "cơm"
     assert by["zzqxbanh"].ipa == "/tɛst/" and by["zzqxbanh"].ipa_unverified  # không có trong CMUdict
     assert by["thank you"].entry_type == "phrase" and by["thank you"].content_key == "a1.food.thank_you.phrase"
@@ -82,7 +82,7 @@ def test_stable_file_format(tmp_path):
     step03.run("A1", fake_ai.client(), **paths)
     text = content.topic_path("A1", "food", paths["content_root"]).read_text(encoding="utf-8")
     assert text.endswith("}\n") and '\n  "level": "A1"' in text and "Đồ ăn" in text  # indent 2, giữ dấu tiếng Việt
-    assert list(json.loads(text)) == ["schema_version", "level", "topic_code", "topic_title", "landmark_key", "entries", "units"]
+    assert list(json.loads(text)) == ["schema_version", "level", "topic_code", "topic_title", "entries", "units"]
 
 
 def test_display_headword_casing():

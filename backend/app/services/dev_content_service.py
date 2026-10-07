@@ -63,7 +63,7 @@ def _entry(topic: TopicFile, key: str) -> ContentEntry:
 def summary(topic: TopicFile) -> dict:
     entries = topic.entries
     return {
-        "code": topic.topic_code, "title": topic.topic_title, "landmark_key": topic.landmark_key, "total": len(entries),
+        "code": topic.topic_code, "title": topic.topic_title, "total": len(entries),
         "approved": sum(e.status == "approved" for e in entries), "rejected": sum(e.status == "rejected" for e in entries),
         "draft": sum(e.status == "draft" for e in entries), "flagged": sum(bool(set(e.flags) - validate.INFO_FLAGS) for e in entries if e.status != "rejected"),
         "units": len(topic.units), "units_approved": sum(u.title_status == "approved" for u in topic.units),
@@ -77,7 +77,7 @@ def list_levels() -> list[dict]:
         for t in topics:
             path = content.topic_path(level, t.code, CONTENT_ROOT)
             rows.append(summary(content.load_topic(path)) if path.exists() else
-                        {"code": t.code, "title": t.title, "landmark_key": t.landmark_key, "total": 0, "approved": 0,
+                        {"code": t.code, "title": t.title, "total": 0, "approved": 0,
                          "rejected": 0, "draft": 0, "flagged": 0, "units": 0, "units_approved": 0})
         out.append({"level": level, "topics": rows})
     return out

@@ -65,7 +65,7 @@ async def dev_api(tmp_path, monkeypatch):
     monkeypatch.setattr(svc, "PROCESSED", tmp_path)  # không có candidates.json: bỏ qua hard_words
     monkeypatch.setattr(svc, "WORK_ROOT", tmp_path / "work")
     monkeypatch.setattr(svc, "ai_provider", lambda: "agent")
-    topic = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=[
+    topic = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
         make_entry("rice", "cơm", "We eat rice for lunch every day.", rank_in_topic=1),
         make_entry("egg", "quả trứng", "My mom buys six eggs at the market.", rank_in_topic=2),
         make_entry("noodle", "mì", "I eat noodle soup in the morning.", rank_in_topic=3),

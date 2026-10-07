@@ -14,7 +14,7 @@ def root(tmp_path):
     r = tmp_path / "content"
     entries = [ContentEntry(content_key=f"a1.food.{h}.noun", headword=h, pos="noun", example_en=f"We eat {h} today.", status=s)
                for h, s in (("rice", "approved"), ("egg", "approved"), ("soup", "approved"), ("cake", "draft"))]
-    content.save_topic(TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=entries), r)
+    content.save_topic(TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=entries), r)
     return r
 
 

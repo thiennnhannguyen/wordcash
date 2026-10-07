@@ -9,6 +9,7 @@ from pathlib import Path
 from sqlalchemy import func, select
 
 from app.models import Level, Topic
+from data_pipeline import config as pconfig
 from seeds.seed_landmarks import LANDMARKS, seed_landmarks
 
 REGISTRY = Path(__file__).resolve().parents[3] / "frontend/src/components/academy/landmarks/landmarkRegistry.js"
@@ -31,6 +32,11 @@ async def test_seed_has_22_landmarks(db_session):
         orders = (await db_session.scalars(select(Topic.order).where(Topic.level_id == level.id).order_by(Topic.order))).all()
         assert orders == list(range(1, 11))
     assert levels["A1"].region_theme == "vn-north" and levels["A2"].region_theme == "vn-central-south"
+    # Mã chủ đề (khóa nối nội dung) khớp cấu hình quy trình kho từ; duy nhất trong cấp
+    a1 = (await db_session.scalars(select(Topic.topic_code).where(Topic.level_id == levels["A1"].id).order_by(Topic.order))).all()
+    assert a1 == [t.code for t in pconfig.topics("A1")]
+    a2 = (await db_session.scalars(select(Topic.topic_code).where(Topic.level_id == levels["A2"].id))).all()
+    assert len(set(a2)) == 10 and all(a2)
     keys = await _all_keys(db_session)
     assert len(keys) == len(set(keys)) == 22
     assert all(re.fullmatch(r"a[12]_[a-z_]+", k) for k in keys)

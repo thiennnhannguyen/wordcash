@@ -17,7 +17,7 @@ NOW = datetime(2026, 10, 7, 9, 0, tzinfo=UTC)
 @pytest.fixture
 def root(tmp_path):
     r = tmp_path / "content"
-    content.save_topic(TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=[
+    content.save_topic(TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
         ContentEntry(content_key="a1.food.rice.noun", headword="rice", pos="noun", meaning_vi="cơm", example_en="We eat rice.",
                      collocations=["cook rice", "a bowl of rice"], rank_in_topic=1),
         ContentEntry(content_key="a1.food.egg.noun", headword="egg", pos="noun", meaning_vi="trứng", rank_in_topic=2),

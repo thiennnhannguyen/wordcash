@@ -22,7 +22,7 @@ def topic_with(n, phrases=8, status="approved", groups=("kitchen", "meals", "fru
         entries.append(ContentEntry(content_key=f"a1.food.{head.replace(' ', '_')}.{'phrase' if phrase else 'noun'}", headword=head,
                                     pos="phrase" if phrase else "noun", status=status, commonness=5 - i % 5,
                                     subgroup=groups[i % len(groups)], rank_in_topic=i + 1))
-    return TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=entries)
+    return TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=entries)
 
 
 @pytest.mark.parametrize("n,k", [(64, 4), (70, 4), (72, 4), (80, 5), (90, 5), (100, 5)])
@@ -103,7 +103,7 @@ def test_check_units_errors():
                ContentUnit(content_key="a1.food.u2", position=2, entries=keys[17:30])]
     errors = " | ".join(units.check_units(t))
     assert "thuộc 2 bài" in errors and "a1.food.u2: 13 mục" in errors and "không phải mục đã duyệt" in errors
-    assert units.check_units(TopicFile(level="A1", topic_code="x", topic_title="x", landmark_key="x")) == ["x: chưa chia bài"]
+    assert units.check_units(TopicFile(level="A1", topic_code="x", topic_title="x")) == ["x: chưa chia bài"]
 
 
 def test_run_reports_topics_that_cannot_be_split(tmp_path):

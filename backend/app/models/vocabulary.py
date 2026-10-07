@@ -46,12 +46,16 @@ class Level(Base):
 
 
 class Topic(Base):
+    """Chặng = CHỦ ĐỀ từ vựng. `topic_code` (greetings, food…) là khóa nối nội dung (content/<cấp>/<topic_code>.json, content_key
+    của entries / units). Địa danh (landmark_*) CHỈ là trang trí bản đồ: đổi địa danh không đổi nội dung, bài hay tiến độ."""
+
     __tablename__ = "topics"
-    __table_args__ = (UniqueConstraint("level_id", "order"),)
+    __table_args__ = (UniqueConstraint("level_id", "order"), UniqueConstraint("level_id", "topic_code"))
 
     id: Mapped[int] = mapped_column(primary_key=True)
     level_id: Mapped[int] = mapped_column(ForeignKey("levels.id", ondelete="CASCADE"), index=True)
     order: Mapped[int]
+    topic_code: Mapped[str | None] = mapped_column(String(40))
     title: Mapped[str] = mapped_column(String(128))
     landmark_key: Mapped[str | None] = mapped_column(String(64))
     landmark_name: Mapped[str | None] = mapped_column(String(128))

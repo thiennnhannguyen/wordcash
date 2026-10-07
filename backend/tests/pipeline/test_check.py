@@ -11,7 +11,7 @@ from data_pipeline.lib.schemas import ContentEntry, ContentUnit, TopicFile
 
 
 def good(root):
-    t = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co",
+    t = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn",
                   entries=[ContentEntry(content_key="a1.food.rice.noun", headword="rice", pos="noun")],
                   units=[ContentUnit(content_key="a1.food.u1", position=1, entries=["a1.food.rice.noun"])])
     return content.save_topic(t, root)

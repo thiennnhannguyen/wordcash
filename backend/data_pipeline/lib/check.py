@@ -1,6 +1,6 @@
 """
 Kiểm tra cấu trúc mọi file backend/content/**/*.json (bước CI, không cần DB hay AI):
-schema TopicFile; tên file khớp cấp / mã chủ đề; chủ đề có trong config và đúng landmark_key; content_key đúng dạng
+schema TopicFile; tên file khớp cấp / mã chủ đề; chủ đề có trong config; content_key đúng dạng
 "<cấp>.<chủ-đề>.<headword>.<pos>" và không trùng giữa các file; bài chỉ trỏ tới mục có trong file, không mục nào thuộc 2 bài
 cùng nhánh, content_key bài đúng dạng. (Cỡ bài 16–20 và tên bài đã duyệt chỉ bắt buộc khi nạp — lib/loader.py.)
 """
@@ -25,9 +25,7 @@ def check_file(path: Path) -> list[str]:
     if path.parent.name != topic.level.lower() or path.stem != topic.topic_code:
         errors.append(f"{name}: tên file không khớp level / topic_code")
     try:
-        cfg = config.topic(topic.level, topic.topic_code)
-        if cfg.landmark_key != topic.landmark_key:
-            errors.append(f"{name}: landmark_key {topic.landmark_key} khác config ({cfg.landmark_key})")
+        config.topic(topic.level, topic.topic_code)
     except KeyError:
         errors.append(f"{name}: chủ đề {topic.topic_code} không có trong data_pipeline/config.py")
     keys = set()

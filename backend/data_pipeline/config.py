@@ -7,7 +7,8 @@ Cấu hình quy trình xây kho từ (data_pipeline): đường dẫn, tham số
   giá trị key; lỗi chỉ báo "thiếu key". ANTHROPIC_MODEL: tên model, bắt buộc khi gọi AI thật.
 - MAX_AI_ENTRIES_PER_RUN: trần số mục mỗi lần chạy một bước có gọi AI (chặn chi phí ngoài ý muốn); đổi bằng biến môi
   trường cùng tên.
-- Mã chủ đề: gắn với chặng trong DB qua `landmark_key` (seeds/seed_landmarks.py); tên chặng và địa danh giữ nguyên.
+- Mã chủ đề (`code`): khóa nối nội dung với chặng trong DB (`topics.topic_code`, seeds/seed_landmarks.py). Địa danh CHỈ là
+  trang trí bản đồ: không dùng để nối nội dung, không đưa vào prompt; đổi địa danh không đổi từ vựng hay tiến độ.
 """
 
 import os
@@ -73,25 +74,24 @@ POS_PHRASE = "phrase"
 @dataclass(frozen=True)
 class TopicConfig:
     level: str
-    code: str  # tên file content/<cấp>/<code>.json và phần giữa của content_key
-    landmark_key: str  # khớp topics.landmark_key trong DB
-    title: str  # tên chặng (giữ nguyên như DB)
+    code: str  # = topics.topic_code trong DB; tên file content/<cấp>/<code>.json và phần giữa của content_key
+    title: str  # tên chủ đề (giữ nguyên như DB)
     hint_en: str  # mô tả ngắn cho AI phân loại
 
 
 # 10 chủ đề A1, đúng thứ tự và tên của seeds/seed_landmarks.py (test kiểm tra khớp)
 TOPICS: dict[str, list[TopicConfig]] = {
     "A1": [
-        TopicConfig("A1", "greetings", "a1_ho_guom", "Chào hỏi", "greetings, introductions, polite everyday phrases, feelings"),
-        TopicConfig("A1", "family", "a1_van_mieu", "Gia đình", "family members, people, describing people, age, relationships"),
-        TopicConfig("A1", "numbers_time", "a1_chua_mot_cot", "Số đếm và thời gian", "numbers, days, months, clock time, dates, daily routine times"),
-        TopicConfig("A1", "food", "a1_pho_co", "Đồ ăn", "food, drinks, meals, cooking, eating out"),
-        TopicConfig("A1", "home", "a1_mu_cang_chai", "Nhà cửa", "house, rooms, furniture, household objects, daily chores"),
-        TopicConfig("A1", "travel", "a1_cau_long_bien", "Đi lại", "transport, directions, places in town, travel"),
-        TopicConfig("A1", "shopping", "a1_cho_dong_xuan", "Mua sắm", "shops, money, prices, clothes, colors, sizes"),
-        TopicConfig("A1", "weather", "a1_fansipan", "Thời tiết", "weather, seasons, temperature, clothes for weather"),
-        TopicConfig("A1", "nature", "a1_trang_an", "Thiên nhiên", "animals, plants, landscape, outdoor activities"),
-        TopicConfig("A1", "school", "a1_ma_pi_leng", "Trường học và học tập", "school, classroom objects, subjects, studying, hobbies"),
+        TopicConfig("A1", "greetings", "Chào hỏi", "greetings, introductions, polite everyday phrases, feelings"),
+        TopicConfig("A1", "family", "Gia đình", "family members, people, describing people, age, relationships"),
+        TopicConfig("A1", "numbers_time", "Số đếm và thời gian", "numbers, days, months, clock time, dates, daily routine times"),
+        TopicConfig("A1", "food", "Đồ ăn", "food, drinks, meals, cooking, eating out"),
+        TopicConfig("A1", "home", "Nhà cửa", "house, rooms, furniture, household objects, daily chores"),
+        TopicConfig("A1", "travel", "Đi lại", "transport, directions, places in town, travel"),
+        TopicConfig("A1", "shopping", "Mua sắm", "shops, money, prices, clothes, colors, sizes"),
+        TopicConfig("A1", "weather", "Thời tiết", "weather, seasons, temperature, clothes for weather"),
+        TopicConfig("A1", "nature", "Thiên nhiên", "animals, plants, landscape, outdoor activities"),
+        TopicConfig("A1", "school", "Trường học và học tập", "school, classroom objects, subjects, studying, hobbies"),
     ],
 }
 

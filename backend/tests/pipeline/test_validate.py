@@ -63,12 +63,12 @@ def test_ipa_sensitive_collocations():
 
 
 def test_duplicates_across_level_and_topic():
-    food = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=[
+    food = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
         entry(), entry(content_key="a1.food.meal.noun", headword="meal", meaning_vi="Cơm", example_en="We eat a meal at noon."),
         entry(content_key="a1.food.dish.noun", headword="dish", meaning_vi="món ăn", example_en="We eat rice for lunch every day.",
               status="rejected"),
     ])
-    home = TopicFile(level="A1", topic_code="home", topic_title="Nhà cửa", landmark_key="a1_mu_cang_chai", entries=[
+    home = TopicFile(level="A1", topic_code="home", topic_title="Nhà cửa", entries=[
         entry(content_key="a1.home.rice.noun", meaning_vi="gạo", example_en="We eat rice for lunch every day."),
     ])
     d = validate.rule_duplicates([food, home])
@@ -80,7 +80,7 @@ def test_duplicates_across_level_and_topic():
 
 def test_run_on_files_recomputes_flags_and_reports(tmp_path):
     root = tmp_path / "content"
-    t = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=[
+    t = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
         entry(origin_flags=["phrase"], flags=["phrase", "stale_flag"]),
         entry(content_key="a1.food.egg.noun", headword="egg", meaning_vi="quả trứng", example_en="We eat rice for dinner here."),
     ])

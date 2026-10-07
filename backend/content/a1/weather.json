@@ -3,7 +3,6 @@
   "level": "A1",
   "topic_code": "weather",
   "topic_title": "Thời tiết",
-  "landmark_key": "a1_fansipan",
   "entries": [
     {
       "content_key": "a1.weather.it_s_hot.phrase",
