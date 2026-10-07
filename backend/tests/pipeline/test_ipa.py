@@ -1,6 +1,7 @@
 """
 ARPAbet → IPA (en-US) và tra CMUdict (data_pipeline/lib/ipa.py): 35 từ mẫu, nhấn chính / phụ, từ một âm tiết không có dấu
-nhấn, cụm từ, từ không có trong cmudict → None (bước 03 gắn ipa_unverified).
+nhấn, cụm từ, từ không có trong cmudict → None (bước 03 gắn ipa_unverified); dạng đọc lướt của từ chức năng trong cụm
+(of /əv/, the /ðə/ ~ /ði/…), từ chức năng đứng riêng giữ dạng đầy đủ.
 """
 
 import pytest
@@ -50,8 +51,8 @@ def test_custom_dictionary():
 
 
 @pytest.mark.parametrize("phrase,expected", [
-    ("take care of", "/ˈteɪk ˈkɛr ʌv/"),  # từ nội dung một âm tiết có nhấn; "of" (chức năng) không nhấn
-    ("a cup of", "/ə ˈkʌp ʌv/"),
+    ("take care of", "/ˈteɪk ˈkɛr əv/"),  # từ nội dung một âm tiết có nhấn; "of" (chức năng) đọc lướt
+    ("a cup of", "/ə ˈkʌp əv/"),
     ("i'm hungry", "/aɪm ˈhʌŋɡri/"),  # dạng rút gọn của từ chức năng: không nhấn
     ("rainy season", "/ˈreɪni ˈsiːzən/"),
     ("I'm Hungry", "/aɪm ˈhʌŋɡri/"),  # chữ hoa hiển thị không ảnh hưởng
@@ -62,3 +63,30 @@ def test_phrase_ipa_stress(phrase, expected):
 
 def test_phrase_with_unknown_word_is_unverified():
     assert ipa.lookup("zzqxbanh rice") is None and ipa.lookup("rice") == "/raɪs/"
+
+
+@pytest.mark.parametrize("phrase,expected", [
+    ("a cup of tea", "/ə ˈkʌp əv ˈtiː/"),
+    ("go to school", "/ˈɡoʊ tə ˈskuːl/"),
+    ("wait for", "/ˈweɪt fər/"),
+    ("salt and pepper", "/ˈsɔːlt ən ˈpɛpɚ/"),
+    ("I can swim", "/aɪ kən ˈswɪm/"),
+    ("at home", "/ət ˈhoʊm/"),
+    ("come from", "/ˈkʌm frəm/"),
+    ("some water", "/səm ˈwɔːtɚ/"),
+    ("an apple", "/ən ˈæpəl/"),
+    ("the sun", "/ðə ˈsʌn/"),
+    ("the apple", "/ði ˈæpəl/"),  # "the" trước âm nguyên âm
+    ("the hour", "/ði ˈaʊɚ/"),  # quyết định theo âm, không theo chữ
+    ("the year", "/ðə ˈjɪr/"),  # chữ y- đọc /j/: phụ âm
+])
+def test_phrase_weak_forms(phrase, expected):
+    assert ipa.lookup(phrase) == expected
+
+
+@pytest.mark.parametrize("word", sorted(ipa.WEAK_FORMS))
+def test_function_word_alone_keeps_full_form(word):
+    alone = ipa.lookup(word)
+    assert alone is not None
+    if word not in ("a", "the"):  # cmudict ghi sẵn a /ə/, the /ðə/ là cách đọc chính
+        assert alone.strip("/") != ipa.WEAK_FORMS[word]

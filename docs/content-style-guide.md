@@ -9,7 +9,10 @@ của chặng chỉ để trang trí, không ảnh hưởng việc chọn từ, 
 (chặng Chợ Đồng Xuân không bắt buộc câu về chợ). Từ đời sống Việt Nam (`vn_context_allowlist.txt`) chỉ là từ ĐƯỢC PHÉP dùng
 cho câu gần gũi, không bắt buộc, không gắn với chặng nào. Tên bài đặt theo nội dung từ vựng của bài.
 
-Chuẩn tiếng Anh: Anh-Mỹ (en-US). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`.
+Chuẩn tiếng Anh: Anh-Mỹ (en-US). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`. IPA của cụm từ ghép
+từng từ: từ nội dung có dấu nhấn (kể cả từ một âm tiết), từ chức năng không nhấn và dùng dạng đọc lướt (of /əv/, a /ə/, to
+/tə/, for /fər/, and /ən/, can /kən/, at /ət/, from /frəm/, some /səm/, the /ðə/, trước nguyên âm /ði/; bảng `WEAK_FORMS`
+trong `lib/ipa.py`). Từ chức năng đứng riêng giữ dạng đầy đủ.
 
 ## 1. Chọn nghĩa
 

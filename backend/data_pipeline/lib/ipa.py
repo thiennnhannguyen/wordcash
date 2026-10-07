@@ -6,6 +6,9 @@ Phiên âm IPA en-US từ CMU Pronouncing Dictionary (quyết định 2). Hàm t
 - Cụm từ: ghép phiên âm từng từ theo cmudict, cách nhau một khoảng trắng; TỪ NỘI DUNG giữ dấu nhấn (từ một âm tiết cũng ghi
   ˈ: "/ˈteɪk ˈkɛr ʌv/"), TỪ CHỨC NĂNG (exclude_function_words.txt, kể cả dạng rút gọn I'm, it's) bỏ dấu nhấn. Một từ không có
   trong cmudict → cả cụm None (ipa_unverified).
+- Dạng đọc lướt (weak form) trong cụm: từ chức năng không nhấn thường gặp dùng dạng đọc lướt theo `WEAK_FORMS` (of /əv/, to /tə/,
+  the /ðə/ — trước nguyên âm /ði/…), không lấy dạng đầy đủ của cmudict. Từ chức năng đứng riêng (headword một từ) vẫn dùng dạng
+  đầy đủ.
 - Âm tiết: mỗi nguyên âm là một nhân; phụ âm giữa hai nguyên âm chia theo nguyên tắc "phụ âm đầu dài nhất hợp lệ" (ONSETS).
 - Lấy cách đọc đầu tiên của cmudict (cách đọc chính). Từ không có trong cmudict → None (nơi gọi gắn `ipa_unverified`).
 """
@@ -108,6 +111,15 @@ def load_cmudict(path: str | None = None) -> dict[str, str]:
     return out
 
 
+# Dạng đọc lướt của từ chức năng khi đứng trong cụm (không nhấn). "the" trước âm nguyên âm: THE_BEFORE_VOWEL.
+WEAK_FORMS = {
+    "a": "ə", "an": "ən", "of": "əv", "to": "tə", "for": "fər", "and": "ən", "can": "kən", "at": "ət", "from": "frəm",
+    "some": "səm", "the": "ðə",
+}
+THE_BEFORE_VOWEL = "ði"
+IPA_VOWEL_START = tuple("aeiouæɑɔəɛɪʊʌɝɚ")
+
+
 @lru_cache(maxsize=1)
 def function_words() -> frozenset[str]:
     return frozenset(config.read_word_list(config.EXCLUDE_FUNCTION_WORDS))
@@ -133,4 +145,18 @@ def lookup(headword: str, cmudict: dict[str, str] | None = None) -> str | None:
             elif "ˈ" not in text:
                 text = "ˈ" + text  # từ nội dung một âm tiết trong cụm: ghi nhấn chính
         parts.append(text)
+    if len(words) > 1:
+        parts = weaken(words, parts)
     return "/" + " ".join(parts) + "/" if parts else None
+
+
+def weaken(words: list[str], parts: list[str]) -> list[str]:
+    """Thay từ chức năng trong cụm bằng dạng đọc lướt (WEAK_FORMS); "the" trước âm nguyên âm đọc /ði/."""
+    out = list(parts)
+    for i, w in enumerate(words):
+        if w not in WEAK_FORMS:
+            continue
+        out[i] = WEAK_FORMS[w]
+        if w == "the" and i + 1 < len(parts) and parts[i + 1].lstrip("ˈˌ").startswith(IPA_VOWEL_START):
+            out[i] = THE_BEFORE_VOWEL
+    return out
