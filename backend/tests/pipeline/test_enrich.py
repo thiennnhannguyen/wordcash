@@ -97,6 +97,7 @@ def test_display_headword_casing():
     assert d("pho", "noun") == "pho" and d("an apple", "phrase") == "an apple"
     assert d("miss", "noun") == "Miss" and d("miss", "verb") == "miss"  # danh xưng viết hoa theo từ loại
     assert d(d("i'm hungry", "phrase"), "phrase") == "I'm hungry"  # lũy đẳng
+    assert d(d("mr", "noun"), "noun") == "Mr." and d(d("miss", "noun"), "noun") == "Miss" and d(d("cd", "noun"), "noun") == "CD"
 
 
 def test_drafts_keep_case_but_keys_lowercase_and_refresh(tmp_path):

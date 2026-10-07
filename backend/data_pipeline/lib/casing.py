@@ -17,6 +17,7 @@ from data_pipeline import config
 FIXED = {
     "i": "I", "i'm": "I'm", "i'll": "I'll", "i've": "I've", "i'd": "I'd",
     "tv": "TV", "dvd": "DVD", "cd": "CD", "ok": "OK", "mr": "Mr.", "mrs": "Mrs.", "ms": "Ms.",
+    "mr.": "Mr.", "mrs.": "Mrs.", "ms.": "Ms.",  # lũy đẳng: chạy lại trên dạng hiển thị
     **{d: d.capitalize() for d in ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "january",
                                   "february", "march", "april", "may", "june", "july", "august", "september", "october",
                                   "november", "december", "english", "vietnamese")},

@@ -91,7 +91,7 @@ def _clean_ipa(text: str) -> str | None:
 
 def build_entry(level: str, job: Job, got: EnrichItem, prompt_tag: str, cmu: dict) -> ContentEntry:
     item = job.item
-    cmu_ipa = ipa.lookup(item["headword"], cmu)
+    cmu_ipa = ipa.lookup(item["headword"], cmu, item["pos"])
     return ContentEntry(
         content_key=job.key, headword=casing.display_headword(item["headword"], item["pos"], bool(item.get("basic_communication"))),
         pos=item["pos"], entry_type=content.entry_type(item["headword"], item["pos"]),
@@ -187,7 +187,7 @@ def refresh_derived(level: str, *, content_root: Path | None = None) -> dict:
             if e.reviewed_at is not None:
                 continue
             e.headword = casing.display_headword(e.headword, e.pos, e.basic_communication)
-            cmu_ipa = ipa.lookup(e.headword, cmu)
+            cmu_ipa = ipa.lookup(e.headword, cmu, e.pos)
             e.ipa, e.ipa_unverified = (cmu_ipa, False) if cmu_ipa else (e.ipa, True)
         if content.dump(topic) != before:
             content.save_topic(topic, content_root)

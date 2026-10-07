@@ -90,3 +90,14 @@ def test_function_word_alone_keeps_full_form(word):
     assert alone is not None
     if word not in ("a", "the"):  # cmudict ghi sẵn a /ə/, the /ðə/ là cách đọc chính
         assert alone.strip("/") != ipa.WEAK_FORMS[word]
+
+
+@pytest.mark.parametrize("word,pos,expected", [
+    ("close", "verb", "/kloʊz/"), ("close", "adjective", "/kloʊs/"),
+    ("live", "verb", "/lɪv/"), ("live", "adjective", "/laɪv/"),
+    ("wind", "noun", "/wɪnd/"), ("use", "verb", "/juːz/"), ("use", "noun", "/juːs/"),
+    ("read", "verb", "/riːd/"), ("excuse", "noun", "/ɪkˈskjuːs/"),
+    ("excuse me", "phrase", "/ɪkˈskjuːz miː/"),  # trong cụm: đọc như động từ; "me" là từ chức năng
+])
+def test_heteronyms_by_part_of_speech(word, pos, expected):
+    assert ipa.lookup(word, pos=pos) == expected

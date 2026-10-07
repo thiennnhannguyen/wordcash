@@ -10,7 +10,9 @@ Phiên âm IPA en-US từ CMU Pronouncing Dictionary (quyết định 2). Hàm t
   the /ðə/ — trước nguyên âm /ði/…), không lấy dạng đầy đủ của cmudict. Từ chức năng đứng riêng (headword một từ) vẫn dùng dạng
   đầy đủ.
 - Âm tiết: mỗi nguyên âm là một nhân; phụ âm giữa hai nguyên âm chia theo nguyên tắc "phụ âm đầu dài nhất hợp lệ" (ONSETS).
-- Lấy cách đọc đầu tiên của cmudict (cách đọc chính). Từ không có trong cmudict → None (nơi gọi gắn `ipa_unverified`).
+- Từ đồng tự khác âm (heteronym): chọn cách đọc theo từ loại (`HETERONYMS`: close động từ /kloʊz/, live động từ /lɪv/, wind
+  danh từ /wɪnd/…); trong cụm từ dùng từ loại thường gặp ở cụm (`PHRASE_POS`: "excuse me" đọc như động từ).
+- Ngoài ra lấy cách đọc đầu tiên của cmudict (cách đọc chính). Từ không có trong cmudict → None (nơi gọi gắn `ipa_unverified`).
 """
 
 from functools import lru_cache
@@ -111,6 +113,15 @@ def load_cmudict(path: str | None = None) -> dict[str, str]:
     return out
 
 
+# (từ, từ loại) → cách đọc ARPAbet (lấy từ các biến thể của cmudict) khi cách đọc đầu tiên thuộc từ loại khác
+HETERONYMS = {
+    ("close", "verb"): "K L OW1 Z", ("use", "verb"): "Y UW1 Z", ("excuse", "verb"): "IH0 K S K Y UW1 Z",
+    ("live", "verb"): "L IH1 V", ("read", "verb"): "R IY1 D", ("wind", "noun"): "W IH1 N D", ("tear", "noun"): "T IH1 R",
+    ("lead", "verb"): "L IY1 D", ("record", "noun"): "R EH1 K ER0 D", ("present", "noun"): "P R EH1 Z AH0 N T",
+}
+# Từ loại mặc định của từ đồng tự khác âm khi đứng trong cụm ("excuse me", "close the door", "live in")
+PHRASE_POS = {"excuse": "verb", "close": "verb", "use": "verb", "live": "verb", "read": "verb", "wind": "noun", "lead": "verb"}
+
 # Dạng đọc lướt của từ chức năng khi đứng trong cụm (không nhấn). "the" trước âm nguyên âm: THE_BEFORE_VOWEL.
 WEAK_FORMS = {
     "a": "ə", "an": "ən", "of": "əv", "to": "tə", "for": "fər", "and": "ən", "can": "kən", "at": "ət", "from": "frəm",
@@ -129,8 +140,8 @@ def is_function_word(word: str) -> bool:
     return word in function_words() or word.split("'")[0] in function_words()
 
 
-def lookup(headword: str, cmudict: dict[str, str] | None = None) -> str | None:
-    """IPA dạng "/…/" cho từ hoặc cụm; None nếu có từ không nằm trong cmudict."""
+def lookup(headword: str, cmudict: dict[str, str] | None = None, pos: str | None = None) -> str | None:
+    """IPA dạng "/…/" cho từ hoặc cụm; None nếu có từ không nằm trong cmudict. `pos` chọn cách đọc của từ đồng tự khác âm."""
     cmu = cmudict if cmudict is not None else load_cmudict()
     words = headword.lower().replace("’", "'").split()
     parts = []
@@ -138,6 +149,8 @@ def lookup(headword: str, cmudict: dict[str, str] | None = None) -> str | None:
         pron = cmu.get(w)
         if pron is None:
             return None
+        word_pos = pos if len(words) == 1 else PHRASE_POS.get(w)
+        pron = HETERONYMS.get((w, word_pos), pron)
         text = arpabet_to_ipa(pron)
         if len(words) > 1:
             if is_function_word(w):
