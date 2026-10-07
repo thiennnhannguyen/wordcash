@@ -50,4 +50,5 @@ backups/
 backend/data_pipeline/processed/*
 !backend/data_pipeline/processed/.gitkeep
 backend/data_pipeline/cache/
+backend/data_pipeline/work/
 backend/data_pipeline/audio_out/

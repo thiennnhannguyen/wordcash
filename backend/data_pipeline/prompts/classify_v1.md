@@ -3,6 +3,9 @@ Level: {{level}}. Each word must go into EXACTLY ONE of these topics (use the co
 
 {{topics}}
 
+Some input items carry "hints": topic labels from the source word list (CEFR-J). Use them only as a hint; the topic list
+above decides.
+
 For every input item return one JSON object:
 - "headword", "pos": copy exactly from the input.
 - "topic_code": the single best topic code from the list above. Choose the topic where a beginner most naturally meets

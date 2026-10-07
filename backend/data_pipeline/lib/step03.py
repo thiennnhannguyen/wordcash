@@ -9,6 +9,8 @@ Bước 03 — AI soạn nháp mục từ (gọi từ data_pipeline/03_enrich_en
   đặt `ipa_unverified = true`.
 - File nội dung đã có: mục đã có (theo content_key) GIỮ NGUYÊN (người duyệt có thể đã sửa); chỉ thêm mục mới. `--redo-drafts`:
   soạn lại các mục còn `draft` và chưa từng được duyệt (vd. sau khi sửa prompt).
+- Chọn phạm vi: `topics` (chỉ các chủ đề này), `per_topic` (N mục đầu mỗi chủ đề, theo `rank_in_topic`), `limit` (N mục đầu).
+- Chế độ agent: lô chưa có output là "đang chờ" (`pending`), không vào failed_03.json; mục đã có output thì vẫn được ghi.
 """
 
 import json
@@ -17,7 +19,7 @@ from pathlib import Path
 
 from data_pipeline import config
 from data_pipeline.lib import content, ipa, prompts
-from data_pipeline.lib.ai import AIClient, AIError, AIJsonError, Usage, call_json
+from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
 from data_pipeline.lib.schemas import ContentEntry, EnrichItem
@@ -36,6 +38,7 @@ class Job:
 class Result:
     usage: Usage = field(default_factory=Usage)
     failed: list[dict] = field(default_factory=list)
+    pending: list[dict] = field(default_factory=list)
     written: dict[str, int] = field(default_factory=dict)
     from_cache: int = 0
 
@@ -51,16 +54,21 @@ def cache_key(level: str, job: Job, system: str) -> str:
     return digest("enrich", level, job.topic_code, job.item["headword"], job.item["pos"], ENRICH_V, prompts.rendered_hash(system))
 
 
-def plan(level: str, selection: dict, *, limit: int | None, content_root: Path | None, redo_drafts: bool = False) -> list[Job]:
+def plan(level: str, selection: dict, *, limit: int | None, content_root: Path | None, redo_drafts: bool = False,
+         topics: list[str] | None = None, per_topic: int | None = None) -> list[Job]:
     jobs = []
     for t in config.topics(level):
+        if topics and t.code not in topics:
+            continue
+        topic_jobs = []
         existing = content.by_key(content.load_or_new(level, t.code, content_root))
         for item in selection.get("topics", {}).get(t.code, []):
             key = content.content_key(level, t.code, item["headword"], item["pos"])
             old = existing.get(key)
             if old is not None and not (redo_drafts and old.status == "draft" and old.reviewed_at is None):
                 continue
-            jobs.append(Job(t.code, item, key))
+            topic_jobs.append(Job(t.code, item, key))
+        jobs += topic_jobs[:per_topic] if per_topic else topic_jobs
     return jobs[:limit] if limit else jobs
 
 
@@ -111,6 +119,10 @@ def enrich_batch(client: AIClient, level: str, jobs: list[Job], system: str, cac
             break
         try:
             got = call_json(client, system, _user_message(todo, cmu), list[EnrichItem], usage=result.usage, max_tokens=8000)
+        except AgentPending:
+            result.pending += [{"topic": j.topic_code, "headword": j.item["headword"], "pos": j.item["pos"]} for j in todo]
+            todo = []
+            break
         except (AIError, AIJsonError):
             continue
         by_word = {(g.headword.strip().lower(), g.pos.strip().lower()): g for g in got}
@@ -129,10 +141,11 @@ def enrich_batch(client: AIClient, level: str, jobs: list[Job], system: str, cac
 
 
 def run(level: str, client: AIClient | None, *, limit: int | None = None, processed: Path = config.PROCESSED,
-        content_root: Path | None = None, cache_root: Path | None = None, redo_drafts: bool = False) -> dict:
+        content_root: Path | None = None, cache_root: Path | None = None, redo_drafts: bool = False,
+        topics: list[str] | None = None, per_topic: int | None = None) -> dict:
     level = level.upper()
     selection = read_json(Path(processed) / f"{level.lower()}_selection.json", {})
-    jobs = plan(level, selection, limit=limit, content_root=content_root, redo_drafts=redo_drafts)
+    jobs = plan(level, selection, limit=limit, content_root=content_root, redo_drafts=redo_drafts, topics=topics, per_topic=per_topic)
     cache = DiskCache("enrich", cache_root)
     cmu = ipa.load_cmudict()
     result = Result()
@@ -148,22 +161,25 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
         topic = content.load_or_new(level, code, content_root)
         keep = [e for e in topic.entries if e.content_key not in made]
         new = [build_entry(level, j, made[j.key], tag, cmu) for j in topic_jobs if j.key in made]
+        if not new and not (content.topic_path(level, code, content_root)).exists():
+            continue  # cả chủ đề còn chờ output: chưa tạo file rỗng
         topic.entries = keep + new
         content.save_topic(topic, content_root)
         result.written[code] = len(new)
     if result.failed:
         write_json(Path(processed) / "failed_03.json", result.failed)
     report = {"level": level, "jobs": len(jobs), "written": result.written, "from_cache": result.from_cache,
-              "failed": len(result.failed), "ai": result.usage.as_dict()}
+              "failed": len(result.failed), "pending": len(result.pending), "ai": result.usage.as_dict()}
     write_json(Path(processed) / "report_03.json", report)
     return report
 
 
 def estimate(level: str, *, limit: int | None, processed: Path = config.PROCESSED, content_root: Path | None = None,
-             cache_root: Path | None = None, redo_drafts: bool = False) -> dict:
+             cache_root: Path | None = None, redo_drafts: bool = False, topics: list[str] | None = None,
+             per_topic: int | None = None) -> dict:
     level = level.upper()
     selection = read_json(Path(processed) / f"{level.lower()}_selection.json", {})
-    jobs = plan(level, selection, limit=limit, content_root=content_root, redo_drafts=redo_drafts)
+    jobs = plan(level, selection, limit=limit, content_root=content_root, redo_drafts=redo_drafts, topics=topics, per_topic=per_topic)
     cache = DiskCache("enrich", cache_root)
     todo: dict[str, int] = {}
     for j in jobs:

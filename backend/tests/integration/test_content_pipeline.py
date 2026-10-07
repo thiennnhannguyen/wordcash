@@ -2,7 +2,8 @@
 Toàn quy trình kho từ trên bộ dữ liệu nhỏ (40 từ định dạng CEFR-J tự soạn + từ chức năng), AI giả, quy mô bài thu nhỏ:
 01 nhập → 02 chọn A1 + chia chủ đề (+ cụm từ) → 03 soạn nháp → 04 kiểm tra → duyệt (giả lập người duyệt) → 06 chia bài + duyệt
 tên bài → 07 nạp vào DB test. Nạp lần 2 không đổi gì; mục bị bỏ khỏi file thì retired chứ không bị xóa. Mọi file nội dung
-qua kiểm tra schema (như bước CI).
+qua kiểm tra schema (như bước CI). Chạy hai lần: AI giả gọi trực tiếp (đường provider API) và chế độ agent (gói việc emit →
+output soạn sẵn → ingest).
 """
 
 import pytest
@@ -10,10 +11,11 @@ from sqlalchemy import func, select
 
 from app.models import Entry, Unit, UnitEntry
 from data_pipeline import config
-from data_pipeline.lib import check, content, loader, step01, step02, step03, units, validate
+from data_pipeline.lib import agent, check, content, loader, step01, step02, step03, units, validate
 from data_pipeline.lib.jsonio import read_json
 from seeds.seed_landmarks import seed_landmarks
 from tests.pipeline import fake_ai
+from tests.pipeline.agent_driver import drive
 
 WORDS = [w for w in fake_ai.TOPIC_OF if w not in ("happy", "old", "red", "read", "drink", "eat", "buy", "egg", "noodle", "kitchen")][:40]
 
@@ -83,3 +85,39 @@ async def test_full_pipeline_to_db(db_session, tmp_path, tiny):
     row = await db_session.scalar(select(Entry).where(Entry.content_key == gone.content_key))
     assert row is not None and row.retired_at is not None
     assert await db_session.scalar(select(func.count()).select_from(Unit).where(Unit.content_key.like("a1.food.%"))) == len(food.units)
+
+
+async def test_full_pipeline_agent_mode(db_session, tmp_path, tiny):
+    """Cùng quy trình ở chế độ agent (mặc định): mọi bước AI đi qua gói việc emit → output soạn sẵn → ingest; không gọi AI."""
+    raw, processed, root, cache, work = (tmp_path / n for n in ("raw", "processed", "content", "cache", "work"))
+    raw.mkdir()
+    rows = ["headword,pos,CEFR"] + [f"{w},noun,A1" for w in WORDS] + ["the,article,A1"]
+    (raw / "cefrj-vocabulary-profile-1.5.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    step01.run(raw, processed)
+
+    report02 = drive("02_select", lambda c: step02.run("A1", c, processed=processed, cache_root=cache), work)
+    assert not report02.get("pending") and report02["classified"] == 40
+    report03 = drive("03_enrich", lambda c: step03.run("A1", c, processed=processed, content_root=root, cache_root=cache), work)
+    assert report03["failed"] == 0 and report03["pending"] == 0
+    assert sum(len(content.load_topic(p).entries) for p in content.level_files("A1", root)) == report02["total"]
+    assert all(e.status == "draft" for p in content.level_files("A1", root) for e in content.load_topic(p).entries)
+    assert validate.run("A1", processed=processed, content_root=root)["files"] == 10 and check.check_tree(root) == []
+
+    for t in [content.load_topic(p) for p in content.level_files("A1", root)]:
+        for e in t.entries:
+            e.status = "approved"
+        content.save_topic(t, root)
+    built = drive("06_units", lambda c: units.run("A1", c, content_root=root, cache_root=cache), work)
+    assert built.errors == {}
+    titled = [content.load_topic(p) for p in content.level_files("A1", root)]
+    assert all(u.title.startswith("Bài học số") for t in titled for u in t.units)
+    for t in titled:
+        for u in t.units:
+            u.title_status = "approved"
+        content.save_topic(t, root)
+
+    st = {s["step"]: s for s in agent.status(work)}
+    assert all(st[k]["emitted"] == st[k]["ingested"] > 0 for k in ("02_select", "03_enrich", "06_units"))
+    await seed_landmarks(db_session)
+    diff = await loader.load_level(db_session, "A1", root=root)
+    assert len(diff.added) == report02["total"] and (await loader.load_level(db_session, "A1", root=root)).changed is False

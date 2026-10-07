@@ -12,9 +12,12 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
    chấm (lưu trong mục, người duyệt chỉnh được), rồi từ ngắn trước.
 
 `--limit N` (chạy thử): chỉ phân loại N ứng viên đầu, KHÔNG thêm cụm từ, đề xuất hay cân bằng.
+Chế độ agent: request chưa có output là "đang chờ" (`ctx.pending`), không phải lỗi; giai đoạn sau (cụm từ → đề xuất thêm)
+chỉ chạy khi giai đoạn trước đủ kết quả; còn chờ thì KHÔNG ghi selection (report_02.json ghi `pending`).
 Đầu ra: processed/<cấp>_selection.json + processed/report_02.json.
 """
 
+import json
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -22,7 +25,7 @@ from pathlib import Path
 
 from data_pipeline import config
 from data_pipeline.lib import prompts
-from data_pipeline.lib.ai import AIClient, AIError, AIJsonError, Usage, call_json
+from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
 from data_pipeline.lib.normalize import normalize_headword
@@ -39,6 +42,7 @@ class Context:
     cache: DiskCache
     usage: Usage = field(default_factory=Usage)
     failed: list[dict] = field(default_factory=list)
+    pending: int = 0  # số request đang chờ output (chế độ agent)
 
 
 def topic_lines(level: str) -> str:
@@ -87,9 +91,12 @@ def classify(ctx: Context, items: list[dict]) -> dict[tuple[str, str], ClassifyI
         for _ in range(config.AI_MAX_RETRIES):
             if not batch:
                 break
-            user = "Classify these items:\n" + "\n".join(f'{{"headword": "{c["headword"]}", "pos": "{c["pos"]}"}}' for c in batch)
+            user = "Classify these items:\n" + "\n".join(json.dumps(_classify_input(c), ensure_ascii=False) for c in batch)
             try:
                 got = call_json(ctx.client, system, user, list[ClassifyItem], usage=ctx.usage, max_tokens=8000)
+            except AgentPending:
+                ctx.pending += 1
+                break
             except (AIError, AIJsonError):
                 continue
             by_key = {(g.headword.strip().lower(), g.pos.strip().lower()): g for g in got}
@@ -103,8 +110,16 @@ def classify(ctx: Context, items: list[dict]) -> dict[tuple[str, str], ClassifyI
                 ctx.cache.set(_classify_key(ctx, system, c), g.model_dump())
                 out[(c["headword"], c["pos"])] = g
             batch = remaining
-        ctx.failed += [{"step": "classify", "headword": c["headword"], "pos": c["pos"]} for c in batch]
+        else:
+            ctx.failed += [{"step": "classify", "headword": c["headword"], "pos": c["pos"]} for c in batch]
     return out
+
+
+def _classify_input(c: dict) -> dict:
+    d = {"headword": c["headword"], "pos": c["pos"]}
+    if c.get("topic_hints"):
+        d["hints"] = c["topic_hints"]
+    return d
 
 
 def make_item(c: dict, g: ClassifyItem) -> dict:
@@ -130,6 +145,9 @@ def _generated(ctx: Context, kind: str, version: int, topic, count: int, existin
                           existing=", ".join(sorted(existing)) or "(none)")
     try:
         got = call_json(ctx.client, system, f"Give {count} items for topic {topic.code}.", list[schema], usage=ctx.usage)
+    except AgentPending:
+        ctx.pending += 1
+        return []
     except (AIError, AIJsonError) as e:
         ctx.failed.append({"step": kind, "topic": topic.code, "error": str(e)})
         return []
@@ -174,6 +192,8 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
         chosen = chosen[:limit]
 
     results = classify(ctx, chosen)
+    if ctx.pending:
+        return _pending_report(ctx, processed, "classify", limit)
     topics: dict[str, list[dict]] = {t.code: [] for t in config.topics(level)}
     for c in chosen:
         g = results.get((c["headword"], c["pos"]))
@@ -184,11 +204,14 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     target_topic = config.TARGET_PER_LEVEL // len(topics)
     if not limit:
         taken = {i["headword"] for items in topics.values() for i in items} | function_words
+        # Danh sách "đã có" gửi AI chụp ở đầu mỗi giai đoạn (không lớn dần trong vòng lặp) để prompt ổn định giữa các lần
+        # chạy (chế độ agent: emit / ingest phải ra cùng gói); trùng giữa các chủ đề vẫn được lọc bằng `taken`.
+        known = sorted(taken)
         for t in config.topics(level):
             have = sum(1 for i in topics[t.code] if i["pos"] == config.POS_PHRASE)
             need = round(target_topic * config.PHRASE_RATIO) - have
             if need > 0:
-                for p in _generated(ctx, "phrases", PHRASES_V, t, need, sorted(taken), PhraseItem):
+                for p in _generated(ctx, "phrases", PHRASES_V, t, need, known, PhraseItem):
                     head = normalize_headword(p.headword)
                     if not head or head in taken or len(head.split()) < 2:
                         continue
@@ -197,11 +220,14 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
                                            "topic_reason": "AI đề xuất cụm từ cho chủ đề", "commonness": p.commonness,
                                            "basic_communication": p.basic_communication, "subgroup": p.subgroup.strip().lower(),
                                            "origin": "ai_phrase", "flags": ["phrase"], "cefr": {}, "sources": []})
+        if ctx.pending:
+            return _pending_report(ctx, processed, "phrases", limit)
+        known = sorted(taken)
         for t in config.topics(level):
             missing = config.TOPIC_SIZE_MIN - len(topics[t.code])
             if missing > 0:
                 want = target_topic - len(topics[t.code])
-                for s in _generated(ctx, "suggest", SUGGEST_V, t, want, sorted(taken), SuggestItem):
+                for s in _generated(ctx, "suggest", SUGGEST_V, t, want, known, SuggestItem):
                     head = normalize_headword(s.headword)
                     if not head or head in taken or s.pos not in FUNCTION_POS_OK:
                         continue
@@ -210,6 +236,8 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
                                            "topic_reason": s.reason, "commonness": s.commonness, "basic_communication": False,
                                            "subgroup": s.subgroup.strip().lower(), "origin": "ai_suggested",
                                            "flags": ["ai_suggested_headword"], "cefr": {}, "sources": []})
+        if ctx.pending:
+            return _pending_report(ctx, processed, "suggest", limit)
         balance(topics, reserve, config.TARGET_PER_LEVEL)
 
     for items in topics.values():
@@ -232,6 +260,14 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     write_json(Path(processed) / "report_02.json", report)
     if ctx.failed:
         write_json(Path(processed) / "failed_02.json", ctx.failed)
+    return report
+
+
+def _pending_report(ctx: Context, processed: Path, stage: str, limit: int | None) -> dict:
+    """Còn gói việc chờ output (chế độ agent): không ghi selection nửa vời, chỉ báo đang chờ ở giai đoạn nào."""
+    report = {"level": ctx.level, "limited_to": limit, "pending": True, "pending_stage": stage, "pending_requests": ctx.pending,
+              "failed": len(ctx.failed)}
+    write_json(Path(processed) / "report_02.json", report)
     return report
 
 

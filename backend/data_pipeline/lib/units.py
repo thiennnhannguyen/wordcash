@@ -6,7 +6,8 @@ Bước 06 — chia bài cho từng chủ đề (gọi từ data_pipeline/06_bui
 - Thứ tự dạy: theo độ dễ (cụm từ / giao tiếp cơ bản, điểm phổ biến, độ dài — giống bước 02), các mục cùng `subgroup` gom liền
   nhau để vào cùng bài; cụm từ cố định rải đều các bài (cụm dễ nhất vào bài 1) và đứng đầu bài.
 - Tên bài: AI đề xuất (prompts/unit_titles_v1.md), `title_status = draft` để duyệt ở tab "Bài học" của /dev/content. Bài cùng
-  vị trí, cùng danh sách mục với lần trước thì GIỮ tên và trạng thái tên cũ.
+  vị trí, cùng danh sách mục với lần trước thì GIỮ tên và trạng thái tên cũ. Chế độ agent: chưa có output thì bài được ghi với
+  tên trống; sau `--ingest` bài chưa có tên được đặt tên.
 - `check_units`: không mục nào thuộc 2 bài cùng nhánh, mỗi bài 16–20 mục, mục trong bài phải tồn tại và đã duyệt (loader dùng lại).
 """
 

@@ -19,6 +19,7 @@ PIPELINE = BACKEND / "data_pipeline"
 RAW = PIPELINE / "raw"
 PROCESSED = PIPELINE / "processed"
 CACHE = PIPELINE / "cache"
+WORK = PIPELINE / "work"  # gói việc của chế độ agent (không đưa lên Git)
 VENDOR = PIPELINE / "vendor"
 PROMPTS = PIPELINE / "prompts"
 AUDIO_OUT = PIPELINE / "audio_out"
@@ -45,7 +46,9 @@ DEFINITION_EN_MAX_WORDS = 12
 EXAMPLE_EN_MIN_WORDS = 5
 EXAMPLE_EN_MAX_WORDS = 12
 
-# AI
+# AI. AI_PROVIDER: "agent" (mặc định, KHÔNG gọi API trả phí: agent đang code soạn output cho các gói việc trong work/) hoặc
+# "anthropic" (chỉ khi đặt rõ; cần ANTHROPIC_API_KEY + ANTHROPIC_MODEL).
+AI_PROVIDERS = ("agent", "anthropic")
 ENRICH_BATCH_SIZE = 15  # 10–20 mục mỗi request
 CLASSIFY_BATCH_SIZE = 40
 AI_MAX_RETRIES = 3
@@ -117,10 +120,18 @@ def env(name: str) -> str | None:
     return os.environ.get(name) or _read_env_file(BACKEND / ".env").get(name) or None
 
 
+def ai_provider() -> str:
+    provider = (env("AI_PROVIDER") or "agent").strip().lower()
+    if provider not in AI_PROVIDERS:
+        raise RuntimeError(f"AI_PROVIDER phải là một trong {', '.join(AI_PROVIDERS)} (đang là {provider!r}).")
+    return provider
+
+
 def anthropic_api_key() -> str:
     key = env("ANTHROPIC_API_KEY")
     if not key:
-        raise RuntimeError("Thiếu ANTHROPIC_API_KEY (đặt trong backend/.env hoặc biến môi trường).")
+        raise RuntimeError("AI_PROVIDER=anthropic nhưng thiếu ANTHROPIC_API_KEY (đặt trong backend/.env hoặc biến môi trường). "
+                           "Muốn dùng chế độ không tốn phí thì bỏ AI_PROVIDER (mặc định agent).")
     return key
 
 

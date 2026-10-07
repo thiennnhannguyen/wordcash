@@ -25,8 +25,9 @@ LOW_CONFIDENCE = {"happy", "old", "red"}
 
 def _classify(user: str) -> str:
     out = []
-    for m in re.finditer(r'\{"headword": "([^"]+)", "pos": "([^"]+)"\}', user):
-        head, pos = m.groups()
+    for line in user.splitlines()[1:]:
+        d = json.loads(line)
+        head, pos = d["headword"], d["pos"]
         out.append({"headword": head, "pos": pos, "topic_code": TOPIC_OF.get(head, "greetings"),
                     "confidence": 0.4 if head in LOW_CONFIDENCE else 0.9, "reason": "fake",
                     "commonness": 5 if len(head) <= 4 else 3, "basic_communication": head in ("hello", "goodbye"),

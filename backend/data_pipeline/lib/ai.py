@@ -3,6 +3,9 @@ Gọi AI cho quy trình kho từ.
 
 - `AnthropicClient`: Claude Messages API qua httpx. Key lấy từ config.anthropic_api_key() (biến môi trường / backend/.env),
   model từ ANTHROPIC_MODEL. Không bao giờ log key, header hay toàn bộ request; lỗi chỉ nêu mã HTTP và loại lỗi.
+- `AgentClient` (lib/agent.py, mặc định): không gọi mạng — mỗi request chưa có trong cache thành một gói việc trong work/,
+  agent đang code soạn output, `--ingest` phát lại output qua đúng `call_json` này (cùng model Pydantic). Request còn chờ
+  output → `AgentPending` (các bước coi là "đang chờ", không phải lỗi).
 - `FakeAIClient`: dùng trong test — hàm `handler(system, user) -> str` trả lời thay AI (không gọi mạng).
 - `call_json`: gửi prompt, tách JSON trong câu trả lời, kiểm bằng Pydantic; sai thì gửi lại kèm mô tả lỗi, tối đa
   AI_MAX_RETRIES lần, rồi ném `AIJsonError` (nơi gọi ghi vào failed.json).
@@ -52,11 +55,16 @@ class Usage:
 
 
 class AIClient(Protocol):
-    def complete(self, system: str, user: str, *, max_tokens: int = 4096) -> AIResponse: ...
+    # `schema`: kiểu Pydantic của câu trả lời (AgentClient ghi JSON schema vào gói việc và kiểm output; client khác bỏ qua)
+    def complete(self, system: str, user: str, *, max_tokens: int = 4096, schema: object = None) -> AIResponse: ...
 
 
 class AIError(RuntimeError):
     pass
+
+
+class AgentPending(AIError):
+    """Request đã thành gói việc trong work/ nhưng chưa có output hợp lệ (chế độ agent) — chờ, không thử lại."""
 
 
 class AIJsonError(AIError):
@@ -74,7 +82,7 @@ class AnthropicClient:
     def __repr__(self) -> str:  # không bao giờ lộ key khi in đối tượng
         return f"AnthropicClient(model={self.model!r})"
 
-    def complete(self, system: str, user: str, *, max_tokens: int = 4096) -> AIResponse:
+    def complete(self, system: str, user: str, *, max_tokens: int = 4096, schema: object = None) -> AIResponse:
         try:
             res = self._http.post(API_URL, headers={"x-api-key": self._key, "anthropic-version": API_VERSION, "content-type": "application/json"},
                                   json={"model": self.model, "max_tokens": max_tokens, "system": system,
@@ -98,7 +106,7 @@ class FakeAIClient:
     handler: Callable[[str, str], str]
     calls: list[tuple[str, str]] = field(default_factory=list)
 
-    def complete(self, system: str, user: str, *, max_tokens: int = 4096) -> AIResponse:
+    def complete(self, system: str, user: str, *, max_tokens: int = 4096, schema: object = None) -> AIResponse:
         self.calls.append((system, user))
         text = self.handler(system, user)
         return AIResponse(text, len(system + user) // 4, len(text) // 4)
@@ -124,7 +132,9 @@ def call_json(client: AIClient, system: str, user: str, schema: type[T] | object
     last = ""
     for attempt in range(1, retries + 1):
         try:
-            res = client.complete(system, prompt, max_tokens=max_tokens)
+            res = client.complete(system, prompt, max_tokens=max_tokens, schema=schema)
+        except AgentPending:
+            raise
         except AIError:
             if usage:
                 usage.failures += 1
