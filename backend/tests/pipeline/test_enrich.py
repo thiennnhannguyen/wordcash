@@ -95,6 +95,7 @@ def test_display_headword_casing():
     # cụm thường, từ đơn, món ăn Việt giữ chữ thường; tên người không viết hoa giữa cụm
     assert d("fried rice", "phrase") == "fried rice" and d("a cup of", "phrase") == "a cup of" and d("hello", "noun") == "hello"
     assert d("pho", "noun") == "pho" and d("an apple", "phrase") == "an apple"
+    assert d("miss", "noun") == "Miss" and d("miss", "verb") == "miss"  # danh xưng viết hoa theo từ loại
     assert d(d("i'm hungry", "phrase"), "phrase") == "I'm hungry"  # lũy đẳng
 
 

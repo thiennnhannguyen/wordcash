@@ -1,7 +1,8 @@
 """
 Chữ hoa của headword HIỂN THỊ (content/*.json, DB, giao diện). Khóa (content_key, selection, cache) luôn dùng chữ thường.
 
-- Từ luôn viết hoa: "I" và dạng rút gọn (I'm, I'll…), thứ trong tuần, tháng, viết tắt (TV, DVD, CD, OK, Mr., Mrs.), tên riêng
+- Từ luôn viết hoa: "I" và dạng rút gọn (I'm, I'll…), thứ trong tuần, tháng, viết tắt (TV, DVD, CD, OK, Mr., Mrs.), danh
+  xưng chỉ viết hoa theo từ loại (`FIXED_BY_POS`: danh từ "Miss", còn động từ "miss" giữ chữ thường), tên riêng
   (proper_names.txt) và từ đời sống Việt Nam (vn_context_allowlist.txt: Tet, Hanoi, Ho Chi Minh City…). Món ăn trong danh
   sách (pho, banh mi, com…) giữ chữ thường như danh từ chung.
 - Câu giao tiếp trọn vẹn nhiều từ (thán từ như "good morning", cụm từ giao tiếp cơ bản, cụm bắt đầu bằng "it's", "how",
@@ -20,6 +21,8 @@ FIXED = {
                                   "february", "march", "april", "may", "june", "july", "august", "september", "october",
                                   "november", "december", "english", "vietnamese")},
 }
+# Viết hoa chỉ khi đúng từ loại: (headword chữ thường, pos) → dạng hiển thị
+FIXED_BY_POS = {("miss", "noun"): "Miss"}
 # Từ đời sống Việt Nam viết thường như danh từ chung (món ăn, đồ vật)
 COMMON_VN = {"pho", "banh mi", "bun cha", "bun bo", "com tam", "com", "banh chung", "banh xeo", "nem", "che", "ca phe sua da",
              "ao dai", "non la", "motorbike", "cyclo", "dong"}
@@ -49,6 +52,8 @@ def _cap_first(text: str) -> str:
 def display_headword(headword: str, pos: str | None = None, basic_communication: bool = False) -> str:
     """Dạng hiển thị đúng chữ hoa của headword (đầu vào chữ thường); hàm lũy đẳng."""
     low = headword.strip().lower()
+    if (low, pos) in FIXED_BY_POS:
+        return FIXED_BY_POS[(low, pos)]
     proper = proper_terms()
     if low in proper:
         return proper[low]
