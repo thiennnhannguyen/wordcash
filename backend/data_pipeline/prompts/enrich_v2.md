@@ -6,12 +6,13 @@ Every card will be checked by a human reviewer before learners see it.
 
 - "headword", "pos": copy exactly from the input.
 - "meaning_vi": the ONE main Vietnamese meaning that fits this topic; natural Vietnamese a Vietnamese person would say;
-  at most {{meaning_max}} words; no long notes or brackets.
+  at most {{meaning_max}} words; no long notes or brackets; avoid pronouns when possible ("I'm hungry" → "đói rồi", not
+  "tôi đói rồi").
 - "definition_en": a simple English definition using only A1–A2 words; at most {{definition_max}} words; do not use the
   headword itself.
 - "example_en": one {{level}} sentence of {{example_min}}–{{example_max}} words that contains the headword (or its
   plural / verb form), uses the topic meaning, mostly present simple, and fits everyday life in Vietnam.
-- "example_vi": a natural Vietnamese translation of example_en.
+- "example_vi": a natural Vietnamese translation of example_en; first person is always "mình" (never "tôi", "tớ").
 - "collocations": for a single word: 2–3 common word partners, each one CONTAINS the headword (e.g. for "rice": "cook
   rice", "a bowl of rice"). For a fixed phrase (pos "phrase"): 2–3 RELATED phrases a learner can use next (a variant, a
   reply, a phrase from the same group), and they must NOT repeat the headword (e.g. "I'm hungry" → "I'm thirsty",

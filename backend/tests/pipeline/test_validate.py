@@ -13,7 +13,7 @@ KW = {"coca-cola", "beer", "taylor swift"}
 def entry(**kw) -> ContentEntry:
     base = dict(content_key="a1.food.rice.noun", headword="rice", pos="noun", ipa="/raɪs/", meaning_vi="cơm",
                 definition_en="white grains that people cook and eat", example_en="We eat rice for lunch every day.",
-                example_vi="Chúng tôi ăn cơm mỗi trưa.", collocations=["cook rice", "a bowl of rice"], image_keyword="bowl of rice")
+                example_vi="Nhà mình ăn cơm mỗi trưa.", collocations=["cook rice", "a bowl of rice"], image_keyword="bowl of rice")
     base.update(kw)
     return ContentEntry(**base)
 
@@ -122,3 +122,10 @@ def test_phrase_related_phrases():
     assert flag == "phrase_related_repeats_headword"
     # Chứa một phần (không nguyên văn) thì được
     assert validate.rule_collocations(entry(**hungry, collocations=["I'm not hungry"])) is None
+
+
+def test_meaning_vi_pronoun():
+    assert validate.rule_meaning_pronoun(entry(meaning_vi="đói rồi")) is None
+    assert validate.rule_meaning_pronoun(entry(meaning_vi="tôi đói rồi")) == ("meaning_vi_pronoun", "tôi đói rồi")
+    assert validate.rule_meaning_pronoun(entry(meaning_vi="Tôi tên là")) is not None
+    assert validate.rule_meaning_pronoun(entry(meaning_vi="tối nay")) is None  # "tối" ≠ "tôi"

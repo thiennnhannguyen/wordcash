@@ -3,6 +3,7 @@ Bước 04 — kiểm tra tự động nội dung (gọi từ data_pipeline/04_v
 
 Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
 - example_missing_headword: câu ví dụ không chứa headword hay dạng biến đổi (số nhiều, chia thì… — lib/morph.py);
+- meaning_vi_pronoun: nghĩa tiếng Việt chứa "tôi" (nghĩa tránh đại từ khi có thể: "đói rồi", "chăm sóc"; câu ví dụ dùng "mình");
 - meaning_empty / meaning_too_long / definition_too_long / example_length: độ dài vượt giới hạn trong config;
 - hard_words: câu ví dụ có từ ngoài danh sách trắng (từ A1–A2 của các nguồn đã nhập + từ chức năng + tên riêng thông dụng +
   từ đời sống Việt Nam trong vn_context_allowlist.txt + headword của cấp đang soạn), kèm danh sách từ;
@@ -36,6 +37,7 @@ ALLOWED_EXAMPLE_LEVELS = {"A1": ["A1", "A2"], "A2": ["A1", "A2", "B1"], "B1": ["
 FLAG_HELP = {
     "example_missing_headword": "Câu ví dụ không chứa từ này (kể cả dạng số nhiều / chia thì).",
     "meaning_empty": "Chưa có nghĩa tiếng Việt.",
+    "meaning_vi_pronoun": "Nghĩa tiếng Việt có \"tôi\" — bỏ đại từ khi được (\"đói rồi\"), câu ví dụ dùng \"mình\".",
     "meaning_too_long": f"Nghĩa tiếng Việt dài hơn {config.MEANING_VI_MAX_WORDS} từ.",
     "definition_too_long": f"Định nghĩa tiếng Anh dài hơn {config.DEFINITION_EN_MAX_WORDS} từ.",
     "example_length": f"Câu ví dụ phải có {config.EXAMPLE_EN_MIN_WORDS}–{config.EXAMPLE_EN_MAX_WORDS} từ.",
@@ -77,6 +79,15 @@ def rule_meaning(e: ContentEntry):
         return "meaning_empty", ""
     if len(words(e.meaning_vi)) > config.MEANING_VI_MAX_WORDS:
         return "meaning_too_long", f"{len(words(e.meaning_vi))} từ"
+
+
+VI_PRONOUNS_IN_MEANING = {"tôi"}
+
+
+def rule_meaning_pronoun(e: ContentEntry):
+    found = [w for w in re.findall(r"\w+", e.meaning_vi.lower()) if w in VI_PRONOUNS_IN_MEANING]
+    if found:
+        return "meaning_vi_pronoun", e.meaning_vi
 
 
 def rule_definition_length(e: ContentEntry):
@@ -153,7 +164,7 @@ def rule_collocations(e: ContentEntry):
 
 def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str], vn: set[str] | None = None) -> list[tuple[str, str]]:
     vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST) if vn is None else vn
-    found = [rule_example_contains_headword(e), rule_meaning(e), rule_definition_length(e), rule_example_length(e),
+    found = [rule_example_contains_headword(e), rule_meaning(e), rule_meaning_pronoun(e), rule_definition_length(e), rule_example_length(e),
              rule_hard_words(e, whitelist), rule_vn_context(e, vn), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e)]
     return [f for f in found if f]
 

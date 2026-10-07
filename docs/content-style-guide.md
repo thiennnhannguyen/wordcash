@@ -30,13 +30,16 @@ Mỗi mục là **một nghĩa chính**, và đó phải là nghĩa hợp với 
 
 Viết nghĩa tự nhiên, ngắn (tối đa 6 từ), đúng cách người Việt nói. Không dịch máy, không kèm chú thích dài hay ngoặc giải
 thích. Danh từ chỉ đồ vật có thể dùng loại từ quen thuộc ("quả", "cái", "con") khi người Việt thường nói như vậy.
+Tránh đại từ khi có thể: cụm `I'm hungry` → "đói rồi", không phải "tôi đói rồi" (cờ `meaning_vi_pronoun` khi có "tôi").
 
 | | Ví dụ |
 |---|---|
 | ĐÚNG | `breakfast` → "bữa sáng" |
 | SAI | `breakfast` → "bữa ăn đầu tiên trong ngày (thường vào buổi sáng)" |
-| ĐÚNG | `excuse me` → "xin lỗi (cho tôi hỏi)" — chấp nhận ngoặc ngắn khi cần phân biệt cách dùng |
+| ĐÚNG | `excuse me` → "xin lỗi (cho hỏi)" — chấp nhận ngoặc ngắn khi cần phân biệt cách dùng |
 | SAI | `excuse me` → "miễn thứ cho tôi" (dịch máy, không ai nói) |
+| ĐÚNG | `I'm hungry` → "đói rồi" |
+| SAI | `I'm hungry` → "tôi đói rồi" (thừa đại từ) |
 | ĐÚNG | `busy` → "bận" |
 | SAI | `busy` → "bận rộn, nhiều việc, không rảnh" (liệt kê nhiều nghĩa) |
 
@@ -60,11 +63,12 @@ Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword.
 - Tránh tên thật và người nổi tiếng; dùng tên phổ biến (Lan, Nam, Minh, Mai) hoặc "my mom", "my friend".
 - Không thương hiệu, rượu bia, thuốc lá, bạo lực, tôn giáo, chính trị; không định kiến giới tính, vùng miền, nghề nghiệp,
   ngoại hình.
-- `example_vi` dịch tự nhiên, không dịch từng chữ.
+- `example_vi` dịch tự nhiên, không dịch từng chữ. Ngôi thứ nhất thống nhất dùng **"mình"** ("Mẹ mình…", "Mình đói rồi."),
+  không dùng "tôi", "tớ".
 
 | | Ví dụ |
 |---|---|
-| ĐÚNG | `market` → "My mom buys vegetables at the market." / "Mẹ tôi mua rau ở chợ." |
+| ĐÚNG | `market` → "My mom buys vegetables at the market." / "Mẹ mình mua rau ở chợ." |
 | SAI | `market` → "The market was crowded because of the festival." (từ khó, thì quá khứ không cần) |
 | ĐÚNG | `motorbike` → "Nam goes to school by motorbike." |
 | SAI | `motorbike` → "He drives a Honda motorbike." (thương hiệu) |
@@ -115,6 +119,7 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 - ONE card = ONE main meaning, the meaning that matches the topic. Right: "orange" in Food → "quả cam". Wrong: "quả cam; màu cam".
 - meaning_vi: natural, short Vietnamese (max 6 words), the way Vietnamese people really say it; no machine translation,
   no long notes. Right: "breakfast" → "bữa sáng". Wrong: "bữa ăn đầu tiên trong ngày (thường vào buổi sáng)".
+  Avoid pronouns when possible: "I'm hungry" → "đói rồi" (Wrong: "tôi đói rồi").
 - definition_en: only A1–A2 words, max 12 words, never use the headword. Right: "kitchen" → "the room where you cook food".
 - example_en: 5–12 words at the target level, contains the headword or its inflected form, mostly present simple, everyday
   life in Vietnam (market, motorbike, pho, Tet, school, family). Right: "My mom buys vegetables at the market."
@@ -126,7 +131,8 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
   or "my mom", "my friend".
 - No alcohol, smoking, violence, religion, politics; no stereotypes about gender, regions, jobs or looks
   (Wrong: "Women always cook for the family.", "My dad drinks beer every night.").
-- example_vi: natural Vietnamese, not word-for-word.
+- example_vi: natural Vietnamese, not word-for-word; first person is always "mình" (never "tôi", "tớ").
+  Right: "Mẹ mình mua rau ở chợ." Wrong: "Mẹ tôi mua rau ở chợ."
 - Fixed phrases (pos "phrase"): 2–4 words really used in conversation; meaning_vi is how Vietnamese people say the same
   thing (Right: "see you later" → "hẹn gặp lại"; Wrong: "nhìn thấy bạn muộn hơn").
 - mnemonic_vi: optional, max 20 words, sound or image based, never vulgar or mocking anyone; "" if nothing good.
