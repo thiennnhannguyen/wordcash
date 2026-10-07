@@ -1,10 +1,11 @@
 /*
  * Thang rank: 8 huy hiệu nối bằng một đường; rank đã qua có màu, rank hiện tại phóng to và phát sáng, rank sau còn xám.
  * Thanh tiến độ tới rank tiếp theo. Khi rank lung lay: huy hiệu nứt có viền hồng nhấp nháy, banner đếm ngược
- * "Còn … · Cần gỡ lại … từ" và nút "ÔN NGAY" (hạn chót do server trả). Mobile: thang cuộn ngang, tự cuộn tới rank hiện tại.
+ * "Còn … · Cần gỡ lại … từ" và nút "ÔN NGAY" (đếm ngược từ số giây server trả, không dùng giờ máy). Mobile: thang cuộn ngang,
+ * tự cuộn tới rank hiện tại. Mốc số từ của từng rank đọc từ luật server (GET /public/stats); chưa tải xong thì ẩn con số.
  */
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Lightning, Warning } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
@@ -14,6 +15,8 @@ import { RANKS, RANK_BY_KEY } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
 import RankEmblem from '../../components/ui/RankEmblem'
 import useCountdown from '../../hooks/useCountdown'
+import { Skeleton } from '../../components/ui/DataState'
+import { rankMin, useRules } from '../../store/rulesStore'
 
 function ClockBox({ value, label }) {
   return (
@@ -28,7 +31,8 @@ function ClockBox({ value, label }) {
 
 function ShakyBanner({ shaky, rankName }) {
   const navigate = useNavigate()
-  const t = useCountdown(shaky.deadline)
+  const [deadline] = useState(() => Date.now() + shaky.secondsLeft * 1000)
+  const t = useCountdown(deadline)
   return (
     <div className="flex flex-col gap-4 rounded-card border-thick border-danger bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))] p-4 md:flex-row md:items-center md:gap-6 md:p-5">
       <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -60,9 +64,11 @@ function ShakyBanner({ shaky, rankName }) {
 export default function RankLadder({ rank, masteredWords, shaky }) {
   const scrollRef = useRef(null)
   const currentRef = useRef(null)
+  const { rules } = useRules()
   const index = RANKS.findIndex((r) => r.key === rank)
   const next = RANKS[index + 1]
   const current = RANK_BY_KEY[rank]
+  const nextMin = next ? rankMin(rules, next.key) : null
 
   // Mobile: cuộn tới rank hiện tại
   useEffect(() => {
@@ -71,7 +77,7 @@ export default function RankLadder({ rank, masteredWords, shaky }) {
     if (box && el) box.scrollLeft = el.offsetLeft - box.clientWidth / 2 + el.clientWidth / 2
   }, [rank])
 
-  const goal = shaky ? { name: current.name, target: shaky.threshold } : next ? { name: next.name, target: next.min } : null
+  const goal = shaky ? { name: current.name, target: shaky.threshold } : next && nextMin != null ? { name: next.name, target: nextMin } : null
   const ratio = goal ? Math.min(masteredWords / goal.target, 1) : 1
 
   return (
@@ -96,7 +102,11 @@ export default function RankLadder({ rank, masteredWords, shaky }) {
                   <RankEmblem rank={r.key} state={state} className={isCurrent ? 'size-16 md:size-20' : 'size-10 md:size-13'} />
                 </span>
                 <span className={cx('text-center font-display text-[13px] font-bold uppercase leading-tight', i > index ? 'text-muted' : 'text-ink', isCurrent && 'text-sm')}>{r.name}</span>
-                <span className="font-num text-[13px] text-muted">{formatNumber(r.min)}</span>
+                {rules ? (
+                  <span className="font-num text-[13px] text-muted">{formatNumber(rankMin(rules, r.key))}</span>
+                ) : (
+                  <Skeleton className="h-4 w-10" />
+                )}
               </li>
             )
           })}

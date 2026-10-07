@@ -2,12 +2,13 @@
  * Phần đầu Hồ sơ: ảnh bìa là dải màu theo rank hiện tại có họa tiết kim cương nhỏ, linh vật đại diện cỡ lớn (khung độ hiếm)
  * đứng lấn ra khỏi ảnh bìa, tên, @handle, ngày tham gia, huy hiệu rank lớn kèm số từ đã thuộc,
  * hàng viên chỉ số (streak, streak cao nhất, cấp hiện tại) và các nút hành động theo chế độ:
- * của tôi (Chỉnh sửa, Chia sẻ, Tải thẻ chứng nhận, cài đặt) hoặc người khác (THÁCH ĐẤU, Kết bạn, thành tích đối đầu).
+ * của tôi (Chỉnh sửa, Chia sẻ, Tải thẻ chứng nhận) hoặc người khác (THÁCH ĐẤU, Kết bạn: vô hiệu, nhãn "Sắp ra mắt" vì chưa có
+ * Đấu Trường và hệ thống bạn bè). Ngày tham gia chỉ có trên hồ sơ của mình (không nằm trong phần công khai).
  * Mobile: ảnh bìa thấp hơn, linh vật và tên căn giữa.
  */
 
-import { Certificate, CheckFat, Fire, GearSix, PencilSimple, ShareNetwork, Sword, Trophy, UserPlus } from '@phosphor-icons/react'
-import Button, { IconButton } from '../../components/ui/Button'
+import { Certificate, Fire, PencilSimple, ShareNetwork, Sword, Trophy, UserPlus } from '@phosphor-icons/react'
+import Button from '../../components/ui/Button'
 import Icon from '../../components/ui/Icon'
 import LevelTag from '../../components/ui/LevelTag'
 import MascotCard from '../../components/collection/MascotCard'
@@ -57,35 +58,36 @@ function joinedLabel(iso) {
   return `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
 }
 
-export default function ProfileHeader({ profile, mascot, onEdit, onShare, onCertificate, onSettings, onChallenge, onFriend, friendState }) {
+function Soon({ children }) {
+  return (
+    <span className="relative inline-flex min-w-0 flex-1 sm:flex-none">
+      {children}
+      <span className="absolute -right-2 -top-3 rotate-6 rounded-pill border-2 border-line bg-gold px-2 py-0.5 font-display text-[13px] font-bold uppercase shadow-hard-sm">
+        Sắp ra mắt
+      </span>
+    </span>
+  )
+}
+
+export default function ProfileHeader({ profile, mascot, onEdit, onShare, onCertificate }) {
   const rank = RANK_BY_KEY[profile.rank]
   const shaky = Boolean(profile.shaky)
 
   return (
     <section className="relative rounded-panel border-thick border-line bg-surface shadow-hard-lg">
-      <Cover rank={profile.rank}>
-        {profile.isMe && (
-          <IconButton icon={GearSix} label="Cài đặt" size="sm" onClick={onSettings} className="absolute right-3 top-3 md:right-5 md:top-5" />
-        )}
-        {!profile.isMe && profile.headToHead && (
-          <span className="absolute right-3 top-3 inline-flex h-10 items-center gap-2 rounded-pill max-md:hidden border-thick border-line bg-surface px-3.5 font-display text-sm font-bold uppercase tracking-wide shadow-hard-sm md:right-5 md:top-5">
-            Đối đầu
-            <span className="font-num text-primary">{profile.headToHead.me}</span>–<span className="font-num text-orange">{profile.headToHead.them}</span>
-          </span>
-        )}
-      </Cover>
+      <Cover rank={profile.rank} />
 
       <div className="flex flex-col gap-5 px-4 pb-5 md:px-8 md:pb-8">
         <div className="flex flex-col items-center gap-4 md:flex-row md:items-end md:gap-7">
           {/* Linh vật đại diện lấn ra khỏi ảnh bìa */}
           <div className="relative z-10 -mt-24 w-[128px] shrink-0 -rotate-3 md:-mt-32 md:w-[168px]">
-            <MascotCard rarity={mascot.rarity} name={mascot.name} number={mascot.number} art={<MascotArt mascot={mascot} />} holo={mascot.rarity === 'legendary'} interactive />
+            <MascotCard rarity={mascot.rarity} name={mascot.name ?? 'Chưa chọn'} number={mascot.number} art={<MascotArt mascot={mascot} />} holo={mascot.rarity === 'legendary'} interactive />
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center md:items-start md:pb-1 md:text-left">
             <h1 className="font-heading text-[34px] font-black leading-none md:text-[48px]">{profile.name}</h1>
             <p className="font-display text-base font-bold text-muted">@{profile.handle}</p>
-            <p className="text-caption font-medium text-muted">Tham gia {joinedLabel(profile.joined)}</p>
+            {profile.joined && <p className="text-caption font-medium text-muted">Tham gia {joinedLabel(profile.joined)}</p>}
             <div className="mt-3 flex w-full flex-wrap justify-center gap-2 md:justify-start">
               <StatChip icon={Fire} color="orange">
                 Streak <span className="font-num">{profile.streak}</span> ngày
@@ -93,14 +95,11 @@ export default function ProfileHeader({ profile, mascot, onEdit, onShare, onCert
               <StatChip icon={Trophy} color="gold">
                 Cao nhất <span className="font-num">{profile.bestStreak}</span>
               </StatChip>
-              <span className="inline-flex h-10 items-center gap-2 rounded-pill border-thick border-line bg-surface pl-1.5 pr-3.5 shadow-hard-sm">
-                <LevelTag level={profile.level} size="sm" />
-                <span className="font-display text-sm font-bold uppercase tracking-wide">Cấp hiện tại</span>
-              </span>
-              {!profile.isMe && profile.headToHead && (
-                <StatChip icon={Sword} color="primary" className="md:hidden">
-                  Đối đầu <span className="font-num">{profile.headToHead.me}–{profile.headToHead.them}</span>
-                </StatChip>
+              {profile.level && (
+                <span className="inline-flex h-10 items-center gap-2 rounded-pill border-thick border-line bg-surface pl-1.5 pr-3.5 shadow-hard-sm">
+                  <LevelTag level={profile.level} size="sm" />
+                  <span className="font-display text-sm font-bold uppercase tracking-wide">Cấp hiện tại</span>
+                </span>
               )}
             </div>
           </div>
@@ -135,23 +134,17 @@ export default function ProfileHeader({ profile, mascot, onEdit, onShare, onCert
               </Button>
             </div>
           ) : (
-            <div className="flex w-full gap-2 sm:w-auto sm:gap-3">
-              <Button size="lg" variant="orange" icon={Sword} onClick={onChallenge} className="min-w-0 flex-1 whitespace-nowrap px-3 text-lg sm:flex-none sm:px-10 sm:text-xl">
-                Thách đấu
-              </Button>
-              {friendState === 'friends' ? (
-                <Button size="lg" variant="accent" icon={CheckFat} disabled className="px-5 disabled:opacity-100">
-                  Bạn bè
+            <div className="flex w-full gap-3 sm:w-auto sm:gap-4">
+              <Soon>
+                <Button size="lg" variant="orange" icon={Sword} disabled className="w-full whitespace-nowrap px-3 text-lg sm:px-10 sm:text-xl">
+                  Thách đấu
                 </Button>
-              ) : friendState === 'pending' ? (
-                <Button size="lg" variant="secondary" icon={CheckFat} disabled className="whitespace-nowrap px-3 text-base disabled:opacity-80 sm:px-5">
-                  Đã gửi lời mời
-                </Button>
-              ) : (
-                <Button size="lg" variant="secondary" icon={UserPlus} onClick={onFriend} className="whitespace-nowrap px-3 text-base sm:px-5">
+              </Soon>
+              <Soon>
+                <Button size="lg" variant="secondary" icon={UserPlus} disabled className="w-full whitespace-nowrap px-3 text-base sm:px-5">
                   Kết bạn
                 </Button>
-              )}
+              </Soon>
             </div>
           )}
         </div>
