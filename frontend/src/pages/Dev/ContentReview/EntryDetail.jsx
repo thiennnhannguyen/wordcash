@@ -1,22 +1,26 @@
 /*
  * Khung chi tiết một mục trên trang duyệt: mọi trường sửa trực tiếp, loa đọc thử (Web Speech API, en-US), các cờ kèm giải thích,
- * câu hỏi mẫu mức 1–4, nút AI viết lại từng trường, ghi chú duyệt. Thanh hành động: Duyệt (A), Từ chối (R, bắt buộc lý do),
+ * câu hỏi mẫu mức 1–4, viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
+ * đã xử lý thì bản cũ / bản mới hiện cạnh nhau ngay dưới trường để chọn), ghi chú duyệt. Thanh hành động: Duyệt (A), Từ chối (R, bắt buộc lý do),
  * Bỏ qua (S), Mục trước (J), Mục sau (K), Lưu (khi có thay đổi chưa lưu).
  */
 
 import { useEffect, useState } from 'react'
-import { ArrowLeft, ArrowRight, CheckCircle, FloppyDisk, MagicWand, SkipForward, SpeakerHigh, Warning, XCircle } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, CheckCircle, FloppyDisk, HourglassMedium, MagicWand, PaperPlaneTilt, SkipForward, SpeakerHigh, Warning, XCircle } from '@phosphor-icons/react'
 import Button from '../../../components/ui/Button'
 import Icon from '../../../components/ui/Icon'
 import { speak } from '../../../utils/speech'
 import cx from '../../../utils/cx'
 import { FIELDS, STATUS_LABEL, STATUS_TONE, changedFields, fromForm, toForm } from './fields'
-import RewriteModal from './RewriteModal'
+import RewriteModal, { VersionCompare } from './RewriteModal'
 import SampleQuestions from './SampleQuestions'
 
 const box = 'w-full rounded-btn border-thick border-line bg-surface px-3 py-2 text-[15px] text-ink shadow-hard outline-none focus:border-primary'
 
-export default function EntryDetail({ entry, flagHelp, infoFlags = [], level, topic, busy, onSave, onApprove, onReject, onSkip, onPrev, onNext, saveRef }) {
+export default function EntryDetail({
+  entry, flagHelp, infoFlags = [], level, topic, busy, onSave, onApprove, onReject, onSkip, onPrev, onNext, saveRef,
+  queueMode = true, rewrites = [], onRewriteQueued, onResolveRewrite,
+}) {
   const [form, setForm] = useState(() => toForm(entry))
   const [note, setNote] = useState(entry.review_note ?? '')
   const [rewrite, setRewrite] = useState(null)
@@ -51,6 +55,9 @@ export default function EntryDetail({ entry, flagHelp, infoFlags = [], level, to
               <span key={f} className="rounded bg-raised px-1.5 text-[13px] font-semibold text-ink" title={flagHelp?.[f]}>{f}</span>
             ))}
             {entry.ipa_unverified && <span className="rounded bg-gold px-1.5 text-[13px] font-semibold text-ink">IPA chưa xác minh</span>}
+            {rewrites.some((r) => r.status === 'queued') && (
+              <span className="rounded bg-sky/40 px-1.5 text-[13px] font-semibold text-ink">Đang chờ viết lại</span>
+            )}
           </p>
           <p className="mt-1 font-num text-[13px] text-muted">{entry.content_key}</p>
         </div>
@@ -82,37 +89,59 @@ export default function EntryDetail({ entry, flagHelp, infoFlags = [], level, to
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        {FIELDS.map((f) => (
-          <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list') && 'md:col-span-2')}>
-            <div className="flex items-center justify-between gap-2">
-              <label htmlFor={`f-${f.key}`} className="hud-label">
-                {f.label}
-              </label>
-              {f.ai && (
-                <button
-                  type="button"
-                  onClick={() => setRewrite(f)}
-                  className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[13px] font-semibold text-primary hover:bg-raised"
-                >
-                  <Icon icon={MagicWand} size={16} color="primary" /> Nhờ AI viết lại
-                </button>
+        {FIELDS.map((f) => {
+          const pending = rewrites.find((r) => r.field === f.key)
+          return (
+            <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list' || pending) && 'md:col-span-2')}>
+              <div className="flex items-center justify-between gap-2">
+                <label htmlFor={`f-${f.key}`} className="hud-label">
+                  {f.label}
+                </label>
+                {pending?.status === 'queued' ? (
+                  <span className="inline-flex min-h-11 items-center gap-1 px-2 text-[13px] font-semibold text-muted">
+                    <Icon icon={HourglassMedium} size={16} color="sky" /> Đang chờ viết lại
+                  </span>
+                ) : f.ai && !pending && (
+                  <button
+                    type="button"
+                    onClick={() => setRewrite(f)}
+                    className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[13px] font-semibold text-primary hover:bg-raised"
+                  >
+                    <Icon icon={queueMode ? PaperPlaneTilt : MagicWand} size={16} color="primary" />
+                    {queueMode ? 'Gửi yêu cầu viết lại' : 'Nhờ AI viết lại'}
+                  </button>
+                )}
+              </div>
+              {f.kind === 'text' || f.kind === 'list' ? (
+                <textarea id={`f-${f.key}`} rows={f.kind === 'list' ? 3 : 2} value={form[f.key]} onChange={set(f.key)} className={box} />
+              ) : (
+                <input
+                  id={`f-${f.key}`}
+                  type={f.kind === 'number' ? 'number' : 'text'}
+                  min={f.kind === 'number' ? 1 : undefined}
+                  max={f.kind === 'number' ? 5 : undefined}
+                  value={form[f.key]}
+                  onChange={set(f.key)}
+                  className={cx(box, 'h-11')}
+                />
+              )}
+              {pending?.status === 'ready' && (
+                <div className="mt-1 flex flex-col gap-2 rounded-card border-2 border-line bg-surface p-3" aria-label={`Bản viết lại: ${f.label}`}>
+                  {pending.note && <p className="text-[13px] text-muted">Ghi chú: {pending.note}</p>}
+                  <VersionCompare oldValue={entry[f.key]} newValue={pending.new} />
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Button size="sm" variant="secondary" disabled={busy} onClick={() => onResolveRewrite(pending, false)}>
+                      Giữ bản cũ
+                    </Button>
+                    <Button size="sm" disabled={busy} onClick={() => onResolveRewrite(pending, true)}>
+                      Dùng bản mới
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
-            {f.kind === 'text' || f.kind === 'list' ? (
-              <textarea id={`f-${f.key}`} rows={f.kind === 'list' ? 3 : 2} value={form[f.key]} onChange={set(f.key)} className={box} />
-            ) : (
-              <input
-                id={`f-${f.key}`}
-                type={f.kind === 'number' ? 'number' : 'text'}
-                min={f.kind === 'number' ? 1 : undefined}
-                max={f.kind === 'number' ? 5 : undefined}
-                value={form[f.key]}
-                onChange={set(f.key)}
-                className={cx(box, 'h-11')}
-              />
-            )}
-          </div>
-        ))}
+            )
+        })}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -157,6 +186,11 @@ export default function EntryDetail({ entry, flagHelp, infoFlags = [], level, to
         entryKey={entry.content_key}
         field={rewrite?.key}
         label={rewrite?.label}
+        queueMode={queueMode}
+        onQueued={(item) => {
+          onRewriteQueued(item)
+          setRewrite(null)
+        }}
         onPick={(value) => {
           setForm((f) => ({ ...f, [rewrite.key]: Array.isArray(value) ? value.join('\n') : value }))
           setRewrite(null)

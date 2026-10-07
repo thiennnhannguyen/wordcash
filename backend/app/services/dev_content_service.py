@@ -7,7 +7,10 @@ Công cụ duyệt nội dung kho từ (CHỈ dev; router api/v1/routers/dev_con
 - Duyệt / Từ chối ghi `reviewed_at` (giờ thật) và `review_note`; Từ chối bắt buộc có lý do;
 - câu hỏi mẫu mức 1–4 sinh bằng services/question_builder.py với đáp án nhiễu lấy trong cùng chủ đề (như người học sẽ thấy;
   mức 2 dùng âm thanh giả để người duyệt xem được đáp án nhiễu);
-- "Nhờ AI viết lại trường này": gọi AI cho riêng một trường kèm ghi chú, trả bản cũ và bản mới, KHÔNG tự lưu.
+- Viết lại một trường (data_pipeline/lib/rewrite.py): chế độ agent (AI_PROVIDER mặc định) → "Gửi yêu cầu viết lại" ghi vào
+  work/rewrite_queue.json, mục hiện "Đang chờ viết lại"; sau `pipeline rewrite --ingest` yêu cầu có bản mới, người duyệt chọn
+  bản cũ / bản mới (`resolve_rewrite`, chọn bản mới mới ghi file). AI_PROVIDER=anthropic → gọi AI ngay, trả bản cũ và bản
+  mới, KHÔNG tự lưu.
 """
 
 import asyncio
@@ -18,18 +21,22 @@ from app.core import clock
 from app.core.errors import AppError
 from app.services import question_builder as qb
 from data_pipeline import config as pconfig
-from data_pipeline.lib import content, prompts, validate
+from data_pipeline.lib import content, rewrite, validate
 from data_pipeline.lib.ai import AIError, AIJsonError, call_json
 from data_pipeline.lib.schemas import ContentEntry, RewriteItem, TopicFile
 
 CONTENT_ROOT: Path = pconfig.CONTENT  # test đổi sang thư mục tạm
 PROCESSED: Path = pconfig.PROCESSED
+WORK_ROOT: Path = pconfig.WORK
 EDITABLE = ("headword", "pos", "ipa", "meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family",
             "synonyms", "mnemonic_vi", "image_keyword", "commonness", "basic_communication", "subgroup", "rank_in_topic")
-REWRITABLE = ("meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family", "synonyms",
-              "mnemonic_vi", "image_keyword")
-REWRITE_V = 1
+REWRITABLE = rewrite.REWRITABLE
 _lock = asyncio.Lock()
+
+
+def ai_provider() -> str:
+    """AI_PROVIDER (mặc định agent). Test thay hàm này."""
+    return pconfig.ai_provider()
 
 
 def ai_client():
@@ -78,7 +85,8 @@ def list_levels() -> list[dict]:
 
 def get_topic(level: str, code: str) -> dict:
     topic = _load(level, code)
-    return {**content.dump(topic), "summary": summary(topic), "flag_help": validate.FLAG_HELP, "info_flags": sorted(validate.INFO_FLAGS)}
+    return {**content.dump(topic), "summary": summary(topic), "flag_help": validate.FLAG_HELP, "info_flags": sorted(validate.INFO_FLAGS),
+            "ai_provider": ai_provider(), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT)}
 
 
 async def _save_and_revalidate(topic: TopicFile) -> TopicFile:
@@ -153,12 +161,11 @@ async def rewrite_field(level: str, code: str, key: str, field: str, note: str) 
         raise AppError("CONTENT_FIELD_NOT_EDITABLE", details={"field": field})
     topic = _load(level, code)
     entry = _entry(topic, key)
-    system = prompts.load("rewrite_field", REWRITE_V, level=topic.level, topic_title=topic.topic_title, field=field,
-                          meaning_max=str(pconfig.MEANING_VI_MAX_WORDS), definition_max=str(pconfig.DEFINITION_EN_MAX_WORDS),
-                          example_min=str(pconfig.EXAMPLE_EN_MIN_WORDS), example_max=str(pconfig.EXAMPLE_EN_MAX_WORDS))
-    card = entry.model_dump(include={"headword", "pos", "meaning_vi", "definition_en", "example_en", "example_vi", "collocations",
-                                     "word_family", "synonyms", "mnemonic_vi", "image_keyword"})
-    user = f"Card: {card}\nReviewer note: {note.strip() or '(none)'}\nRewrite the field: {field}"
+    if ai_provider() == "agent":
+        async with _lock:
+            item = rewrite.enqueue(topic.level, code, entry, field, note, WORK_ROOT)
+        return {"field": field, "old": getattr(entry, field), "new": None, "queued": True, "request": item}
+    system, user = rewrite.request(topic, entry, field, note)
     try:
         client = ai_client()
         got = await asyncio.to_thread(call_json, client, system, user, RewriteItem, max_tokens=1000)
@@ -166,9 +173,19 @@ async def rewrite_field(level: str, code: str, key: str, field: str, note: str) 
         if isinstance(e, (AIError, AIJsonError)) or "ANTHROPIC" in str(e):
             raise AppError("CONTENT_AI_UNAVAILABLE", details={"reason": str(e)[:200]}) from None
         raise
-    value = got.value
-    if field in ("collocations", "word_family", "synonyms") and isinstance(value, str):
-        value = [v.strip() for v in value.split(",") if v.strip()]
-    if field not in ("collocations", "word_family", "synonyms") and isinstance(value, list):
-        value = " ".join(value)
-    return {"field": field, "old": getattr(entry, field), "new": value}
+    return {"field": field, "old": getattr(entry, field), "new": rewrite.normalize(field, got.value), "queued": False}
+
+
+async def resolve_rewrite(level: str, code: str, request_id: str, accept: bool) -> dict:
+    """Người duyệt chọn bản mới (ghi vào file, chạy lại kiểm tra) hoặc giữ bản cũ cho một yêu cầu viết lại."""
+    item = next((i for i in rewrite.open_for_topic(level, code, WORK_ROOT) if i["id"] == request_id), None)
+    if item is None:
+        raise AppError("CONTENT_NOT_FOUND")
+    if accept and item["status"] != "ready":
+        raise AppError("CONTENT_REWRITE_NOT_READY")
+    result = await update_entry(level, code, item["content_key"], {item["field"]: item["new"]}) if accept else None
+    async with _lock:
+        rewrite.resolve(request_id, accept, WORK_ROOT)
+    topic = _load(level, code)
+    return {"entry": (result or {}).get("entry") or _entry(topic, item["content_key"]).model_dump(mode="json"),
+            "summary": summary(topic), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT)}

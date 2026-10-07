@@ -69,6 +69,7 @@ ERRORS: dict[str, tuple[int, str]] = {
     "CONTENT_REJECT_REASON_REQUIRED": (422, "Từ chối thì phải ghi lý do."),
     "CONTENT_FIELD_NOT_EDITABLE": (422, "Trường này không nhờ AI viết lại được."),
     "CONTENT_AI_UNAVAILABLE": (503, "Chưa gọi được AI (thiếu ANTHROPIC_API_KEY / ANTHROPIC_MODEL hoặc lỗi mạng)."),
+    "CONTENT_REWRITE_NOT_READY": (409, "Yêu cầu viết lại chưa có bản mới (chờ xử lý hàng đợi)."),
     # Mã bổ sung cho các lỗi chung
     "FORBIDDEN": (403, "Bạn không có quyền thực hiện thao tác này."),
     "EMAIL_NOT_VERIFIED": (403, "Bạn cần xác thực email trước."),

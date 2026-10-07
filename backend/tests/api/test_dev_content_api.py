@@ -3,21 +3,23 @@ Công cụ duyệt nội dung (router dev_content, services/dev_content_service.
 - BẢO MẬT: router chỉ được gắn khi ENV=development — không tồn tại ở production, testing, e2e (dựng lại app với từng ENV),
   và app test hiện tại trả 404.
 - Chức năng (app thử chỉ gồm router này, thư mục nội dung tạm): danh sách chủ đề + tiến độ, sửa trường (kiểm lại cờ), duyệt
-  ghi reviewed_at, từ chối bắt buộc lý do, câu hỏi mẫu mức 1–4, nhờ AI viết lại (AI giả; thiếu key → CONTENT_AI_UNAVAILABLE),
-  sửa tên bài; file ghi nguyên tử, định dạng ổn định.
+  ghi reviewed_at, từ chối bắt buộc lý do, câu hỏi mẫu mức 1–4, viết lại một trường (chế độ agent: hàng đợi → gói việc →
+  chọn bản cũ / mới, không gọi AI; AI_PROVIDER=anthropic: AI giả, thiếu key → CONTENT_AI_UNAVAILABLE), sửa tên bài; file ghi nguyên tử, định dạng ổn định.
 """
 
 import importlib
 import json
 
 import httpx
+
 import pytest
 from fastapi import FastAPI
 
 from app.api.deps import get_current_user
 from app.core.errors import register_exception_handlers
 from app.services import dev_content_service as svc
-from data_pipeline.lib import content
+from data_pipeline.lib import content, rewrite
+from data_pipeline.lib.agent import AgentClient
 from data_pipeline.lib.ai import FakeAIClient
 from data_pipeline.lib.schemas import ContentEntry, ContentUnit, TopicFile
 
@@ -61,6 +63,8 @@ async def dev_api(tmp_path, monkeypatch):
     root = tmp_path / "content"
     monkeypatch.setattr(svc, "CONTENT_ROOT", root)
     monkeypatch.setattr(svc, "PROCESSED", tmp_path)  # không có candidates.json: bỏ qua hard_words
+    monkeypatch.setattr(svc, "WORK_ROOT", tmp_path / "work")
+    monkeypatch.setattr(svc, "ai_provider", lambda: "agent")
     topic = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", landmark_key="a1_pho_co", entries=[
         make_entry("rice", "cơm", "We eat rice for lunch every day.", rank_in_topic=1),
         make_entry("egg", "quả trứng", "My mom buys six eggs at the market.", rank_in_topic=2),
@@ -122,10 +126,12 @@ async def test_sample_questions_all_levels(dev_api):
 
 async def test_rewrite_field_with_ai(dev_api, monkeypatch):
     c, _ = dev_api
+    monkeypatch.setattr(svc, "ai_provider", lambda: "anthropic")  # chỉ khi đặt rõ AI_PROVIDER=anthropic
     fake = FakeAIClient(lambda s, u: '{"value": "We cook rice for dinner."}')
     monkeypatch.setattr(svc, "ai_client", lambda: fake)
     res = await c.post(f"{API}/dev/content/A1/food/entries/a1.food.rice.noun/rewrite", json={"field": "example_en", "note": "ngắn hơn"})
-    assert res.json() == {"field": "example_en", "old": "We eat rice for lunch every day.", "new": "We cook rice for dinner."}
+    assert res.json() == {"field": "example_en", "old": "We eat rice for lunch every day.", "new": "We cook rice for dinner.",
+                          "queued": False}
     system, user = fake.calls[0]
     assert "Rewrite only the field \"example_en\"" in system and "ngắn hơn" in user and "ONE card = ONE main meaning" in system
     topic = (await c.get(f"{API}/dev/content/A1/food")).json()
@@ -139,6 +145,37 @@ async def test_rewrite_field_with_ai(dev_api, monkeypatch):
     monkeypatch.setattr(svc, "ai_client", no_key)
     res = await c.post(f"{API}/dev/content/A1/food/entries/a1.food.rice.noun/rewrite", json={"field": "meaning_vi"})
     assert res.status_code == 503 and res.json()["error"]["code"] == "CONTENT_AI_UNAVAILABLE"
+
+
+async def test_rewrite_queue_in_agent_mode(dev_api, tmp_path, monkeypatch):
+    """Chế độ agent: yêu cầu vào hàng đợi (không gọi AI), `pipeline rewrite --emit/--ingest` tạo bản mới, người duyệt chọn."""
+    c, _ = dev_api
+    monkeypatch.setattr(svc, "ai_client", lambda: pytest.fail("chế độ agent không được gọi AI"))
+    url = f"{API}/dev/content/A1/food/entries/a1.food.rice.noun/rewrite"
+    res = (await c.post(url, json={"field": "collocations", "note": "thêm cụm nấu cơm"})).json()
+    assert res["queued"] is True and res["new"] is None and res["request"]["status"] == "queued"
+    rid = res["request"]["id"]
+    topic = (await c.get(f"{API}/dev/content/A1/food")).json()
+    assert topic["ai_provider"] == "agent" and [r["id"] for r in topic["rewrites"]] == [rid]
+    res = await c.post(f"{API}/dev/content/A1/food/rewrites/{rid}", json={"accept": True})
+    assert res.status_code == 409 and res.json()["error"]["code"] == "CONTENT_REWRITE_NOT_READY"
+
+    work = tmp_path / "work"
+    emit = AgentClient("rewrite", root=work)
+    assert rewrite.process(emit, root=work, content_root=svc.CONTENT_ROOT)["waiting"] == 1
+    packet = json.loads((work / "rewrite" / "batch_0001.input.json").read_text())
+    assert "thêm cụm nấu cơm" in packet["user_message"] and packet["output_schema"]["required"] == ["value"]
+    (work / "rewrite" / "batch_0001.output.json").write_text('{"value": ["cook rice", "a bowl of rice"]}')
+    assert rewrite.process(AgentClient("rewrite", replay=True, root=work), root=work, content_root=svc.CONTENT_ROOT)["ready"] == 1
+
+    topic = (await c.get(f"{API}/dev/content/A1/food")).json()
+    assert topic["rewrites"][0]["status"] == "ready" and topic["rewrites"][0]["new"] == ["cook rice", "a bowl of rice"]
+    assert topic["rewrites"][0]["current"] == ["a rice"]
+    res = (await c.post(f"{API}/dev/content/A1/food/rewrites/{rid}", json={"accept": True})).json()
+    assert res["entry"]["collocations"] == ["cook rice", "a bowl of rice"] and res["rewrites"] == []
+    res = (await c.post(url, json={"field": "example_vi"})).json()
+    res = (await c.post(f"{API}/dev/content/A1/food/rewrites/{res['request']['id']}", json={"accept": False})).json()
+    assert res["rewrites"] == [] and res["entry"]["example_vi"] == "câu"  # giữ bản cũ
 
 
 async def test_unit_title_review(dev_api):

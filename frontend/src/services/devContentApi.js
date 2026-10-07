@@ -18,9 +18,16 @@ export const patchEntry = (level, topic, key, patch) =>
 export const fetchSampleQuestions = (level, topic, key) =>
   request({ url: `${base}/${level}/${topic}/entries/${encodeURIComponent(key)}/questions` })
 
-/** AI viết lại MỘT trường; trả {field, old, new}, KHÔNG tự lưu. */
+/**
+ * Viết lại MỘT trường. Chế độ agent (mặc định): yêu cầu vào hàng đợi, trả {queued: true, request}; AI_PROVIDER=anthropic: trả
+ * {field, old, new, queued: false}. Cả hai KHÔNG tự lưu.
+ */
 export const rewriteField = (level, topic, key, field, note) =>
   request({ url: `${base}/${level}/${topic}/entries/${encodeURIComponent(key)}/rewrite`, method: 'POST', data: { field, note } })
+
+/** Chọn bản mới (accept = true, ghi vào file) hoặc giữ bản cũ của một yêu cầu viết lại; trả {entry, summary, rewrites}. */
+export const resolveRewrite = (level, topic, id, accept) =>
+  request({ url: `${base}/${level}/${topic}/rewrites/${encodeURIComponent(id)}`, method: 'POST', data: { accept } })
 
 export const patchUnit = (level, topic, unitKey, patch) =>
   request({ url: `${base}/${level}/${topic}/units/${encodeURIComponent(unitKey)}`, method: 'PATCH', data: patch })

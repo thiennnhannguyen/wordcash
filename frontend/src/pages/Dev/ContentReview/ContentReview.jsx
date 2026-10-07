@@ -3,7 +3,8 @@
  *
  * - Thanh bên: các chủ đề của cấp, mỗi chủ đề "đã duyệt x/y" và số mục có cờ.
  * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ), tìm theo từ, nghĩa, câu ví dụ.
- * - Khung chi tiết (EntryDetail): sửa trường, loa, cờ, câu hỏi mẫu, AI viết lại, Duyệt / Từ chối / Bỏ qua.
+ * - Khung chi tiết (EntryDetail): sửa trường, loa, cờ, câu hỏi mẫu, viết lại một trường (chế độ agent: hàng đợi, mục hiện
+ *   "Đang chờ viết lại"; có bản mới thì chọn bản cũ / mới), Duyệt / Từ chối / Bỏ qua.
  * - Phím tắt (khi không gõ trong ô): A duyệt, R từ chối (hỏi lý do), S bỏ qua, J mục trước, K mục sau.
  * - Tab "Bài học": duyệt tên bài do bước 06 đề xuất.
  * Mọi thay đổi ghi thẳng file backend/content/<cấp>/<chủ-đề>.json qua API; sau mỗi lần lưu backend kiểm lại cờ.
@@ -19,7 +20,7 @@ import Modal from '../../../components/ui/Modal'
 import Select from '../../../components/ui/Select'
 import ProgressBar from '../../../components/ui/ProgressBar'
 import { useToastStore } from '../../../store/toastStore'
-import { fetchLevels, fetchTopic, patchEntry, patchUnit } from '../../../services/devContentApi'
+import { fetchLevels, fetchTopic, patchEntry, patchUnit, resolveRewrite } from '../../../services/devContentApi'
 import cx from '../../../utils/cx'
 import { STATUS_TONE } from './fields'
 import EntryDetail from './EntryDetail'
@@ -136,6 +137,25 @@ export default function ContentReview() {
     return () => window.removeEventListener('keydown', onKey)
   }, [approve, askReject, go, rejecting, tab, entry])
 
+  const rewritesOf = (key) => (data?.rewrites ?? []).filter((r) => r.content_key === key)
+  const onRewriteQueued = (item) => {
+    setData((d) => ({ ...d, rewrites: [...(d.rewrites ?? []).filter((r) => !(r.content_key === item.content_key && r.field === item.field)), item] }))
+    toast('success', 'Đã gửi yêu cầu viết lại', 'Mục ở trạng thái "Đang chờ viết lại" cho tới khi hàng đợi được xử lý.')
+  }
+  const onResolveRewrite = async (item, accept) => {
+    setBusy(true)
+    try {
+      const res = await resolveRewrite(level, activeTopic, item.id, accept)
+      applyResult(res)
+      setData((d) => ({ ...d, rewrites: res.rewrites }))
+      toast('success', accept ? 'Đã dùng bản mới' : 'Đã giữ bản cũ', item.headword)
+    } catch (e) {
+      toast('error', 'Chưa lưu được', e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   const saveUnit = async (unit, patch) => {
     setBusy(true)
     try {
@@ -237,6 +257,11 @@ export default function ContentReview() {
                         <span className="block truncate text-[15px] font-semibold text-ink">{e.headword}</span>
                         <span className="block truncate text-[13px] text-muted">{e.meaning_vi || '—'}</span>
                       </span>
+                      {rewritesOf(e.content_key).length > 0 && (
+                        <span className="rounded-full bg-sky/40 px-2 text-[13px] font-semibold text-ink" title="Có yêu cầu viết lại">
+                          {rewritesOf(e.content_key).some((r) => r.status === 'ready') ? 'mới' : 'chờ'}
+                        </span>
+                      )}
                       {warnings(e, data.info_flags).length > 0 && e.status !== 'rejected' && (
                         <span className="rounded-full bg-gold px-2 text-[13px] font-semibold text-ink">{warnings(e, data.info_flags).length}</span>
                       )}
@@ -261,6 +286,10 @@ export default function ContentReview() {
                   onSkip={() => go(1)}
                   onPrev={() => go(-1)}
                   onNext={() => go(1)}
+                  queueMode={data.ai_provider !== 'anthropic'}
+                  rewrites={rewritesOf(entry.content_key)}
+                  onRewriteQueued={onRewriteQueued}
+                  onResolveRewrite={onResolveRewrite}
                 />
               ) : (
                 <p className="text-[15px] text-muted">{data ? 'Không có mục nào khớp bộ lọc.' : 'Đang tải…'}</p>

@@ -1,4 +1,5 @@
-"""Schema của công cụ duyệt nội dung (chỉ dev): sửa mục, duyệt / từ chối, nhờ AI viết lại một trường, sửa tên bài."""
+"""Schema của công cụ duyệt nội dung (chỉ dev): sửa mục, duyệt / từ chối, yêu cầu viết lại một trường và chọn bản cũ / mới,
+sửa tên bài."""
 
 from typing import Literal
 
@@ -34,6 +35,12 @@ class RewriteIn(BaseModel):
 
     field: str
     note: str = Field(default="", max_length=500)
+
+
+class RewriteResolveIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    accept: bool  # true: dùng bản mới (ghi vào file); false: giữ bản cũ
 
 
 class UnitPatchIn(BaseModel):
