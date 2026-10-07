@@ -29,6 +29,8 @@ EXCLUDE_FUNCTION_WORDS = PIPELINE / "exclude_function_words.txt"
 BR_US_SPELLING = PIPELINE / "br_us_spelling.tsv"
 SENSITIVE_KEYWORDS = PIPELINE / "sensitive_keywords.txt"
 PROPER_NAMES = PIPELINE / "proper_names.txt"
+VN_CONTEXT_ALLOWLIST = PIPELINE / "vn_context_allowlist.txt"  # từ đời sống Việt Nam được phép trong câu ví dụ
+VN_CONTEXT_MAX_PER_EXAMPLE = 1
 
 # Quy mô (quyết định 6)
 TARGET_PER_LEVEL = 800

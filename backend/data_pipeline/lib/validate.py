@@ -5,7 +5,8 @@ Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
 - example_missing_headword: câu ví dụ không chứa headword hay dạng biến đổi (số nhiều, chia thì… — lib/morph.py);
 - meaning_empty / meaning_too_long / definition_too_long / example_length: độ dài vượt giới hạn trong config;
 - hard_words: câu ví dụ có từ ngoài danh sách trắng (từ A1–A2 của các nguồn đã nhập + từ chức năng + tên riêng thông dụng +
-  headword của cấp đang soạn), kèm danh sách từ;
+  từ đời sống Việt Nam trong vn_context_allowlist.txt + headword của cấp đang soạn), kèm danh sách từ;
+- vn_context_overuse: câu ví dụ có hơn VN_CONTEXT_MAX_PER_EXAMPLE từ đời sống Việt Nam (pho, Tet, Hanoi…; so khớp bỏ dấu);
 - ipa_unverified: IPA không lấy được từ CMUdict (AI đề xuất) hoặc trống;
 - sensitive: có từ khóa thương hiệu / người nổi tiếng / chủ đề nhạy cảm (sensitive_keywords.txt);
 - collocation_missing_headword: có cụm đi kèm không chứa headword.
@@ -17,6 +18,7 @@ Quy tắc so sánh nhiều mục (bỏ qua mục rejected):
 """
 
 import re
+import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -38,6 +40,7 @@ FLAG_HELP = {
     "hard_words": "Câu ví dụ có từ ngoài danh sách A1–A2 cho phép.",
     "ipa_unverified": "IPA không có trong CMUdict (AI đề xuất) — kiểm tra lại phát âm.",
     "sensitive": "Có thương hiệu, người nổi tiếng hoặc chủ đề nhạy cảm.",
+    "vn_context_overuse": f"Câu ví dụ có hơn {config.VN_CONTEXT_MAX_PER_EXAMPLE} từ đời sống Việt Nam (pho, Tet, Hanoi…).",
     "collocation_missing_headword": "Có cụm đi kèm không chứa từ này.",
     "duplicate_headword": "Trùng từ + từ loại với mục khác trong cùng cấp.",
     "duplicate_example": "Trùng câu ví dụ với mục khác trong cùng cấp.",
@@ -93,6 +96,34 @@ def rule_hard_words(e: ContentEntry, whitelist: set[str] | None):
         return "hard_words", ", ".join(hard)
 
 
+def plain(text: str) -> str:
+    """Chữ thường, bỏ dấu tiếng Việt (Tết → tet, phở → pho), chỉ giữ chữ cái / số / khoảng trắng."""
+    text = unicodedata.normalize("NFD", (text or "").replace("đ", "d").replace("Đ", "D"))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
+    return " ".join(re.findall(r"[a-z0-9]+", text))
+
+
+def vn_terms(text: str, terms: set[str]) -> list[str]:
+    """Các từ đời sống Việt Nam xuất hiện trong câu (cụm dài khớp trước, không đếm trùng phần: "ha long bay" ≠ "ha long")."""
+    words = plain(text).split()
+    found, i = [], 0
+    ordered = sorted((t.split() for t in terms), key=len, reverse=True)
+    while i < len(words):
+        hit = next((t for t in ordered if words[i:i + len(t)] == t), None)
+        if hit:
+            found.append(" ".join(hit))
+            i += len(hit)
+        else:
+            i += 1
+    return found
+
+
+def rule_vn_context(e: ContentEntry, terms: set[str]):
+    hits = vn_terms(e.example_en, terms)
+    if len(hits) > config.VN_CONTEXT_MAX_PER_EXAMPLE:
+        return "vn_context_overuse", ", ".join(hits)
+
+
 def rule_ipa(e: ContentEntry):
     if e.ipa_unverified or not e.ipa:
         return "ipa_unverified", e.ipa or "trống"
@@ -111,9 +142,10 @@ def rule_collocations(e: ContentEntry):
         return "collocation_missing_headword", "; ".join(bad)
 
 
-def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str]) -> list[tuple[str, str]]:
+def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str], vn: set[str] | None = None) -> list[tuple[str, str]]:
+    vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST) if vn is None else vn
     found = [rule_example_contains_headword(e), rule_meaning(e), rule_definition_length(e), rule_example_length(e),
-             rule_hard_words(e, whitelist), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e)]
+             rule_hard_words(e, whitelist), rule_vn_context(e, vn), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e)]
     return [f for f in found if f]
 
 
@@ -157,6 +189,7 @@ def build_whitelist(level: str, candidates: list[dict] | None, topics: list[Topi
     base = {c["headword"] for c in candidates if allowed_levels & set((c.get("cefr") or {}).values())}
     base |= config.read_word_list(config.EXCLUDE_FUNCTION_WORDS)
     base |= {t for name in config.read_word_list(config.PROPER_NAMES) for t in morph.tokens(name)}
+    base |= {t for term in config.read_word_list(config.VN_CONTEXT_ALLOWLIST) for t in morph.tokens(term)}
     base |= {e.headword for t in topics for e in t.entries if e.status != "rejected"}
     out = set()
     for w in base:
@@ -174,6 +207,7 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
     candidates = read_json(Path(processed) / "candidates.json")
     whitelist = build_whitelist(level, candidates, topics)
     keywords = config.read_word_list(config.SENSITIVE_KEYWORDS)
+    vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST)
     dupes = rule_duplicates(topics)
     by_flag: Counter = Counter()
     by_topic: dict[str, dict] = {}
@@ -182,7 +216,7 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
         for e in t.entries:
             if e.status == "rejected":
                 continue
-            found = entry_rules(e, whitelist=whitelist, keywords=keywords) + dupes.get(e.content_key, [])
+            found = entry_rules(e, whitelist=whitelist, keywords=keywords, vn=vn) + dupes.get(e.content_key, [])
             details = {flag: detail for flag, detail in found}
             e.flags = list(dict.fromkeys([*e.origin_flags, *(f for f, _ in found)]))
             e.flag_details = details

@@ -95,3 +95,17 @@ def test_run_on_files_recomputes_flags_and_reports(tmp_path):
     assert report["by_flag"]["example_missing_headword"] == 1 and report["by_topic"]["food"]["flagged"] == 1  # "phrase" chỉ là thông tin
     assert report["hard_words_checked"] is True
     assert set(validate.FLAG_HELP) >= set(report["by_flag"])  # mọi cờ đều có giải thích cho người duyệt
+
+
+def test_vn_context_allowlist():
+    vn = {"pho", "banh mi", "tet", "hanoi", "ha long bay", "ha long", "motorbike"}
+    assert validate.vn_terms("I eat Phở for breakfast.", vn) == ["pho"]  # so khớp bỏ dấu, không phân biệt hoa thường
+    assert validate.vn_terms("We visit Ha Long Bay at Tết.", vn) == ["ha long bay", "tet"]  # cụm dài khớp trước
+    assert validate.rule_vn_context(entry(example_en="I eat pho for breakfast."), vn) is None
+    flag, detail = validate.rule_vn_context(entry(example_en="In Hanoi, I eat pho and banh mi."), vn)
+    assert flag == "vn_context_overuse" and detail == "hanoi, pho, banh mi"
+    # Từ trong danh sách (file thật) không bị cờ hard_words
+    whitelist = validate.build_whitelist("A1", [], [])
+    assert validate.rule_hard_words(entry(example_en="My dad goes to Hanoi by motorbike."),
+                                    whitelist | {"my", "dad", "go", "goes", "to", "by"}) is None
+    assert "vn_context_overuse" in flags(entry(example_en="We eat banh mi and pho in Hoi An."))

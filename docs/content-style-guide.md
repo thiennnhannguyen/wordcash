@@ -45,7 +45,10 @@ Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword.
 
 - 5–12 từ, trình độ của cấp đang soạn; chứa headword hoặc dạng biến đổi (số nhiều, chia thì).
 - Thì hiện tại đơn là chính; dùng thì khác chỉ khi nghĩa của từ cần (vd. `yesterday`).
-- Ngữ cảnh đời sống Việt Nam: chợ, xe máy, phở, Tết, trường học, gia đình.
+- Ngữ cảnh đời sống Việt Nam: chợ, xe máy, phở, Tết, trường học, gia đình. Từ đời sống Việt Nam được phép (không bị cờ
+  `hard_words`) nằm trong `backend/data_pipeline/vn_context_allowlist.txt` (pho, banh mi, Tet, ao dai, motorbike, Hanoi,
+  Ho Chi Minh City, Ha Long Bay, Hoi An…), viết không dấu kiểu tiếng Anh. **Mỗi câu ví dụ tối đa 1 từ trong danh sách này**
+  (cờ `vn_context_overuse`), để câu vẫn là câu tiếng Anh dễ hiểu.
 - Tránh tên thật và người nổi tiếng; dùng tên phổ biến (Lan, Nam, Minh, Mai) hoặc "my mom", "my friend".
 - Không thương hiệu, rượu bia, thuốc lá, bạo lực, tôn giáo, chính trị; không định kiến giới tính, vùng miền, nghề nghiệp,
   ngoại hình.
@@ -57,6 +60,8 @@ Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword.
 | SAI | `market` → "The market was crowded because of the festival." (từ khó, thì quá khứ không cần) |
 | ĐÚNG | `motorbike` → "Nam goes to school by motorbike." |
 | SAI | `motorbike` → "He drives a Honda motorbike." (thương hiệu) |
+| ĐÚNG | `breakfast` → "I eat pho for breakfast." (1 từ đời sống Việt Nam) |
+| SAI | `breakfast` → "In Hanoi, I eat pho and banh mi for breakfast." (3 từ đời sống Việt Nam) |
 | SAI | `cook` → "Women always cook for the family." (định kiến giới) |
 | SAI | `drink` → "My dad drinks beer every night." (rượu bia) |
 
@@ -97,6 +102,9 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 - example_en: 5–12 words at the target level, contains the headword or its inflected form, mostly present simple, everyday
   life in Vietnam (market, motorbike, pho, Tet, school, family). Right: "My mom buys vegetables at the market."
   Wrong: "The market was crowded because of the festival."
+- Vietnamese-life words allowed in examples, written without accents: pho, banh mi, bun cha, com, Tet, ao dai, motorbike,
+  Hanoi, Ho Chi Minh City, Ha Long Bay, Hoi An, Da Nang, Mekong (full list: vn_context_allowlist.txt). Use AT MOST ONE of
+  them per example. Right: "I eat pho for breakfast." Wrong: "In Hanoi, I eat pho and banh mi for breakfast."
 - No real people, celebrities or brands (Wrong: "He drives a Honda motorbike."). Use common names (Lan, Nam, Minh, Mai)
   or "my mom", "my friend".
 - No alcohol, smoking, violence, religion, politics; no stereotypes about gender, regions, jobs or looks

@@ -1,15 +1,6 @@
-# Tên riêng thông dụng được phép trong câu ví dụ (danh sách trắng của 04_validate). Chữ thường.
-vietnam
+# Tên riêng thông dụng được phép trong câu ví dụ (danh sách trắng của 04_validate). Chữ thường. Địa danh Việt Nam nằm ở
+# vn_context_allowlist.txt.
 vietnamese
-hanoi
-saigon
-ho chi minh city
-da nang
-hue
-hoi an
-sapa
-ha long
-mekong
 english
 monday
 tuesday
