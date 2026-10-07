@@ -1,5 +1,6 @@
 # Từ đời sống Việt Nam được phép trong câu ví dụ (04_validate không gắn cờ hard_words). Mỗi example_en tối đa 1 từ trong
 # danh sách này (cờ vn_context_overuse). Viết không dấu, chữ thường; so khớp bỏ dấu, không phân biệt hoa thường.
+# Đây chỉ là từ ĐƯỢC PHÉP cho câu gần gũi: không bắt buộc dùng, không gắn với chặng / địa danh nào trên bản đồ.
 # Món ăn, đồ uống
 pho
 banh mi

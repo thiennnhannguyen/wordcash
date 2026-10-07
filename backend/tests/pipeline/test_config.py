@@ -1,19 +1,20 @@
 """
-Cấu hình quy trình kho từ (data_pipeline/config.py): 10 chủ đề A1 khớp đúng tên và địa danh trong seeds/seed_landmarks.py,
+Cấu hình quy trình kho từ (data_pipeline/config.py): 10 chủ đề A1 khớp đúng mã chủ đề (topic_code) và tên trong seeds/seed_landmarks.py (địa danh không tham gia),
 tham số quy mô hợp lệ, API key chỉ đọc từ môi trường / backend/.env và không bao giờ lộ trong thông báo lỗi.
 """
 
 import pytest
 
 from data_pipeline import config
+from data_pipeline.lib import prompts, units
 from seeds.seed_landmarks import LANDMARKS
 
 
-def test_a1_topics_match_db_landmarks():
+def test_a1_topics_match_db_topics():
     seeded = LANDMARKS["A1"]["topics"]
     ours = config.topics("A1")
     assert len(ours) == len(seeded) == 10
-    assert [(t.title, t.landmark_key) for t in ours] == [(s["title"], s["landmark_key"]) for s in seeded]
+    assert [(t.code, t.title) for t in ours] == [(s["topic_code"], s["title"]) for s in seeded]
     assert len({t.code for t in ours}) == 10
 
 
@@ -43,3 +44,15 @@ def test_api_key_from_env_file_never_in_error(tmp_path, monkeypatch):
     assert config.anthropic_api_key() == secret and config.anthropic_model() == "claude-test"
     monkeypatch.setenv("ANTHROPIC_API_KEY", "from-env")
     assert config.anthropic_api_key() == "from-env"
+
+
+def test_prompts_never_mention_landmarks():
+    """Địa danh chỉ là trang trí bản đồ: prompt phân loại, soạn nháp, đặt tên bài chỉ dùng tên và mô tả chủ đề."""
+    from data_pipeline.lib import step02, step03
+
+    names = {t[k] for lv in LANDMARKS.values() for t in lv["topics"] for k in ("landmark_key", "landmark_name")}
+    names |= {lv["boss"][k] for lv in LANDMARKS.values() for k in ("landmark_key", "landmark_name")}
+    texts = [step02.classify_prompt("A1")] + [step03.system_prompt("A1", t.code) for t in config.topics("A1")]
+    texts += [prompts.load("unit_titles", units.TITLES_V, level="A1", topic_title=t.title) for t in config.topics("A1")]
+    for text in texts:
+        assert "landmark" not in text.lower() and not [n for n in names if n.lower() in text.lower()]

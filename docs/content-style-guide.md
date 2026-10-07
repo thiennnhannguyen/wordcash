@@ -4,6 +4,11 @@
 (`backend/data_pipeline/prompts/enrich_v1.md`) chèn nguyên khối "Quy tắc cho AI" ở cuối trang này. Sửa khối đó thì prompt
 đổi theo, và cache AI tự hết hiệu lực vì mã băm của prompt đổi.
 
+**Chủ đề quyết định từ vựng, địa danh chỉ là trang trí.** Mỗi chặng trên bản đồ là một chủ đề (greetings, food…); địa danh
+của chặng chỉ để trang trí, không ảnh hưởng việc chọn từ, nghĩa, câu ví dụ hay tên bài. Không viết nội dung "theo địa danh"
+(chặng Chợ Đồng Xuân không bắt buộc câu về chợ). Từ đời sống Việt Nam (`vn_context_allowlist.txt`) chỉ là từ ĐƯỢC PHÉP dùng
+cho câu gần gũi, không bắt buộc, không gắn với chặng nào. Tên bài đặt theo nội dung từ vựng của bài.
+
 Chuẩn tiếng Anh: Anh-Mỹ (en-US). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`.
 
 ## 1. Chọn nghĩa
