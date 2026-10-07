@@ -170,7 +170,7 @@
       "example_vi": "Mình đói rồi. Mình đi ăn phở đi.",
       "collocations": [
         "I'm hungry now",
-        "I'm so hungry"
+        "I'm hungry again"
       ],
       "word_family": [],
       "synonyms": [],
@@ -186,14 +186,9 @@
         "phrase"
       ],
       "flags": [
-        "phrase",
-        "hard_words",
-        "collocation_missing_headword"
+        "phrase"
       ],
-      "flag_details": {
-        "hard_words": "pho",
-        "collocation_missing_headword": "I'm so hungry"
-      },
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

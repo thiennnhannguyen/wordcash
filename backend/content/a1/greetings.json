@@ -51,7 +51,7 @@
       "ipa": "/noʊ/",
       "ipa_unverified": false,
       "meaning_vi": "không",
-      "definition_en": "a word you say when something is not true or you do not want it",
+      "definition_en": "a word you say when you do not agree",
       "example_en": "No, thanks. I am not hungry now.",
       "example_vi": "Không, cảm ơn. Giờ mình chưa đói.",
       "collocations": [
@@ -71,12 +71,8 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "definition_too_long"
-      ],
-      "flag_details": {
-        "definition_too_long": "15 từ"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -297,12 +293,8 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "hard_words"
-      ],
-      "flag_details": {
-        "hard_words": "pho"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

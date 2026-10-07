@@ -17,8 +17,8 @@
       "example_en": "It's hot today. Let's drink some water.",
       "example_vi": "Hôm nay trời nóng. Mình uống chút nước đi.",
       "collocations": [
-        "it's hot today",
-        "it's so hot"
+        "It's hot today",
+        "It's hot outside"
       ],
       "word_family": [],
       "synonyms": [],
@@ -34,12 +34,9 @@
         "phrase"
       ],
       "flags": [
-        "phrase",
-        "collocation_missing_headword"
+        "phrase"
       ],
-      "flag_details": {
-        "collocation_missing_headword": "it's so hot"
-      },
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -58,8 +55,8 @@
       "example_en": "It's cold in Hanoi in January.",
       "example_vi": "Tháng Một ở Hà Nội trời lạnh.",
       "collocations": [
-        "it's cold today",
-        "it's very cold"
+        "It's cold today",
+        "It's cold at night"
       ],
       "word_family": [],
       "synonyms": [],
@@ -75,12 +72,9 @@
         "phrase"
       ],
       "flags": [
-        "phrase",
-        "collocation_missing_headword"
+        "phrase"
       ],
-      "flag_details": {
-        "collocation_missing_headword": "it's very cold"
-      },
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

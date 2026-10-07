@@ -385,12 +385,8 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "hard_words"
-      ],
-      "flag_details": {
-        "hard_words": "motorbike"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
