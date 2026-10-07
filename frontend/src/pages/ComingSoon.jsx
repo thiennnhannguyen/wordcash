@@ -26,7 +26,7 @@ export default function ComingSoon({ title, standalone = false }) {
           </Button>
           {/* Trang Design System chỉ có khi chạy dev */}
           {import.meta.env.DEV && (
-            <Button variant="ghost" onClick={() => navigate('/design-system')}>
+            <Button variant="ghost" onClick={() => navigate('/dev/design-system')}>
               Design System
             </Button>
           )}
