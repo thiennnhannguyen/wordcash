@@ -3,8 +3,10 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
 
 1. Ứng viên: được ít nhất một nguồn gắn đúng cấp (CEFR-J A1); bỏ từ chức năng: theo danh sách (exclude_function_words.txt,
    lý do `function_word`) và theo từ loại chức năng (đại từ, hạn định từ, giới từ, liên từ, modal, trợ động từ — `function_pos`).
+   Từ không hợp giọng cấp A1 (a1_excluded_tone.txt: bạo lực, đáng sợ…) không phân loại, vào `reserve` lý do `tone_a1`.
 2. AI phân loại (prompts/classify_v1.md, theo lô CLASSIFY_BATCH_SIZE, có cache): mỗi từ vào ĐÚNG MỘT chủ đề, kèm độ tự tin,
-   lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN → cờ `needs_topic_review`.
+   lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN (không hợp rõ chủ đề nào) → KHÔNG
+   ép vào chủ đề, vào `reserve` lý do `low_topic_confidence` (giữ chủ đề AI gợi ý để người duyệt đưa lại nếu muốn).
 3. Cụm từ cố định (~PHRASE_RATIO mỗi chủ đề, prompts/phrases_v1.md): `pos = phrase`, cờ `phrase`.
 4. Cân bằng: chủ đề dưới TOPIC_SIZE_MIN → AI đề xuất thêm từ (prompts/suggest_v1.md), cờ `ai_suggested_headword`; chủ đề
    trên TOPIC_SIZE_MAX, hoặc cả cấp vượt TARGET_PER_LEVEL quá 5% → bớt mục ưu tiên thấp nhất của chủ đề đông nhất, đưa vào
@@ -195,6 +197,10 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     chosen, excluded = select_level(candidates, level, function_words)
     if limit:
         chosen = chosen[:limit]
+    tone = config.read_word_list(config.A1_EXCLUDED_TONE) if level == "A1" else set()
+    reserve: list[dict] = [{"headword": c["headword"], "pos": c["pos"], "cefr": c.get("cefr", {}), "sources": c.get("sources", []),
+                            "reserve_reason": "tone_a1"} for c in chosen if c["headword"] in tone]
+    chosen = [c for c in chosen if c["headword"] not in tone]
 
     results = classify(ctx, chosen)
     if ctx.pending:
@@ -202,13 +208,16 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     topics: dict[str, list[dict]] = {t.code: [] for t in config.topics(level)}
     for c in chosen:
         g = results.get((c["headword"], c["pos"]))
-        if g is not None:
+        if g is None:
+            continue
+        if g.confidence < config.TOPIC_CONFIDENCE_MIN:
+            reserve.append({**make_item(c, g), "reserve_reason": "low_topic_confidence"})
+        else:
             topics[g.topic_code].append(make_item(c, g))
 
-    reserve: list[dict] = []
     target_topic = config.TARGET_PER_LEVEL // len(topics)
     if not limit:
-        taken = {i["headword"] for items in topics.values() for i in items} | function_words
+        taken = {i["headword"] for items in topics.values() for i in items} | {r["headword"] for r in reserve} | function_words | tone
         # Danh sách "đã có" gửi AI chụp ở đầu mỗi giai đoạn (không lớn dần trong vòng lặp) để prompt ổn định giữa các lần
         # chạy (chế độ agent: emit / ingest phải ra cùng gói); trùng giữa các chủ đề vẫn được lọc bằng `taken`.
         known = sorted(taken)
@@ -218,7 +227,7 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
             if need > 0:
                 for p in _generated(ctx, "phrases", PHRASES_V, t, need, known, PhraseItem):
                     head = normalize_headword(p.headword)
-                    if not head or head in taken or len(head.split()) < 2:
+                    if not head or head in taken or len(head.split()) < 2 or any(w in tone for w in head.split()):
                         continue
                     taken.add(head)
                     topics[t.code].append({"headword": head, "pos": config.POS_PHRASE, "topic_code": t.code, "topic_confidence": 1.0,
@@ -255,6 +264,7 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     report = {
         "level": level, "limited_to": limit, "candidates_at_level": len(chosen) + len(excluded) if not limit else None,
         "classified": len(results), "excluded": dict(Counter(e["reason"] for e in excluded)),
+        "reserve_reasons": dict(Counter(r["reserve_reason"] for r in reserve)),
         "topics": {code: {"total": len(items), "phrases": sum(i["pos"] == config.POS_PHRASE for i in items),
                           "ai_suggested": sum(i["origin"] == "ai_suggested" for i in items),
                           "needs_topic_review": sum("needs_topic_review" in i["flags"] for i in items)}

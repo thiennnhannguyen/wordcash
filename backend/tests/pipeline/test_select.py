@@ -1,6 +1,6 @@
 """
 Bước 02 (chọn từ và chia chủ đề) với AI giả: lọc đúng cấp và loại từ chức năng, mỗi từ đúng một chủ đề, độ tự tin thấp gắn
-cờ needs_topic_review, cache (chạy lại không gọi AI), mục AI bỏ sót được thử lại rồi ghi failed, thêm cụm từ ~10%, đề xuất
+từ độ tự tin thấp / không hợp giọng A1 vào dự phòng (không ép vào chủ đề), cache (chạy lại không gọi AI), mục AI bỏ sót được thử lại rồi ghi failed, thêm cụm từ ~10%, đề xuất
 thêm từ cho chủ đề thiếu, cân bằng / reserve, thứ tự trong chủ đề. Kèm test lớp gọi AI: thử lại khi JSON sai, không lộ key.
 """
 
@@ -48,15 +48,30 @@ def test_limited_run_classifies_once_and_uses_cache(tmp_path):
     report = step02.run("A1", client, limit=10, processed=tmp_path, cache_root=tmp_path / "cache")
     sel = read_json(tmp_path / "a1_selection.json")
     items = [i for items in sel["topics"].values() for i in items]
-    assert report["classified"] == 10 and len(items) == 10 and report["limited_to"] == 10
-    assert len({(i["headword"], i["pos"]) for i in items}) == 10  # mỗi từ đúng một chủ đề
+    assert report["classified"] == 10 and len(items) == 9 and report["limited_to"] == 10
+    assert len({(i["headword"], i["pos"]) for i in items}) == 9  # mỗi từ đúng một chủ đề
     assert all(i["topic_code"] == fake_ai.TOPIC_OF[i["headword"]] for i in items)
-    assert "needs_topic_review" in next(i for i in items if i["headword"] == "happy")["flags"]
+    # "happy": AI không chắc chủ đề → dự phòng, không ép vào chủ đề
+    assert [(r["headword"], r["reserve_reason"]) for r in sel["reserve"]] == [("happy", "low_topic_confidence")]
+    assert report["reserve_reasons"] == {"low_topic_confidence": 1}
     assert all(i["origin"] == "source" for i in items)  # --limit: không thêm cụm từ / đề xuất
     calls = len(client.calls)
     step02.run("A1", client, limit=10, processed=tmp_path, cache_root=tmp_path / "cache")
     assert len(client.calls) == calls  # lần 2 lấy hết từ cache
     assert step02.estimate("A1", limit=10, processed=tmp_path, cache_root=tmp_path / "cache")["items"] == 0
+
+
+def test_a1_tone_words_go_to_reserve(tmp_path, monkeypatch):
+    tone = tmp_path / "tone.txt"
+    tone.write_text("# thử\nwar\nghost\n", encoding="utf-8")
+    monkeypatch.setattr(config, "A1_EXCLUDED_TONE", tone)
+    write_json(tmp_path / "candidates.json", candidates(["hello", "war", "ghost", "rice"]))
+    client = fake_ai.client()
+    step02.run("A1", client, limit=4, processed=tmp_path, cache_root=tmp_path / "cache")
+    sel = read_json(tmp_path / "a1_selection.json")
+    assert {(r["headword"], r["reserve_reason"]) for r in sel["reserve"]} == {("war", "tone_a1"), ("ghost", "tone_a1")}
+    assert "war" not in client.calls[0][1] and "ghost" not in client.calls[0][1]  # không gửi đi phân loại
+    assert {i["headword"] for items in sel["topics"].values() for i in items} == {"hello", "rice"}
 
 
 def test_missing_and_invalid_answers_are_retried_then_failed(tmp_path):
