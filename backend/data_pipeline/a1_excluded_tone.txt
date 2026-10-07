@@ -1,5 +1,5 @@
 # Từ không hợp giọng A1 (bạo lực, đáng sợ, chất gây nghiện): bước 02 không đưa vào chủ đề, chuyển vào dự phòng với lý do
-# "tone_a1" (người duyệt có thể đưa lại cấp cao hơn). Chữ thường, một từ / cụm mỗi dòng.
+# "tone_a1" (người duyệt có thể đưa lại cấp cao hơn). Chữ thường, một từ / cụm mỗi dòng; lý do khác ghi sau " | ".
 war
 kill
 fight
@@ -27,3 +27,6 @@ beer
 wine
 alcohol
 cigarette
+# Chê ngoại hình (07/10/2026: loại khỏi A1)
+fat | body_shaming
+ugly | body_shaming

@@ -2680,46 +2680,6 @@
       "ai_prompt": "enrich_v2#57fe3e1acde4"
     },
     {
-      "content_key": "a1.family.fat.adjective",
-      "headword": "fat",
-      "pos": "adjective",
-      "entry_type": "word",
-      "ipa": "/fæt/",
-      "ipa_unverified": false,
-      "meaning_vi": "béo, mập",
-      "definition_en": "having a big, round body",
-      "example_en": "Our cat is fat because it eats a lot.",
-      "example_vi": "Con mèo nhà mình béo vì ăn nhiều.",
-      "collocations": [
-        "a fat cat",
-        "get fat"
-      ],
-      "word_family": [],
-      "synonyms": [],
-      "mnemonic_vi": "",
-      "image_keyword": "fat cat",
-      "commonness": 3,
-      "basic_communication": false,
-      "subgroup": "describing people",
-      "rank_in_topic": 71,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [
-        "sensitive"
-      ],
-      "flag_details": {
-        "sensitive": "fat"
-      },
-      "status": "draft",
-      "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#57fe3e1acde4"
-    },
-    {
       "content_key": "a1.family.guy.noun",
       "headword": "guy",
       "pos": "noun",
@@ -2778,6 +2738,81 @@
       "basic_communication": false,
       "subgroup": "describing people",
       "rank_in_topic": 73,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v2#57fe3e1acde4"
+    },
+    {
+      "content_key": "a1.family.life.noun",
+      "headword": "life",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/laɪf/",
+      "ipa_unverified": false,
+      "meaning_vi": "cuộc sống, cuộc đời",
+      "definition_en": "the time when a person is alive, or the way they live",
+      "example_en": "My grandparents have a quiet life in the countryside.",
+      "example_vi": "Ông bà mình sống một cuộc sống yên bình ở quê.",
+      "collocations": [
+        "a happy life",
+        "daily life"
+      ],
+      "word_family": [
+        "live",
+        "lives"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "grandparents in countryside",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "life events",
+      "rank_in_topic": 73,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v2#57fe3e1acde4"
+    },
+    {
+      "content_key": "a1.family.neck.noun",
+      "headword": "neck",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/nɛk/",
+      "ipa_unverified": false,
+      "meaning_vi": "cổ",
+      "definition_en": "the part of the body between your head and shoulders",
+      "example_en": "Wear a scarf around your neck in winter.",
+      "example_vi": "Mùa đông nhớ quàng khăn quanh cổ nhé.",
+      "collocations": [
+        "a long neck",
+        "around your neck"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "scarf around neck",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "body",
+      "rank_in_topic": 75,
       "origin": "source",
       "sources": [
         "cefrj"
@@ -2893,46 +2928,6 @@
       "origin_flags": [],
       "flags": [],
       "flag_details": {},
-      "status": "draft",
-      "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#57fe3e1acde4"
-    },
-    {
-      "content_key": "a1.family.ugly.adjective",
-      "headword": "ugly",
-      "pos": "adjective",
-      "entry_type": "word",
-      "ipa": "/ˈʌɡli/",
-      "ipa_unverified": false,
-      "meaning_vi": "xấu (xí)",
-      "definition_en": "not nice to look at",
-      "example_en": "This old sweater is ugly, but it is warm.",
-      "example_vi": "Cái áo len cũ này xấu nhưng ấm.",
-      "collocations": [
-        "an ugly sweater",
-        "ugly color"
-      ],
-      "word_family": [],
-      "synonyms": [],
-      "mnemonic_vi": "",
-      "image_keyword": "funny old sweater",
-      "commonness": 3,
-      "basic_communication": false,
-      "subgroup": "describing people",
-      "rank_in_topic": 78,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [
-        "sensitive"
-      ],
-      "flag_details": {
-        "sensitive": "ugly"
-      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

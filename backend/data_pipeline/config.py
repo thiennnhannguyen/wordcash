@@ -30,7 +30,7 @@ EXCLUDE_FUNCTION_WORDS = PIPELINE / "exclude_function_words.txt"
 BR_US_SPELLING = PIPELINE / "br_us_spelling.tsv"
 SENSITIVE_KEYWORDS = PIPELINE / "sensitive_keywords.txt"
 PROPER_NAMES = PIPELINE / "proper_names.txt"
-A1_EXCLUDED_TONE = PIPELINE / "a1_excluded_tone.txt"  # bước 02: vào dự phòng, lý do tone_a1
+A1_EXCLUDED_TONE = PIPELINE / "a1_excluded_tone.txt"  # bước 02: vào dự phòng, lý do tone_a1 (hoặc lý do ghi sau " | ")
 VN_CONTEXT_ALLOWLIST = PIPELINE / "vn_context_allowlist.txt"  # từ đời sống Việt Nam được phép trong câu ví dụ
 VN_CONTEXT_MAX_PER_EXAMPLE = 1
 
@@ -151,6 +151,15 @@ def anthropic_model() -> str:
     if not model:
         raise RuntimeError("Thiếu ANTHROPIC_MODEL (tên model Claude, đặt trong backend/.env hoặc biến môi trường).")
     return model
+
+
+def read_reason_list(path: Path, default_reason: str) -> dict[str, str]:
+    """File danh sách "mục | lý do" (lý do tùy chọn, thiếu thì `default_reason`); bỏ dòng trống và chú thích '#'. Chữ thường."""
+    out: dict[str, str] = {}
+    for line in read_word_list(path):
+        word, _, reason = line.partition("|")
+        out[word.strip()] = reason.strip() or default_reason
+    return out
 
 
 def read_word_list(path: Path) -> set[str]:

@@ -3,7 +3,8 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
 
 1. Ứng viên: được ít nhất một nguồn gắn đúng cấp (CEFR-J A1); bỏ từ chức năng: theo danh sách (exclude_function_words.txt,
    lý do `function_word`) và theo từ loại chức năng (đại từ, hạn định từ, giới từ, liên từ, modal, trợ động từ — `function_pos`).
-   Từ không hợp giọng cấp A1 (a1_excluded_tone.txt: bạo lực, đáng sợ…) không phân loại, vào `reserve` lý do `tone_a1`.
+   Từ không hợp giọng cấp A1 (a1_excluded_tone.txt: bạo lực, đáng sợ…; chê ngoại hình) không phân loại, vào `reserve` lý do
+   `tone_a1` hoặc lý do ghi trong file (`fat | body_shaming`).
 2. AI phân loại (prompts/classify_v1.md, theo lô CLASSIFY_BATCH_SIZE, có cache): mỗi từ vào ĐÚNG MỘT chủ đề, kèm độ tự tin,
    lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN (không hợp rõ chủ đề nào) → KHÔNG
    ép vào chủ đề, vào `reserve` lý do `low_topic_confidence` (giữ chủ đề AI gợi ý để người duyệt đưa lại nếu muốn).
@@ -212,9 +213,9 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
     chosen, excluded = select_level(candidates, level, function_words)
     if limit:
         chosen = chosen[:limit]
-    tone = config.read_word_list(config.A1_EXCLUDED_TONE) if level == "A1" else set()
+    tone = config.read_reason_list(config.A1_EXCLUDED_TONE, "tone_a1") if level == "A1" else {}
     reserve: list[dict] = [{"headword": c["headword"], "pos": c["pos"], "cefr": c.get("cefr", {}), "sources": c.get("sources", []),
-                            "reserve_reason": "tone_a1"} for c in chosen if c["headword"] in tone]
+                            "reserve_reason": tone[c["headword"]]} for c in chosen if c["headword"] in tone]
     chosen = [c for c in chosen if c["headword"] not in tone]
 
     results = classify(ctx, chosen)
@@ -232,7 +233,7 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
 
     target_topic = config.TARGET_PER_LEVEL // len(topics)
     if not limit:
-        taken = {i["headword"] for items in topics.values() for i in items} | {r["headword"] for r in reserve} | function_words | tone
+        taken = {i["headword"] for items in topics.values() for i in items} | {r["headword"] for r in reserve} | function_words | set(tone)
         # Danh sách "đã có" gửi AI chụp ở đầu mỗi giai đoạn (không lớn dần trong vòng lặp) để prompt ổn định giữa các lần
         # chạy (chế độ agent: emit / ingest phải ra cùng gói); trùng giữa các chủ đề vẫn được lọc bằng `taken`.
         known = sorted(taken)
