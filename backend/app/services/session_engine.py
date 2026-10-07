@@ -30,6 +30,7 @@ def card(entry: Entry, personal_note: str | None = None) -> dict:
         "entry_id": entry.id,
         "headword": entry.headword,
         "meaning_vi": entry.meaning_vi,
+        "variant_note": entry.variant_note,
         "pos": entry.pos,
         "ipa": entry.ipa,
         "audio_url": entry.audio_url,

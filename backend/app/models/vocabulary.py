@@ -137,6 +137,7 @@ class Entry(Base):
     mnemonic_vi: Mapped[str | None] = mapped_column(Text)
     image_keyword: Mapped[str | None] = mapped_column(String(100))
     ipa_unverified: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
+    variant_note: Mapped[str | None] = mapped_column(String(120))  # ghi chú biến thể Anh-Mỹ, vd. "Mỹ thường dùng: fall"
     collocations: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     word_family: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     synonyms: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))

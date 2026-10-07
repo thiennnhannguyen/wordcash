@@ -5,7 +5,8 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
    lý do `function_word`) và theo từ loại chức năng (đại từ, hạn định từ, giới từ, liên từ, modal, trợ động từ — `function_pos`).
    Từ không hợp giọng cấp A1 (a1_excluded_tone.txt: bạo lực, đáng sợ…; chê ngoại hình) không phân loại, vào `reserve` lý do
    `tone_a1` hoặc lý do ghi trong file (`fat | body_shaming`). Mục trùng nghĩa với mục được giữ (a1_excluded_duplicates.txt,
-   vd. burger — giữ hamburger) cũng vào `reserve`, lý do `duplicate_meaning`.
+   vd. burger — giữ hamburger) cũng vào `reserve`, lý do `duplicate_meaning`. Chuẩn Anh-Mỹ (`apply_us_vocab`, uk_us_vocab.tsv):
+   headword chỉ dùng ở Anh đổi thành từ Mỹ (flat → apartment), hoặc vào `reserve` lý do `uk_vocab` nếu từ Mỹ đã có (trousers → pants).
 2. AI phân loại (prompts/classify_v1.md, theo lô CLASSIFY_BATCH_SIZE, có cache): mỗi từ vào ĐÚNG MỘT chủ đề, kèm độ tự tin,
    lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN (không hợp rõ chủ đề nào) → KHÔNG
    ép vào chủ đề, vào `reserve` lý do `low_topic_confidence` (giữ chủ đề AI gợi ý để người duyệt đưa lại nếu muốn).
@@ -32,7 +33,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from data_pipeline import config
-from data_pipeline.lib import prompts, units
+from data_pipeline.lib import prompts, ukus, units
 from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
@@ -185,6 +186,30 @@ def order_topic(code: str, items: list[dict], reserve: list[dict]) -> list[dict]
     return units.interleave(words, phrases[:cap])
 
 
+def apply_us_vocab(topics: dict[str, list[dict]], reserve: list[dict]) -> None:
+    """Chuẩn Anh-Mỹ (uk_us_vocab.tsv, mode replace / headword): headword chỉ dùng ở Anh đổi thành từ Mỹ (flat → apartment,
+    `uk_variant_of` ghi từ gốc); từ Mỹ đã có trong cấp (trousers → pants) thì mục Anh-Anh vào dự phòng, lý do `uk_vocab`, và từ
+    Mỹ nhận độ ưu tiên (commonness, giao tiếp cơ bản) của từ Anh.
+    Chạy sau các giai đoạn gọi AI để prompt không đổi."""
+    present = {i["headword"]: i for items in topics.values() for i in items}
+    for code, items in topics.items():
+        kept = []
+        for item in items:
+            us = ukus.headword_replacement(item["headword"], item["pos"])
+            if us is None:
+                kept.append(item)
+            elif us.lower() in present:
+                # từ Mỹ nhận độ ưu tiên của từ Anh nó thay (không bị bớt khi cân bằng chỉ vì nguồn xếp nó thấp hơn)
+                us_item = present[us.lower()]
+                us_item["commonness"] = max(us_item.get("commonness", 3), item.get("commonness", 3))
+                us_item["basic_communication"] = us_item.get("basic_communication") or item.get("basic_communication")
+                reserve.append({**item, "reserve_reason": "uk_vocab", "us_word": us})
+            else:
+                present[us.lower()] = renamed = {**item, "headword": us.lower(), "uk_variant_of": item["headword"]}
+                kept.append(renamed)
+        topics[code] = kept
+
+
 def removal_order(item: dict) -> tuple:
     """Khóa bớt mục khi chủ đề quá đông (nhỏ = bớt trước): không bớt cụm từ / giao tiếp cơ bản trước."""
     protected = item["pos"] == config.POS_PHRASE or item.get("basic_communication")
@@ -279,6 +304,7 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
                                            "sources": source[head].get("sources", [])})
         if ctx.pending:
             return _pending_report(ctx, processed, "suggest", limit)
+        apply_us_vocab(topics, reserve)
         balance(topics, reserve, config.TARGET_PER_LEVEL)
 
     for code in topics:

@@ -29,7 +29,7 @@ CONTENT_ROOT: Path = pconfig.CONTENT  # test đổi sang thư mục tạm
 PROCESSED: Path = pconfig.PROCESSED
 WORK_ROOT: Path = pconfig.WORK
 EDITABLE = ("headword", "pos", "ipa", "meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family",
-            "synonyms", "mnemonic_vi", "image_keyword", "commonness", "basic_communication", "subgroup", "rank_in_topic")
+            "synonyms", "mnemonic_vi", "image_keyword", "variant_note", "commonness", "basic_communication", "subgroup", "rank_in_topic")
 REWRITABLE = rewrite.REWRITABLE
 _lock = asyncio.Lock()
 

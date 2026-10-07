@@ -4,7 +4,7 @@
  * `emphasis` đổi phần được đẩy lên nổi bật theo chế độ học: "word" (mặc định), "phrase" (cụm đi kèm),
  * "family" (họ từ). Từ đang học trong câu ví dụ được tô nền xanh chanh.
  * Mục là cụm từ cố định (`pos = "phrase"`): danh sách `collocations` là các CỤM LIÊN QUAN (biến thể, câu đáp lại), nên nhãn
- * đổi thành "Cụm liên quan".
+ * đổi thành "Cụm liên quan". `entry.variantNote` (ghi chú biến thể Anh-Mỹ, vd. "Mỹ thường dùng: fall") hiện ngay dưới nghĩa.
  * Dùng chung cho Học Viện và "Khóa học của tôi": cấp độ, loại từ, định nghĩa, ví dụ đều có thể trống (từ tự tạo).
  * `tag`: nhãn phụ cạnh cấp độ (vd. "Tự tạo"); `actions`: hàng nút cuối thẻ (vd. "+ Thêm vào khóa học của tôi").
  */
@@ -135,6 +135,7 @@ export default function WordCard({ entry, level, emphasis = 'word', tag, actions
         <p className="self-start rounded-[12px] bg-gold px-3 py-1 font-heading text-[30px] font-black leading-tight tracking-tight md:text-[36px]">
           {entry.meaning}
         </p>
+        {entry.variantNote && <p className="text-[14px] font-semibold text-muted">{entry.variantNote}</p>}
         {entry.definition && <p className="text-muted">{entry.definition}</p>}
       </div>
 

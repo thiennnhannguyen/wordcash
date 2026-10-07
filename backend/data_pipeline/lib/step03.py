@@ -9,7 +9,8 @@ Bước 03 — AI soạn nháp mục từ (gọi từ data_pipeline/03_enrich_en
   đặt `ipa_unverified = true`.
 - File nội dung đã có: mục đã có (theo content_key) GIỮ NGUYÊN (người duyệt có thể đã sửa); chỉ thêm mục mới. `--redo-drafts`:
   soạn lại các mục còn `draft` và chưa từng được duyệt (vd. sau khi sửa prompt).
-- `refresh_derived`: KHÔNG gọi AI — tính lại phần suy ra được (headword hiển thị đúng chữ hoa — lib/casing.py; IPA từ CMUdict)
+- `refresh_derived`: KHÔNG gọi AI — tính lại phần suy ra được (headword hiển thị đúng chữ hoa — lib/casing.py; IPA từ CMUdict;
+  variant_note Anh-Mỹ — lib/ukus.py)
   cho các mục chưa từng được duyệt, sau khi đổi quy tắc chữ hoa / IPA. Từ không có trong CMUdict giữ IPA cũ và ipa_unverified.
 - Chọn phạm vi: `topics` (chỉ các chủ đề này), `per_topic` (N mục đầu mỗi chủ đề, theo `rank_in_topic`), `limit` (N mục đầu).
 - Chế độ agent: lô chưa có output là "đang chờ" (`pending`), không vào failed_03.json; mục đã có output thì vẫn được ghi.
@@ -20,7 +21,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from data_pipeline import config
-from data_pipeline.lib import casing, content, ipa, prompts
+from data_pipeline.lib import casing, content, ipa, prompts, ukus
 from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
@@ -100,6 +101,7 @@ def build_entry(level: str, job: Job, got: EnrichItem, prompt_tag: str, cmu: dic
         example_vi=got.example_vi.strip(), collocations=[c.strip() for c in got.collocations if c.strip()],
         word_family=[w.strip().lower() for w in got.word_family if w.strip()], synonyms=[s.strip().lower() for s in got.synonyms if s.strip()],
         mnemonic_vi=got.mnemonic_vi.strip(), image_keyword=got.image_keyword.strip().lower(),
+        variant_note=ukus.variant_note(item["headword"], item["pos"]),
         commonness=item.get("commonness", 3), basic_communication=bool(item.get("basic_communication")),
         subgroup=item.get("subgroup", ""), rank_in_topic=item.get("rank_in_topic", 0), origin=item.get("origin", "source"),
         sources=item.get("sources", []), origin_flags=list(item.get("flags", [])), flags=list(item.get("flags", [])),
@@ -189,10 +191,12 @@ def refresh_derived(level: str, *, content_root: Path | None = None) -> dict:
             e.headword = casing.display_headword(e.headword, e.pos, e.basic_communication)
             cmu_ipa = ipa.lookup(e.headword, cmu, e.pos)
             e.ipa, e.ipa_unverified = (cmu_ipa, False) if cmu_ipa else (e.ipa, True)
+            e.variant_note = ukus.variant_note(e.headword, e.pos)
         if content.dump(topic) != before:
             content.save_topic(topic, content_root)
-            old = {o["content_key"]: (o["headword"], o["ipa"]) for o in before["entries"]}
-            changed[topic.topic_code] = [e.content_key for e in topic.entries if (e.headword, e.ipa) != old[e.content_key]]
+            old = {o["content_key"]: (o["headword"], o["ipa"], o.get("variant_note", "")) for o in before["entries"]}
+            changed[topic.topic_code] = [e.content_key for e in topic.entries
+                                         if (e.headword, e.ipa, e.variant_note) != old[e.content_key]]
     return {"level": level.upper(), "changed": changed}
 
 

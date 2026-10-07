@@ -10,6 +10,8 @@ Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
 - vn_context_overuse: câu ví dụ có hơn VN_CONTEXT_MAX_PER_EXAMPLE từ đời sống Việt Nam (pho, Tet, Hanoi…; so khớp bỏ dấu);
 - ipa_unverified: IPA không lấy được từ CMUdict (AI đề xuất) hoặc trống;
 - sensitive: có từ khóa thương hiệu / người nổi tiếng / chủ đề nhạy cảm (sensitive_keywords.txt);
+- uk_vocab: từ vựng Anh-Anh (uk_us_vocab.tsv, lib/ukus.py) — headword chỉ dùng ở Anh, headword cần ghi chú Mỹ mà thiếu
+  variant_note, hoặc từ Anh-Anh (mode replace) trong example_en, collocations, definition_en; chi tiết ghi từ Mỹ nên dùng;
 - collocation_missing_headword: có cụm đi kèm không chứa headword (mục từ đơn);
 - phrase_related_repeats_headword: mục cụm từ cố định (pos = phrase) có "cụm liên quan" chứa nguyên văn headword (với phrase,
   collocations là 2–3 cụm liên quan: biến thể, câu đáp lại, cụm cùng nhóm — không phải chính cụm đó thêm một chữ).
@@ -30,7 +32,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from data_pipeline import config
-from data_pipeline.lib import content, morph
+from data_pipeline.lib import content, morph, ukus
 from data_pipeline.lib.jsonio import read_json
 from data_pipeline.lib.schemas import ContentEntry, TopicFile
 
@@ -50,6 +52,7 @@ FLAG_HELP = {
     "sensitive": "Có thương hiệu, người nổi tiếng hoặc chủ đề nhạy cảm.",
     "vn_context_overuse": f"Câu ví dụ có hơn {config.VN_CONTEXT_MAX_PER_EXAMPLE} từ đời sống Việt Nam (pho, Tet, Hanoi…).",
     "collocation_missing_headword": "Có cụm đi kèm không chứa từ này.",
+    "uk_vocab": "Có từ vựng Anh-Anh (kho từ theo chuẩn Anh-Mỹ) — đổi sang từ Mỹ, hoặc thêm ghi chú biến thể.",
     "phrase_related_repeats_headword": "Cụm liên quan lặp lại nguyên cụm này (cần biến thể, câu đáp lại hoặc cụm cùng nhóm).",
     "duplicate_headword": "Trùng từ + từ loại với mục khác trong cùng cấp.",
     "duplicate_example": "Trùng câu ví dụ với mục khác trong cùng cấp.",
@@ -167,6 +170,21 @@ def rule_sensitive(e: ContentEntry, keywords: set[str]):
         return "sensitive", ", ".join(hits)
 
 
+def rule_uk_vocab(e: ContentEntry):
+    found = []
+    us = ukus.headword_replacement(e.headword, e.pos)
+    if us:
+        found.append(f"headword: {e.headword} → {us}")
+    note = ukus.variant_note(e.headword, e.pos)
+    if note and not e.variant_note:
+        found.append(f"headword: thiếu variant_note \"{note}\"")
+    for field, texts in (("example_en", [e.example_en]), ("collocations", e.collocations), ("definition_en", [e.definition_en])):
+        for p in {p for text in texts for p in ukus.text_terms(text)}:
+            found.append(f"{field}: {p.uk} → {p.us}")
+    if found:
+        return "uk_vocab", "; ".join(sorted(found))
+
+
 def rule_collocations(e: ContentEntry):
     if e.pos == config.POS_PHRASE:
         head = f" {norm_text(e.headword)} "
@@ -182,7 +200,8 @@ def rule_collocations(e: ContentEntry):
 def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str], vn: set[str] | None = None) -> list[tuple[str, str]]:
     vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST) if vn is None else vn
     found = [rule_example_contains_headword(e), rule_meaning(e), rule_meaning_pronoun(e), rule_definition_length(e), rule_example_length(e),
-             rule_hard_words(e, whitelist), rule_vn_context(e, vn), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e)]
+             rule_hard_words(e, whitelist), rule_vn_context(e, vn), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e),
+             rule_uk_vocab(e)]
     return [f for f in found if f]
 
 

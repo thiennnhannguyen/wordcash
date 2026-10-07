@@ -28,6 +28,7 @@ CONTENT = BACKEND / "content"
 CMUDICT = VENDOR / "cmudict" / "cmudict.dict"
 EXCLUDE_FUNCTION_WORDS = PIPELINE / "exclude_function_words.txt"
 BR_US_SPELLING = PIPELINE / "br_us_spelling.tsv"
+UK_US_VOCAB = PIPELINE / "uk_us_vocab.tsv"  # cặp từ vựng Anh-Anh / Anh-Mỹ (lib/ukus.py)
 SENSITIVE_KEYWORDS = PIPELINE / "sensitive_keywords.txt"
 PROPER_NAMES = PIPELINE / "proper_names.txt"
 A1_EXCLUDED_TONE = PIPELINE / "a1_excluded_tone.txt"  # bước 02: vào dự phòng, lý do tone_a1 (hoặc lý do ghi sau " | ")

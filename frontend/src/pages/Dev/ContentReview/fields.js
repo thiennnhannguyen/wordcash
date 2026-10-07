@@ -13,6 +13,7 @@ export const FIELDS = [
   { key: 'synonyms', label: 'Từ đồng nghĩa (mỗi dòng một từ)', kind: 'list', ai: true },
   { key: 'mnemonic_vi', label: 'Mẹo nhớ', kind: 'text', ai: true },
   { key: 'image_keyword', label: 'Từ khóa ảnh', kind: 'line', ai: true },
+  { key: 'variant_note', label: 'Ghi chú Anh-Mỹ (vd. Mỹ thường dùng: fall)', kind: 'line', ai: false },
   { key: 'ipa', label: 'IPA', kind: 'line', ai: false },
   { key: 'subgroup', label: 'Nhóm nhỏ (gom bài)', kind: 'line', ai: false },
   { key: 'commonness', label: 'Độ phổ biến 1–5', kind: 'number', ai: false },

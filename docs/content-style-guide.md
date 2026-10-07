@@ -9,7 +9,10 @@ của chặng chỉ để trang trí, không ảnh hưởng việc chọn từ, 
 (chặng Chợ Đồng Xuân không bắt buộc câu về chợ). Từ đời sống Việt Nam (`vn_context_allowlist.txt`) chỉ là từ ĐƯỢC PHÉP dùng
 cho câu gần gũi, không bắt buộc, không gắn với chặng nào. Tên bài đặt theo nội dung từ vựng của bài.
 
-Chuẩn tiếng Anh: Anh-Mỹ (en-US). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`. IPA của cụm từ ghép
+Chuẩn tiếng Anh: Anh-Mỹ (en-US), cả chính tả (`br_us_spelling.tsv`) lẫn **từ vựng** (`backend/data_pipeline/uk_us_vocab.tsv`):
+từ chỉ người Anh dùng thì thay bằng từ Mỹ (flat → apartment, trousers → pants, football → soccer, mobile phone → cell
+phone); từ người Mỹ vẫn hiểu và dùng (autumn, shop, film, holiday, toilet) thì giữ, kèm `variant_note` "Mỹ thường dùng: fall"
+(tự điền, hiện dưới nghĩa trên thẻ học). Câu ví dụ, cụm đi kèm, định nghĩa cũng dùng từ Mỹ (cờ `uk_vocab`). IPA lấy từ CMUdict, không tự sửa trừ khi mục có cờ `ipa_unverified`. IPA của cụm từ ghép
 từng từ: từ nội dung có dấu nhấn (kể cả từ một âm tiết), từ chức năng không nhấn và dùng dạng đọc lướt (of /əv/, a /ə/, to
 /tə/, for /fər/, and /ən/, can /kən/, at /ət/, from /frəm/, some /səm/, the /ðə/, trước nguyên âm /ði/; bảng `WEAK_FORMS`
 trong `lib/ipa.py`). Từ chức năng đứng riêng giữ dạng đầy đủ.
@@ -149,6 +152,8 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
   Fixed phrases: 2–3 RELATED phrases (variant, reply, same group) that do NOT repeat the headword
   (Right: "I'm hungry" → "I'm thirsty", "I'm full". Wrong: "I'm hungry now").
 - word_family 0–3 useful words; synonyms 0–2 only when helpful; image_keyword 1–4 English words.
+- American English vocabulary, not only spelling: apartment (not flat), pants (not trousers), soccer (not football),
+  cell phone (not mobile phone), vacation (not holiday), cookie (not biscuit), candy (not sweets), trash (not rubbish).
 <!-- ai-rules:end -->
 
 ## 8. Danh sách kiểm tra cho người duyệt

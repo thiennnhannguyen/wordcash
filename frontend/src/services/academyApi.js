@@ -45,7 +45,7 @@ export function daysLeft(seconds) {
 
 export function toWordEntry(e) {
   if (!e) return null
-  return { id: e.id, word: e.headword, ipa: e.ipa, pos: e.pos, meaning: e.meaning_vi, example: e.example, collocations: e.collocations ?? [], family: e.word_family ?? [], audio_url: e.audio_url }
+  return { id: e.id, word: e.headword, ipa: e.ipa, pos: e.pos, meaning: e.meaning_vi, variantNote: e.variant_note, example: e.example, collocations: e.collocations ?? [], family: e.word_family ?? [], audio_url: e.audio_url }
 }
 
 function playQuestion(question, { slow = false } = {}) {

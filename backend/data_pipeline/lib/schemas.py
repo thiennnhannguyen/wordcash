@@ -92,6 +92,7 @@ class ContentEntry(_Model):
     synonyms: list[str] = Field(default_factory=list)
     mnemonic_vi: str = ""
     image_keyword: str = ""
+    variant_note: str = ""  # ghi chú biến thể Anh-Mỹ (uk_us_vocab.tsv, không do AI soạn), vd. "Mỹ thường dùng: fall"
     # Chọn từ (bước 02) — người duyệt chỉnh được
     commonness: int = Field(default=3, ge=1, le=5)
     basic_communication: bool = False

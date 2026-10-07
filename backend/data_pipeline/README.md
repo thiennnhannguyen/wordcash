@@ -94,6 +94,12 @@ tiến độ chặng / cấp; người đang học dở được đưa về bài
   (`ENRICH_V`…). Sau đó chạy `03_enrich_entries --redo-drafts --emit` (soạn output, `--ingest`) để soạn lại các mục còn draft
   và chưa ai duyệt, rồi chạy lại 04.
 - Bước 04 tính lại cờ từ đầu mỗi lần chạy và chỉ ghi các file thật sự đổi.
+- Chuẩn Anh-Mỹ cho từ vựng: `uk_us_vocab.tsv` (cột uk, us, mode, pos). Mode `replace` / `headword`: bước 02 đổi headword
+  sang từ Mỹ (hoặc vào dự phòng lý do `uk_vocab` nếu từ Mỹ đã có); `note`: bước 03 (và `--refresh-derived`) điền `variant_note`
+  "Mỹ thường dùng: …", nạp vào cột `entries.variant_note`, thẻ học hiện dưới nghĩa; `context`: người duyệt tự xem. Bước 04
+  gắn cờ `uk_vocab` cho headword, example_en, collocations, definition_en.
+- Loại khỏi A1 có lý do: `a1_excluded_tone.txt` (giọng không hợp, `body_shaming`), `a1_excluded_duplicates.txt` (trùng nghĩa
+  với mục được giữ, nghĩa Anh-Mỹ dễ nhầm); bước 02 đưa vào dự phòng kèm lý do.
 - Cờ thông tin (`config.INFO_FLAGS`: `phrase`, `ai_suggested_headword`) vẫn hiện thành nhãn cho người duyệt nhưng không tính là
   "có cờ" trong báo cáo `flagged` và không tính vào ngưỡng dừng 10% mục bị cờ mỗi chủ đề khi soạn.
 - Bước 07 upsert theo `content_key`; chạy lại không đổi gì. Mục bị bỏ khỏi file thì được đặt `retired_at`, không bị xóa: không

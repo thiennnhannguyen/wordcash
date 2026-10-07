@@ -31,6 +31,7 @@ export function toCardEntry(card) {
     ipa: card.ipa,
     pos: card.pos,
     meaning: card.meaning_vi,
+    variantNote: card.variant_note,
     definition: card.personal_note ? `Ghi chú của bạn: ${card.personal_note}` : null,
     example: card.example,
     collocations: card.collocations,

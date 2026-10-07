@@ -1,6 +1,6 @@
 """
 Nạp nội dung vào DB (data_pipeline/lib/loader.py) trên PostgreSQL test, quy mô bài thu nhỏ (monkeypatch config):
-- lần đầu thêm đủ mục approved + bài; chạy lại không đổi gì; sửa nội dung → cập nhật, content_version + 1;
+- lần đầu thêm đủ mục approved + bài; chạy lại không đổi gì; sửa nội dung (kể cả variant_note) → cập nhật, content_version + 1;
 - mục bị bỏ khỏi file → retired_at, KHÔNG xóa, tiến độ học giữ nguyên; approved trở lại → bỏ retired_at;
 - --dry-run không ghi; kiểm tra trước khi nạp (thiếu file, tên bài chưa duyệt, còn bài DEV_SAMPLE, bài có tiến độ bị bỏ);
 - dev: purge(keep_position) + nạp kho thật → người đang học dở được mở bài đầu của chặng hiện tại (ensure_initialized);
@@ -97,6 +97,14 @@ async def test_load_twice_update_and_retire(db_session, tmp_path, small):
     assert diff.updated == {"a1.food.wfoo0.noun": ["meaning_vi"]}
     await db.refresh(rice)
     assert rice.meaning_vi == "nghĩa mới" and rice.content_version == 2
+    assert rice.variant_note is None  # rỗng trong file → NULL
+
+    food.entries[0].variant_note = "Mỹ thường dùng: fall"  # ghi chú Anh-Mỹ nạp vào DB như mọi trường nội dung
+    content.save_topic(food, root)
+    diff = await load(db, root)
+    assert diff.updated == {"a1.food.wfoo0.noun": ["variant_note"]}
+    await db.refresh(rice)
+    assert rice.variant_note == "Mỹ thường dùng: fall" and rice.content_version == 3
 
     # Người học đã thuộc mục 5; mục bị bỏ khỏi file (thay bằng mục mới trong bài) → retired, không xóa, tiến độ còn
     user = await make_user(db)

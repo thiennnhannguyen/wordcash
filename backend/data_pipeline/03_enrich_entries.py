@@ -21,7 +21,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=None, help="chỉ soạn N mục đầu (chạy thử)")
     parser.add_argument("--redo-drafts", action="store_true", help="soạn lại mục draft chưa từng duyệt (sau khi đổi prompt)")
     parser.add_argument("--refresh-derived", action="store_true",
-                        help="không gọi AI: tính lại headword hiển thị (chữ hoa) và IPA CMUdict cho mục chưa duyệt")
+                        help="không gọi AI: tính lại headword hiển thị (chữ hoa), IPA CMUdict và variant_note Anh-Mỹ cho mục chưa duyệt")
     cli.add_ai_args(parser)
     args = parser.parse_args()
     if args.refresh_derived:

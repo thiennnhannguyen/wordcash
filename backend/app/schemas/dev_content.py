@@ -21,6 +21,7 @@ class EntryPatchIn(BaseModel):
     synonyms: list[str] | None = None
     mnemonic_vi: str | None = None
     image_keyword: str | None = None
+    variant_note: str | None = Field(default=None, max_length=120)
     commonness: int | None = Field(default=None, ge=1, le=5)
     basic_communication: bool | None = None
     subgroup: str | None = None
