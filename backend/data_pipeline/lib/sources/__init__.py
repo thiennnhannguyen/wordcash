@@ -24,6 +24,7 @@ class RawRow:
 class SourceReader:
     name: str = ""
     has_frequency_rank: bool = False  # True: `rank` là thứ hạng tần suất thật; False: chỉ là thứ tự dòng
+    is_lemma_list: bool = False  # True: headword trong nguồn đã là lemma (news, glasses, people…) → bước 01 không rút gọn
 
     def matches(self, path: Path) -> bool:
         raise NotImplementedError

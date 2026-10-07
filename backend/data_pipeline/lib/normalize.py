@@ -50,7 +50,9 @@ def spelling_map(path: Path | None = None) -> dict[str, str]:
 def clean(text: str) -> str:
     text = (text or "").replace("’", "'").replace("‘", "'").replace(" ", " ")
     text = re.sub(r"\s+", " ", text).strip().lower()
-    return text.strip(" .,;:!?\"()[]")
+    text = text.strip(" ,;:!?\"()[]")
+    # Giữ dấu chấm của chữ viết tắt có chấm bên trong ("a.m.", "p.m."); còn lại bỏ dấu chấm ở hai đầu ("Mr." → "mr")
+    return text if re.fullmatch(r"(?:[a-z]\.){2,}", text) else text.strip(" .")
 
 
 def to_american(word: str) -> str:

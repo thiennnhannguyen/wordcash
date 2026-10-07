@@ -1,8 +1,10 @@
 """
 Bước 01 — nhập và chuẩn hóa danh sách từ (gọi từ data_pipeline/01_import_wordlist.py).
 
-Đọc mọi file trong raw/ bằng bộ đọc nguồn tương ứng (lib/sources/), chuẩn hóa (lib/normalize.py), lấy lemma bảo thủ, gộp theo
-(headword, pos): giữ cấp CEFR và thứ hạng theo từng nguồn, tên nguồn, các biến thể gốc. File dữ liệu không có bộ đọc → lỗi
+Đọc mọi file trong raw/ bằng bộ đọc nguồn tương ứng (lib/sources/), chuẩn hóa (lib/normalize.py), lấy lemma bảo thủ (bỏ qua
+với nguồn vốn là danh sách lemma, `is_lemma_list`), gộp theo
+(headword, pos): giữ cấp CEFR và thứ hạng theo từng nguồn, tên nguồn, các biến thể gốc, gợi ý chủ đề của nguồn (`topic_hints`).
+File dữ liệu không có bộ đọc → lỗi
 (không dùng nguồn chưa khai báo giấy phép). Đầu ra: processed/candidates.json + processed/report_01.json.
 """
 
@@ -39,12 +41,15 @@ def import_sources(raw_dir: Path = config.RAW) -> tuple[list[dict], dict]:
         raise UnknownSourceError(f"Không có bộ đọc cho: {', '.join(unknown)}. Khai báo nguồn trong docs/data-sources.md và "
                                  "viết bộ đọc trong data_pipeline/lib/sources/ trước.")
     rows = []
+    lemma_sources: set[str] = set()
     for path in source_files(raw_dir):
         reader = reader_for(path)
         raw = reader.read(path)
         report["sources"].append({"file": path.name, "source": reader.name, "version": reader.version(path), "rows": len(raw),
                                   "has_frequency_rank": reader.has_frequency_rank})
         rows.extend(raw)
+        if reader.is_lemma_list:
+            lemma_sources.add(reader.name)
 
     dropped: Counter = Counter()
     examples: dict[str, list[str]] = defaultdict(list)
@@ -69,14 +74,15 @@ def import_sources(raw_dir: Path = config.RAW) -> tuple[list[dict], dict]:
     known = {h for h, _, _ in normalized}
     merged: dict[tuple[str, str], dict] = {}
     for head, pos, row in normalized:
-        base = morph.lemma(head, pos, known)
+        base = head if row.source in lemma_sources else morph.lemma(head, pos, known)
         if base != head:
             report["lemmatized"].append(f"{head} → {base}")
             head = base
         key = (head, pos)
         item = merged.get(key)
         if item is None:
-            item = merged[key] = {"headword": head, "pos": pos, "cefr": {}, "rank": {}, "sources": [], "variants": []}
+            item = merged[key] = {"headword": head, "pos": pos, "cefr": {}, "rank": {}, "sources": [], "variants": [],
+                                  "topic_hints": []}
         else:
             report["merged_duplicates"] += 1
         src = row.source
@@ -86,6 +92,9 @@ def import_sources(raw_dir: Path = config.RAW) -> tuple[list[dict], dict]:
             item["cefr"][src] = row.cefr
         if row.rank is not None and (src not in item["rank"] or row.rank < item["rank"][src]):
             item["rank"][src] = row.rank
+        for hint in row.extra.get("topic_hints", []):
+            if hint not in item["topic_hints"]:
+                item["topic_hints"].append(hint)
         variant = row.headword.strip()
         if variant.lower() != head and variant not in item["variants"]:
             item["variants"].append(variant)
