@@ -2,7 +2,10 @@
 Phiên âm IPA en-US từ CMU Pronouncing Dictionary (quyết định 2). Hàm thuần + bộ nạp cmudict (lười, một lần).
 
 - Định dạng giống dữ liệu đang có: "/ˈwɔːtɚ/" — có gạch chéo, dấu nhấn chính ˈ / phụ ˌ đặt trước âm tiết, không chấm tách
-  âm tiết; từ một âm tiết không ghi dấu nhấn; cụm từ: phiên âm từng từ cách nhau một khoảng trắng.
+  âm tiết; từ một âm tiết không ghi dấu nhấn.
+- Cụm từ: ghép phiên âm từng từ theo cmudict, cách nhau một khoảng trắng; TỪ NỘI DUNG giữ dấu nhấn (từ một âm tiết cũng ghi
+  ˈ: "/ˈteɪk ˈkɛr ʌv/"), TỪ CHỨC NĂNG (exclude_function_words.txt, kể cả dạng rút gọn I'm, it's) bỏ dấu nhấn. Một từ không có
+  trong cmudict → cả cụm None (ipa_unverified).
 - Âm tiết: mỗi nguyên âm là một nhân; phụ âm giữa hai nguyên âm chia theo nguyên tắc "phụ âm đầu dài nhất hợp lệ" (ONSETS).
 - Lấy cách đọc đầu tiên của cmudict (cách đọc chính). Từ không có trong cmudict → None (nơi gọi gắn `ipa_unverified`).
 """
@@ -105,6 +108,15 @@ def load_cmudict(path: str | None = None) -> dict[str, str]:
     return out
 
 
+@lru_cache(maxsize=1)
+def function_words() -> frozenset[str]:
+    return frozenset(config.read_word_list(config.EXCLUDE_FUNCTION_WORDS))
+
+
+def is_function_word(word: str) -> bool:
+    return word in function_words() or word.split("'")[0] in function_words()
+
+
 def lookup(headword: str, cmudict: dict[str, str] | None = None) -> str | None:
     """IPA dạng "/…/" cho từ hoặc cụm; None nếu có từ không nằm trong cmudict."""
     cmu = cmudict if cmudict is not None else load_cmudict()
@@ -114,5 +126,11 @@ def lookup(headword: str, cmudict: dict[str, str] | None = None) -> str | None:
         pron = cmu.get(w)
         if pron is None:
             return None
-        parts.append(arpabet_to_ipa(pron))
+        text = arpabet_to_ipa(pron)
+        if len(words) > 1:
+            if is_function_word(w):
+                text = text.replace("ˈ", "").replace("ˌ", "")
+            elif "ˈ" not in text:
+                text = "ˈ" + text  # từ nội dung một âm tiết trong cụm: ghi nhấn chính
+        parts.append(text)
     return "/" + " ".join(parts) + "/" if parts else None

@@ -38,12 +38,27 @@ def test_arpabet_rules():
 
 
 def test_phrases_and_missing_words():
-    assert ipa.lookup("good morning") == "/ɡʊd ˈmɔːrnɪŋ/"
-    assert ipa.lookup("thank you") == "/θæŋk juː/"
-    assert ipa.lookup("Thank   You") == "/θæŋk juː/"
+    assert ipa.lookup("good morning") == "/ˈɡʊd ˈmɔːrnɪŋ/"
+    assert ipa.lookup("thank you") == "/ˈθæŋk juː/"
+    assert ipa.lookup("Thank   You") == "/ˈθæŋk juː/"
     assert ipa.lookup("zzqxv") is None and ipa.lookup("good zzqxv") is None
 
 
 def test_custom_dictionary():
     cmu = {"pho": "F AH1"}
     assert ipa.lookup("pho", cmu) == "/fʌ/" and ipa.lookup("water", cmu) is None
+
+
+@pytest.mark.parametrize("phrase,expected", [
+    ("take care of", "/ˈteɪk ˈkɛr ʌv/"),  # từ nội dung một âm tiết có nhấn; "of" (chức năng) không nhấn
+    ("a cup of", "/ə ˈkʌp ʌv/"),
+    ("i'm hungry", "/aɪm ˈhʌŋɡri/"),  # dạng rút gọn của từ chức năng: không nhấn
+    ("rainy season", "/ˈreɪni ˈsiːzən/"),
+    ("I'm Hungry", "/aɪm ˈhʌŋɡri/"),  # chữ hoa hiển thị không ảnh hưởng
+])
+def test_phrase_ipa_stress(phrase, expected):
+    assert ipa.lookup(phrase) == expected
+
+
+def test_phrase_with_unknown_word_is_unverified():
+    assert ipa.lookup("zzqxbanh rice") is None and ipa.lookup("rice") == "/raɪs/"
