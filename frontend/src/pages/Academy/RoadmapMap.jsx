@@ -5,14 +5,14 @@
  * đi từ DƯỚI LÊN TRÊN; mỗi chặng kết thúc ở một địa danh, Trận Boss ở đỉnh bản đồ. Vùng chưa mở bị sương mù che.
  * Thanh tab cấp, card tóm tắt và cột widget nổi trên bản đồ như giấy ghim; mobile thu thành một thanh trên cùng và
  * hai nút tròn ở góc dưới. Tọa độ tính theo bề rộng thật của khung (xem map/layout.js).
- * Dữ liệu hiện lấy từ roadmapMock.js; mở/khóa, điểm và con dấu luôn do server quyết định.
+ * Dữ liệu từ GET /academy/roadmap + GET /me/stats (useAcademyMap.js); mở/khóa, điểm, con dấu, Hộ chiếu luôn do server quyết định.
+ * Đang tải: nền bản đồ trống; lỗi: thông báo + Thử lại.
  */
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { animate } from 'framer-motion'
 import {
-  ArrowsClockwise,
   BookOpenText,
   CaretDown,
   Clock,
@@ -43,10 +43,12 @@ import cx from '../../utils/cx'
 import { formatDayMonth, formatNumber } from '../../utils/format'
 import { speak } from '../../utils/speech'
 import { goalMessage } from '../../utils/dailyGoal'
-import { PASS_BOSS_PERCENT, PASS_LESSON_PERCENT } from '../../utils/constants'
-import { BRANCHES } from './roadmapMock'
+import { percent, useRules } from '../../store/rulesStore'
+import { useAuthStore } from '../../store/authStore'
+import { useMascot } from '../../store/mascotStore'
+import { BRANCHES } from './map/decor'
 import useAcademyMap from './useAcademyMap'
-import { USE_MOCK } from '../../services/academyApi'
+import { ErrorState } from '../../components/ui/DataState'
 import { buildLayout, pointAt, travelerSpot } from './map/layout'
 import Terrain from './map/Terrain'
 import Fog from './map/Fog'
@@ -58,8 +60,11 @@ import { Cloud } from './map/Props'
 import Passport from './map/Passport'
 import { Compass, PlantedFlag, Signpost, SpeechBubble, StageRibbon, Traveler, VisitedStamp, WorldMiniMap } from './map/MapPieces'
 
-// Linh vật đại diện của người chơi (sẽ lấy từ hồ sơ; hiện là #077 Kẹo Dẻo)
-const MY_MASCOT = { color: 'danger', shape: 'tall', traits: {} }
+/** Ngưỡng qua bài / Trận Boss (%) theo luật server; chưa tải xong thì null (câu chữ bỏ con số). */
+function usePassPercents() {
+  const { rules } = useRules()
+  return rules ? { lesson: percent(rules.unit_pass_rate), boss: percent(rules.boss_pass_rate) } : { lesson: null, boss: null }
+}
 const WALK_MS = 1200
 const LOCKED_CLOUDS = [
   [4, 8, 150],
@@ -143,6 +148,7 @@ function Landmark({ lm, mobile, ribbonWidth }) {
 }
 
 function StationPopup({ row, level, nextLevel, onClose }) {
+  const pass = usePassPercents()
   const navigate = useNavigate()
   if (!row) return null
 
@@ -156,11 +162,11 @@ function StationPopup({ row, level, nextLevel, onClose }) {
   if (row.kind === 'lesson') {
     title = `Bài ${row.item.number} · ${row.item.title}`
     meta = `Chặng ${row.stage.number} · ${row.stage.title} · ${row.item.words} từ${row.item.phrases != null ? ` · ${row.item.phrases} cụm từ` : ''}`
-    requirement = locked ? `Hoàn thành bài trước với ít nhất ${PASS_LESSON_PERCENT}% để mở bài này.` : `Cần ${PASS_LESSON_PERCENT}% ở bài kiểm tra cuối bài để mở bài tiếp.`
+    requirement = pass.lesson == null
+      ? (locked ? 'Hoàn thành bài trước để mở bài này.' : 'Qua bài kiểm tra cuối bài để mở bài tiếp.')
+      : locked ? `Hoàn thành bài trước với ít nhất ${pass.lesson}% để mở bài này.` : `Cần ${pass.lesson}% ở bài kiểm tra cuối bài để mở bài tiếp.`
     primary = { label: row.status === 'done' ? 'Học lại' : 'Học', icon: Play, to: `/academy/lesson?unit=${row.item.id}` }
-    secondary = USE_MOCK
-      ? { label: 'Ôn lại', icon: ArrowsClockwise, to: `/academy/review?unit=${row.item.id}`, disabled: row.item.best == null }
-      : { label: 'Kiểm tra cuối bài', icon: ShieldStar, to: `/academy/unit-test?unit=${row.item.id}` }
+    secondary = { label: 'Kiểm tra cuối bài', icon: ShieldStar, to: `/academy/unit-test?unit=${row.item.id}` }
   } else if (row.kind === 'checkpoint') {
     title = `Kiểm tra chặng ${row.stage.number} · ${row.stage.title}`
     meta = `Tổng hợp mọi bài trong chặng · Qua bài để đặt chân tới ${row.stage.landmark_name}`
@@ -169,7 +175,7 @@ function StationPopup({ row, level, nextLevel, onClose }) {
   } else {
     title = `Trận Boss ${level.code} · ${row.item.landmark_name}`
     meta = `Khoảng ${row.item.questions} câu trộn từ cả cấp`
-    requirement = locked ? 'Vượt mọi chặng của cấp để mở Trận Boss.' : `Cần ${PASS_BOSS_PERCENT}% để bay tới ${nextLevel ? `${nextLevel.code} · ${nextLevel.region.short}` : 'cấp tiếp theo'}.`
+    requirement = locked ? 'Vượt mọi chặng của cấp để mở Trận Boss.' : `${pass.boss != null ? `Cần ${pass.boss}%` : 'Thắng'} để bay tới ${nextLevel ? `${nextLevel.code} · ${nextLevel.region.short}` : 'cấp tiếp theo'}.`
     if (row.item.cooldown?.retry_at) requirement = `Luyện các chặng yếu hoặc chờ tới ${new Date(row.item.cooldown.retry_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} để đánh lại.`
     primary = { label: 'Vào Trận Boss', icon: Sword, to: `/academy/boss?level=${level.code}` }
   }
@@ -307,7 +313,7 @@ function SideWidgets({ data, map }) {
   )
 }
 
-function MobileBar({ map, levelCode, branch, onSelectLevel, onBranch }) {
+function MobileBar({ map, levels, levelCode, branch, onSelectLevel, onBranch }) {
   const [open, setOpen] = useState(false)
   const { level, region, summary } = map
   return (
@@ -329,9 +335,9 @@ function MobileBar({ map, levelCode, branch, onSelectLevel, onBranch }) {
           ) : (
             <>
               <span className="block font-num text-[13px] uppercase text-muted">
-                Chặng {summary.stageCurrent}/{summary.stageTotal} · {formatNumber(summary.mastered)}/{formatNumber(summary.total)} từ
+                Chặng {summary.stageCurrent}/{summary.stageTotal} · {formatNumber(summary.mastered)}/{formatNumber(summary.total)} từ đã qua bài
               </span>
-              <ProgressBar value={summary.mastered} max={summary.total} size="sm" className="mt-1 [&>div]:h-2.5" />
+              <ProgressBar value={summary.mastered} max={Math.max(summary.total, 1)} size="sm" label="Từ trong các bài đã qua" className="mt-1 [&>div]:h-2.5" />
             </>
           )}
         </span>
@@ -342,7 +348,7 @@ function MobileBar({ map, levelCode, branch, onSelectLevel, onBranch }) {
       {open && (
         <div className="flex flex-col gap-3 border-t-thick border-line px-3 pb-3 pt-1">
           <LevelTabs
-            levels={LEVELS}
+            levels={levels}
             size="sm"
             selected={levelCode}
             onSelect={(l) => {
@@ -374,6 +380,8 @@ function Fab({ icon, label, bg, badge, onClick }) {
 // ---------------- Tấm bản đồ ----------------
 
 function World({ map, layout, onOpen, cloudRef, walk }) {
+  const pass = usePassPercents()
+  const myMascot = useMascot(useAuthStore((st) => st.user?.avatar_mascot_id))
   const { nodes, landmarks, signs, mobile, sizes, clouds } = layout
   const current = layout.current
   const target = walk?.to
@@ -457,7 +465,7 @@ function World({ map, layout, onOpen, cloudRef, walk }) {
           <div key="boss" className="absolute z-30 flex flex-col items-center gap-2" style={{ left: n.x - n.size / 2, top: n.y - n.size / 2, width: n.size }}>
             <RoadmapNode kind="boss" status={n.status} compact={mobile} label={`Trận Boss ${map.level.code} · ${map.boss.landmark_name}`} onClick={() => onOpen(n)} />
             <span className="font-num -mt-1 whitespace-nowrap rounded-pill border-thick border-line bg-gold px-3 py-1 text-[13px] uppercase shadow-hard-sm md:text-sm">
-              Trận Boss · Cần {PASS_BOSS_PERCENT}%
+              Trận Boss{pass.boss != null && ` · Cần ${pass.boss}%`}
             </span>
           </div>
         ))}
@@ -472,7 +480,7 @@ function World({ map, layout, onOpen, cloudRef, walk }) {
         >
           <div className="absolute bottom-0 left-0 flex -translate-x-1/2 flex-col items-center gap-2">
             {!walk && <SpeechBubble>Bắt đầu</SpeechBubble>}
-            <Traveler mascot={MY_MASCOT} size={mobile ? 62 : 80} walking={Boolean(walk)} facing={walk ? 1 : spot.dir} />
+            <Traveler mascot={myMascot} size={mobile ? 62 : 80} walking={Boolean(walk)} facing={walk ? 1 : spot.dir} />
           </div>
         </div>
       )}
@@ -498,7 +506,7 @@ export default function RoadmapMap() {
   const branch = params.get('branch') ?? 'core'
   const demo = params.get('demo')
   const [progress, setProgress] = useState(params.get('fog') === 'after' ? 1 : 0)
-  const academy = useAcademyMap(params.get('level'), branch, { progress })
+  const academy = useAcademyMap(params.get('level'))
   const { levels: LEVELS, sidebar: SIDEBAR } = academy
   const levelCode = academy.currentCode
   const map = academy.map
@@ -595,17 +603,16 @@ export default function RoadmapMap() {
         <NavBar />
         <main className="grid min-h-dvh place-items-center bg-map-grass md:pl-64" aria-busy={academy.loading}>
           {academy.error && (
-            <div className="flex flex-col items-center gap-3 rounded-card border-thick border-line bg-surface p-6 text-center shadow-hard">
-              <p className="font-semibold">{academy.error.message}</p>
-              <Button onClick={academy.reload}>Thử lại</Button>
+            <div className="rounded-card border-thick border-line bg-surface px-6 shadow-hard">
+              <ErrorState title="Chưa tải được bản đồ" message={academy.error.message} onRetry={academy.reload} />
             </div>
           )}
         </main>
       </div>
     )
   }
-  // Nhánh IELTS / TOEIC chưa có kho từ (bản dữ liệu thật)
-  const branchSoon = !USE_MOCK && branch !== 'core'
+  // Nhánh IELTS / TOEIC chưa có kho từ
+  const branchSoon = branch !== 'core'
   // Onboarding chọn "Làm bài xếp lớp": tạm vào A1 kèm thông báo
   const placementSoon = params.get('placement') === 'soon'
 
@@ -680,7 +687,7 @@ export default function RoadmapMap() {
 
           {/* Mobile: thanh nổi trên cùng */}
           <div className="pointer-events-none absolute inset-x-3 top-3 z-[60] md:hidden">
-            <MobileBar map={map} levelCode={levelCode} branch={branch} onSelectLevel={selectLevel} onBranch={setBranch} />
+            <MobileBar map={map} levels={LEVELS} levelCode={levelCode} branch={branch} onSelectLevel={selectLevel} onBranch={setBranch} />
           </div>
 
           {/* Cột widget bên phải (≥ 1280px) */}

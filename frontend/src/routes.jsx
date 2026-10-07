@@ -14,7 +14,7 @@
  */
 
 import { lazy, Suspense } from 'react'
-import TravelPreview from './pages/Travel/TravelPreview'
+import Travel from './pages/Travel/Travel'
 import { Outlet, useRoutes } from 'react-router-dom'
 import PageShell from './components/layout/PageShell'
 import Landing from './pages/Landing/Landing'
@@ -102,7 +102,7 @@ export default function AppRoutes() {
         // Quay thẻ: màn toàn màn hình, tự gắn thanh trên
         { path: '/collection/spin', element: <GachaSpin /> },
         // Cảnh chuyển cấp "Bay sang vùng đất mới" và màn bắt đầu hành trình cho người mới
-        { path: '/travel', element: <TravelPreview /> },
+        { path: '/travel', element: <Travel /> },
         // Bản đồ lộ trình: tranh bản đồ tràn khung, tự gắn thanh điều hướng
         { path: '/academy', element: <RoadmapMap /> },
         {

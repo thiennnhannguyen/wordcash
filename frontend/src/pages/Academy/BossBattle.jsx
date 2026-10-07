@@ -354,7 +354,7 @@ function WinResult({ result }) {
       </main>
 
       <DarkActions>
-        <Button size="lg" iconRight={ArrowRight} className="md:min-w-72" onClick={() => navigate(`/travel?from=${result.level}`)}>
+        <Button size="lg" iconRight={ArrowRight} className="md:min-w-72" onClick={() => navigate(`/travel?from=${result.level}`, { state: { specialSpins: result.reward?.specialSpins ?? 0 } })}>
           Bay tới {result.nextLevel}
         </Button>
         <Button size="lg" variant="secondary" icon={ShareNetwork} onClick={share}>

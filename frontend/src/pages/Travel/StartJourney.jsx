@@ -1,6 +1,6 @@
 /*
  * Biến thể màn đầu tiên cho người dùng mới (bắt đầu A1): linh vật nhà du hành đứng trước nhà mình, cạnh tấm biển gỗ
- * "HÀNH TRÌNH 10.000 TỪ BẮT ĐẦU TỪ ĐÂY"; mini-map toàn bộ 6 vùng đất với đường bay nối các vùng; nút "LÊN ĐƯỜNG".
+ * "HÀNH TRÌNH <số mục từ hiện có> TỪ BẮT ĐẦU TỪ ĐÂY" (GET /public/stats); mini-map toàn bộ 6 vùng đất với đường bay nối các vùng; nút "LÊN ĐƯỜNG".
  * Danh sách vùng đất và tổng số từ do server trả (travelMock.fetchJourneyStart).
  */
 
