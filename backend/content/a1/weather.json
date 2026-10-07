@@ -1,0 +1,397 @@
+{
+  "schema_version": 1,
+  "level": "A1",
+  "topic_code": "weather",
+  "topic_title": "Thời tiết",
+  "landmark_key": "a1_fansipan",
+  "entries": [
+    {
+      "content_key": "a1.weather.it_s_hot.phrase",
+      "headword": "it's hot",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ɪts hɑːt/",
+      "ipa_unverified": false,
+      "meaning_vi": "trời nóng",
+      "definition_en": "words to say the weather is very warm",
+      "example_en": "It's hot today. Let's drink some water.",
+      "example_vi": "Hôm nay trời nóng. Mình uống chút nước đi.",
+      "collocations": [
+        "it's hot today",
+        "it's so hot"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "sun and sweating person",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "hot and cold",
+      "rank_in_topic": 1,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase",
+        "collocation_missing_headword"
+      ],
+      "flag_details": {
+        "collocation_missing_headword": "it's so hot"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.it_s_cold.phrase",
+      "headword": "it's cold",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ɪts koʊld/",
+      "ipa_unverified": false,
+      "meaning_vi": "trời lạnh",
+      "definition_en": "words to say the weather is not warm",
+      "example_en": "It's cold in Hanoi in January.",
+      "example_vi": "Tháng Một ở Hà Nội trời lạnh.",
+      "collocations": [
+        "it's cold today",
+        "it's very cold"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "person in winter coat",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "hot and cold",
+      "rank_in_topic": 2,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase",
+        "collocation_missing_headword"
+      ],
+      "flag_details": {
+        "collocation_missing_headword": "it's very cold"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.sunny_day.phrase",
+      "headword": "sunny day",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈsʌni deɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "ngày nắng",
+      "definition_en": "a day with a lot of sun",
+      "example_en": "On a sunny day, we play in the park.",
+      "example_vi": "Vào ngày nắng, chúng mình chơi ở công viên.",
+      "collocations": [
+        "a sunny day",
+        "a hot sunny day"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "sunny sky",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "weather",
+      "rank_in_topic": 3,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.dry_season.phrase",
+      "headword": "dry season",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/draɪ ˈsiːzən/",
+      "ipa_unverified": false,
+      "meaning_vi": "mùa khô",
+      "definition_en": "the part of the year with little rain",
+      "example_en": "The dry season in Saigon starts in December.",
+      "example_vi": "Mùa khô ở Sài Gòn bắt đầu vào tháng Mười Hai.",
+      "collocations": [
+        "the dry season",
+        "in the dry season"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "dry field",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "seasons",
+      "rank_in_topic": 4,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.it_s_raining.phrase",
+      "headword": "it's raining",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ɪts ˈreɪnɪŋ/",
+      "ipa_unverified": false,
+      "meaning_vi": "trời đang mưa",
+      "definition_en": "words to say rain is falling now",
+      "example_en": "It's raining. Take your raincoat.",
+      "example_vi": "Trời đang mưa. Mang áo mưa theo nhé.",
+      "collocations": [
+        "it's raining hard",
+        "it's raining again"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "rain and umbrella",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "weather",
+      "rank_in_topic": 5,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.rainy_season.phrase",
+      "headword": "rainy season",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈreɪni ˈsiːzən/",
+      "ipa_unverified": false,
+      "meaning_vi": "mùa mưa",
+      "definition_en": "the part of the year with a lot of rain",
+      "example_en": "In the rainy season, it rains every afternoon.",
+      "example_vi": "Vào mùa mưa, chiều nào cũng mưa.",
+      "collocations": [
+        "the rainy season",
+        "in the rainy season"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "rainy street",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "seasons",
+      "rank_in_topic": 6,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.very_windy.phrase",
+      "headword": "very windy",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈvɛri ˈwɪndi/",
+      "ipa_unverified": false,
+      "meaning_vi": "gió to, nhiều gió",
+      "definition_en": "with a lot of strong wind",
+      "example_en": "It is very windy at the beach today.",
+      "example_vi": "Hôm nay ở bãi biển gió rất to.",
+      "collocations": [
+        "very windy today",
+        "very windy weather"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "trees in strong wind",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "weather",
+      "rank_in_topic": 7,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.weather_forecast.phrase",
+      "headword": "weather forecast",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈwɛðɚ ˈfɔːrkæst/",
+      "ipa_unverified": false,
+      "meaning_vi": "dự báo thời tiết",
+      "definition_en": "news that tells you the weather for the next days",
+      "example_en": "I watch the weather forecast on TV.",
+      "example_vi": "Mình xem dự báo thời tiết trên TV.",
+      "collocations": [
+        "watch the weather forecast",
+        "check the weather forecast"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "weather map on tv",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "weather",
+      "rank_in_topic": 8,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.hot.adjective",
+      "headword": "hot",
+      "pos": "adjective",
+      "entry_type": "word",
+      "ipa": "/hɑːt/",
+      "ipa_unverified": false,
+      "meaning_vi": "nóng",
+      "definition_en": "very warm",
+      "example_en": "The water is too hot to drink.",
+      "example_vi": "Nước nóng quá, chưa uống được.",
+      "collocations": [
+        "hot weather",
+        "hot water"
+      ],
+      "word_family": [
+        "heat"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "thermometer high",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "hot and cold",
+      "rank_in_topic": 9,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    },
+    {
+      "content_key": "a1.weather.sun.noun",
+      "headword": "sun",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/sʌn/",
+      "ipa_unverified": false,
+      "meaning_vi": "mặt trời",
+      "definition_en": "the big bright star in the sky in the day",
+      "example_en": "The sun is very strong at noon.",
+      "example_vi": "Buổi trưa mặt trời rất gắt.",
+      "collocations": [
+        "the morning sun",
+        "in the sun"
+      ],
+      "word_family": [
+        "sunny",
+        "sunshine"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "bright sun",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "weather",
+      "rank_in_topic": 10,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#7f8d3a8b9818"
+    }
+  ],
+  "units": []
+}

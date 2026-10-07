@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "level": "A1",
+  "topic_code": "family",
+  "topic_title": "Gia đình",
+  "landmark_key": "a1_van_mieu",
+  "entries": [
+    {
+      "content_key": "a1.family.happy_birthday.phrase",
+      "headword": "happy birthday",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈhæpi ˈbɝːθdeɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "chúc mừng sinh nhật",
+      "definition_en": "words you say to someone on their birthday",
+      "example_en": "Happy birthday, Mai! This gift is for you.",
+      "example_vi": "Chúc mừng sinh nhật Mai! Quà này tặng bạn.",
+      "collocations": [
+        "say happy birthday",
+        "sing happy birthday"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "birthday cake",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "life events",
+      "rank_in_topic": 1,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.look_like.phrase",
+      "headword": "look like",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/lʊk laɪk/",
+      "ipa_unverified": false,
+      "meaning_vi": "trông giống",
+      "definition_en": "to have the same face or body as someone",
+      "example_en": "Nam looks like his father.",
+      "example_vi": "Nam trông giống bố.",
+      "collocations": [
+        "look like your mom",
+        "look like a baby"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "father and son faces",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "describing people",
+      "rank_in_topic": 2,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.my_family.phrase",
+      "headword": "my family",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/maɪ ˈfæməli/",
+      "ipa_unverified": false,
+      "meaning_vi": "gia đình tôi",
+      "definition_en": "the people in your home: parents, brothers and sisters",
+      "example_en": "There are five people in my family.",
+      "example_vi": "Gia đình mình có năm người.",
+      "collocations": [
+        "love my family",
+        "my family photo"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "family photo",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "family members",
+      "rank_in_topic": 3,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.best_friend.phrase",
+      "headword": "best friend",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/bɛst frɛnd/",
+      "ipa_unverified": false,
+      "meaning_vi": "bạn thân",
+      "definition_en": "the friend you like the most",
+      "example_en": "Lan is my best friend at school.",
+      "example_vi": "Lan là bạn thân của mình ở trường.",
+      "collocations": [
+        "my best friend",
+        "best friend forever"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "two girls hugging",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "people",
+      "rank_in_topic": 4,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.grow_up.phrase",
+      "headword": "grow up",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ɡroʊ ʌp/",
+      "ipa_unverified": false,
+      "meaning_vi": "lớn lên",
+      "definition_en": "to become older, from a child to an adult",
+      "example_en": "I grow up in a small town in Vietnam.",
+      "example_vi": "Mình lớn lên ở một thị trấn nhỏ ở Việt Nam.",
+      "collocations": [
+        "grow up fast",
+        "grow up in"
+      ],
+      "word_family": [
+        "grown-up"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "child growing taller",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "life events",
+      "rank_in_topic": 5,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.only_child.phrase",
+      "headword": "only child",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈoʊnli tʃaɪld/",
+      "ipa_unverified": false,
+      "meaning_vi": "con một",
+      "definition_en": "a child with no brothers or sisters",
+      "example_en": "Minh is an only child.",
+      "example_vi": "Minh là con một.",
+      "collocations": [
+        "an only child",
+        "the only child"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "one child with parents",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "family members",
+      "rank_in_topic": 6,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.get_married.phrase",
+      "headword": "get married",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ɡɛt ˈmɛrid/",
+      "ipa_unverified": false,
+      "meaning_vi": "kết hôn, cưới",
+      "definition_en": "to become husband and wife",
+      "example_en": "My aunt gets married in spring.",
+      "example_vi": "Dì mình cưới vào mùa xuân.",
+      "collocations": [
+        "get married soon",
+        "get married in May"
+      ],
+      "word_family": [
+        "marriage"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "wedding couple",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "life events",
+      "rank_in_topic": 7,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.take_care_of.phrase",
+      "headword": "take care of",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/teɪk kɛr ʌv/",
+      "ipa_unverified": false,
+      "meaning_vi": "chăm sóc",
+      "definition_en": "to look after someone or something",
+      "example_en": "My grandma takes care of my baby brother.",
+      "example_vi": "Bà mình chăm em trai nhỏ của mình.",
+      "collocations": [
+        "take care of a baby",
+        "take care of your family"
+      ],
+      "word_family": [],
+      "synonyms": [
+        "look after"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "grandmother holding baby",
+      "commonness": 3,
+      "basic_communication": false,
+      "subgroup": "family members",
+      "rank_in_topic": 8,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.boy.noun",
+      "headword": "boy",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/bɔɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "con trai, cậu bé",
+      "definition_en": "a male child",
+      "example_en": "The boy plays soccer with his friends.",
+      "example_vi": "Cậu bé chơi bóng đá với các bạn.",
+      "collocations": [
+        "a little boy",
+        "a good boy"
+      ],
+      "word_family": [
+        "boyfriend"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "young boy",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "people",
+      "rank_in_topic": 9,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    },
+    {
+      "content_key": "a1.family.dad.noun",
+      "headword": "dad",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/dæd/",
+      "ipa_unverified": false,
+      "meaning_vi": "bố",
+      "definition_en": "father",
+      "example_en": "My dad takes me to school by motorbike.",
+      "example_vi": "Bố chở mình đi học bằng xe máy.",
+      "collocations": [
+        "my dad",
+        "dad and mom"
+      ],
+      "word_family": [
+        "daddy"
+      ],
+      "synonyms": [
+        "father"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "father smiling",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "family members",
+      "rank_in_topic": 10,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [
+        "hard_words"
+      ],
+      "flag_details": {
+        "hard_words": "motorbike"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#c64e94f2684b"
+    }
+  ],
+  "units": []
+}

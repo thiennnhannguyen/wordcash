@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "level": "A1",
+  "topic_code": "greetings",
+  "topic_title": "Chào hỏi",
+  "landmark_key": "a1_ho_guom",
+  "entries": [
+    {
+      "content_key": "a1.greetings.hi.interjection",
+      "headword": "hi",
+      "pos": "interjection",
+      "entry_type": "word",
+      "ipa": "/haɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "xin chào",
+      "definition_en": "a short, friendly word you say when you meet someone",
+      "example_en": "Hi, Lan! How are you today?",
+      "example_vi": "Chào Lan! Hôm nay bạn khỏe không?",
+      "collocations": [
+        "say hi",
+        "hi there"
+      ],
+      "word_family": [],
+      "synonyms": [
+        "hello"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "two friends waving",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "greetings",
+      "rank_in_topic": 1,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.no.adverb",
+      "headword": "no",
+      "pos": "adverb",
+      "entry_type": "word",
+      "ipa": "/noʊ/",
+      "ipa_unverified": false,
+      "meaning_vi": "không",
+      "definition_en": "a word you say when something is not true or you do not want it",
+      "example_en": "No, thanks. I am not hungry now.",
+      "example_vi": "Không, cảm ơn. Giờ mình chưa đói.",
+      "collocations": [
+        "say no",
+        "no, thanks"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "shaking head",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "yes and no",
+      "rank_in_topic": 2,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [
+        "definition_too_long"
+      ],
+      "flag_details": {
+        "definition_too_long": "15 từ"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.ok.adjective",
+      "headword": "ok",
+      "pos": "adjective",
+      "entry_type": "word",
+      "ipa": "/ˌoʊˈkeɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "ổn, được",
+      "definition_en": "good enough or all right",
+      "example_en": "Is the soup OK for you?",
+      "example_vi": "Món canh có vừa miệng bạn không?",
+      "collocations": [
+        "it's ok",
+        "ok for me"
+      ],
+      "word_family": [],
+      "synonyms": [
+        "all right"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "thumbs up",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "yes and no",
+      "rank_in_topic": 3,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.ask.verb",
+      "headword": "ask",
+      "pos": "verb",
+      "entry_type": "word",
+      "ipa": "/æsk/",
+      "ipa_unverified": false,
+      "meaning_vi": "hỏi",
+      "definition_en": "to say something because you want an answer",
+      "example_en": "I ask my teacher a question after class.",
+      "example_vi": "Mình hỏi cô giáo một câu sau giờ học.",
+      "collocations": [
+        "ask a question",
+        "ask for help"
+      ],
+      "word_family": [
+        "question"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "student raising hand",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "talking",
+      "rank_in_topic": 4,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.bye.noun",
+      "headword": "bye",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/baɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "tạm biệt",
+      "definition_en": "a word you say when you leave someone",
+      "example_en": "Minh says bye to his mom at the school gate.",
+      "example_vi": "Minh chào tạm biệt mẹ ở cổng trường.",
+      "collocations": [
+        "say bye",
+        "bye for now"
+      ],
+      "word_family": [],
+      "synonyms": [
+        "goodbye"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "waving goodbye",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "greetings",
+      "rank_in_topic": 5,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.how.adverb",
+      "headword": "how",
+      "pos": "adverb",
+      "entry_type": "word",
+      "ipa": "/haʊ/",
+      "ipa_unverified": false,
+      "meaning_vi": "thế nào, như thế nào",
+      "definition_en": "a word to ask about the way or the state of something",
+      "example_en": "How do you go to school every day?",
+      "example_vi": "Hằng ngày bạn đi học bằng gì?",
+      "collocations": [
+        "how are you",
+        "how old"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "question mark",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "question words",
+      "rank_in_topic": 6,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.why.adverb",
+      "headword": "why",
+      "pos": "adverb",
+      "entry_type": "word",
+      "ipa": "/waɪ/",
+      "ipa_unverified": false,
+      "meaning_vi": "tại sao",
+      "definition_en": "a word to ask for the reason",
+      "example_en": "Why are you late for class today?",
+      "example_vi": "Sao hôm nay bạn đi học muộn?",
+      "collocations": [
+        "why not",
+        "ask why"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "Why đọc như \"quai\" — hỏi \"tại sao\" khi thấy lạ quái.",
+      "image_keyword": "thinking face",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "question words",
+      "rank_in_topic": 7,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.yes.adverb",
+      "headword": "yes",
+      "pos": "adverb",
+      "entry_type": "word",
+      "ipa": "/jɛs/",
+      "ipa_unverified": false,
+      "meaning_vi": "vâng, có",
+      "definition_en": "a word you say when something is true or you agree",
+      "example_en": "Yes, I like pho very much.",
+      "example_vi": "Có, mình rất thích phở.",
+      "collocations": [
+        "say yes",
+        "yes, please"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "nodding head",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "yes and no",
+      "rank_in_topic": 8,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [
+        "hard_words"
+      ],
+      "flag_details": {
+        "hard_words": "pho"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.fine.adjective",
+      "headword": "fine",
+      "pos": "adjective",
+      "entry_type": "word",
+      "ipa": "/faɪn/",
+      "ipa_unverified": false,
+      "meaning_vi": "khỏe, ổn",
+      "definition_en": "well and healthy, or good enough",
+      "example_en": "I am fine, thank you. And you?",
+      "example_vi": "Mình khỏe, cảm ơn. Còn bạn?",
+      "collocations": [
+        "feel fine",
+        "I'm fine"
+      ],
+      "word_family": [],
+      "synonyms": [
+        "well"
+      ],
+      "mnemonic_vi": "",
+      "image_keyword": "smiling person",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "yes and no",
+      "rank_in_topic": 9,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    },
+    {
+      "content_key": "a1.greetings.help.verb",
+      "headword": "help",
+      "pos": "verb",
+      "entry_type": "word",
+      "ipa": "/hɛlp/",
+      "ipa_unverified": false,
+      "meaning_vi": "giúp, giúp đỡ",
+      "definition_en": "to do something for someone so it is easier for them",
+      "example_en": "Can you help me with my homework?",
+      "example_vi": "Bạn giúp mình làm bài tập được không?",
+      "collocations": [
+        "help me",
+        "help my mom"
+      ],
+      "word_family": [
+        "helpful"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "helping hand",
+      "commonness": 5,
+      "basic_communication": true,
+      "subgroup": "talking",
+      "rank_in_topic": 10,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#9a8d102522c3"
+    }
+  ],
+  "units": []
+}

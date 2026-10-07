@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "level": "A1",
+  "topic_code": "food",
+  "topic_title": "Đồ ăn",
+  "landmark_key": "a1_pho_co",
+  "entries": [
+    {
+      "content_key": "a1.food.have_lunch.phrase",
+      "headword": "have lunch",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/hæv lʌntʃ/",
+      "ipa_unverified": false,
+      "meaning_vi": "ăn trưa",
+      "definition_en": "to eat the meal in the middle of the day",
+      "example_en": "We have lunch at school at eleven.",
+      "example_vi": "Chúng mình ăn trưa ở trường lúc mười một giờ.",
+      "collocations": [
+        "have lunch together",
+        "have lunch at home"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "lunch tray",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "meals",
+      "rank_in_topic": 1,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.have_dinner.phrase",
+      "headword": "have dinner",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/hæv ˈdɪnɚ/",
+      "ipa_unverified": false,
+      "meaning_vi": "ăn tối",
+      "definition_en": "to eat the meal in the evening",
+      "example_en": "My family has dinner at seven o'clock.",
+      "example_vi": "Nhà mình ăn tối lúc bảy giờ.",
+      "collocations": [
+        "have dinner together",
+        "have dinner at home"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "family at dinner table",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "meals",
+      "rank_in_topic": 2,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.have_breakfast.phrase",
+      "headword": "have breakfast",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/hæv ˈbrɛkfəst/",
+      "ipa_unverified": false,
+      "meaning_vi": "ăn sáng",
+      "definition_en": "to eat the first meal of the day",
+      "example_en": "I have breakfast with bread and milk.",
+      "example_vi": "Mình ăn sáng bằng bánh mì và sữa.",
+      "collocations": [
+        "have breakfast early",
+        "have breakfast at home"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "breakfast table",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "meals",
+      "rank_in_topic": 3,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.fried_rice.phrase",
+      "headword": "fried rice",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/fraɪd raɪs/",
+      "ipa_unverified": false,
+      "meaning_vi": "cơm chiên",
+      "definition_en": "rice cooked in a pan with oil and egg",
+      "example_en": "My mom makes fried rice on Sunday.",
+      "example_vi": "Mẹ mình làm cơm chiên vào Chủ nhật.",
+      "collocations": [
+        "egg fried rice",
+        "a plate of fried rice"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "plate of fried rice",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "rice and bread",
+      "rank_in_topic": 4,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.i_m_hungry.phrase",
+      "headword": "i'm hungry",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/aɪm ˈhʌŋɡri/",
+      "ipa_unverified": false,
+      "meaning_vi": "tôi đói rồi",
+      "definition_en": "words you say when you want to eat",
+      "example_en": "I'm hungry. Let's eat pho now.",
+      "example_vi": "Mình đói rồi. Mình đi ăn phở đi.",
+      "collocations": [
+        "I'm hungry now",
+        "I'm so hungry"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "person holding stomach",
+      "commonness": 4,
+      "basic_communication": true,
+      "subgroup": "meals",
+      "rank_in_topic": 5,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase",
+        "hard_words",
+        "collocation_missing_headword"
+      ],
+      "flag_details": {
+        "hard_words": "pho",
+        "collocation_missing_headword": "I'm so hungry"
+      },
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.orange_juice.phrase",
+      "headword": "orange juice",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ˈɔːrəndʒ dʒuːs/",
+      "ipa_unverified": false,
+      "meaning_vi": "nước cam",
+      "definition_en": "a drink made from oranges",
+      "example_en": "I drink orange juice every morning.",
+      "example_vi": "Sáng nào mình cũng uống nước cam.",
+      "collocations": [
+        "a glass of orange juice",
+        "fresh orange juice"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "glass of orange juice",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "drinks",
+      "rank_in_topic": 6,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.a_cup_of.phrase",
+      "headword": "a cup of",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ə kʌp ʌv/",
+      "ipa_unverified": false,
+      "meaning_vi": "một tách, một cốc",
+      "definition_en": "an amount in a small cup",
+      "example_en": "My dad drinks a cup of tea after lunch.",
+      "example_vi": "Bố mình uống một tách trà sau bữa trưa.",
+      "collocations": [
+        "a cup of tea",
+        "a cup of coffee"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "cup of tea",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "drinks",
+      "rank_in_topic": 7,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.a_glass_of.phrase",
+      "headword": "a glass of",
+      "pos": "phrase",
+      "entry_type": "phrase",
+      "ipa": "/ə ɡlæs ʌv/",
+      "ipa_unverified": false,
+      "meaning_vi": "một ly, một cốc",
+      "definition_en": "an amount in a glass",
+      "example_en": "Can I have a glass of water, please?",
+      "example_vi": "Cho mình xin một ly nước nhé?",
+      "collocations": [
+        "a glass of water",
+        "a glass of milk"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "glass of water",
+      "commonness": 4,
+      "basic_communication": false,
+      "subgroup": "drinks",
+      "rank_in_topic": 8,
+      "origin": "ai_phrase",
+      "sources": [],
+      "origin_flags": [
+        "phrase"
+      ],
+      "flags": [
+        "phrase"
+      ],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.eat.verb",
+      "headword": "eat",
+      "pos": "verb",
+      "entry_type": "word",
+      "ipa": "/iːt/",
+      "ipa_unverified": false,
+      "meaning_vi": "ăn",
+      "definition_en": "to put food in your mouth and have it",
+      "example_en": "We eat rice with fish and vegetables.",
+      "example_vi": "Nhà mình ăn cơm với cá và rau.",
+      "collocations": [
+        "eat rice",
+        "eat breakfast"
+      ],
+      "word_family": [
+        "food"
+      ],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "person eating rice",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "meals",
+      "rank_in_topic": 9,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    },
+    {
+      "content_key": "a1.food.egg.noun",
+      "headword": "egg",
+      "pos": "noun",
+      "entry_type": "word",
+      "ipa": "/ɛɡ/",
+      "ipa_unverified": false,
+      "meaning_vi": "quả trứng",
+      "definition_en": "a round food from a chicken",
+      "example_en": "My mom buys ten eggs at the market.",
+      "example_vi": "Mẹ mình mua mười quả trứng ở chợ.",
+      "collocations": [
+        "a boiled egg",
+        "fried eggs"
+      ],
+      "word_family": [],
+      "synonyms": [],
+      "mnemonic_vi": "",
+      "image_keyword": "eggs in a bowl",
+      "commonness": 5,
+      "basic_communication": false,
+      "subgroup": "meat and fish",
+      "rank_in_topic": 10,
+      "origin": "source",
+      "sources": [
+        "cefrj"
+      ],
+      "origin_flags": [],
+      "flags": [],
+      "flag_details": {},
+      "status": "draft",
+      "reviewed_at": null,
+      "review_note": "",
+      "reject_reason": "",
+      "ai_prompt": "enrich_v1#36daf8e9bc28"
+    }
+  ],
+  "units": []
+}
