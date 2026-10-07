@@ -2,6 +2,12 @@
  * Trang landing: màn hình đầu tiên người dùng thấy. Mục tiêu duy nhất là bấm "CHƠI NGAY".
  * Thứ tự: header · hero (mini màn đấu) · số liệu · hai khu chính · cách chơi · thang rank ·
  * linh vật · Cửa Ải Hôm Nay · CTA cuối · footer.
+ *
+ * Mọi con số (số mục từ theo cấp, số linh vật, số người học, mốc rank, luật lượt quay, cỡ bài, số từ Cửa Ải) lấy từ
+ * GET /public/stats (store/rulesStore.js; không cần đăng nhập). Số người học chỉ hiện khi server trả (≥ 100 người); không thì
+ * thay bằng câu không có số. Đang tải: khối chờ; lỗi: thông báo + Thử lại.
+ * HÌNH MINH HỌA TĨNH (không phải dữ liệu): mini màn đấu ở hero, bản đồ trạm "Bài 1–3", mã phòng mẫu, sticker và dải streak ở
+ * khối Cửa Ải.
  */
 
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +25,9 @@ import {
   Sword,
 } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
+import { ErrorState, Skeleton } from '../../components/ui/DataState'
+import { useRules } from '../../store/rulesStore'
+import { formatNumber } from '../../utils/format'
 import Icon, { IconBadge } from '../../components/ui/Icon'
 import Reveal from '../../components/ui/Reveal'
 import Sticker from '../../components/ui/Sticker'
@@ -31,20 +40,29 @@ import LandingHeader, { LANDING_LINKS } from './LandingHeader'
 import MascotFan from './MascotFan'
 import RankStairs from './RankStairs'
 
-const STATS = [
-  { icon: BookOpen, bg: 'primary', value: '10.000', label: 'từ vựng' },
-  { icon: GraduationCap, bg: 'sky', value: '6 cấp độ', label: 'A1–C2' },
-  { icon: Smiley, bg: 'gold', value: '100', label: 'linh vật' },
-  { icon: Sword, bg: 'orange', value: 'Đấu 1v1', label: 'thời gian thực' },
-]
+/** Dải số liệu từ GET /public/stats. */
+function statsOf(stats) {
+  const levels = stats.entries_by_level.filter((l) => l.count > 0).map((l) => l.code)
+  return [
+    { icon: BookOpen, bg: 'primary', value: formatNumber(stats.entries_total), label: 'mục từ · thêm cấp mới liên tục' },
+    {
+      icon: GraduationCap,
+      bg: 'sky',
+      value: `${levels.length} cấp độ`,
+      label: levels.length ? (levels.length > 1 ? `${levels[0]}–${levels[levels.length - 1]} đã mở` : `${levels[0]} đã mở`) : 'đang chuẩn bị',
+    },
+    { icon: Smiley, bg: 'gold', value: formatNumber(stats.mascots_released), label: 'linh vật đã ra mắt' },
+    { icon: Sword, bg: 'orange', value: 'Đấu 1v1', label: 'sắp mở' },
+  ]
+}
 
 const STEPS = [
-  { icon: GraduationCap, bg: 'sky', title: 'Học theo lộ trình', text: 'Mỗi bài 15–20 từ, đi từ nhận diện nghĩa tới tự điền vào câu.' },
+  { icon: GraduationCap, bg: 'sky', title: 'Học theo lộ trình', text: (r) => `${r?.unit_size ? `Mỗi bài ${r.unit_size.min === r.unit_size.max ? r.unit_size.min : `${r.unit_size.min}–${r.unit_size.max}`} từ, đi` : 'Đi'} từ nhận diện nghĩa tới tự điền vào câu.` },
   { icon: Fire, bg: 'gold', title: 'Qua Cửa Ải mỗi ngày', text: 'Trả bài vài từ đã học để giữ streak và không bị tụt từ.' },
-  { icon: Sword, bg: 'orange', title: 'Vào Đấu Trường', text: 'Dùng vốn từ thật để hạ đối thủ và leo bảng xếp hạng.' },
+  { icon: Sword, bg: 'orange', title: 'Vào Đấu Trường (sắp mở)', text: 'Dùng vốn từ thật để hạ đối thủ và leo bảng xếp hạng.' },
 ]
 
-// Trạm trên bản đồ lộ trình minh họa
+// Trạm trên bản đồ lộ trình: HÌNH MINH HỌA TĨNH, không phải tiến độ của ai
 const ROADMAP = [
   { state: 'done', label: 'Bài 1' },
   { state: 'done', label: 'Bài 2' },
@@ -53,6 +71,7 @@ const ROADMAP = [
   { state: 'locked', label: 'Boss' },
 ]
 
+// Dải streak ở khối Cửa Ải: HÌNH MINH HỌA TĨNH
 const WEEK = [
   { day: 'T2', done: true },
   { day: 'T3', done: true },
@@ -105,9 +124,34 @@ function RoadmapStation({ state, label }) {
   )
 }
 
+function StatsStrip({ status, stats, retry }) {
+  if (status === 'error') return <ErrorState compact title="Chưa tải được số liệu" onRetry={retry} className="col-span-full" />
+  if (!stats) {
+    return [0, 1, 2, 3].map((k) => (
+      <div key={k} className="flex items-center gap-3 md:gap-4" role="status" aria-label="Đang tải">
+        <Skeleton className="size-16 shrink-0" />
+        <div className="flex flex-1 flex-col gap-2">
+          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+    ))
+  }
+  return statsOf(stats).map((s, i) => (
+    <Reveal key={s.label} delay={i * 0.06} className="flex items-center gap-3 md:gap-4">
+      <IconBadge icon={s.icon} bg={s.bg} size="lg" shape="square" />
+      <div className="leading-tight">
+        <div className="font-num text-xl md:text-2xl">{s.value}</div>
+        <div className="text-caption font-medium text-muted">{s.label}</div>
+      </div>
+    </Reveal>
+  ))
+}
+
 export default function Landing() {
   const navigate = useNavigate()
   const play = () => navigate('/register')
+  const { status, stats, rules, retry } = useRules()
 
   return (
     <div id="top" className="min-h-dvh overflow-x-clip bg-bg">
@@ -119,7 +163,7 @@ export default function Landing() {
           <Container className="grid items-center gap-12 pb-16 pt-10 md:pt-16 lg:grid-cols-[1.25fr_1fr] lg:gap-12 lg:pb-24">
             <div className="flex flex-col gap-6">
               <Sticker bg="gold" tilt={-3} size="sm" wiggle className="self-start">
-                Mới · Đấu từ vựng 1v1
+                Học từ vựng kiểu game
               </Sticker>
               <h1 className="text-[48px] leading-[0.98] tracking-[-0.04em] sm:text-[64px] lg:text-[72px] xl:text-[78px]">
                 Học từ
@@ -133,7 +177,7 @@ export default function Landing() {
                 </span>
               </h1>
               <p className="max-w-lg text-lg text-muted md:text-xl">
-                Học 10.000 từ vựng từ A1 đến C2, rồi thách đấu bạn bè. Trả lời nhanh hơn, bắn trúng trước.
+                Học từ vựng theo lộ trình A1 → C2, ôn đúng lúc sắp quên, sưu tầm linh vật. Sắp có Đấu Trường: trả lời nhanh hơn, bắn trúng trước.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                 <Button size="lg" icon={Play} onClick={play}>
@@ -156,7 +200,13 @@ export default function Landing() {
                   ))}
                 </div>
                 <p className="text-caption font-medium text-muted">
-                  <span className="font-num text-base text-ink">12.400+</span> người đang luyện từ mỗi ngày
+                  {stats?.learners != null ? (
+                    <>
+                      <span className="font-num text-base text-ink">{formatNumber(stats.learners)}</span> người đang luyện từ cùng WORDCLASH
+                    </>
+                  ) : (
+                    'Luyện từ mỗi ngày, giữ streak, lên rank bằng vốn từ thật.'
+                  )}
                 </p>
               </div>
             </div>
@@ -168,15 +218,7 @@ export default function Landing() {
         {/* 3. DẢI SỐ LIỆU */}
         <section className="border-y-thick border-line bg-surface">
           <Container className="grid grid-cols-2 gap-4 py-8 md:grid-cols-4 md:gap-6 md:py-10">
-            {STATS.map((s, i) => (
-              <Reveal key={s.label} delay={i * 0.06} className="flex items-center gap-3 md:gap-4">
-                <IconBadge icon={s.icon} bg={s.bg} size="lg" shape="square" />
-                <div className="leading-tight">
-                  <div className="font-num text-xl md:text-2xl">{s.value}</div>
-                  <div className="text-caption font-medium text-muted">{s.label}</div>
-                </div>
-              </Reveal>
-            ))}
+            <StatsStrip status={status} stats={stats} retry={retry} />
           </Container>
         </section>
 
@@ -220,10 +262,11 @@ export default function Landing() {
                   <h3 className="text-[30px] font-black">Đấu Trường</h3>
                 </div>
                 <p className="text-lg font-medium text-ink">
-                  Ghép trận cùng rank hoặc rủ bạn bằng mã phòng. Ai đúng và nhanh hơn thì bắn trước.
+                  Sắp mở: ghép trận cùng rank hoặc rủ bạn bằng mã phòng. Ai đúng và nhanh hơn thì bắn trước.
                 </p>
                 <div className="mt-auto flex flex-col gap-4 rounded-card border-thick border-line bg-surface p-4 shadow-hard md:p-5">
-                  <div className="hud-label">Mã phòng</div>
+                  {/* Mã phòng mẫu: HÌNH MINH HỌA TĨNH */}
+                  <div className="hud-label">Mã phòng (minh họa)</div>
                   <div className="flex gap-2" aria-label="Mã phòng WX7K2">
                     {'WX7K2'.split('').map((ch, i) => (
                       <span
@@ -234,8 +277,8 @@ export default function Landing() {
                       </span>
                     ))}
                   </div>
-                  <Button icon={Lightning} fullWidth onClick={play}>
-                    Tìm trận
+                  <Button icon={Lightning} fullWidth disabled>
+                    Sắp ra mắt
                   </Button>
                 </div>
               </Reveal>
@@ -255,7 +298,7 @@ export default function Landing() {
                     <IconBadge icon={step.icon} bg={step.bg} size="lg" />
                   </div>
                   <h3 className="text-h3">{step.title}</h3>
-                  <p className="text-muted">{step.text}</p>
+                  <p className="text-muted">{typeof step.text === 'function' ? step.text(rules) : step.text}</p>
                   {i < STEPS.length - 1 && (
                     <span aria-hidden="true" className="absolute -right-6 top-1/2 z-10 hidden -translate-y-1/2 md:block">
                       <IconBadge icon={ArrowRight} bg="gold" size="sm" />
@@ -275,7 +318,7 @@ export default function Landing() {
               title="Leo rank bằng số từ đã thuộc."
             />
             <Reveal>
-              <RankStairs />
+              <RankStairs rules={rules} />
             </Reveal>
           </Container>
         </section>
@@ -283,14 +326,20 @@ export default function Landing() {
         {/* 7. LINH VẬT */}
         <section id="linh-vat" className="scroll-mt-20 border-y-thick border-line bg-surface py-20 md:py-28">
           <Container className="flex flex-col items-center text-center">
-            <SectionTitle eyebrow="Bộ sưu tập" title="Sưu tầm 100 linh vật" className="items-center" />
+            <SectionTitle
+              eyebrow="Bộ sưu tập"
+              title={stats ? `Sưu tầm ${formatNumber(stats.mascots_total)} linh vật` : 'Sưu tầm linh vật'}
+              className="items-center"
+            />
             <Reveal className="w-full">
-              <MascotFan />
+              <MascotFan mascots={stats?.featured_mascots ?? null} />
             </Reveal>
-            <p className="flex items-center gap-2 text-base font-medium md:text-lg">
-              <IconBadge icon={Star} bg="gold" size="sm" shadow={false} />
-              Cứ mỗi 50 từ thuộc được 1 lượt quay.
-            </p>
+            {rules && (
+              <p className="flex items-center gap-2 text-base font-medium md:text-lg">
+                <IconBadge icon={Star} bg="gold" size="sm" shadow={false} />
+                Cứ mỗi {rules.spin_every_n_words} từ thuộc được 1 lượt quay.
+              </p>
+            )}
           </Container>
         </section>
 
@@ -305,8 +354,9 @@ export default function Landing() {
               <div className="flex flex-col gap-5">
                 <h2 className="text-[34px] leading-[1.05] md:text-[44px]">Cửa Ải Hôm Nay</h2>
                 <p className="max-w-2xl text-lg font-medium">
-                  Mỗi ngày một cửa ải. Mở web là phải trả bài 2–5 từ. Quên là tụt từ, có thể tụt rank. Giữ streak để nhận
-                  lượt quay.
+                  Mỗi ngày một cửa ải. Mở web là phải trả bài
+                  {rules ? ` ${rules.daily_check_min_words}–${rules.daily_check_max_words}` : ' vài'} từ đã học. Quên là tụt từ, có
+                  thể tụt rank. Giữ streak để nhận lượt quay.
                 </p>
                 <ul className="grid max-w-md grid-cols-7 gap-1.5 md:gap-2" aria-label="Streak trong tuần">
                   {WEEK.map((d) => (
@@ -335,7 +385,7 @@ export default function Landing() {
               <MascotBlob color="accent" shape="round" size={110} className="absolute -bottom-6 -left-4 hidden -rotate-12 md:block" />
               <MascotBlob color="gold" shape="drop" size={96} className="absolute -right-2 -top-3 hidden rotate-12 md:block" />
               <h2 className="text-[40px] leading-[1.02] text-white md:text-[64px]">Sẵn sàng vào trận?</h2>
-              <p className="max-w-md text-lg text-white/85">Tạo tài khoản miễn phí, làm bài xếp lớp và vào trận đầu tiên ngay hôm nay.</p>
+              <p className="max-w-md text-lg text-white/85">Tạo tài khoản miễn phí và học bài đầu tiên ngay hôm nay.</p>
               <Button variant="accent" size="lg" icon={Lightning} onClick={play}>
                 Tạo tài khoản ngay
               </Button>
