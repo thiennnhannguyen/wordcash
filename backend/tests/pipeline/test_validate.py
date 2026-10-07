@@ -143,3 +143,8 @@ def test_hyphenated_headwords_are_allowed_in_other_examples():
     whitelist = validate.build_whitelist("A1", [], [TopicFile(level="A1", topic_code="shopping", topic_title="Mua sắm", entries=[tshirt])])
     green = entry(headword="green", pos="adjective", example_en="I like the green T-shirt.")
     assert validate.rule_hard_words(green, whitelist | {"i", "like", "the"}) is None
+
+
+def test_info_flags_are_not_counted():
+    assert {"phrase", "ai_suggested_headword"} <= validate.INFO_FLAGS
+    assert {"phrase", "ai_suggested_headword"} <= set(validate.FLAG_HELP)

@@ -94,6 +94,8 @@ tiến độ chặng / cấp; người đang học dở được đưa về bài
   (`ENRICH_V`…). Sau đó chạy `03_enrich_entries --redo-drafts --emit` (soạn output, `--ingest`) để soạn lại các mục còn draft
   và chưa ai duyệt, rồi chạy lại 04.
 - Bước 04 tính lại cờ từ đầu mỗi lần chạy và chỉ ghi các file thật sự đổi.
+- Cờ thông tin (`config.INFO_FLAGS`: `phrase`, `ai_suggested_headword`) vẫn hiện thành nhãn cho người duyệt nhưng không tính là
+  "có cờ" trong báo cáo `flagged` và không tính vào ngưỡng dừng 10% mục bị cờ mỗi chủ đề khi soạn.
 - Bước 07 upsert theo `content_key`; chạy lại không đổi gì. Mục bị bỏ khỏi file thì được đặt `retired_at`, không bị xóa: không
   dạy mới nữa, nhưng vẫn ôn được và vẫn giữ trạng thái đã thuộc.
 

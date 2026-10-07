@@ -52,10 +52,10 @@ FLAG_HELP = {
     "same_meaning_vi": "Trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).",
     "phrase": "Cụm từ cố định (do AI đề xuất ở bước 02).",
     "needs_topic_review": "AI không chắc chủ đề — xem lại chủ đề của mục này.",
-    "ai_suggested_headword": "Từ do AI đề xuất thêm (không có trong nguồn) — duyệt kỹ.",
+    "ai_suggested_headword": "Từ do AI đề xuất thêm (đã kiểm có trong CEFR-J A1–A2) — duyệt kỹ. Chỉ là nhãn thông tin.",
 }
-# Cờ chỉ mang tính thông tin (không tính là "có cờ" cần xử lý)
-INFO_FLAGS = {"phrase"}
+# Cờ chỉ mang tính thông tin (không tính là "có cờ" cần xử lý) — khai báo ở config
+INFO_FLAGS = config.INFO_FLAGS
 NUMBER_TOKEN = re.compile(r"^\d+(?:[:.,]\d+)*$")
 
 

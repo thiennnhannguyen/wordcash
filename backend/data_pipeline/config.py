@@ -46,6 +46,10 @@ PHRASE_RATIO = 0.1  # quyết định 4: khoảng 10% là cụm từ cố địn
 PHRASES_PER_UNIT_MAX = 3  # tối đa cụm từ cố định mỗi bài, rải đều trong bài và trong chủ đề
 PHRASES_PER_UNIT_MAX_BY_TOPIC = {"greetings": 8}  # chủ đề chào hỏi vốn nhiều câu giao tiếp
 
+# Cờ chỉ mang tính thông tin: vẫn hiện cho người duyệt (nhãn trên /dev/content) nhưng KHÔNG tính là "có cờ cần xử lý" và không
+# tính vào ngưỡng dừng 10% mục bị cờ mỗi chủ đề. ai_suggested_headword: từ đề xuất thêm đã kiểm có trong CEFR-J A1–A2 ở bước 02.
+INFO_FLAGS = frozenset({"phrase", "ai_suggested_headword"})
+
 # Giới hạn độ dài (docs/content-style-guide.md)
 MEANING_VI_MAX_WORDS = 6
 DEFINITION_EN_MAX_WORDS = 12

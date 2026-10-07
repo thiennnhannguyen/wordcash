@@ -161,3 +161,6 @@ Trả lời từng câu. Có câu "Không" thì sửa trực tiếp, nhờ AI vi
 8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không? Với cụm từ cố định: cụm liên quan có ích, không lặp lại chính cụm?
 9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không?
 10. Mọi cờ của mục đã được xử lý (đã sửa, hoặc đã xem và chấp nhận) chưa?
+
+Nhãn thông tin (`phrase`, `ai_suggested_headword`) không phải lỗi, chỉ nhắc người duyệt chú ý; chúng không tính vào số mục
+"có cờ" và không tính vào ngưỡng dừng 10% khi soạn. `ai_suggested_headword` = từ AI đề xuất thêm, đã kiểm có trong CEFR-J A1–A2.
