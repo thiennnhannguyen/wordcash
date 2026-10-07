@@ -36,7 +36,7 @@ VN_CONTEXT_MAX_PER_EXAMPLE = 1
 
 # Quy mô (quyết định 6)
 TARGET_PER_LEVEL = 800
-TOPIC_SIZE_MIN = 48  # 3 bài × 16; chủ đề ít từ thì nhỏ hơn, không độn từ cho đủ
+TOPIC_SIZE_MIN = 48  # 3 bài × 16 (≥ 3 × 15); chỉ đề xuất thêm cho đủ mức này, không độn tới chỉ tiêu
 TOPIC_SIZE_MAX = 90
 UNIT_SIZE_MIN = 15  # luật: mỗi bài 15–20 mục (CLAUDE.md); 3–5 bài × 15–20 phủ liền 45–100 mục
 UNIT_SIZE_MAX = 20

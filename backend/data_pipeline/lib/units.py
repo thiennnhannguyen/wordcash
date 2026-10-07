@@ -40,6 +40,16 @@ def unit_count(n: int) -> int:
     return min(options, key=lambda k: (abs(n / k - IDEAL_UNIT_SIZE), -k))
 
 
+def estimated_units(n: int) -> int:
+    """Số bài dự kiến cho chủ đề n mục (bước 02, báo cáo): đúng như `unit_count` (luật 15–20 mục mỗi bài, vd. 61 → 4 bài);
+    cỡ không chia được (dưới 45 mục…) thì lấy số bài gần nhất trong UNITS_PER_TOPIC_MIN–MAX."""
+    try:
+        return unit_count(n)
+    except UnitError:
+        k = round(n / IDEAL_UNIT_SIZE)
+        return min(config.UNITS_PER_TOPIC_MAX, max(config.UNITS_PER_TOPIC_MIN, k))
+
+
 def phrase_cap(topic_code: str) -> int:
     return config.PHRASES_PER_UNIT_MAX_BY_TOPIC.get(topic_code, config.PHRASES_PER_UNIT_MAX)
 

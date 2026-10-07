@@ -178,8 +178,7 @@ def order_topic(code: str, items: list[dict], reserve: list[dict]) -> list[dict]
     phrase_cap × số bài ước tính → dự phòng (lý do phrase_cap)."""
     words = sorted((i for i in items if i["pos"] != config.POS_PHRASE), key=priority)
     phrases = sorted((i for i in items if i["pos"] == config.POS_PHRASE), key=priority)
-    est_units = min(config.UNITS_PER_TOPIC_MAX, max(config.UNITS_PER_TOPIC_MIN, round(len(items) / units.IDEAL_UNIT_SIZE)))
-    cap = units.phrase_cap(code) * est_units
+    cap = units.phrase_cap(code) * units.estimated_units(len(items))
     reserve += [{**p, "reserve_reason": "phrase_cap"} for p in phrases[cap:]]
     return units.interleave(words, phrases[:cap])
 
@@ -291,7 +290,8 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
         "classified": len(results), "excluded": dict(Counter(e["reason"] for e in excluded)),
         "reserve_reasons": dict(Counter(r["reserve_reason"] for r in reserve)),
         "dropped_suggestions": ctx.dropped_suggestions,
-        "topics": {code: {"total": len(items), "phrases": sum(i["pos"] == config.POS_PHRASE for i in items),
+        "topics": {code: {"total": len(items), "units_estimated": units.estimated_units(len(items)),
+                          "phrases": sum(i["pos"] == config.POS_PHRASE for i in items),
                           "ai_suggested": sum(i["origin"] == "ai_suggested" for i in items),
                           "needs_topic_review": sum("needs_topic_review" in i["flags"] for i in items)}
                    for code, items in topics.items()},

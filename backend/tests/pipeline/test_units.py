@@ -31,6 +31,16 @@ def test_unit_count(n, k):
     assert config.UNIT_SIZE_MIN <= n / k <= config.UNIT_SIZE_MAX
 
 
+@pytest.mark.parametrize("n,k", [(48, 3), (60, 3), (61, 4), (75, 4), (80, 5), (90, 5)])
+def test_estimated_units_follow_15_to_20_rule(n, k):
+    assert units.estimated_units(n) == units.unit_count(n) == k
+    assert config.UNIT_SIZE_MIN <= n / k <= config.UNIT_SIZE_MAX
+
+
+def test_estimated_units_for_sizes_that_cannot_split():
+    assert units.estimated_units(30) == config.UNITS_PER_TOPIC_MIN and units.estimated_units(200) == config.UNITS_PER_TOPIC_MAX
+
+
 @pytest.mark.parametrize("n", [44, 101, 10])
 def test_unit_count_impossible(n):
     with pytest.raises(units.UnitError):
