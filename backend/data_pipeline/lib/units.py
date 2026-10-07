@@ -4,11 +4,14 @@ Bước 06 — chia bài cho từng chủ đề (gọi từ data_pipeline/06_bui
 - Chỉ dùng mục `approved`. Số bài k ∈ [UNITS_PER_TOPIC_MIN, UNITS_PER_TOPIC_MAX] sao cho mỗi bài có UNIT_SIZE_MIN–MAX mục,
   ưu tiên cỡ bài gần 18 nhất (hòa thì nhiều bài hơn, bài ngắn hơn). Không chia được → lỗi cho chủ đề đó (không ghi).
 - Thứ tự dạy: theo độ dễ (cụm từ / giao tiếp cơ bản, điểm phổ biến, độ dài — giống bước 02), các mục cùng `subgroup` gom liền
-  nhau để vào cùng bài; cụm từ cố định rải đều các bài (cụm dễ nhất vào bài 1) và đứng đầu bài.
+  nhau để vào cùng bài; cụm từ cố định rải đều các bài (cụm dễ nhất vào bài 1) và rải đều trong bài (không dồn lên đầu),
+  tối đa `phrase_cap(chủ đề)` cụm mỗi bài (PHRASES_PER_UNIT_MAX, riêng greetings 8); vượt thì lỗi.
 - Tên bài: AI đề xuất (prompts/unit_titles_v1.md), `title_status = draft` để duyệt ở tab "Bài học" của /dev/content. Bài cùng
   vị trí, cùng danh sách mục với lần trước thì GIỮ tên và trạng thái tên cũ. Chế độ agent: chưa có output thì bài được ghi với
   tên trống; sau `--ingest` bài chưa có tên được đặt tên.
-- `check_units`: không mục nào thuộc 2 bài cùng nhánh, mỗi bài 16–20 mục, mục trong bài phải tồn tại và đã duyệt (loader dùng lại).
+- `check_units`: không mục nào thuộc 2 bài cùng nhánh, mỗi bài 16–20 mục, không quá số cụm từ cho phép, mục trong bài phải tồn
+  tại và đã duyệt (loader dùng lại).
+- `interleave`: rải đều cụm từ vào danh sách từ (dùng cả ở bước 02 để xếp thứ tự soạn).
 """
 
 from dataclasses import dataclass, field
@@ -37,6 +40,20 @@ def unit_count(n: int) -> int:
     return min(options, key=lambda k: (abs(n / k - IDEAL_UNIT_SIZE), -k))
 
 
+def phrase_cap(topic_code: str) -> int:
+    return config.PHRASES_PER_UNIT_MAX_BY_TOPIC.get(topic_code, config.PHRASES_PER_UNIT_MAX)
+
+
+def interleave(words: list, phrases: list) -> list:
+    """Rải đều `phrases` vào giữa `words` (giữ thứ tự từng danh sách): cụm thứ j ở vị trí ~ (j + 0.5) · n / số cụm."""
+    if not phrases:
+        return list(words)
+    n = len(words) + len(phrases)
+    slots = {int((j + 0.5) * n / len(phrases)) for j in range(len(phrases))}
+    w, p = iter(words), iter(phrases)
+    return [next(p) if i in slots else next(w) for i in range(n)]
+
+
 def ease_key(e: ContentEntry) -> tuple:
     basic = e.pos == config.POS_PHRASE or e.basic_communication
     return (0 if basic else 1, -e.commonness, len(e.headword.split()), len(e.headword), e.rank_in_topic, e.headword)
@@ -51,18 +68,21 @@ def teaching_order(entries: list[ContentEntry]) -> list[ContentEntry]:
     return [e for g in groups.values() for e in g]
 
 
-def split(entries: list[ContentEntry]) -> list[list[ContentEntry]]:
+def split(entries: list[ContentEntry], topic_code: str = "") -> list[list[ContentEntry]]:
     k = unit_count(len(entries))
     sizes = [len(entries) // k + (1 if i < len(entries) % k else 0) for i in range(k)]
     phrases = sorted([e for e in entries if e.pos == config.POS_PHRASE], key=ease_key)
+    if len(phrases) > phrase_cap(topic_code) * k:
+        raise UnitError(f"{len(phrases)} cụm từ đã duyệt, quá {phrase_cap(topic_code)} cụm × {k} bài — bớt cụm từ (từ chối) trước")
     words = teaching_order([e for e in entries if e.pos != config.POS_PHRASE])
-    units: list[list[ContentEntry]] = [[] for _ in range(k)]
+    unit_phrases: list[list[ContentEntry]] = [[] for _ in range(k)]
     for i, p in enumerate(phrases):
-        units[i % k].append(p)
+        unit_phrases[i % k].append(p)
     it = iter(words)
+    units = []
     for i in range(k):
-        while len(units[i]) < sizes[i]:
-            units[i].append(next(it))
+        unit_words = [next(it) for _ in range(sizes[i] - len(unit_phrases[i]))]
+        units.append(interleave(unit_words, unit_phrases[i]))
     return units
 
 
@@ -72,6 +92,7 @@ def check_units(topic: TopicFile, branch: str = config.DEFAULT_BRANCH) -> list[s
     approved = {e.content_key for e in topic.entries if e.status == "approved"}
     seen: dict[str, int] = {}
     units = [u for u in topic.units if u.branch == branch]
+    is_phrase = {e.content_key for e in topic.entries if e.pos == config.POS_PHRASE}
     if not units:
         return [f"{topic.topic_code}: chưa chia bài"]
     if [u.position for u in sorted(units, key=lambda u: u.position)] != list(range(1, len(units) + 1)):
@@ -79,6 +100,9 @@ def check_units(topic: TopicFile, branch: str = config.DEFAULT_BRANCH) -> list[s
     for u in units:
         if not config.UNIT_SIZE_MIN <= len(u.entries) <= config.UNIT_SIZE_MAX:
             errors.append(f"{u.content_key}: {len(u.entries)} mục (phải {config.UNIT_SIZE_MIN}–{config.UNIT_SIZE_MAX})")
+        n_phrases = sum(k in is_phrase for k in u.entries)
+        if n_phrases > phrase_cap(topic.topic_code):
+            errors.append(f"{u.content_key}: {n_phrases} cụm từ (tối đa {phrase_cap(topic.topic_code)})")
         for key in u.entries:
             if key in seen:
                 errors.append(f"{key} thuộc 2 bài: bài {seen[key]} và bài {u.position}")
@@ -115,7 +139,7 @@ def _titles(client: AIClient | None, topic: TopicFile, groups: list[list[Content
 
 def build_topic(topic: TopicFile, client: AIClient | None, cache: DiskCache, usage: Usage, branch: str = config.DEFAULT_BRANCH) -> TopicFile:
     approved = [e for e in topic.entries if e.status == "approved"]
-    groups = split(approved)
+    groups = split(approved, topic.topic_code)
     old = {u.position: u for u in topic.units if u.branch == branch}
     titles = _titles(client, topic, groups, cache, usage)
     units = []

@@ -11,8 +11,9 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
 4. Cân bằng: chủ đề dưới TOPIC_SIZE_MIN → AI đề xuất thêm từ (prompts/suggest_v1.md), cờ `ai_suggested_headword`; chủ đề
    trên TOPIC_SIZE_MAX, hoặc cả cấp vượt TARGET_PER_LEVEL quá 5% → bớt mục ưu tiên thấp nhất của chủ đề đông nhất, đưa vào
    `reserve` (người duyệt có thể đổi lại).
-5. Thứ tự trong chủ đề (nguồn CEFR-J không có tần suất): cụm từ cố định và từ giao tiếp cơ bản trước, rồi điểm phổ biến do AI
-   chấm (lưu trong mục, người duyệt chỉnh được), rồi từ ngắn trước.
+5. Thứ tự trong chủ đề (nguồn CEFR-J không có tần suất): từ giao tiếp cơ bản trước, rồi điểm phổ biến do AI chấm (lưu trong
+   mục, người duyệt chỉnh được), rồi từ ngắn trước; cụm từ cố định rải đều trong chủ đề (units.interleave), tối đa
+   PHRASES_PER_UNIT_MAX × số bài (greetings 8 × số bài), dư → dự phòng `phrase_cap`.
 
 `--limit N` (chạy thử): chỉ phân loại N ứng viên đầu, KHÔNG thêm cụm từ, đề xuất hay cân bằng.
 Chế độ agent: request chưa có output là "đang chờ" (`ctx.pending`), không phải lỗi; giai đoạn sau (cụm từ → đề xuất thêm)
@@ -27,7 +28,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from data_pipeline import config
-from data_pipeline.lib import prompts
+from data_pipeline.lib import prompts, units
 from data_pipeline.lib.ai import AgentPending, AIClient, AIError, AIJsonError, Usage, call_json
 from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
@@ -163,9 +164,20 @@ def _generated(ctx: Context, kind: str, version: int, topic, count: int, existin
 
 
 def priority(item: dict) -> tuple:
-    """Khóa sắp xếp trong chủ đề (nhỏ = dạy trước)."""
+    """Khóa sắp xếp trong chủ đề (nhỏ = dạy trước). Cụm từ cố định được xếp riêng rồi rải đều (`order_topic`)."""
     basic = item["pos"] == config.POS_PHRASE or item.get("basic_communication")
     return (0 if basic else 1, -item.get("commonness", 3), len(item["headword"].split()), len(item["headword"]), item["headword"])
+
+
+def order_topic(code: str, items: list[dict], reserve: list[dict]) -> list[dict]:
+    """Thứ tự soạn / dạy: từ theo `priority`, cụm từ rải đều trong chủ đề (không dồn lên đầu). Cụm từ vượt
+    phrase_cap × số bài ước tính → dự phòng (lý do phrase_cap)."""
+    words = sorted((i for i in items if i["pos"] != config.POS_PHRASE), key=priority)
+    phrases = sorted((i for i in items if i["pos"] == config.POS_PHRASE), key=priority)
+    est_units = min(config.UNITS_PER_TOPIC_MAX, max(config.UNITS_PER_TOPIC_MIN, round(len(items) / units.IDEAL_UNIT_SIZE)))
+    cap = units.phrase_cap(code) * est_units
+    reserve += [{**p, "reserve_reason": "phrase_cap"} for p in phrases[cap:]]
+    return units.interleave(words, phrases[:cap])
 
 
 def removal_order(item: dict) -> tuple:
@@ -254,8 +266,8 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
             return _pending_report(ctx, processed, "suggest", limit)
         balance(topics, reserve, config.TARGET_PER_LEVEL)
 
-    for items in topics.values():
-        items.sort(key=priority)
+    for code in topics:
+        topics[code] = items = order_topic(code, topics[code], reserve)
         for i, item in enumerate(items, start=1):
             item["rank_in_topic"] = i
 

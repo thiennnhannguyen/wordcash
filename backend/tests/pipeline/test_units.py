@@ -39,15 +39,15 @@ def test_unit_count_impossible(n):
 
 def test_split_sizes_phrases_and_groups():
     t = topic_with(80)
-    groups = units.split(t.entries)
+    groups = units.split(t.entries, "food")
     assert len(groups) == 5 and all(16 <= len(g) <= 20 for g in groups)
     keys = [e.content_key for g in groups for e in g]
     assert sorted(keys) == sorted(e.content_key for e in t.entries)  # mỗi mục đúng một lần
     phrase_counts = [sum(e.pos == "phrase" for e in g) for g in groups]
     assert max(phrase_counts) - min(phrase_counts) <= 1  # rải đều
     for g in groups:
-        n = sum(e.pos == "phrase" for e in g)
-        assert all(e.pos == "phrase" for e in g[:n])  # cụm từ đứng đầu bài
+        assert sum(e.pos == "phrase" for e in g) <= config.PHRASES_PER_UNIT_MAX
+        assert g[0].pos != "phrase"  # cụm từ rải trong bài, không dồn lên đầu
     words = [e for g in groups for e in g if e.pos != "phrase"]
     seen, last = set(), None
     for e in words:  # mỗi nhóm nhỏ là một đoạn liền
@@ -55,6 +55,25 @@ def test_split_sizes_phrases_and_groups():
             assert e.subgroup not in seen
             seen.add(e.subgroup)
             last = e.subgroup
+
+
+def test_interleave_spreads_phrases():
+    out = units.interleave(list("abcdefghijkl"), ["P1", "P2", "P3"])
+    assert [i for i, x in enumerate(out) if x.startswith("P")] == [2, 7, 12] and len(out) == 15
+    assert units.interleave(["a", "b"], []) == ["a", "b"]
+
+
+def test_phrase_cap_per_unit():
+    t = topic_with(80, phrases=16)  # 5 bài × 3 = 15 < 16
+    with pytest.raises(units.UnitError, match="cụm từ"):
+        units.split(t.entries, "food")
+    groups = units.split(t.entries, "greetings")  # chào hỏi: tối đa 8 cụm mỗi bài
+    assert max(sum(e.pos == "phrase" for e in g) for g in groups) == 4
+    t = topic_with(64, phrases=4)
+    keys = [e.content_key for e in t.entries]
+    t.units = [ContentUnit(content_key=f"a1.food.u{i + 1}", position=i + 1, title="x", entries=keys[i * 16:(i + 1) * 16])
+               for i in range(4)]
+    assert any("4 cụm từ (tối đa 3)" in err for err in units.check_units(t))
 
 
 def test_build_uses_only_approved_and_titles_draft(tmp_path):

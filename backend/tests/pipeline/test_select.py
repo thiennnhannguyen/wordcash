@@ -10,7 +10,7 @@ import httpx
 import pytest
 
 from data_pipeline import config
-from data_pipeline.lib import ai, step02
+from data_pipeline.lib import ai, step02, units
 from data_pipeline.lib.jsonio import read_json, write_json
 from data_pipeline.lib.schemas import ClassifyItem
 from tests.pipeline import fake_ai
@@ -100,10 +100,23 @@ def test_full_run_adds_phrases_suggestions_and_balances(tmp_path, small_scale):
         phrases = [i for i in items if i["pos"] == "phrase"]
         assert phrases and all("phrase" in i["flags"] for i in phrases)
         assert [i["rank_in_topic"] for i in items] == list(range(1, len(items) + 1))
-        assert items[0]["pos"] == "phrase" or items[0]["basic_communication"]  # cụm từ / giao tiếp cơ bản đứng đầu
+        assert items[0]["pos"] != "phrase"  # cụm từ rải đều, không dồn lên đầu
+        assert len(phrases) <= units.phrase_cap(code) * config.UNITS_PER_TOPIC_MAX
     suggested = [i for items in sel["topics"].values() for i in items if i["origin"] == "ai_suggested"]
     assert suggested and all("ai_suggested_headword" in i["flags"] and i["topic_code"] == "home" for i in suggested)
     assert report["total"] <= config.TARGET_PER_LEVEL * 1.05 and report["total"] + report["reserve"] >= report["total"]
+
+
+def test_order_topic_spreads_phrases_and_caps(monkeypatch):
+    monkeypatch.setattr(config, "UNITS_PER_TOPIC_MIN", 3)
+    items = [{"headword": f"w{i}", "pos": "noun", "commonness": 3} for i in range(40)]
+    items += [{"headword": f"good p{i}", "pos": "phrase", "commonness": 5, "basic_communication": True} for i in range(10)]
+    reserve = []
+    ordered = step02.order_topic("food", items, reserve)  # ~3 bài × 3 cụm = 9
+    pos = [i for i, x in enumerate(ordered) if x["pos"] == "phrase"]
+    assert len(pos) == 9 and pos[0] > 0 and max(b - a for a, b in zip(pos, pos[1:])) <= 6
+    assert [r["reserve_reason"] for r in reserve] == ["phrase_cap"]
+    assert len(step02.order_topic("greetings", items, [])) == 50  # chào hỏi: 8 cụm mỗi bài
 
 
 def test_balance_moves_overflow_to_reserve(monkeypatch):

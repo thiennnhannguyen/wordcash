@@ -42,6 +42,8 @@ UNIT_SIZE_MAX = 20
 UNITS_PER_TOPIC_MIN = 4
 UNITS_PER_TOPIC_MAX = 5
 PHRASE_RATIO = 0.1  # quyết định 4: khoảng 10% là cụm từ cố định
+PHRASES_PER_UNIT_MAX = 3  # tối đa cụm từ cố định mỗi bài, rải đều trong bài và trong chủ đề
+PHRASES_PER_UNIT_MAX_BY_TOPIC = {"greetings": 8}  # chủ đề chào hỏi vốn nhiều câu giao tiếp
 
 # Giới hạn độ dài (docs/content-style-guide.md)
 MEANING_VI_MAX_WORDS = 6
