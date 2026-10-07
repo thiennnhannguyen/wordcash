@@ -8,7 +8,9 @@ Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ dat
    lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN (không hợp rõ chủ đề nào) → KHÔNG
    ép vào chủ đề, vào `reserve` lý do `low_topic_confidence` (giữ chủ đề AI gợi ý để người duyệt đưa lại nếu muốn).
 3. Cụm từ cố định (~PHRASE_RATIO mỗi chủ đề, prompts/phrases_v1.md): `pos = phrase`, cờ `phrase`.
-4. Cân bằng: chủ đề dưới TOPIC_SIZE_MIN → AI đề xuất thêm từ (prompts/suggest_v1.md), cờ `ai_suggested_headword`; chủ đề
+4. Cân bằng: chủ đề dưới TOPIC_SIZE_MIN (48 = 3 bài) → AI đề xuất thêm cho đủ mức đó, KHÔNG độn tới chỉ tiêu
+   (prompts/suggest_v2.md); chỉ nhận từ có trong nguồn ở cấp A1–A2 (SUGGEST_LEVELS), từ khác bị bỏ (`dropped_suggestions`);
+   cờ `ai_suggested_headword`; chủ đề
    trên TOPIC_SIZE_MAX, hoặc cả cấp vượt TARGET_PER_LEVEL quá 5% → bớt mục ưu tiên thấp nhất của chủ đề đông nhất, đưa vào
    `reserve` (người duyệt có thể đổi lại).
 5. Thứ tự trong chủ đề (nguồn CEFR-J không có tần suất): từ giao tiếp cơ bản trước, rồi điểm phổ biến do AI chấm (lưu trong
@@ -35,7 +37,8 @@ from data_pipeline.lib.jsonio import read_json, write_json
 from data_pipeline.lib.normalize import normalize_headword
 from data_pipeline.lib.schemas import ClassifyItem, PhraseItem, SuggestItem
 
-CLASSIFY_V, PHRASES_V, SUGGEST_V = 1, 1, 1
+CLASSIFY_V, PHRASES_V, SUGGEST_V = 1, 1, 2
+SUGGEST_LEVELS = {"A1": ("A1", "A2"), "A2": ("A1", "A2", "B1")}  # cấp nguồn được phép khi đề xuất thêm
 FUNCTION_POS_OK = {"noun", "verb", "adjective", "adverb", "number", "interjection", "phrase"}
 FUNCTION_POS = {"pronoun", "determiner", "preposition", "conjunction", "modal", "auxiliary"}
 
@@ -48,6 +51,7 @@ class Context:
     usage: Usage = field(default_factory=Usage)
     failed: list[dict] = field(default_factory=list)
     pending: int = 0  # số request đang chờ output (chế độ agent)
+    dropped_suggestions: list[dict] = field(default_factory=list)  # từ đề xuất không có trong nguồn ở cấp cho phép
 
 
 def topic_lines(level: str) -> str:
@@ -142,15 +146,15 @@ def make_item(c: dict, g: ClassifyItem) -> dict:
     }
 
 
-def _generated(ctx: Context, kind: str, version: int, topic, count: int, existing: list[str], schema) -> list:
+def _generated(ctx: Context, kind: str, version: int, topic, count: int, existing: list[str], schema, **extra: str) -> list:
     template = prompts.load(kind, version, level=ctx.level, topic_code=topic.code, topic_hint=topic.hint_en, count=str(count),
-                            existing="(see below)")
+                            existing="(see below)", **{k: "(see below)" for k in extra})
     key = digest(kind, ctx.level, topic.code, count, version, prompts.rendered_hash(template))
     hit = ctx.cache.get(key)
     if hit is not None:
         return [schema.model_validate(x) for x in hit]
     system = prompts.load(kind, version, level=ctx.level, topic_code=topic.code, topic_hint=topic.hint_en, count=str(count),
-                          existing=", ".join(sorted(existing)) or "(none)")
+                          existing=", ".join(sorted(existing)) or "(none)", **extra)
     try:
         got = call_json(ctx.client, system, f"Give {count} items for topic {topic.code}.", list[schema], usage=ctx.usage)
     except AgentPending:
@@ -249,19 +253,28 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
         if ctx.pending:
             return _pending_report(ctx, processed, "phrases", limit)
         known = sorted(taken)
+        # Đề xuất thêm: CHỈ từ có trong nguồn ở cấp cho phép (A1 → CEFR-J A1/A2), chỉ cho chủ đề dưới TOPIC_SIZE_MIN và chỉ đủ tới
+        # mức đó (không độn từ cho đủ chỉ tiêu).
+        allowed = set(SUGGEST_LEVELS.get(level, (level,)))
+        source = {c["headword"]: c for c in candidates if allowed & set((c.get("cefr") or {}).values())}
+        pool = ", ".join(sorted(h for h, c in source.items() if h not in taken and c["pos"] in FUNCTION_POS_OK))
         for t in config.topics(level):
             missing = config.TOPIC_SIZE_MIN - len(topics[t.code])
             if missing > 0:
-                want = target_topic - len(topics[t.code])
-                for s in _generated(ctx, "suggest", SUGGEST_V, t, want, known, SuggestItem):
+                added = 0
+                for s in _generated(ctx, "suggest", SUGGEST_V, t, missing, known, SuggestItem, pool=pool):
                     head = normalize_headword(s.headword)
-                    if not head or head in taken or s.pos not in FUNCTION_POS_OK:
+                    if not head or head in taken or s.pos not in FUNCTION_POS_OK or head not in source or added >= missing:
+                        if head and head not in source:
+                            ctx.dropped_suggestions.append({"topic": t.code, "headword": head, "reason": "not_in_source_levels"})
                         continue
+                    added += 1
                     taken.add(head)
                     topics[t.code].append({"headword": head, "pos": s.pos, "topic_code": t.code, "topic_confidence": 1.0,
                                            "topic_reason": s.reason, "commonness": s.commonness, "basic_communication": False,
                                            "subgroup": s.subgroup.strip().lower(), "origin": "ai_suggested",
-                                           "flags": ["ai_suggested_headword"], "cefr": {}, "sources": []})
+                                           "flags": ["ai_suggested_headword"], "cefr": source[head].get("cefr", {}),
+                                           "sources": source[head].get("sources", [])})
         if ctx.pending:
             return _pending_report(ctx, processed, "suggest", limit)
         balance(topics, reserve, config.TARGET_PER_LEVEL)
@@ -277,6 +290,7 @@ def run(level: str, client: AIClient | None, *, limit: int | None = None, proces
         "level": level, "limited_to": limit, "candidates_at_level": len(chosen) + len(excluded) if not limit else None,
         "classified": len(results), "excluded": dict(Counter(e["reason"] for e in excluded)),
         "reserve_reasons": dict(Counter(r["reserve_reason"] for r in reserve)),
+        "dropped_suggestions": ctx.dropped_suggestions,
         "topics": {code: {"total": len(items), "phrases": sum(i["pos"] == config.POS_PHRASE for i in items),
                           "ai_suggested": sum(i["origin"] == "ai_suggested" for i in items),
                           "needs_topic_review": sum("needs_topic_review" in i["flags"] for i in items)}

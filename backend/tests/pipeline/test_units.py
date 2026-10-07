@@ -31,7 +31,7 @@ def test_unit_count(n, k):
     assert config.UNIT_SIZE_MIN <= n / k <= config.UNIT_SIZE_MAX
 
 
-@pytest.mark.parametrize("n", [63, 101, 10])
+@pytest.mark.parametrize("n", [44, 101, 10])
 def test_unit_count_impossible(n):
     with pytest.raises(units.UnitError):
         units.unit_count(n)
@@ -40,7 +40,7 @@ def test_unit_count_impossible(n):
 def test_split_sizes_phrases_and_groups():
     t = topic_with(80)
     groups = units.split(t.entries, "food")
-    assert len(groups) == 5 and all(16 <= len(g) <= 20 for g in groups)
+    assert len(groups) == 5 and all(15 <= len(g) <= 20 for g in groups)
     keys = [e.content_key for g in groups for e in g]
     assert sorted(keys) == sorted(e.content_key for e in t.entries)  # mỗi mục đúng một lần
     phrase_counts = [sum(e.pos == "phrase" for e in g) for g in groups]

@@ -10,6 +10,8 @@ Chế độ agent (AI_PROVIDER=agent, mặc định): thay lệnh gọi API tr�
   work/<bước>/rejected.json, gói ở trạng thái `rejected` (sửa output rồi ingest lại); đúng → trả về như câu trả lời API, bước
   ghi cache và nội dung (status = draft) như bình thường. Request mới phát sinh (giai đoạn sau, mục còn thiếu) → gói mới.
 - Gói được đánh số theo thứ tự tạo, nhận diện bằng mã băm (prompt hệ thống + tin nhắn) nên emit lại không tạo trùng.
+- Mỗi lần chạy một bước tăng `run`; gói chưa có output mà lần chạy gần nhất không yêu cầu lại (prompt / phạm vi đã đổi) là gói
+  lỗi thời (`stale`): không tính vào việc phải làm.
 - work/ nằm trong .gitignore; chỉ content/**/*.json được commit. `status()` cho biết từng bước đang ở đâu (lệnh
   `python -m data_pipeline.pipeline status`).
 """
@@ -115,6 +117,9 @@ class AgentClient:
 
     def __post_init__(self):
         self.work = WorkDir(self.step, self.root)
+        m = self.work.manifest()
+        m["run"] = self.run = m.get("run", 0) + 1
+        self.work.save_manifest(m)
 
     def remember_args(self, args: dict) -> None:
         m = self.work.manifest()
@@ -147,6 +152,7 @@ class AgentClient:
     def complete(self, system: str, user: str, *, max_tokens: int = 4096, schema: object = None) -> AIResponse:
         m = self.work.manifest()
         entry = self._packet(m, system, user, schema)
+        entry["last_run"] = self.run
         n = entry["n"]
         out = self.work.output_path(n)
         if self.replay and out.exists():
@@ -184,9 +190,10 @@ def step_status(step: str, root: Path | None = None) -> dict:
     batches = m["batches"]
     has_output = [b["n"] for b in batches if work.output_path(b["n"]).exists()]
     ingested = [b["n"] for b in batches if b["status"] == "ingested"]
-    rejected = [b["n"] for b in batches if b["status"] == "rejected"]
-    waiting = [b["n"] for b in batches if b["n"] not in has_output]
-    to_ingest = [n for n in has_output if n not in ingested]
+    stale = [b["n"] for b in batches if b["status"] != "ingested" and b.get("last_run", 0) < m.get("run", 0)]
+    rejected = [b["n"] for b in batches if b["status"] == "rejected" and b["n"] not in stale]
+    waiting = [b["n"] for b in batches if b["n"] not in has_output and b["n"] not in stale]
+    to_ingest = [n for n in has_output if n not in ingested and n not in stale]
     ingest_cmd = STEPS[step].format(level=m.get("args", {}).get("level", "A1"))
     if waiting:
         nxt = f"Soạn output cho {', '.join(work.output_path(n).name for n in waiting[:5])}{' …' if len(waiting) > 5 else ''}"
@@ -197,7 +204,8 @@ def step_status(step: str, root: Path | None = None) -> dict:
     else:
         nxt = "Chưa có gói nào"
     return {"step": step, "emitted": len(batches), "with_output": len(has_output), "ingested": len(ingested),
-            "rejected": rejected, "waiting_output": waiting, "to_ingest": to_ingest, "args": m.get("args", {}), "next": nxt}
+            "rejected": rejected, "waiting_output": waiting, "to_ingest": to_ingest, "stale": stale, "args": m.get("args", {}),
+            "next": nxt}
 
 
 def status(root: Path | None = None) -> list[dict]:

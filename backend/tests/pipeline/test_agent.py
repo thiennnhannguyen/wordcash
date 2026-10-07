@@ -150,3 +150,14 @@ def test_provider_selection(monkeypatch, capsys):
     monkeypatch.setenv("AI_PROVIDER", "openai")
     with pytest.raises(RuntimeError):
         config.ai_provider()
+
+
+def test_packets_not_requested_again_become_stale(tmp_path):
+    paths = setup(tmp_path, {"food": [("rice", "noun")], "home": [("bed", "noun")]})
+    work = tmp_path / "work"
+    step03.run("A1", AgentClient("03_enrich", root=work), topics=["food"], **paths)
+    step03.run("A1", AgentClient("03_enrich", root=work), topics=["home"], **paths)  # phạm vi đổi: gói food không còn được hỏi
+    st = agent.step_status("03_enrich", work)
+    assert st["stale"] == [1] and st["waiting_output"] == [2] and "batch_0002" in st["next"]
+    step03.run("A1", AgentClient("03_enrich", root=work), topics=["food", "home"], **paths)
+    assert agent.step_status("03_enrich", work)["stale"] == []

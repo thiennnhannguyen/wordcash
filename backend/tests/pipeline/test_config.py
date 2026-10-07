@@ -18,9 +18,9 @@ def test_a1_topics_match_db_landmarks():
 
 
 def test_scale_parameters_are_consistent():
-    assert config.UNIT_SIZE_MIN == 16 and config.UNIT_SIZE_MAX == 20 and config.PHRASE_RATIO == 0.1
-    assert config.TARGET_PER_LEVEL == 800
-    # mỗi chủ đề 70–90 mục phải chia được thành 4–5 bài 16–20 mục
+    assert config.UNIT_SIZE_MIN == 15 and config.UNIT_SIZE_MAX == 20 and config.PHRASE_RATIO == 0.1
+    assert config.TARGET_PER_LEVEL == 800 and (config.TOPIC_SIZE_MIN, config.TOPIC_SIZE_MAX) == (48, 90)
+    # mọi cỡ chủ đề 48–90 mục phải chia được thành 3–5 bài 15–20 mục (không có khe hở)
     for n in range(config.TOPIC_SIZE_MIN, config.TOPIC_SIZE_MAX + 1):
         assert any(k * config.UNIT_SIZE_MIN <= n <= k * config.UNIT_SIZE_MAX
                    for k in range(config.UNITS_PER_TOPIC_MIN, config.UNITS_PER_TOPIC_MAX + 1)), n

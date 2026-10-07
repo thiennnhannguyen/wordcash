@@ -92,7 +92,8 @@ def test_missing_and_invalid_answers_are_retried_then_failed(tmp_path):
 
 def test_full_run_adds_phrases_suggestions_and_balances(tmp_path, small_scale):
     thin = [w for w in WORDS if w not in ("kitchen", "door", "bed")]  # chủ đề home thiếu → AI đề xuất thêm
-    write_json(tmp_path / "candidates.json", candidates(thin))
+    # Từ đề xuất chỉ được lấy trong nguồn ở cấp A1–A2 (ở đây: các từ A2); AI giả trả thêm 2 từ ngoài nguồn → bị bỏ
+    write_json(tmp_path / "candidates.json", candidates(thin) + candidates(["kitchen", "door", "bed", "lamp"], "A2"))
     report = step02.run("A1", fake_ai.client(), processed=tmp_path, cache_root=tmp_path / "cache")
     sel = read_json(tmp_path / "a1_selection.json")
     for code, items in sel["topics"].items():
@@ -104,6 +105,11 @@ def test_full_run_adds_phrases_suggestions_and_balances(tmp_path, small_scale):
         assert len(phrases) <= units.phrase_cap(code) * config.UNITS_PER_TOPIC_MAX
     suggested = [i for items in sel["topics"].values() for i in items if i["origin"] == "ai_suggested"]
     assert suggested and all("ai_suggested_headword" in i["flags"] and i["topic_code"] == "home" for i in suggested)
+    assert {i["headword"] for i in suggested} <= {"kitchen", "door", "bed", "lamp"}
+    assert all(i["cefr"] == {"cefrj": "A2"} for i in suggested)
+    assert report["dropped_suggestions"] and all(d["reason"] == "not_in_source_levels" for d in report["dropped_suggestions"])
+    home = sel["topics"]["home"]
+    assert len(home) == config.TOPIC_SIZE_MIN  # chỉ đề xuất cho đủ mức tối thiểu, không độn tới chỉ tiêu
     assert report["total"] <= config.TARGET_PER_LEVEL * 1.05 and report["total"] + report["reserve"] >= report["total"]
 
 

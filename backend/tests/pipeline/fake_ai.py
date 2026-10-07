@@ -50,8 +50,10 @@ def _generated(system: str, kind: str) -> str:
     if kind == "phrases":
         return json.dumps([{"headword": f"good {topic[:4]} {_letters(i)}", "commonness": 4, "basic_communication": i == 0,
                             "subgroup": "phrases"} for i in range(count)])
-    return json.dumps([{"headword": f"{topic[:3]}{_letters(i)}", "pos": "noun", "commonness": 2, "subgroup": "extra",
-                        "reason": "fake"} for i in range(count)])
+    m = re.search(r"source list \(.*?\): (.*)", system)
+    pool = [w.strip() for w in m.group(1).split(",") if w.strip()] if m else []
+    picked = pool[:count] + [f"{topic[:3]}{_letters(i)}" for i in range(2)]  # 2 từ ngoài nguồn: phải bị bỏ
+    return json.dumps([{"headword": w, "pos": "noun", "commonness": 2, "subgroup": "extra", "reason": "fake"} for w in picked])
 
 
 VI = {"rice": "cơm", "apple": "quả táo", "water": "nước", "egg": "quả trứng", "noodle": "mì", "eat": "ăn", "drink": "uống"}

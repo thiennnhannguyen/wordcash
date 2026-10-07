@@ -39,7 +39,8 @@ async def test_full_pipeline_to_db(db_session, tmp_path, tiny):
     report02 = step02.run("A1", client, processed=processed, cache_root=cache)
     assert report02["excluded"] == {"function_word": 2} and report02["classified"] == 40
     sel = read_json(processed / "a1_selection.json")
-    assert all(4 <= len(items) <= 6 for items in sel["topics"].values())
+    # Không độn từ: school chỉ có 1 từ nguồn A2 (airport) để đề xuất nên dừng ở 3 mục (dưới mức tối thiểu 4)
+    assert all(len(items) <= 6 for items in sel["topics"].values()) and len(sel["topics"]["school"]) == 3
     assert sum(i["pos"] == "phrase" for items in sel["topics"].values() for i in items) == 10  # 1 cụm mỗi chủ đề
     report03 = step03.run("A1", client, processed=processed, content_root=root, cache_root=cache)
     assert report03["failed"] == 0 and sum(report03["written"].values()) == report02["total"]

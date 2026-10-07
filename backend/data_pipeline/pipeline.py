@@ -34,7 +34,8 @@ def print_status(level: str) -> None:
     print(f"== Gói việc (AI_PROVIDER={config.ai_provider()}) ==")
     for s in agent.status():
         print(f"- {s['step']}: emit {s['emitted']} · có output {s['with_output']} · đã ingest {s['ingested']}"
-              f"{' · SAI SCHEMA ' + str(s['rejected']) if s['rejected'] else ''}")
+              f"{' · SAI SCHEMA ' + str(s['rejected']) if s['rejected'] else ''}"
+              f"{' · lỗi thời (bỏ qua) ' + str(len(s['stale'])) if s['stale'] else ''}")
         if s["args"]:
             print(f"    phạm vi lần gần nhất: {json.dumps(s['args'], ensure_ascii=False)}")
         print(f"    tiếp theo: {s['next']}")
