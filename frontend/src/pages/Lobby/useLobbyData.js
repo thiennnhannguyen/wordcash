@@ -1,40 +1,43 @@
 /*
- * Dữ liệu Sảnh: số liệu thật từ GET /me/stats (streak + lịch tuần, số từ đã thuộc, rank + lung lay, lượt quay + tiến độ x/50,
- * mục tiêu hôm nay, Cửa Ải hôm nay, bài đang học, Hành trình + Hộ chiếu) ghép lên khung data/mockLobby.js.
- *
+ * Dữ liệu Sảnh, 100% từ server. Mỗi khối tải riêng và có đủ 3 trạng thái (đang tải / lỗi + Thử lại / trống), không bao giờ
+ * thay bằng số giả khi lỗi:
+ * - `useLobbyStats()`: GET /me/stats (+ GET /academy/units/:id của bài đang học để đếm từ đã gặp) → thanh trạng thái, chào hỏi,
+ *   lịch tuần, card Học Viện, mục tiêu hôm nay, rank kế tiếp, lượt quay kế tiếp.
+ * - Hành trình + Hộ chiếu: GET /academy/roadmap (`useServerData(getRoadmap)` ở Lobby.jsx).
+ * - Từ của ngày: GET /words/daily; Top tuần này: GET /leaderboard?board=weekly&limit=3; Khóa học: GET /courses.
  * Linh vật đang dùng: avatar_mascot_id của user (authStore) tra trong danh mục GET /mascots (store/mascotStore.js).
- * CÒN MOCK (TODO, chưa có API): Đấu Trường (thắng/thua tuần, số người online), Từ của ngày, bảng bạn bè, mục tiêu Đấu Trường.
- * Chế độ mock (VITE_USE_MOCK=true) hoặc `?variant=` khi dev: dùng nguyên getLobbyMock.
+ * `buildLobby` là hàm thuần (test ở tests/lobby.test.jsx).
  */
 
-import { useEffect, useState } from 'react'
-import { journeyRegions } from '../../data/roadmap'
-import { getLobbyMock } from '../../data/mockLobby'
-import { USE_MOCK, daysLeft, getMeStats, getUnit } from '../../services/academyApi'
-import { useMascot } from '../../store/mascotStore'
+import useServerData from '../../hooks/useServerData'
+import { daysLeft, getMeStats, getUnit } from '../../services/academyApi'
 
 const WEEK_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 const ALIVE = new Set(['passed', 'partial', 'exempt'])
 
 function academyCard(position, unit, dueReviews) {
-  if (!position) return { isNew: false, level: 'A1', topic: '', lessonNumber: 1, lessonTitle: '', lessonsInStage: 1, stage: 1, stagesTotal: 1, learned: 0, total: 1, dueReviews, landmark: null, to: '/academy' }
+  if (!position || position.step === 'done') return { done: Boolean(position), level: position?.level_code ?? null, dueReviews, to: '/academy' }
   const landmark = position.landmark_key ? { key: position.landmark_key, name: position.landmark_name, label: 'Đang tới' } : null
-  const base = { isNew: false, level: position.level_code, dueReviews, landmark, stage: position.topic_order ?? position.stages_total, stagesTotal: position.stages_total }
+  const base = { level: position.level_code, dueReviews, landmark, stage: position.topic_order ?? position.stages_total, stagesTotal: position.stages_total }
   if (position.step === 'unit') {
-    const learned = unit ? unit.words.filter((w) => w.status !== 'new').length : 0
     return {
-      ...base, topic: position.topic_title, lessonNumber: position.unit_position, lessonTitle: position.unit_title,
-      lessonsInStage: position.units_total, learned, total: unit?.words.length ?? 1, to: `/academy/lesson?unit=${position.unit_id}`,
+      ...base,
+      topic: position.topic_title,
+      lessonNumber: position.unit_position,
+      lessonTitle: position.unit_title,
+      lessonsInStage: position.units_total,
+      // Số từ đã gặp / tổng từ của bài: chỉ có khi đọc được chi tiết bài; không có thì ẩn thanh tiến độ (không đoán)
+      progress: unit ? { learned: unit.words.filter((w) => w.status !== 'new').length, total: unit.words.length } : null,
+      to: `/academy/lesson?unit=${position.unit_id}`,
     }
   }
   if (position.step === 'topic_test') {
-    return { ...base, topic: position.topic_title, lessonNumber: position.units_total, lessonTitle: 'Bài tổng hợp chặng', lessonsInStage: position.units_total, learned: 1, total: 1, to: `/academy/unit-test?topic=${position.topic_id}` }
+    return { ...base, topic: position.topic_title, lessonTitle: 'Bài tổng hợp chặng', lessonsInStage: position.units_total, lessonNumber: null, progress: null, to: `/academy/unit-test?topic=${position.topic_id}` }
   }
-  return { ...base, topic: 'Trận Boss', lessonNumber: base.stagesTotal, lessonTitle: position.landmark_name ?? 'Trận Boss', lessonsInStage: base.stagesTotal, learned: 1, total: 1, to: `/academy/boss?level=${position.level_code}`, stage: base.stagesTotal }
+  return { ...base, topic: 'Trận Boss', lessonTitle: position.landmark_name ?? 'Trận Boss', lessonNumber: null, stage: base.stagesTotal, progress: null, to: `/academy/boss?level=${position.level_code}` }
 }
 
-export function buildLobby(stats, unit, user) {
-  const base = getLobbyMock('default', user)
+export function buildLobby(stats, unit) {
   const r = stats.rank
   const today = stats.today
   const week = stats.streak.week.map((d, i) => ({
@@ -42,45 +45,30 @@ export function buildLobby(stats, unit, user) {
     state: d.today ? 'today' : d.status === 'future' ? 'future' : ALIVE.has(d.status) ? 'done' : 'empty',
     studied: ALIVE.has(d.status),
   }))
+  const goals = [{ key: 'new', label: `Học ${today.new_words_goal} từ mới`, current: Math.min(today.new_words, today.new_words_goal), target: today.new_words_goal }]
+  // Chỉ hiện mục ôn khi thật sự có từ đến hạn hôm nay (không đặt mục tiêu giả)
+  if (today.reviews_total > 0) goals.push({ key: 'review', label: `Ôn ${today.reviews_total} từ đến hạn`, current: today.reviews_done, target: today.reviews_total })
   return {
-    ...base,
     stats: { streak: stats.streak.current, masteredWords: stats.mastered_count, rank: r.current, rankShaky: r.shaky, spins: stats.spins.normal + stats.spins.special },
     dailyCheck: ['passed', 'partial'].includes(today.daily_check)
       ? { correct: today.daily_check_correct, total: today.daily_check_total, streakGained: today.daily_check === 'passed' }
       : null,
+    firstDay: stats.mastered_count === 0 && today.answers === 0 && !week.some((d) => d.studied),
     week,
     academy: academyCard(stats.position, unit, today.due_now),
-    goals: [
-      { key: 'new', label: `Học ${today.new_words_goal} từ mới`, current: Math.min(today.new_words, today.new_words_goal), target: today.new_words_goal },
-      { key: 'review', label: today.reviews_total ? `Ôn ${today.reviews_total} từ đến hạn` : 'Không có từ đến hạn ôn', current: today.reviews_done, target: Math.max(today.reviews_total, 1) },
-      base.goals.find((g) => g.key === 'arena'), // TODO: chưa có API Đấu Trường
-    ],
-    nextRank: { from: r.current, to: r.next ?? r.current, current: stats.mastered_count, target: r.next_min ?? stats.mastered_count },
+    goals,
+    nextRank: r.next ? { from: r.current, to: r.next, current: stats.mastered_count, target: r.next_min, remaining: r.remaining } : { from: r.current, to: null },
     nextSpin: { current: stats.spins.progress.current, target: stats.spins.progress.target, left: stats.spins.progress.remaining },
     shaky: r.shaky ? { daysLeft: daysLeft(r.shaky_seconds_left), wordsToReview: r.words_to_recover, threshold: r.current_min } : null,
-    journey: { regions: journeyRegions({ level: stats.position?.level_code ?? 'A1' }), passport: stats.passport },
   }
 }
 
-export default function useLobbyData(variant, user) {
-  const mock = USE_MOCK || (import.meta.env.DEV && variant)
-  const [data, setData] = useState(null)
+async function loadLobby() {
+  const stats = await getMeStats()
+  const unit = stats.position?.step === 'unit' ? await getUnit(stats.position.unit_id).catch(() => null) : null
+  return buildLobby(stats, unit)
+}
 
-  useEffect(() => {
-    if (mock) return undefined
-    let alive = true
-    getMeStats()
-      .then(async (stats) => {
-        const unit = stats.position?.step === 'unit' ? await getUnit(stats.position.unit_id).catch(() => null) : null
-        if (alive) setData(buildLobby(stats, unit, user))
-      })
-      .catch(() => alive && setData(getLobbyMock('default', user)))
-    return () => {
-      alive = false
-    }
-  }, [mock, user])
-
-  const mascot = useMascot(user?.avatar_mascot_id)
-  if (mock) return getLobbyMock(variant ?? 'default', user)
-  return data && { ...data, mascot }
+export default function useLobbyStats() {
+  return useServerData(loadLobby, [])
 }
