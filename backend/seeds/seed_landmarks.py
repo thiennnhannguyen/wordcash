@@ -4,7 +4,9 @@ Dữ liệu địa danh cho bản đồ "Hộ chiếu vòng quanh thế giới" 
 Mỗi cấp có `region_theme` (cột mới của bảng levels); mỗi chặng (bảng topics) là một CHỦ ĐỀ từ vựng: `topic_code` (khóa nối
 nội dung — content/<cấp>/<topic_code>.json, content_key) và tên chủ đề; `landmark_key`, `landmark_name`, `landmark_image`
 (nullable: điền đường dẫn ảnh PNG thì frontend dùng ảnh thay tranh SVG) CHỈ là trang trí bản đồ — đổi địa danh không đổi từ
-vựng, bài hay tiến độ. Mã chủ đề A2 đặt sẵn theo tên chặng (chưa có nội dung A2).
+vựng, bài hay tiến độ. **Mã chủ đề A2 (daily_routine, feelings… và tên chủ đề) là TẠM**, đặt theo tên chặng để có dữ liệu bản
+đồ; chưa có nội dung A2. Khi làm A2, chủ đề sẽ được chọn theo nhóm từ vựng A2 của CEFR-J (cột gợi ý chủ đề), rồi mới gắn địa
+danh để trang trí (docs/academy.md).
 Thứ tự chặng khớp `order` của topics. Trận Boss không phải một chặng nên lưu ở bảng levels (`boss_landmark_key`,
 `boss_landmark_name`), không nằm trong topics: mỗi cấp 10 chặng + 1 Boss = 11 địa danh, A1 + A2 = 22.
 `guardian` (quái vật canh giữ) chưa có cột trong DB; hiện chỉ frontend dùng (roadmapMock.js).
@@ -42,6 +44,7 @@ LANDMARKS = {
         ],
         "boss": {"landmark_key": "a1_boss_ha_long", "landmark_name": "Vịnh Hạ Long", "guardian": "Rồng Vịnh"},
     },
+    # TẠM: topic_code / title A2 sẽ thay bằng chủ đề chọn theo nhóm từ vựng A2 của CEFR-J khi làm A2 (chưa có nội dung A2)
     "A2": {
         "region_theme": "vn-central-south",
         "topics": [

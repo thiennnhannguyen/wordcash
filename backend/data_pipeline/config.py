@@ -79,7 +79,9 @@ class TopicConfig:
     hint_en: str  # mô tả ngắn cho AI phân loại
 
 
-# 10 chủ đề A1, đúng thứ tự và tên của seeds/seed_landmarks.py (test kiểm tra khớp)
+# 10 chủ đề A1, đúng thứ tự và tên của seeds/seed_landmarks.py (test kiểm tra khớp).
+# A2: CHƯA khai báo, mã chủ đề A2 trong seeds/seed_landmarks.py là TẠM. Khi làm A2: chọn chủ đề theo nhóm từ vựng A2 của
+# CEFR-J (cột gợi ý chủ đề, `topic_hints`), khai báo ở đây, cập nhật topic_code trong seed, rồi mới gắn địa danh để trang trí.
 TOPICS: dict[str, list[TopicConfig]] = {
     "A1": [
         TopicConfig("A1", "greetings", "Chào hỏi", "greetings, introductions, polite everyday phrases, feelings"),
