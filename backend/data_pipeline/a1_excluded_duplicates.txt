@@ -1,3 +1,4 @@
 # Mục trùng nghĩa với một mục khác được giữ lại trong A1: bước 02 không đưa vào chủ đề, chuyển vào dự phòng với lý do
 # "duplicate_meaning" (hoặc lý do ghi sau " | "). Mục giữ lại ghi từ bỏ đi vào synonyms. Chữ thường, một từ / cụm mỗi dòng.
 burger  # giữ hamburger (có trong nguồn), burger ghi vào synonyms
+biscuit | us_meaning_differs  # Anh-Mỹ: bánh mì mềm, dễ nhầm; giữ cookie

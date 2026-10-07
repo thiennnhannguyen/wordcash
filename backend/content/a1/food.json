@@ -1679,12 +1679,8 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.food.biscuit.noun (bánh quy giòn)"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
@@ -2635,48 +2631,6 @@
       "origin_flags": [],
       "flags": [],
       "flag_details": {},
-      "status": "draft",
-      "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#8e7f99160cc2"
-    },
-    {
-      "content_key": "a1.food.biscuit.noun",
-      "headword": "biscuit",
-      "pos": "noun",
-      "entry_type": "word",
-      "ipa": "/ˈbɪskət/",
-      "ipa_unverified": false,
-      "meaning_vi": "bánh quy giòn",
-      "definition_en": "a small, dry, crisp cake, often sweet",
-      "example_en": "Grandpa eats a biscuit with his tea.",
-      "example_vi": "Ông ăn một chiếc bánh quy với trà.",
-      "collocations": [
-        "a chocolate biscuit",
-        "a box of biscuits"
-      ],
-      "word_family": [],
-      "synonyms": [
-        "cookie"
-      ],
-      "mnemonic_vi": "",
-      "image_keyword": "biscuits and tea",
-      "commonness": 2,
-      "basic_communication": false,
-      "subgroup": "sweets",
-      "rank_in_topic": 74,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.food.cookie.noun (bánh quy)"
-      },
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",
