@@ -9,7 +9,8 @@ Every card will be checked by a human reviewer before learners see it.
   at most {{meaning_max}} words; no long notes or brackets; avoid pronouns when possible ("I'm hungry" → "đói rồi", not
   "tôi đói rồi").
 - "definition_en": a simple English definition using only A1–A2 words; at most {{definition_max}} words; do not use the
-  headword itself.
+  headword itself. Simple but never untrue: name a real distinguishing feature (Right: "egg" → "a food that comes from a
+  chicken"; Wrong: "egg" → "a round food").
 - "example_en": one {{level}} sentence of {{example_min}}–{{example_max}} words that contains the headword (or its
   plural / verb form), uses the topic meaning, mostly present simple, and fits everyday life in Vietnam.
 - "example_vi": a natural Vietnamese translation of example_en; first person is always "mình" (never "tôi", "tớ").

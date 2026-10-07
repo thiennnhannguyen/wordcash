@@ -45,12 +45,15 @@ Tránh đại từ khi có thể: cụm `I'm hungry` → "đói rồi", không p
 
 ## 3. Định nghĩa tiếng Anh `definition_en`
 
-Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword.
+Chỉ dùng từ A1–A2, tối đa 12 từ, không dùng chính headword. **Đơn giản nhưng không sai sự thật:** định nghĩa ngắn không
+được nói điều sai hoặc quá rộng tới mức chỉ sang thứ khác (quả bóng, quả cam cũng "tròn"). Nêu đặc điểm phân biệt thật.
 
 | | Ví dụ |
 |---|---|
 | ĐÚNG | `kitchen` → "the room where you cook food" |
 | SAI | `kitchen` → "a kitchen is a culinary area" (dùng headword, từ khó) |
+| ĐÚNG | `egg` → "a food that comes from a chicken" |
+| SAI | `egg` → "a round food" (sai: trứng không tròn, và quá rộng) |
 
 ## 4. Câu ví dụ `example_en` / `example_vi`
 
@@ -121,6 +124,8 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
   no long notes. Right: "breakfast" → "bữa sáng". Wrong: "bữa ăn đầu tiên trong ngày (thường vào buổi sáng)".
   Avoid pronouns when possible: "I'm hungry" → "đói rồi" (Wrong: "tôi đói rồi").
 - definition_en: only A1–A2 words, max 12 words, never use the headword. Right: "kitchen" → "the room where you cook food".
+  Simple but never untrue or so broad it fits other things. Right: "egg" → "a food that comes from a chicken".
+  Wrong: "egg" → "a round food".
 - example_en: 5–12 words at the target level, contains the headword or its inflected form, mostly present simple, everyday
   life in Vietnam (market, motorbike, pho, Tet, school, family). Right: "My mom buys vegetables at the market."
   Wrong: "The market was crowded because of the festival."
@@ -152,7 +157,7 @@ Trả lời từng câu. Có câu "Không" thì sửa trực tiếp, nhờ AI vi
 4. Câu ví dụ có chứa từ, dùng đúng nghĩa, đúng ngữ pháp và đủ dễ không?
 5. Câu ví dụ có gần gũi đời sống Việt Nam, không tên thật, không thương hiệu, không chủ đề nhạy cảm hay định kiến không?
 6. `example_vi` có dịch tự nhiên và khớp nghĩa câu tiếng Anh không?
-7. Định nghĩa tiếng Anh có đơn giản, đúng, không dùng chính từ đó không?
+7. Định nghĩa tiếng Anh có đơn giản, đúng sự thật (không sai, không rộng tới mức chỉ sang thứ khác), không dùng chính từ đó không?
 8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không? Với cụm từ cố định: cụm liên quan có ích, không lặp lại chính cụm?
 9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không?
 10. Mọi cờ của mục đã được xử lý (đã sửa, hoặc đã xem và chấp nhận) chưa?
