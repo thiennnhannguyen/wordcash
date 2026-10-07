@@ -86,3 +86,23 @@ export const DATA_CREDITS = [
   'Danh sách từ dựa trên CEFR-J Wordlist (Tono Laboratory, Tokyo University of Foreign Studies).',
   'Phiên âm dựa trên CMU Pronouncing Dictionary (Carnegie Mellon University).',
 ]
+
+// Trang Giới thiệu (/about): chi tiết từng nguồn, khớp docs/data-sources.md
+export const DATA_SOURCES = [
+  {
+    key: 'cefrj',
+    name: 'CEFR-J Wordlist',
+    owner: 'Tono Laboratory, Tokyo University of Foreign Studies',
+    use: 'Danh sách từ và nhãn trình độ (A1…) để chọn từ cho lộ trình.',
+    license: 'Dùng miễn phí cho nghiên cứu và thương mại với điều kiện trích dẫn đúng.',
+    url: 'https://www.cefr-j.org/download.html',
+  },
+  {
+    key: 'cmudict',
+    name: 'CMU Pronouncing Dictionary',
+    owner: 'Carnegie Mellon University',
+    use: 'Phiên âm IPA (Anh-Mỹ) của mục từ.',
+    license: 'Giấy phép kiểu BSD 2 điều khoản.',
+    url: 'https://github.com/cmusphinx/cmudict',
+  },
+]

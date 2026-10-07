@@ -44,6 +44,7 @@ import { BootSplash, GuestOnly, RequireAuth } from './components/layout/RouteGua
 import MyCourses from './pages/Courses/MyCourses'
 import CourseDetail from './pages/Courses/CourseDetail'
 import CourseStudy from './pages/Courses/CourseStudy'
+import About from './pages/About/About'
 
 const DEV = import.meta.env.DEV
 
@@ -144,6 +145,7 @@ export default function AppRoutes() {
             ...(DEV ? [{ path: '/certificates', element: <DevPage name="CertificateGallery" /> }] : []),
             { path: '/courses', element: <MyCourses /> },
             { path: '/courses/:id', element: <CourseDetail /> },
+            { path: '/about', element: <About /> },
             { path: '*', element: <ComingSoon title="Không tìm thấy trang" /> },
           ],
         },
