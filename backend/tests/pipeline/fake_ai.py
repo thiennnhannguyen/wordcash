@@ -68,7 +68,8 @@ def _enrich(user: str) -> str:
             "headword": head, "pos": pos, "meaning_vi": VI.get(head, f"nghĩa của {head}"),
             "definition_en": f"a simple thing called {head}" if pos != "verb" else "to do a simple daily action",
             "example_en": f"My mom and I {head} every day." if pos == "verb" else f"Lan sees the {head} at home today.",
-            "example_vi": f"Câu ví dụ có {head}.", "collocations": [f"a {head}", f"my {head}"], "word_family": [],
+            "example_vi": f"Câu ví dụ có {head}.", "word_family": [],
+            "collocations": ["see you", "you too"] if pos == "phrase" else [f"a {head}", f"my {head}"],
             "synonyms": [], "mnemonic_vi": "", "image_keyword": head, "ipa_suggestion": "/tɛst/" if d.get("ipa") == "missing" else "",
         })
     return json.dumps(out, ensure_ascii=False)

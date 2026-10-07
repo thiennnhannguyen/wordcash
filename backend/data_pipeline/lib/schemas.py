@@ -45,7 +45,7 @@ class SuggestItem(_Model):
 
 
 class EnrichItem(_Model):
-    """Một mục AI soạn nháp (prompts/enrich_v1.md). IPA KHÔNG lấy từ đây trừ khi cmudict không có (ipa_suggestion)."""
+    """Một mục AI soạn nháp (prompts/enrich_v2.md). IPA KHÔNG lấy từ đây trừ khi cmudict không có (ipa_suggestion)."""
 
     headword: str
     pos: str

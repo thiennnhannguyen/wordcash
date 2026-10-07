@@ -3,6 +3,8 @@
  *
  * `emphasis` đổi phần được đẩy lên nổi bật theo chế độ học: "word" (mặc định), "phrase" (cụm đi kèm),
  * "family" (họ từ). Từ đang học trong câu ví dụ được tô nền xanh chanh.
+ * Mục là cụm từ cố định (`pos = "phrase"`): danh sách `collocations` là các CỤM LIÊN QUAN (biến thể, câu đáp lại), nên nhãn
+ * đổi thành "Cụm liên quan".
  * Dùng chung cho Học Viện và "Khóa học của tôi": cấp độ, loại từ, định nghĩa, ví dụ đều có thể trống (từ tự tạo).
  * `tag`: nhãn phụ cạnh cấp độ (vd. "Tự tạo"); `actions`: hàng nút cuối thẻ (vd. "+ Thêm vào khóa học của tôi").
  */
@@ -32,11 +34,11 @@ function HighlightedExample({ sentence, word }) {
   )
 }
 
-function Collocations({ items, big }) {
+function Collocations({ items, big, phrase }) {
   if (!items.length) return null
   return (
     <div className="flex flex-col gap-2">
-      <span className="hud-label">Cụm đi kèm</span>
+      <span className="hud-label">{phrase ? 'Cụm liên quan' : 'Cụm đi kèm'}</span>
       <div className="flex flex-wrap gap-2">
         {items.map((c) => (
           <button
@@ -82,10 +84,11 @@ function wordSizeClass(word) {
 }
 
 export default function WordCard({ entry, level, emphasis = 'word', tag, actions, className }) {
+  const phrase = entry.pos === 'phrase'
   const extras =
     emphasis === 'family'
-      ? [<Family key="f" word={entry.word} items={entry.family ?? []} big />, <Collocations key="c" items={entry.collocations ?? []} />]
-      : [<Collocations key="c" items={entry.collocations ?? []} big={emphasis === 'phrase'} />, <Family key="f" word={entry.word} items={entry.family ?? []} />]
+      ? [<Family key="f" word={entry.word} items={entry.family ?? []} big />, <Collocations key="c" items={entry.collocations ?? []} phrase={phrase} />]
+      : [<Collocations key="c" items={entry.collocations ?? []} big={emphasis === 'phrase'} phrase={phrase} />, <Family key="f" word={entry.word} items={entry.family ?? []} />]
 
   return (
     <article className={cx('flex flex-col gap-6 rounded-panel border-thick border-line bg-surface p-5 shadow-hard-lg md:p-8', className)}>

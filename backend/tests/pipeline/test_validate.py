@@ -109,3 +109,16 @@ def test_vn_context_allowlist():
     assert validate.rule_hard_words(entry(example_en="My dad goes to Hanoi by motorbike."),
                                     whitelist | {"my", "dad", "go", "goes", "to", "by"}) is None
     assert "vn_context_overuse" in flags(entry(example_en="We eat banh mi and pho in Hoi An."))
+
+
+def test_phrase_related_phrases():
+    hungry = dict(content_key="a1.food.i_m_hungry.phrase", headword="I'm hungry", pos="phrase", ipa="/aɪm ˈhʌŋɡri/",
+                  meaning_vi="đói rồi", example_en="I'm hungry. Let's eat now.", example_vi="Mình đói rồi. Đi ăn thôi.")
+    # Cụm liên quan (biến thể, câu đáp lại) không cần chứa headword
+    assert validate.rule_collocations(entry(**hungry, collocations=["I'm thirsty", "I'm full"])) is None
+    flag, detail = validate.rule_collocations(entry(**hungry, collocations=["I'm hungry now", "I'm thirsty"]))
+    assert flag == "phrase_related_repeats_headword" and detail == "I'm hungry now"
+    flag, _ = validate.rule_collocations(entry(**hungry, collocations=["i'm HUNGRY again"]))  # không phân biệt hoa thường
+    assert flag == "phrase_related_repeats_headword"
+    # Chứa một phần (không nguyên văn) thì được
+    assert validate.rule_collocations(entry(**hungry, collocations=["I'm not hungry"])) is None

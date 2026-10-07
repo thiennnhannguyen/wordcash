@@ -2,7 +2,7 @@
 Bước 03 — AI soạn nháp mục từ (gọi từ data_pipeline/03_enrich_entries.py).
 
 - Đầu vào: processed/<cấp>_selection.json (bước 02). Đầu ra: content/<cấp>/<chủ-đề>.json, mọi mục mới `status = draft`.
-- Gọi AI theo lô ENRICH_BATCH_SIZE (10–20) mục cùng chủ đề, prompt prompts/enrich_v1.md; câu trả lời kiểm bằng Pydantic
+- Gọi AI theo lô ENRICH_BATCH_SIZE (10–20) mục cùng chủ đề, prompt prompts/enrich_v2.md; câu trả lời kiểm bằng Pydantic
   (EnrichItem). Mục thiếu / sai được hỏi lại, tối đa AI_MAX_RETRIES vòng; vẫn lỗi → processed/failed_03.json.
 - Cache theo (cấp, chủ đề, headword, pos, phiên bản prompt, mã băm prompt đã dựng): chạy lại không gọi API lần nữa.
 - IPA: luôn lấy từ CMUdict (lib/ipa.py); AI KHÔNG ghi đè. Chỉ khi CMUdict không có từ thì dùng `ipa_suggestion` của AI và
@@ -26,7 +26,7 @@ from data_pipeline.lib.cache import DiskCache, digest
 from data_pipeline.lib.jsonio import read_json, write_json
 from data_pipeline.lib.schemas import ContentEntry, EnrichItem
 
-ENRICH_V = 1
+ENRICH_V = 2
 
 
 @dataclass

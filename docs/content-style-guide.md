@@ -1,7 +1,7 @@
 # Hướng dẫn soạn nội dung kho từ
 
 Áp dụng cho mọi mục từ trong `backend/content/<cấp>/*.json`, dù do AI soạn nháp hay người viết tay. Prompt AI
-(`backend/data_pipeline/prompts/enrich_v1.md`) chèn nguyên khối "Quy tắc cho AI" ở cuối trang này. Sửa khối đó thì prompt
+(`backend/data_pipeline/prompts/enrich_v2.md`) chèn nguyên khối "Quy tắc cho AI" ở cuối trang này. Sửa khối đó thì prompt
 đổi theo, và cache AI tự hết hiệu lực vì mã băm của prompt đổi.
 
 **Chủ đề quyết định từ vựng, địa danh chỉ là trang trí.** Mỗi chặng trên bản đồ là một chủ đề (greetings, food…); địa danh
@@ -97,7 +97,16 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 
 ## 7. Cụm đi kèm, họ từ, từ đồng nghĩa, từ khóa ảnh
 
-- `collocations`: 2–3 cụm thông dụng, mỗi cụm **có chứa headword** (`rice` → "cook rice", "a bowl of rice").
+- `collocations` của từ đơn: 2–3 cụm thông dụng, mỗi cụm **có chứa headword** (`rice` → "cook rice", "a bowl of rice").
+- `collocations` của cụm từ cố định (`pos = phrase`): 2–3 **cụm liên quan** có ích (biến thể, câu đáp lại, cụm cùng nhóm),
+  **không lặp lại chính cụm đó** thêm một chữ (cờ `phrase_related_repeats_headword`). Thẻ học hiện nhãn "Cụm liên quan".
+
+| | Ví dụ |
+|---|---|
+| ĐÚNG | `I'm hungry` → "I'm thirsty", "I'm full" |
+| ĐÚNG | `It's hot` → "It's cold", "It's warm" |
+| SAI | `I'm hungry` → "I'm hungry now", "I'm hungry again" (lặp lại chính cụm) |
+
 - `word_family`: 0–3 từ cùng họ hữu ích (`teach` → "teacher").
 - `synonyms`: 0–2, chỉ khi giúp người học (`big` → "large"); không thì để trống.
 - `image_keyword`: 1–4 từ tiếng Anh để tìm hoặc vẽ ảnh (`rice` → "bowl of rice").
@@ -121,7 +130,9 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 - Fixed phrases (pos "phrase"): 2–4 words really used in conversation; meaning_vi is how Vietnamese people say the same
   thing (Right: "see you later" → "hẹn gặp lại"; Wrong: "nhìn thấy bạn muộn hơn").
 - mnemonic_vi: optional, max 20 words, sound or image based, never vulgar or mocking anyone; "" if nothing good.
-- collocations: 2–3 common partners, EACH contains the headword ("rice" → "cook rice", "a bowl of rice").
+- collocations: single words: 2–3 common partners, EACH contains the headword ("rice" → "cook rice", "a bowl of rice").
+  Fixed phrases: 2–3 RELATED phrases (variant, reply, same group) that do NOT repeat the headword
+  (Right: "I'm hungry" → "I'm thirsty", "I'm full". Wrong: "I'm hungry now").
 - word_family 0–3 useful words; synonyms 0–2 only when helpful; image_keyword 1–4 English words.
 <!-- ai-rules:end -->
 
@@ -136,6 +147,6 @@ Trả lời từng câu. Có câu "Không" thì sửa trực tiếp, nhờ AI vi
 5. Câu ví dụ có gần gũi đời sống Việt Nam, không tên thật, không thương hiệu, không chủ đề nhạy cảm hay định kiến không?
 6. `example_vi` có dịch tự nhiên và khớp nghĩa câu tiếng Anh không?
 7. Định nghĩa tiếng Anh có đơn giản, đúng, không dùng chính từ đó không?
-8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không?
+8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không? Với cụm từ cố định: cụm liên quan có ích, không lặp lại chính cụm?
 9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không?
 10. Mọi cờ của mục đã được xử lý (đã sửa, hoặc đã xem và chấp nhận) chưa?

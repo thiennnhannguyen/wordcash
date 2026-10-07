@@ -38,7 +38,7 @@ def test_enrich_writes_drafts_with_cmudict_ipa(tmp_path):
     assert by["rice"].ipa == "/raɪs/" and not by["rice"].ipa_unverified and by["rice"].meaning_vi == "cơm"
     assert by["zzqxbanh"].ipa == "/tɛst/" and by["zzqxbanh"].ipa_unverified  # không có trong CMUdict
     assert by["thank you"].entry_type == "phrase" and by["thank you"].content_key == "a1.food.thank_you.phrase"
-    assert by["thank you"].origin_flags == ["phrase"] and by["rice"].ai_prompt.startswith("enrich_v1#")
+    assert by["thank you"].origin_flags == ["phrase"] and by["rice"].ai_prompt.startswith("enrich_v2#")
     calls = len(client.calls)
     # chạy lại: không có mục mới → không gọi AI; file không đổi
     before = content.topic_path("A1", "food", paths["content_root"]).read_bytes()

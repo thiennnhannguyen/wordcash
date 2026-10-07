@@ -9,7 +9,9 @@ Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
 - vn_context_overuse: câu ví dụ có hơn VN_CONTEXT_MAX_PER_EXAMPLE từ đời sống Việt Nam (pho, Tet, Hanoi…; so khớp bỏ dấu);
 - ipa_unverified: IPA không lấy được từ CMUdict (AI đề xuất) hoặc trống;
 - sensitive: có từ khóa thương hiệu / người nổi tiếng / chủ đề nhạy cảm (sensitive_keywords.txt);
-- collocation_missing_headword: có cụm đi kèm không chứa headword.
+- collocation_missing_headword: có cụm đi kèm không chứa headword (mục từ đơn);
+- phrase_related_repeats_headword: mục cụm từ cố định (pos = phrase) có "cụm liên quan" chứa nguyên văn headword (với phrase,
+  collocations là 2–3 cụm liên quan: biến thể, câu đáp lại, cụm cùng nhóm — không phải chính cụm đó thêm một chữ).
 Quy tắc so sánh nhiều mục (bỏ qua mục rejected):
 - duplicate_headword: trùng (headword, pos) trong cùng cấp; duplicate_example: trùng câu ví dụ trong cùng cấp;
 - same_meaning_vi: trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).
@@ -42,6 +44,7 @@ FLAG_HELP = {
     "sensitive": "Có thương hiệu, người nổi tiếng hoặc chủ đề nhạy cảm.",
     "vn_context_overuse": f"Câu ví dụ có hơn {config.VN_CONTEXT_MAX_PER_EXAMPLE} từ đời sống Việt Nam (pho, Tet, Hanoi…).",
     "collocation_missing_headword": "Có cụm đi kèm không chứa từ này.",
+    "phrase_related_repeats_headword": "Cụm liên quan lặp lại nguyên cụm này (cần biến thể, câu đáp lại hoặc cụm cùng nhóm).",
     "duplicate_headword": "Trùng từ + từ loại với mục khác trong cùng cấp.",
     "duplicate_example": "Trùng câu ví dụ với mục khác trong cùng cấp.",
     "same_meaning_vi": "Trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).",
@@ -137,6 +140,12 @@ def rule_sensitive(e: ContentEntry, keywords: set[str]):
 
 
 def rule_collocations(e: ContentEntry):
+    if e.pos == config.POS_PHRASE:
+        head = f" {norm_text(e.headword)} "
+        bad = [c for c in e.collocations if head in f" {norm_text(c)} "]
+        if bad:
+            return "phrase_related_repeats_headword", "; ".join(bad)
+        return None
     bad = [c for c in e.collocations if not morph.contains_headword(c, e.headword, e.pos)]
     if bad:
         return "collocation_missing_headword", "; ".join(bad)
