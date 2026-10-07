@@ -2,7 +2,7 @@
  * Khung chi tiết một mục trên trang duyệt: mọi trường sửa trực tiếp, loa đọc thử (Web Speech API, en-US), các cờ kèm giải thích,
  * câu hỏi mẫu mức 1–4, viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
  * đã xử lý thì bản cũ / bản mới hiện cạnh nhau ngay dưới trường để chọn), ghi chú duyệt. Thanh hành động: Duyệt (A), Từ chối (R, bắt buộc lý do),
- * Bỏ qua (S), Mục trước (J), Mục sau (K), Lưu (khi có thay đổi chưa lưu).
+ * Bỏ qua (S), Mục sau (J), Mục trước (K) — theo quy ước Gmail / Vim, Lưu (khi có thay đổi chưa lưu).
  */
 
 import { useEffect, useState } from 'react'
@@ -167,11 +167,11 @@ export default function EntryDetail({
         <Button size="sm" variant="secondary" icon={SkipForward} disabled={busy} onClick={onSkip}>
           Bỏ qua (S)
         </Button>
-        <Button size="sm" variant="secondary" icon={ArrowLeft} onClick={onPrev} aria-label="Mục trước (J)">
-          J
+        <Button size="sm" variant="secondary" icon={ArrowLeft} onClick={onPrev} aria-label="Mục trước (K)">
+          Trước (K)
         </Button>
-        <Button size="sm" variant="secondary" icon={ArrowRight} onClick={onNext} aria-label="Mục sau (K)">
-          K
+        <Button size="sm" variant="secondary" icon={ArrowRight} onClick={onNext} aria-label="Mục sau (J)">
+          Sau (J)
         </Button>
         <Button size="sm" icon={FloppyDisk} disabled={busy || !dirty} onClick={() => onSave(patch())} className="ml-auto">
           Lưu

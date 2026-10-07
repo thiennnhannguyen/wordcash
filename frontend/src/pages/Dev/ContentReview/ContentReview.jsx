@@ -5,7 +5,7 @@
  * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ), tìm theo từ, nghĩa, câu ví dụ.
  * - Khung chi tiết (EntryDetail): sửa trường, loa, cờ, câu hỏi mẫu, viết lại một trường (chế độ agent: hàng đợi, mục hiện
  *   "Đang chờ viết lại"; có bản mới thì chọn bản cũ / mới), Duyệt / Từ chối / Bỏ qua.
- * - Phím tắt (khi không gõ trong ô): A duyệt, R từ chối (hỏi lý do), S bỏ qua, J mục trước, K mục sau.
+ * - Phím tắt (khi không gõ trong ô): A duyệt, R từ chối (hỏi lý do), S bỏ qua, J mục sau, K mục trước (quy ước Gmail / Vim).
  * - Tab "Bài học": duyệt tên bài do bước 06 đề xuất.
  * Mọi thay đổi ghi thẳng file backend/content/<cấp>/<chủ-đề>.json qua API; sau mỗi lần lưu backend kiểm lại cờ.
  * Tham số xem nhanh: ?topic=food&status=draft&q=rice&key=a1.food.rice.noun&tab=units
@@ -128,8 +128,8 @@ export default function ContentReview() {
       const current = saveRef.current?.patch() ?? {}
       if (key === 'a') approve(current)
       else if (key === 'r') askReject(current)
-      else if (key === 's' || key === 'k') go(1)
-      else if (key === 'j') go(-1)
+      else if (key === 's' || key === 'j') go(1)
+      else if (key === 'k') go(-1)
       else return
       e.preventDefault()
     }

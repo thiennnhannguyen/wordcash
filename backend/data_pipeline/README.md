@@ -35,7 +35,7 @@ flowchart TD
 | 02 | `python -m data_pipeline.02_select_and_tag --level A1 [--limit 40] [--yes]` | Có gọi AI: in ước tính rồi hỏi xác nhận. `--limit`: chạy thử, không thêm cụm từ / cân bằng |
 | 03 | `python -m data_pipeline.03_enrich_entries --level A1 [--limit 40] [--yes] [--redo-drafts]` | AI soạn theo lô 15 mục; lỗi → `processed/failed_03.json` |
 | 04 | `python -m data_pipeline.04_validate --level A1` | Không gọi AI; báo cáo `processed/report_04.json` |
-| duyệt | Mở `/dev/content` (backend `ENV=development`, frontend `npm run dev`) | Phím A / R / S / J / K; tab Bài học |
+| duyệt | Mở `/dev/content` (backend `ENV=development`, frontend `npm run dev`) | Phím A duyệt · R từ chối (bắt buộc lý do) · S bỏ qua · J mục sau · K mục trước (quy ước Gmail / Vim); tab Bài học |
 | 05 | `python -m data_pipeline.05_review_export export --level A1 --out reviewed/a1.xlsx` rồi `import --file … [--apply]` | Tùy chọn: duyệt bằng bảng tính, xem trước khác biệt trước khi ghi |
 | 06 | `python -m data_pipeline.06_build_units --level A1 [--topic food] [--yes]` | Chỉ mục approved; tên bài AI đề xuất ở trạng thái draft |
 | 07 | `python -m data_pipeline.07_load_to_db --level A1 --dry-run`, rồi bỏ `--dry-run` | Production: chạy `sh scripts/backup_db.sh` trước và thêm `--yes` |
