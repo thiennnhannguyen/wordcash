@@ -1,7 +1,8 @@
 """
 Bước 02 — chọn từ một cấp (A1) và chia chủ đề (gọi từ data_pipeline/02_select_and_tag.py).
 
-1. Ứng viên: được ít nhất một nguồn gắn đúng cấp (CEFR-J A1); bỏ từ chức năng (exclude_function_words.txt).
+1. Ứng viên: được ít nhất một nguồn gắn đúng cấp (CEFR-J A1); bỏ từ chức năng: theo danh sách (exclude_function_words.txt,
+   lý do `function_word`) và theo từ loại chức năng (đại từ, hạn định từ, giới từ, liên từ, modal, trợ động từ — `function_pos`).
 2. AI phân loại (prompts/classify_v1.md, theo lô CLASSIFY_BATCH_SIZE, có cache): mỗi từ vào ĐÚNG MỘT chủ đề, kèm độ tự tin,
    lý do, điểm phổ biến 1–5, cờ giao tiếp cơ bản, nhóm nhỏ. Độ tự tin < TOPIC_CONFIDENCE_MIN → cờ `needs_topic_review`.
 3. Cụm từ cố định (~PHRASE_RATIO mỗi chủ đề, prompts/phrases_v1.md): `pos = phrase`, cờ `phrase`.
@@ -33,6 +34,7 @@ from data_pipeline.lib.schemas import ClassifyItem, PhraseItem, SuggestItem
 
 CLASSIFY_V, PHRASES_V, SUGGEST_V = 1, 1, 1
 FUNCTION_POS_OK = {"noun", "verb", "adjective", "adverb", "number", "interjection", "phrase"}
+FUNCTION_POS = {"pronoun", "determiner", "preposition", "conjunction", "modal", "auxiliary"}
 
 
 @dataclass
@@ -60,6 +62,9 @@ def select_level(candidates: list[dict], level: str, function_words: set[str]) -
             continue
         if c["headword"] in function_words:
             excluded.append({"headword": c["headword"], "pos": c["pos"], "reason": "function_word"})
+            continue
+        if c["pos"] in FUNCTION_POS:
+            excluded.append({"headword": c["headword"], "pos": c["pos"], "reason": "function_pos"})
             continue
         chosen.append(c)
     return chosen, excluded

@@ -35,6 +35,11 @@ def test_select_level_filters_level_and_function_words():
     chosen, excluded = step02.select_level(cands, "A1", {"the", "can"})
     assert [c["headword"] for c in chosen] == ["apple"]
     assert {e["headword"] for e in excluded} == {"the", "can"} and {e["reason"] for e in excluded} == {"function_word"}
+    # Từ loại chức năng bị loại kể cả khi không có trong danh sách; cùng chữ khác từ loại vẫn giữ (above: trạng từ)
+    more = [{**candidates([w])[0], "pos": p} for w, p in (("anybody", "pronoun"), ("above", "preposition"), ("above", "adverb"))]
+    chosen, excluded = step02.select_level(more, "A1", set())
+    assert [(c["headword"], c["pos"]) for c in chosen] == [("above", "adverb")]
+    assert [(e["headword"], e["reason"]) for e in excluded] == [("anybody", "function_pos"), ("above", "function_pos")]
 
 
 def test_limited_run_classifies_once_and_uses_cache(tmp_path):
