@@ -1,6 +1,6 @@
 /*
- * Thang rank: 8 huy hiệu xếp theo bậc thang đi lên, dưới mỗi huy hiệu là số từ cần thuộc.
- * Mobile: cuộn ngang.
+ * Thang rank: 8 huy hiệu xếp theo bậc thang đi lên, dưới mỗi huy hiệu là số từ cần thuộc (mốc đọc từ luật server,
+ * GET /public/stats; chưa tải xong thì hiện khối chờ). Mobile: cuộn ngang.
  */
 
 import { ShieldStar } from '@phosphor-icons/react'
@@ -8,11 +8,13 @@ import Icon from '../../components/ui/Icon'
 import cx from '../../utils/cx'
 import { RANKS } from '../../utils/constants'
 import { formatNumber } from '../../utils/format'
+import { Skeleton } from '../../components/ui/DataState'
+import { rankMin } from '../../store/rulesStore'
 
 const STEP_BASE = 36
 const STEP_RISE = 26
 
-export default function RankStairs() {
+export default function RankStairs({ rules }) {
   return (
     <div className="-mx-4 overflow-x-auto px-4 pb-4 pt-2 md:mx-0 md:overflow-visible md:px-0">
       <ol className="flex min-w-[760px] items-end gap-2 md:min-w-0 md:gap-3">
@@ -38,8 +40,14 @@ export default function RankStairs() {
                 className="flex w-full flex-col items-center justify-start rounded-t-[16px] border-thick border-b-0 border-line bg-surface pt-2"
                 style={{ height: STEP_BASE + i * STEP_RISE }}
               >
-                <span className="font-num text-lg leading-none">{formatNumber(rank.min)}</span>
-                <span className="text-xs font-medium text-muted">từ</span>
+                {rules ? (
+                  <>
+                    <span className="font-num text-lg leading-none">{formatNumber(rankMin(rules, rank.key))}</span>
+                    <span className="text-xs font-medium text-muted">từ</span>
+                  </>
+                ) : (
+                  <Skeleton className="h-5 w-12" />
+                )}
               </div>
             </li>
           )

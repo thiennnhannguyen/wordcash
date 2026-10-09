@@ -3,18 +3,13 @@
  *
  * - Hàm gọi thẳng API (`getRoadmap`, `startLearn`, `submitAnswers`, `getMeStats`…) trả JSON của server (snake_case);
  *   câu hỏi được đổi `letter_count` → `letterCount` cho khớp components/academy/QuestionView.
- * - "Bộ chuyển" cho các màn đã thiết kế trên dữ liệu mẫu (UnitTest, BossBattle qua useTestRun; DailyCheck): trả đúng cấu trúc
- *   các file mock cũ (testMock.js, dailyCheckMock.js) để giữ nguyên giao diện. VITE_USE_MOCK=true thì dùng lại chính các
- *   file mock đó (không cần backend).
+ * - "Bộ chuyển" cho các màn Kiểm tra / Trận Boss (qua useTestRun) và Cửa Ải: đổi phản hồi server sang dạng dữ liệu các màn
+ *   đó vẽ (camelCase, gom sẵn từ sai, phần mở khóa…).
  * - Server là trọng tài: câu hỏi không có đáp án; đúng/sai, điểm, mở khóa, con dấu, lượt quay, rank đều lấy từ phản hồi.
  */
 
 import { request } from './api'
-import * as testMock from '../pages/Academy/testMock'
-import * as dailyMock from '../pages/DailyCheck/dailyCheckMock'
 import { speak } from '../utils/speech'
-
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
 const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 const toQuestion = ({ letter_count: letterCount, ...q }) => (letterCount == null ? q : { ...q, letterCount })
@@ -45,7 +40,7 @@ export function daysLeft(seconds) {
 
 export function toWordEntry(e) {
   if (!e) return null
-  return { id: e.id, word: e.headword, ipa: e.ipa, pos: e.pos, meaning: e.meaning_vi, example: e.example, collocations: e.collocations ?? [], family: e.word_family ?? [], audio_url: e.audio_url }
+  return { id: e.id, word: e.headword, ipa: e.ipa, pos: e.pos, meaning: e.meaning_vi, variantNote: e.variant_note, example: e.example, collocations: e.collocations ?? [], family: e.word_family ?? [], audio_url: e.audio_url }
 }
 
 function playQuestion(question, { slow = false } = {}) {
@@ -56,7 +51,7 @@ function playQuestion(question, { slow = false } = {}) {
   } else if (question?.word) speak(question.word, { rate: slow ? 0.55 : 0.9 })
 }
 
-/* ---------- Bộ chuyển cho màn Kiểm tra / Trận Boss (cùng dạng testMock.js) ---------- */
+/* ---------- Bộ chuyển cho màn Kiểm tra / Trận Boss ---------- */
 
 let run = null // phiên đang làm: {id, kind, total, correct, questions, final}
 
@@ -66,7 +61,7 @@ function openRun(kind, session, extra) {
 }
 
 /** Kiểm tra cuối bài (`unitId`) hoặc bài tổng hợp chặng (`topicId`). */
-async function realStartUnitTest({ unitId, topicId } = {}) {
+export async function startUnitTest({ unitId, topicId } = {}) {
   if (topicId) {
     const [session, road] = await Promise.all([startTopicTestSession(topicId), getRoadmap()])
     const level = road.levels.find((l) => l.topics.some((t) => t.id === Number(topicId)))
@@ -81,7 +76,7 @@ async function realStartUnitTest({ unitId, topicId } = {}) {
   })
 }
 
-async function realSubmitTestAnswer(questionId, answer) {
+export async function submitTestAnswer(questionId, answer) {
   const res = await submitAnswers(run.id, [{ question_id: questionId, answer }])
   const r = res.results.find((x) => x.question_id === questionId)
   if (r.correct) run.correct += 1
@@ -96,7 +91,7 @@ async function realSubmitTestAnswer(questionId, answer) {
   }
 }
 
-function realPlayTestAudio(questionId, opts) {
+export function playTestAudio(questionId, opts) {
   playQuestion(run?.questions.find((q) => q.id === questionId), opts)
 }
 
@@ -118,7 +113,7 @@ function unlockedOf(outcome) {
   return null
 }
 
-async function realFinishUnitTest() {
+export async function finishUnitTest() {
   const final = run.final
   const { summary, outcome } = final
   const passPercent = Math.round(outcome.pass_rate * 100)
@@ -137,7 +132,7 @@ async function realFinishUnitTest() {
 }
 
 /** Trận Boss theo mã cấp (A1…). BOSS_COOLDOWN ném lỗi kèm details.retry_at, weak_topics. */
-async function realStartBoss({ level = 'A1' } = {}) {
+export async function startBoss({ level = 'A1' } = {}) {
   const road = await getRoadmap()
   const lv = road.levels.find((l) => l.code === level)
   if (!lv) throw { code: 'NOT_FOUND', message: 'Không tìm thấy cấp.', details: null, status: 404 }
@@ -147,7 +142,7 @@ async function realStartBoss({ level = 'A1' } = {}) {
 
 const WEAK_COLORS = ['accent', 'danger', 'sky', 'gold']
 
-async function realFinishBoss() {
+export async function finishBoss() {
   const { summary, outcome, rewards } = run.final
   const accuracy = Object.fromEntries((outcome.topic_accuracy ?? []).map((a) => [a.topic_id, a]))
   const special = (rewards?.spins ?? []).filter((s) => s.kind === 'special' && s.reason === 'boss').length
@@ -173,14 +168,8 @@ async function realFinishBoss() {
   }
 }
 
-export const startUnitTest = USE_MOCK ? testMock.startUnitTest : realStartUnitTest
-export const submitTestAnswer = USE_MOCK ? testMock.submitTestAnswer : realSubmitTestAnswer
-export const playTestAudio = USE_MOCK ? testMock.playTestAudio : realPlayTestAudio
-export const finishUnitTest = USE_MOCK ? testMock.finishUnitTest : realFinishUnitTest
-export const startBoss = USE_MOCK ? testMock.startBoss : realStartBoss
-export const finishBoss = USE_MOCK ? testMock.finishBoss : realFinishBoss
 
-/* ---------- Bộ chuyển cho màn Cửa Ải (cùng dạng dailyCheckMock.js) ---------- */
+/* ---------- Bộ chuyển cho màn Cửa Ải ---------- */
 
 let check = null // {answers: {question_id: kết quả}, last}
 
@@ -200,7 +189,7 @@ function toFeedback(r) {
   }
 }
 
-async function realFetchDailyCheck() {
+export async function fetchDailyCheck() {
   const [today, stats] = await Promise.all([getDailyCheckToday(), getMeStats()])
   check = { answers: Object.fromEntries(today.answered.map((a) => [a.question_id, a])), last: null }
   return {
@@ -212,7 +201,7 @@ async function realFetchDailyCheck() {
   }
 }
 
-async function realSubmitAnswer(questionId, answer) {
+export async function submitDailyAnswer(questionId, answer) {
   const res = await submitDailyCheck([{ question_id: questionId, answer }])
   const r = res.results[0]
   check.answers[questionId] = r
@@ -220,7 +209,7 @@ async function realSubmitAnswer(questionId, answer) {
   return toFeedback(r)
 }
 
-async function realFinishDailyCheck({ streak }) {
+export async function finishDailyCheck({ streak }) {
   const res = check.last
   const result = res.result
   const stats = await getMeStats()
@@ -240,7 +229,3 @@ async function realFinishDailyCheck({ streak }) {
     rewards: result.rewards,
   }
 }
-
-export const fetchDailyCheck = USE_MOCK ? dailyMock.fetchDailyCheck : realFetchDailyCheck
-export const submitDailyAnswer = USE_MOCK ? dailyMock.submitAnswer : realSubmitAnswer
-export const finishDailyCheck = USE_MOCK ? dailyMock.finishDailyCheck : realFinishDailyCheck

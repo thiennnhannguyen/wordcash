@@ -1,19 +1,11 @@
 /*
- * Gọi API "Khóa học của tôi" (docs/courses.md).
- *
- * Mặc định gọi backend thật qua services/api.js (.env.development, .env.production: VITE_USE_MOCK=false).
- * Bật mock thủ công khi không có backend: `VITE_USE_MOCK=true npm run dev` (services/coursesMock.js đóng vai server).
- * Bản build production không bao giờ dùng mock (vite.config.js dừng build).
- * Hai chế độ trả cùng cấu trúc JSON (snake_case như server) và cùng dạng lỗi {code, message, details, status}.
- * Riêng câu hỏi phiên học được đổi `letter_count` → `letterCount` cho khớp components/academy/QuestionView.
+ * Gọi API "Khóa học của tôi" (docs/courses.md) qua services/api.js. Trả JSON của server (snake_case), lỗi dạng
+ * {code, message, details, status}. Riêng câu hỏi phiên học được đổi `letter_count` → `letterCount` cho khớp
+ * components/academy/QuestionView.
  */
 
 import { request } from './api'
-import * as mock from './coursesMock'
-
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
-
-const real = {
+const api = {
   listCourses: ({ archived = false } = {}) => request({ url: '/courses', params: { archived } }),
   createCourse: (data) => request({ method: 'post', url: '/courses', data }),
   getCourse: (id) => request({ url: `/courses/${id}` }),
@@ -36,7 +28,7 @@ const real = {
   submitAnswers: (sessionId, answers) => request({ method: 'post', url: `/study-sessions/${sessionId}/answers`, data: { answers } }),
 }
 
-const impl = USE_MOCK ? mock : real
+const impl = api
 
 export const listCourses = impl.listCourses
 export const createCourse = impl.createCourse
@@ -63,7 +55,7 @@ export async function startSession(id, data) {
 
 /*
  * Thêm một từ đang xem (thẻ học Học Viện, "Từ bạn đã sai", "Từ của ngày") vào khóa học.
- * Có `id` của mục từ trong kho thì liên kết thẳng; chưa có (dữ liệu mẫu) thì tìm đúng chữ trong kho rồi liên kết;
+ * Có `id` của mục từ trong kho thì liên kết thẳng; chưa có thì tìm đúng chữ trong kho rồi liên kết;
  * kho không có thì tạo từ riêng với nghĩa đang hiển thị.
  */
 export async function addWordToCourse(courseId, { id, headword, meaning_vi: meaning }) {

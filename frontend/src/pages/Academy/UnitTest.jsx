@@ -8,7 +8,7 @@
  *
  * Dữ liệu thật: `?unit=<id>` (kiểm tra cuối bài) hoặc `?topic=<id>` (bài tổng hợp chặng) qua services/academyApi.js.
  * Qua bài: hiện trạm vừa mở, con dấu địa danh (bài tổng hợp), lượt quay / lên rank (RewardsLayer).
- * Dev: `?preview=pass|fail`, `?q=16` (bản mock: vào thẳng câu 17, đã làm sẵn 16 câu).
+ * Màn kết quả dựng sẵn (dữ liệu mẫu) chỉ có ở trang dev /dev/results.
  */
 
 import { useEffect, useState } from 'react'
@@ -31,9 +31,7 @@ import { speak } from '../../utils/speech'
 import RewardsLayer from '../../components/academy/RewardsLayer'
 import { finishUnitTest, startUnitTest } from '../../services/academyApi'
 import { AcademyError } from './AcademyLesson'
-import { ENTRY_BY_WORD, LESSON } from './lessonMock'
 import LessonTopBar from './LessonTopBar'
-import { PREVIEW_UNIT } from './testMock'
 import useTestRun from './useTestRun'
 
 function tokenColors(names) {
@@ -42,7 +40,7 @@ function tokenColors(names) {
 }
 
 /** Tiêu đề bài: kiểm tra cuối bài hoặc bài tổng hợp chặng (`lesson.kind === 'topic'`). */
-function titleOf(lesson = LESSON) {
+function titleOf(lesson) {
   return lesson.kind === 'topic' ? `${lesson.level} · Chặng ${lesson.number}: ${lesson.title}` : `${lesson.level} · Bài ${lesson.number}: ${lesson.title}`
 }
 const kindLabel = (lesson) => (lesson?.kind === 'topic' ? 'Bài tổng hợp chặng' : 'Kiểm tra cuối bài')
@@ -153,7 +151,7 @@ function ResultActions({ children }) {
   )
 }
 
-function PassResult({ result, lesson = LESSON }) {
+export function PassResult({ result, lesson }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
 
@@ -246,7 +244,7 @@ function WrongWords({ words }) {
   )
 }
 
-function FailResult({ result, onReview, lesson = LESSON }) {
+export function FailResult({ result, onReview, lesson }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
 
@@ -290,9 +288,9 @@ function FailResult({ result, onReview, lesson = LESSON }) {
 }
 
 /** Lật thẻ lần lượt các từ đã sai, xong thì làm lại bài kiểm tra. */
-function ReviewStep({ words, onRetry, onExit, level = LESSON.level }) {
+function ReviewStep({ words, onRetry, onExit, level }) {
   const [index, setIndex] = useState(0)
-  const entry = words[index].entry ?? ENTRY_BY_WORD[words[index].word]
+  const entry = words[index].entry
   const isLast = index === words.length - 1
 
   return (
@@ -335,24 +333,23 @@ function ReviewStep({ words, onRetry, onExit, level = LESSON.level }) {
 export default function UnitTest() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const preview = PREVIEW_UNIT[params.get('preview')]
   const [session, setSession] = useState(null)
-  const [result, setResult] = useState(preview ?? null)
-  const [step, setStep] = useState(preview ? 'result' : 'test')
+  const [result, setResult] = useState(null)
+  const [step, setStep] = useState('test')
   const [exitOpen, setExitOpen] = useState(false)
   const [error, setError] = useState(null)
   const unitId = params.get('unit')
   const topicId = params.get('topic')
 
-  const begin = (resumeAt = 0) => {
+  const begin = () => {
     setSession(null)
     setStep('test')
-    startUnitTest({ resumeAt, unitId, topicId }).then(setSession).catch(setError)
+    startUnitTest({ unitId, topicId }).then(setSession).catch(setError)
   }
 
   // Chỉ bắt đầu một lần khi vào trang (kể cả StrictMode)
   useStartOnce(() => {
-    if (!preview) begin(Number(params.get('q')) || 0)
+    begin()
   }, [unitId, topicId])
 
   const finish = async () => {
@@ -361,7 +358,7 @@ export default function UnitTest() {
     window.scrollTo({ top: 0 })
   }
 
-  const lesson = session?.lesson ?? LESSON
+  const lesson = session?.lesson
   let screen
   if (error) screen = <AcademyError error={error} onBack={() => navigate('/academy')} />
   else if (step === 'result' && result)

@@ -131,6 +131,7 @@ class CourseEntryOut(BaseModel):
     entry_id: int
     headword: str
     meaning_vi: str
+    variant_note: str | None = None  # ghi chú biến thể Anh-Mỹ, hiện dưới nghĩa
     pos: str | None
     ipa: str | None
     audio_url: str | None

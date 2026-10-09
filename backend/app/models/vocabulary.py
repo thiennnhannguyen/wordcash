@@ -12,6 +12,9 @@ Mọi truy vấn entries phía người học PHẢI lọc qua `visible_to(user_
 
 AudioJob: hàng đợi tạo phát âm cho từ tự tạo (chưa gọi TTS thật; frontend dùng Web Speech API khi `audio_url` trống).
 
+Kho từ thật: nguồn chính là backend/content/<cấp>/<chủ-đề>.json, nạp bằng `python -m data_pipeline.07_load_to_db` theo
+`content_key` (entries và units). Mục bị bỏ khỏi file KHÔNG bị xóa mà đặt `retired_at` (không dạy mới, vẫn ôn được).
+
 Unit (bài học trong một chặng, thứ tự `position`) và UnitEntry (mục từ của bài, chỉ liên kết, không sao chép). Số bài mỗi
 chặng và số từ mỗi bài KHÔNG cố định (dữ liệu mẫu dev 2 bài × 15 từ; kho thật 4–5 bài). Hiện chỉ có nhánh Nền tảng;
 IELTS/TOEIC chưa có dữ liệu. Ngày đến địa danh (con dấu) lưu ở user_topic_progress.stamped_at (models/academy.py).
@@ -43,12 +46,16 @@ class Level(Base):
 
 
 class Topic(Base):
+    """Chặng = CHỦ ĐỀ từ vựng. `topic_code` (greetings, food…) là khóa nối nội dung (content/<cấp>/<topic_code>.json, content_key
+    của entries / units). Địa danh (landmark_*) CHỈ là trang trí bản đồ: đổi địa danh không đổi nội dung, bài hay tiến độ."""
+
     __tablename__ = "topics"
-    __table_args__ = (UniqueConstraint("level_id", "order"),)
+    __table_args__ = (UniqueConstraint("level_id", "order"), UniqueConstraint("level_id", "topic_code"))
 
     id: Mapped[int] = mapped_column(primary_key=True)
     level_id: Mapped[int] = mapped_column(ForeignKey("levels.id", ondelete="CASCADE"), index=True)
     order: Mapped[int]
+    topic_code: Mapped[str | None] = mapped_column(String(40))
     title: Mapped[str] = mapped_column(String(128))
     landmark_key: Mapped[str | None] = mapped_column(String(64))
     landmark_name: Mapped[str | None] = mapped_column(String(128))
@@ -65,6 +72,7 @@ class Unit(Base):
     topic_id: Mapped[int] = mapped_column(ForeignKey("topics.id", ondelete="CASCADE"), index=True)
     position: Mapped[int]  # thứ tự trong chặng, bắt đầu từ 1
     title: Mapped[str] = mapped_column(String(128))
+    content_key: Mapped[str | None] = mapped_column(String(80), unique=True)  # "a1.food.u1"; rỗng = bài mẫu dev
 
 
 class UnitEntry(Base):
@@ -82,6 +90,7 @@ class EntryType(enum.StrEnum):
     COLLOCATION = "collocation"
     PHRASAL_VERB = "phrasal_verb"
     IDIOM = "idiom"
+    PHRASE = "phrase"  # cụm từ cố định thông dụng (good morning, thank you…)
 
 
 class EntryStatus(enum.StrEnum):
@@ -123,7 +132,12 @@ class Entry(Base):
     audio_url: Mapped[str | None] = mapped_column(String(512))
     meaning_vi: Mapped[str] = mapped_column(String(300))
     definition_en: Mapped[str | None] = mapped_column(Text)
-    example: Mapped[str | None] = mapped_column(String(500))
+    example: Mapped[str | None] = mapped_column(String(500))  # câu ví dụ tiếng Anh (example_en của file nội dung)
+    example_vi: Mapped[str | None] = mapped_column(Text)
+    mnemonic_vi: Mapped[str | None] = mapped_column(Text)
+    image_keyword: Mapped[str | None] = mapped_column(String(100))
+    ipa_unverified: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
+    variant_note: Mapped[str | None] = mapped_column(String(120))  # ghi chú biến thể Anh-Mỹ, vd. "Mỹ thường dùng: fall"
     collocations: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     word_family: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     synonyms: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
@@ -131,6 +145,11 @@ class Entry(Base):
     topic: Mapped[str | None] = mapped_column(String(64))  # chủ đề (vd. "Gia đình"); từ tự tạo: rỗng
     exam_tags: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     image_url: Mapped[str | None] = mapped_column(String(512))
+    # Kho từ thật nạp từ backend/content/ (data_pipeline/07_load_to_db.py): khóa ổn định "a1.<chủ-đề>.<headword>.<pos>",
+    # số lần nội dung đổi, thời điểm ngừng dạy (bị bỏ khỏi file: không dạy mới, vẫn ôn được, giữ mastered đã có)
+    content_key: Mapped[str | None] = mapped_column(String(160), unique=True)
+    content_version: Mapped[int] = mapped_column(default=0, server_default=text("0"))
+    retired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     status: Mapped[EntryStatus] = mapped_column(str_enum(EntryStatus, "entry_status"), default=EntryStatus.DRAFT, server_default=EntryStatus.DRAFT.value)
     source: Mapped[EntrySource] = mapped_column(str_enum(EntrySource, "entry_source"), default=EntrySource.SYSTEM, server_default=EntrySource.SYSTEM.value)
     owner_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
@@ -152,8 +171,14 @@ class Entry(Base):
 
     @staticmethod
     def system_approved():
-        """Chỉ kho hệ thống đã duyệt (gợi ý khi gõ, đáp án nhiễu bổ sung, Cửa Ải Hôm Nay)."""
+        """Chỉ kho hệ thống đã duyệt, gồm cả mục đã ngừng dùng (đáp án nhiễu bổ sung, chấm câu trả lời của mục đã giao)."""
         return and_(Entry.source == EntrySource.SYSTEM, Entry.status == EntryStatus.APPROVED)
+
+    @staticmethod
+    def teachable():
+        """Kho hệ thống đã duyệt và CHƯA ngừng dùng (`retired_at` rỗng): tìm trong kho, gợi ý dùng từ kho, thêm vào khóa học,
+        Cửa Ải Hôm Nay, câu hỏi Đấu Trường. Mục đã ngừng dùng vẫn ôn được trong ôn tập cá nhân (`visible_to`) và giữ mastered."""
+        return and_(Entry.system_approved(), Entry.retired_at.is_(None))
 
 
 class AudioJobStatus(enum.StrEnum):

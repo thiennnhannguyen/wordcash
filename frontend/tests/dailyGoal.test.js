@@ -3,7 +3,7 @@
  */
 
 import assert from 'node:assert/strict'
-import { test } from 'node:test'
+import { test } from 'vitest'
 import { CAP_MESSAGE, crossedGoal, goalMessage, goalState } from '../src/utils/dailyGoal.js'
 
 test('trạng thái: chưa đạt → đạt mục tiêu (vẫn học được) → chạm hạn mức', () => {

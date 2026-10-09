@@ -148,16 +148,55 @@ async def _has_progress(session: AsyncSession, user_id: uuid.UUID) -> bool:
     return bool(await session.scalar(select(func.count()).select_from(UserLevelProgress).where(UserLevelProgress.user_id == user_id)))
 
 
+# Chặng đang mở mà chưa mở bài nào (bài cũ bị thay khi nạp kho thật), cấp đang mở mà chưa mở chặng nào
+_HOLES = text("""
+    SELECT 'topic' AS kind, tp.topic_id AS id FROM user_topic_progress tp
+    WHERE tp.user_id = :u AND tp.status = :unlocked
+      AND EXISTS (SELECT 1 FROM units x WHERE x.topic_id = tp.topic_id)
+      AND NOT EXISTS (SELECT 1 FROM user_unit_progress up JOIN units x ON x.id = up.unit_id
+                      WHERE up.user_id = :u AND x.topic_id = tp.topic_id)
+    UNION ALL
+    SELECT 'level', lp.level_id FROM user_level_progress lp
+    WHERE lp.user_id = :u AND lp.status = :unlocked
+      AND EXISTS (SELECT 1 FROM topics t WHERE t.level_id = lp.level_id)
+      AND NOT EXISTS (SELECT 1 FROM user_topic_progress tp JOIN topics t ON t.id = tp.topic_id
+                      WHERE tp.user_id = :u AND t.level_id = lp.level_id)
+""")
+
+
+async def _holes(session: AsyncSession, user_id: uuid.UUID) -> list[tuple[str, int]]:
+    return [tuple(r) for r in (await session.execute(_HOLES, {"u": user_id, "unlocked": S.UNLOCKED.value})).all()]
+
+
+async def _lock(session: AsyncSession, user_id: uuid.UUID) -> None:
+    await session.execute(text("SELECT pg_advisory_xact_lock(hashtextextended(:key, 0))"), {"key": f"roadmap-init:{user_id}"})
+
+
 async def ensure_initialized(session: AsyncSession, user: User, now: datetime, st: Structure | None = None) -> None:
-    """Người mới: mở cấp đầu, chặng 1, bài 1. Đã có tiến độ thì không làm gì.
+    """Người mới: mở cấp đầu, chặng 1, bài 1. Đã có tiến độ thì chỉ vá chỗ hổng: chặng đang mở mà chưa có bài nào mở (vd. dev
+    vừa thay bài mẫu bằng kho thật, seeds/refresh_dev_content.py) → mở bài đầu của chặng đó; cấp đang mở mà chưa có chặng nào
+    → mở chặng đầu. Người đang học dở vì vậy quay về đúng bài đầu tiên của chặng hiện tại, không lỗi.
 
     Nhiều request đầu tiên của cùng một người có thể chạy song song (Sảnh gọi /me/stats, menu gọi /collection…): khóa
-    advisory theo người dùng (tới hết transaction) để chỉ một request khởi tạo, các request khác chờ rồi thấy đã có tiến độ.
+    advisory theo người dùng (tới hết transaction) để chỉ một request khởi tạo / vá, các request khác chờ rồi thấy đã xong.
     Không khóa dòng users nên không ảnh hưởng thứ tự khóa users → user_stats ở nơi khác (tránh deadlock).
     """
     if await _has_progress(session, user.id):
+        if not await _holes(session, user.id):
+            return
+        await _lock(session, user.id)
+        holes = await _holes(session, user.id)
+        if not holes:
+            return
+        st = st or await load_structure(session)
+        for kind, ident in holes:
+            if kind == "topic" and st.units.get(ident):
+                await unlock_unit(session, user, st.units[ident][0], now)
+            elif kind == "level" and st.topics.get(ident):
+                await unlock_topic(session, user, st, st.topics[ident][0], now)
+        await session.flush()
         return
-    await session.execute(text("SELECT pg_advisory_xact_lock(hashtextextended(:key, 0))"), {"key": f"roadmap-init:{user.id}"})
+    await _lock(session, user.id)
     if await _has_progress(session, user.id):
         return
     st = st or await load_structure(session)

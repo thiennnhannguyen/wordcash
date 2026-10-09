@@ -1,0 +1,51 @@
+# Cặp từ vựng Anh-Anh / Anh-Mỹ (chuẩn kho từ: en-US). Chính tả (colour/color) nằm ở br_us_spelling.tsv.
+# Cột (cách nhau bằng TAB): uk	us	mode	pos (tùy chọn: chỉ áp dụng cho headword đúng từ loại)
+# mode:
+#   replace  — chỉ dùng ở Anh: headword thay bằng từ Mỹ (bước 02); quy tắc uk_vocab gắn cờ khi gặp ở headword, example_en,
+#              collocations, definition_en.
+#   headword — chỉ thay khi là headword (từ vẫn đúng tiếng Mỹ ở nghĩa / cụm khác: "post office", "lift a box", "a flat road").
+#   note     — người Mỹ vẫn hiểu và dùng: giữ, thêm variant_note "Mỹ thường dùng: <us>" (hiện dưới nghĩa trên thẻ học).
+#   context  — tùy ngữ cảnh (chips Mỹ = khoai tây lát, garden Mỹ = vườn trồng cây): không tự gắn cờ, người duyệt xem.
+flat	apartment	headword	noun
+trousers	pants	replace
+autumn	fall	note
+holiday	vacation	note
+football	soccer	replace
+chips	fries	context
+crisps	chips	replace
+lift	elevator	headword	noun
+mobile phone	cell phone	replace
+mobile	cell phone	headword	noun
+rubbish	trash	replace
+film	movie	note
+shop	store	note
+post	mail	headword	noun
+queue	line	replace
+sweets	candy	replace
+biscuit	cookie	replace
+timetable	schedule	replace
+petrol	gas	replace
+motorway	highway	replace
+garden	yard	context
+pavement	sidewalk	replace
+underground	subway	headword	noun
+rubber	eraser	headword	noun
+maths	math	replace
+mum	mom	replace
+mummy	mommy	replace
+toilet	restroom, bathroom	note
+cooker	stove	replace
+trainers	sneakers	headword	noun
+jumper	sweater	headword	noun
+torch	flashlight	headword	noun
+lorry	truck	replace
+car park	parking lot	replace
+dustbin	trash can	replace
+rubbish bin	trash can	replace
+postman	mail carrier	replace
+chemist	drugstore	headword	noun
+railway	railroad	note
+city centre	downtown	replace
+city center	downtown	note
+term	semester	note	noun
+cinema	movie theater	note

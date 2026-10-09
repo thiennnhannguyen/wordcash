@@ -6,9 +6,22 @@ Luật đã chốt tóm tắt ở `docs/game-rules.md`; mọi con số nằm tro
 ## Cấu trúc
 
 ```
-Level (cấp, A1, A2…) ── Topic (chặng, 1 địa danh) ── Unit (bài, 15–20 mục từ qua unit_entries)
+Level (cấp, A1, A2…) ── Topic (chặng = 1 CHỦ ĐỀ từ vựng, topic_code) ── Unit (bài, 15–20 mục từ qua unit_entries)
         └── Boss (địa danh Boss lưu ở levels.boss_landmark_*)
 ```
+
+**Địa danh chỉ là trang trí giao diện**, tượng trưng cho chặng trên bản đồ. Từ vựng của mỗi chặng do CHỦ ĐỀ quyết định,
+không liên quan và không bị giới hạn bởi địa danh:
+- `topics.topic_code` (greetings, family, food…) là khóa nối nội dung: `content/<cấp>/<topic_code>.json`, `content_key` của
+  entries (`a1.food.rice.noun`) và units (`a1.food.u1`). Loader nối theo `topic_code`, không theo địa danh.
+- `landmark_key`, `landmark_name`, `landmark_image` chỉ là thuộc tính hiển thị của topic. Đổi / thay địa danh không đổi
+  content_key, entries, units hay tiến độ học (có test ở `tests/integration/test_content_loader.py`).
+- Prompt và gói việc của bước 02 (phân loại), 03 (soạn nháp), 06 (đặt tên bài) chỉ dùng tên và mô tả chủ đề, không nhắc địa
+  danh; tên bài đặt theo nội dung từ vựng (có test quét prompt).
+- **Mã chủ đề A2 hiện là TẠM** (daily_routine, feelings, festivals, city, exploring, beach_holidays, free_time, money_prices,
+  architecture, farm_food — đặt theo tên chặng để có bản đồ). Khi làm A2: chọn chủ đề theo nhóm từ vựng A2 của CEFR-J (cột
+  gợi ý chủ đề của nguồn), khai báo trong `data_pipeline/config.py`, cập nhật `topic_code` trong `seeds/seed_landmarks.py`,
+  rồi mới gắn địa danh để trang trí. Chưa soạn nội dung A2.
 
 Tiến độ: `user_level_progress`, `user_topic_progress`, `user_unit_progress` (trạng thái `locked → unlocked → completed`,
 điểm cao nhất, số lần làm, `stamped_at`, `boss_best`, `boss_won_at`). Lần thua/thắng Boss: `boss_attempts`; luyện chặng yếu:

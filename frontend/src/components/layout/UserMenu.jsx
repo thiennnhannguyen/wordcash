@@ -1,5 +1,6 @@
 /*
- * Menu người dùng: tên hiển thị, @username, Hồ Sơ, Đăng xuất, Đăng xuất mọi thiết bị (POST /auth/logout, /auth/logout-all).
+ * Menu người dùng: tên hiển thị, @username, Hồ Sơ, Giới thiệu và nguồn dữ liệu (/about), Đăng xuất, Đăng xuất mọi thiết bị
+ * (POST /auth/logout, /auth/logout-all).
  *
  * `trigger` (vd. avatar linh vật trên thanh trạng thái Sảnh) mở menu. Desktop: popover bám nút; mobile (< 768px): hộp thoại,
  * vì thanh trạng thái trên mobile là dải cuộn ngang nên popover dễ bị cắt. Đăng xuất xong route guard đưa về /login.
@@ -7,7 +8,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Devices, SignOut, UserCircle } from '@phosphor-icons/react'
+import { Devices, Info, SignOut, UserCircle } from '@phosphor-icons/react'
 import Icon from '../ui/Icon'
 import Modal from '../ui/Modal'
 import MascotBlob from '../collection/MascotBlob'
@@ -71,6 +72,17 @@ function MenuBody({ user, onDone }) {
         }}
       >
         <Icon icon={UserCircle} size={20} /> Hồ Sơ
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        className={item}
+        onClick={() => {
+          onDone?.()
+          navigate('/about')
+        }}
+      >
+        <Icon icon={Info} size={20} /> Giới thiệu và nguồn dữ liệu
       </button>
       <button type="button" role="menuitem" className={item} disabled={pending !== null} onClick={() => run('one')}>
         <Icon icon={SignOut} size={20} /> {pending === 'one' ? 'Đang đăng xuất…' : 'Đăng xuất'}

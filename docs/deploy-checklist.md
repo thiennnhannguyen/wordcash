@@ -39,11 +39,19 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
 - [ ] Chạy `python -m seeds.seed_mascots` sau migration để nạp hồ sơ và hình dạng linh vật (migration chỉ ghi các trường gốc). Không có route `/api/v1/dev/*` ở production (ENV=production).
 - [ ] Sau lần deploy đầu tiên: **không viết lại migration cũ**, chỉ thêm migration mới.
 - [ ] Bật sao lưu tự động cho PostgreSQL.
+- [ ] **Kho từ:** nội dung chỉ nạp từ `backend/content/` đã qua review. Sao lưu → `python -m data_pipeline.check_content` →
+  `python -m data_pipeline.07_load_to_db --level A1 --dry-run` (xem bảng thêm / sửa / ngừng dùng) → chạy lại với `--yes`.
+  Không sửa nội dung trực tiếp trong DB production. Router `/api/v1/dev/content` không tồn tại ở production (có test).
 - [ ] **Không có dữ liệu mẫu dev:** database production phải có **0** mục từ `DEV_SAMPLE`. Không bao giờ chạy `seeds.seed_dev_entries` ở production (script tự từ chối). Kiểm tra:
   ```sql
   SELECT count(*) FROM entries WHERE exam_tags @> '["DEV_SAMPLE"]'::jsonb;  -- phải bằng 0
   ```
   hoặc `python -m seeds.purge_dev_entries --dry-run` (phải in `'entries': 0`). Nếu khác 0: `python -m seeds.purge_dev_entries --yes` (xóa mục từ cùng tiến độ, nhật ký, liên kết khóa học, phiên học đang mở và trừ lại `mastered_count`).
+- [ ] **Không có tài khoản mẫu dev:** database production không có user nào có username bắt đầu bằng `dev_` (tài khoản do `seeds.seed_dev_accounts` tạo; script tự từ chối khi ENV khác development/e2e). Kiểm tra:
+  ```sql
+  SELECT count(*) FROM users WHERE username LIKE 'dev\_%' ESCAPE '\';  -- phải bằng 0 (`_` trong LIKE là ký tự đại diện nên phải thoát)
+  ```
+  Backend cũng tự kiểm tra lúc khởi động khi `ENV=production`: còn tài khoản `dev_` thì ghi log **ERROR** (logger `wordclash.startup`) kèm số lượng và username; app vẫn chạy. Xem log ngay sau khi deploy.
 - [ ] Bản build frontend đã qua `postbuild` (`scripts/check-dist.mjs`): không chứa `__wcAuthStore` hay `DEV_SAMPLE`.
 
 ## Sau khi deploy

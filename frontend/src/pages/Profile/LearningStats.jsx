@@ -1,15 +1,18 @@
 /*
- * Thống kê học tập trên Hồ sơ: tiến độ theo cấp (6 thanh A1–C2), lịch nhiệt hoạt động kiểu bảng đóng góp GitHub
- * (12 tuần; mobile 8 tuần), độ ghi nhớ (tỉ lệ đúng ở Cửa Ải, dạng vòng tròn) và 5 từ hay quên nhất kèm nút ôn.
- * Độ ghi nhớ và từ khó nhất là thống kê riêng, chỉ hiện trên hồ sơ của mình.
+ * Thống kê học tập trên Hồ sơ của tôi (GET /me/profile): tiến độ theo cấp (cấp có trong DB: đã thuộc / tổng mục dạy được),
+ * lịch nhiệt hoạt động kiểu bảng đóng góp GitHub (12 tuần; mobile 8 tuần; số từ mới + số câu ôn mỗi ngày), độ ghi nhớ (tỉ lệ
+ * đúng ở Cửa Ải 30 ngày, dạng vòng tròn), 5 từ hay quên nhất (lapse_count) kèm nút ôn, khóa học và từ tự tạo đã thuộc.
+ * Đều là thống kê riêng, không có trên hồ sơ người khác. Chưa có dữ liệu thì khối hiện trạng thái trống có gợi ý.
+ * `SoonCard`: khối "Sắp ra mắt" cho tính năng chưa có backend (Đấu Trường, huy hiệu).
  */
 
 import { useNavigate } from 'react-router-dom'
-import { ArrowsClockwise, Brain, CalendarBlank, ChartBar, LockSimple, Siren } from '@phosphor-icons/react'
+import { ArrowsClockwise, BookmarkSimple, Brain, CalendarBlank, ChartBar, Hourglass, LockSimple, Siren } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
 import Icon, { IconBadge } from '../../components/ui/Icon'
 import LevelTag from '../../components/ui/LevelTag'
 import ProgressRing from '../../components/ui/ProgressRing'
+import { EmptyState } from '../../components/ui/DataState'
 import cx from '../../utils/cx'
 import { formatNumber } from '../../utils/format'
 
@@ -31,10 +34,10 @@ export function LevelProgress({ levels }) {
     <StatCard title="Tiến độ theo cấp" icon={ChartBar} iconBg="sky">
       <ul className="flex flex-col gap-3">
         {levels.map((l) => (
-          <li key={l.level} className="flex items-center gap-3">
-            <LevelTag level={l.level} size="sm" className="w-11 shrink-0" />
+          <li key={l.code} className="flex items-center gap-3">
+            <LevelTag level={l.code} size="sm" className="w-11 shrink-0" />
             <div className="h-4 min-w-0 flex-1 overflow-hidden rounded-pill border-2 border-line bg-raised">
-              {l.unlocked && <div className="h-full border-r-2 border-line" style={{ width: `${(l.mastered / l.total) * 100}%`, background: `var(--color-level-${l.level.toLowerCase()})` }} />}
+              {l.unlocked && l.total > 0 && <div className="h-full border-r-2 border-line" style={{ width: `${(l.mastered / l.total) * 100}%`, background: `var(--color-level-${l.code.toLowerCase()})` }} />}
             </div>
             {l.unlocked ? (
               <span className="w-24 shrink-0 text-right font-num text-sm">
@@ -138,21 +141,28 @@ export function Heatmap({ activity, weeks = 12 }) {
   )
 }
 
-export function Retention({ retention }) {
-  const percent = Math.round((retention.correct / retention.total) * 100)
+export function Retention({ accuracy }) {
+  if (accuracy.total === 0) {
+    return (
+      <StatCard title="Độ ghi nhớ" icon={Brain} iconBg="primary">
+        <EmptyState compact title="Chưa có câu Cửa Ải nào" message={`Tỉ lệ đúng ở Cửa Ải Hôm Nay trong ${accuracy.days} ngày sẽ hiện ở đây khi bạn đã học vài từ.`} />
+      </StatCard>
+    )
+  }
+  const percent = Math.round(accuracy.rate * 100)
   return (
     <StatCard title="Độ ghi nhớ" icon={Brain} iconBg="primary">
       <div className="flex flex-1 flex-col items-center justify-center gap-3 py-1">
-        <ProgressRing value={retention.correct} max={retention.total} size={150} stroke={20} tone="accent" label={`Tỉ lệ đúng ở Cửa Ải ${percent}%`}>
+        <ProgressRing value={accuracy.correct} max={accuracy.total} size={150} stroke={20} tone="accent" label={`Tỉ lệ đúng ở Cửa Ải ${percent}%`}>
           <span className="font-num text-[40px] leading-none">{percent}%</span>
         </ProgressRing>
         <p className="text-center text-caption font-medium text-muted">
           Tỉ lệ đúng ở Cửa Ải Hôm Nay
           <br />
           <span className="font-num text-ink">
-            {retention.correct}/{retention.total}
+            {accuracy.correct}/{accuracy.total}
           </span>{' '}
-          câu trong {retention.days} ngày
+          câu trong {accuracy.days} ngày
         </p>
       </div>
     </StatCard>
@@ -162,24 +172,70 @@ export function Retention({ retention }) {
 export function HardestWords({ words }) {
   const navigate = useNavigate()
   return (
-    <StatCard title="Từ khó nhất" icon={Siren} iconBg="danger">
-      <ol className="flex flex-col gap-2">
-        {words.map((w, i) => (
-          <li key={w.word} className="flex items-center gap-3 rounded-[14px] border-2 border-line bg-surface px-3 py-2">
-            <span className="w-4 font-num text-sm text-muted">{i + 1}</span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate font-display text-lg font-bold leading-tight">{w.word}</span>
-              <span className="block truncate text-caption text-muted">{w.meaning}</span>
-            </span>
-            <span className="shrink-0 rounded-pill border-2 border-line bg-[color-mix(in_srgb,var(--color-danger)_25%,var(--color-surface))] px-2 font-display text-[13px] font-bold uppercase leading-6">
-              Quên {w.forgot}
-            </span>
-          </li>
-        ))}
-      </ol>
-      <Button variant="danger" icon={ArrowsClockwise} onClick={() => navigate(`/academy/review/session?words=${words.map((w) => w.word).join(',')}`)}>
-        Ôn {words.length} từ này
+    <StatCard title="Từ hay quên nhất" icon={Siren} iconBg="danger">
+      {words.length === 0 ? (
+        <EmptyState compact title="Chưa có từ nào bị quên" message="Từ bạn trả lời sai nhiều lần sẽ hiện ở đây để ôn lại." />
+      ) : (
+        <>
+          <ol className="flex flex-col gap-2">
+            {words.map((w, i) => (
+              <li key={w.id} className="flex items-center gap-3 rounded-[14px] border-2 border-line bg-surface px-3 py-2">
+                <span className="w-4 font-num text-sm text-muted">{i + 1}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-display text-lg font-bold leading-tight">{w.word}</span>
+                  <span className="block truncate text-caption text-muted">{w.meaning}</span>
+                </span>
+                <span className="shrink-0 rounded-pill border-2 border-line bg-[color-mix(in_srgb,var(--color-danger)_25%,var(--color-surface))] px-2 font-display text-[13px] font-bold uppercase leading-6">
+                  Quên {w.forgot}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <Button variant="danger" icon={ArrowsClockwise} onClick={() => navigate('/academy/review')}>
+            Ôn tập
+          </Button>
+        </>
+      )}
+    </StatCard>
+  )
+}
+
+export function CoursesStat({ courses, customMastered }) {
+  const navigate = useNavigate()
+  return (
+    <StatCard title="Khóa học của tôi" icon={BookmarkSimple} iconBg="sky">
+      <div className="flex flex-wrap gap-6">
+        <p className="flex flex-col">
+          <span className="font-num text-[36px] leading-none">{formatNumber(courses)}</span>
+          <span className="font-display text-[13px] font-bold uppercase text-muted">Khóa đang học</span>
+        </p>
+        <p className="flex flex-col">
+          <span className="font-num text-[36px] leading-none">{formatNumber(customMastered)}</span>
+          <span className="font-display text-[13px] font-bold uppercase text-muted">Từ tự tạo đã thuộc</span>
+        </p>
+      </div>
+      <p className="text-caption text-muted">Từ tự tạo không tính vào rank và lượt quay.</p>
+      <Button size="sm" variant="secondary" onClick={() => navigate('/courses')}>
+        {courses > 0 ? 'Mở khóa học' : 'Tạo khóa học'}
       </Button>
+    </StatCard>
+  )
+}
+
+/** Tính năng chưa có backend: khối giữ phong cách, nhãn "Sắp ra mắt", không có số liệu. */
+export function SoonCard({ title, icon, iconBg, text }) {
+  return (
+    <StatCard
+      title={title}
+      icon={icon}
+      iconBg={iconBg}
+      aside={
+        <span className="inline-flex items-center gap-1 rounded-pill border-2 border-line bg-gold px-2.5 py-0.5 font-display text-[13px] font-bold uppercase">
+          <Icon icon={Hourglass} size={14} /> Sắp ra mắt
+        </span>
+      }
+    >
+      <p className="text-muted">{text}</p>
     </StatCard>
   )
 }

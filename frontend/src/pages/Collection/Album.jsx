@@ -27,7 +27,8 @@ import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
 import { RARITIES, RARITY_ORDER } from '../../utils/constants'
 import { messageFor } from '../../utils/errorMessages'
-import { exchangeShards, fetchCollection, fetchRates, markSeen, updateMascots } from '../../services/collectionApi'
+import { exchangeShards, fetchCollection, markSeen, updateMascots } from '../../services/collectionApi'
+import { useRatesStore } from '../../store/ratesStore'
 import CollectionHeader, { OddsModal } from './CollectionHeader'
 import ExchangeModal from './ExchangeModal'
 import MascotArt from './MascotArt'
@@ -55,8 +56,14 @@ function sortMascots(list, sort, owned) {
 }
 
 /** Tiến độ theo độ hiếm (đã có / tổng ô) tính trên 100 ô. */
+/** {độ hiếm: {owned, total}}: tổng đếm từ danh mục server (GET /mascots), không dùng số tự đặt. */
 function countByRarity(mascots, owned) {
-  return Object.fromEntries(RARITY_ORDER.map((r) => [r, mascots.filter((m) => m.rarity === r && owned[m.id]).length]))
+  return Object.fromEntries(
+    RARITY_ORDER.map((r) => {
+      const list = mascots.filter((m) => m.rarity === r)
+      return [r, { owned: list.filter((m) => owned[m.id]).length, total: list.length }]
+    }),
+  )
 }
 
 function FilterBar({ rarity, setRarity, region, setRegion, onlyOwned, setOnlyOwned, sort, setSort }) {
@@ -135,7 +142,6 @@ export default function Album() {
   const catalog = useMascotCatalog()
   const [data, setData] = useState(null)
   const [loadError, setLoadError] = useState(null)
-  const [rates, setRates] = useState(null)
   const [rarity, setRarity] = useState(params.get('rarity') ?? 'all')
   const [region, setRegion] = useState(params.get('region') ?? 'all')
   const [onlyOwned, setOnlyOwned] = useState(params.get('owned') === '1')
@@ -169,11 +175,7 @@ export default function Album() {
     if (fresh.length) markSeen(fresh).then(() => useCollectionStore.setState({ newCount: 0 })).catch(() => {})
   }, [data])
 
-  useEffect(() => {
-    if (oddsOpen && !rates) fetchRates().then(setRates).catch(() => {})
-  }, [oddsOpen, rates])
-
-  const owned = data?.owned ?? {}
+  const owned = useMemo(() => data?.owned ?? {}, [data])
   const counts = useMemo(() => countByRarity(catalog.mascots, owned), [catalog.mascots, owned])
 
   const visible = useMemo(() => {
@@ -223,6 +225,7 @@ export default function Album() {
     <div className="flex flex-col gap-5 pb-20 md:gap-8 md:pb-0">
       <CollectionHeader
         ownedCount={Object.keys(owned).length}
+        total={catalog.mascots.length}
         counts={counts}
         spins={data.spins.normal + data.spins.special}
         shards={data.shards}
@@ -297,10 +300,13 @@ export default function Album() {
         unlockedRegions={regions}
         initialPick={params.get('pick') ? Number(params.get('pick')) : null}
         initialConfirm={params.get('confirm') === '1'}
-        onExchange={async (id) => apply(await exchangeShards(id))}
+        onExchange={async (id) => {
+          apply(await exchangeShards(id))
+          useRatesStore.getState().refresh()
+        }}
       />
 
-      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} pity={rates?.pity ?? data.pity} rates={rates} />
+      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} />
     </div>
   )
 }

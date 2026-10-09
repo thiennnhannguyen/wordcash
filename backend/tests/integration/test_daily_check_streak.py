@@ -1,6 +1,8 @@
 """
 Cửa Ải Hôm Nay và streak trên PostgreSQL thật.
 - 2–5 câu, chỉ từ HỆ THỐNG đã học, chỉ mức 3/4; miễn khi < 2 từ (từ tự tạo không tính).
+- Mục đã ngừng dùng (retired) không vào Cửa Ải (cũng không vào Đấu Trường), vẫn có trong ôn tập cá nhân, giữ mastered và
+  mastered_count.
 - Sai: mất "đã thuộc", trừ đúng DAILY_FORGET_PENALTY. Ranh giới 0 giờ theo múi giờ người dùng (23:59 / 00:01).
 - Streak: tăng khi đúng hết; giữ nguyên khi có câu sai; về 0 khi bỏ một ngày; ngày miễn không làm mất; chạm 7, 14 cấp lượt quay.
 """
@@ -13,7 +15,9 @@ from sqlalchemy import func, select, update
 from app.core.config import settings
 from app.models import DailyCheck, EntryState, SpinGrant, User, UserEntryProgress, UserStats
 from app.schemas.course import AnswerIn
-from app.services import daily_check_service, stats_service
+from app.game.question_picker import eligible_clause
+from app.models import Entry
+from app.services import daily_check_service, review_service, stats_service
 from tests.factories import make_custom, make_entry, make_user
 
 T0 = datetime(2026, 10, 4, 3, 0, tzinfo=UTC)  # 10:00 ngày 04/10 giờ Việt Nam
@@ -72,6 +76,44 @@ async def test_two_to_five_questions_level_3_or_4_system_only(db_session, have, 
         assert soonest <= {q["entry_id"] for q in row.questions}
     public = await daily_check_service.today(db_session, user, T0)
     assert all("answer" not in q and "entry_id" not in q for q in public["questions"])
+
+
+async def test_retired_entries_skipped_but_kept_for_review_and_mastery(db_session):
+    user = await make_user(db_session)
+    words = await learned(db_session, user, 4, status=EntryState.MASTERED)
+    retired = words[:2]
+    for w in retired:
+        w.retired_at = T0 - timedelta(days=1)
+    await db_session.flush()
+    row = await daily_check_service.get_or_create_today(db_session, user, T0)
+    assert row.status == "pending" and row.total == 2
+    assert {q["entry_id"] for q in row.questions} == {w.id for w in words[2:]}
+    assert await daily_check_service.learned_count(db_session, user) == 2
+    # Ôn tập cá nhân vẫn có mục retired; trạng thái đã thuộc và bộ đếm giữ nguyên
+    review = await review_service.due_overview(db_session, user, T0)
+    assert {w.id for w in retired} <= {i["id"] for i in review["due"]}
+    statuses = dict((await db_session.execute(select(UserEntryProgress.entry_id, UserEntryProgress.status)
+                                              .where(UserEntryProgress.user_id == user.id))).all())
+    assert all(statuses[w.id] == EntryState.MASTERED for w in retired)
+    assert (await db_session.scalar(select(User.mastered_count).where(User.id == user.id))) == 4
+
+    # Chỉ còn 1 mục chưa ngừng dùng → miễn (streak giữ nguyên), không hỏi mục retired
+    other = await make_user(db_session)
+    mine = await learned(db_session, other, 2, prefix="r")
+    mine[0].retired_at = T0
+    await db_session.flush()
+    assert (await daily_check_service.get_or_create_today(db_session, other, T0)).status == "exempt"
+
+
+async def test_arena_clause_skips_retired_custom_and_locked_levels(db_session):
+    user = await make_user(db_session)
+    ok = await make_entry(db_session, "apple", "quả táo", cefr="A1")
+    gone = await make_entry(db_session, "pear", "quả lê", cefr="A1", retired_at=T0)
+    locked = await make_entry(db_session, "harvest", "thu hoạch", cefr="B1")
+    custom = await make_custom(db_session, user, "mango", "xoài")
+    ids = set(await db_session.scalars(select(Entry.id).where(eligible_clause(["A1", "A2"]),
+                                                               Entry.id.in_([ok.id, gone.id, locked.id, custom.id]))))
+    assert ids == {ok.id}
 
 
 async def test_wrong_answer_loses_mastered_with_penalty(db_session):

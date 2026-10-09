@@ -57,6 +57,7 @@ ERRORS: dict[str, tuple[int, str]] = {
     "DAILY_CHECK_DONE": (409, "Bạn đã hoàn thành Cửa Ải hôm nay."),
     # Bộ Sưu Tập, vòng quay
     "MASCOT_NOT_FOUND": (404, "Không tìm thấy linh vật."),
+    "USER_NOT_FOUND": (404, "Không tìm thấy người chơi."),
     "NO_SPINS_LEFT": (409, "Bạn không đủ lượt quay. Học thêm ở Học Viện để nhận lượt mới nhé."),
     "INVALID_SPIN_COUNT": (422, "Mỗi lần chỉ mở được từ 1 tới 10 lượt."),
     "NOT_ENOUGH_SHARDS": (409, "Bạn chưa đủ mảnh để đổi linh vật này."),
@@ -64,6 +65,12 @@ ERRORS: dict[str, tuple[int, str]] = {
     "MASCOT_NOT_EXCHANGEABLE": (409, "Linh vật này không đổi bằng mảnh được (chưa ra mắt, nhận qua thành tích hoặc vùng chưa mở)."),
     "IDEMPOTENCY_KEY_REQUIRED": (400, "Thiếu header Idempotency-Key."),
     "IDEMPOTENCY_KEY_REUSED": (409, "Idempotency-Key này đã dùng cho một yêu cầu khác."),
+    # Công cụ duyệt nội dung (chỉ dev)
+    "CONTENT_NOT_FOUND": (404, "Không tìm thấy chủ đề hoặc mục nội dung."),
+    "CONTENT_REJECT_REASON_REQUIRED": (422, "Từ chối thì phải ghi lý do."),
+    "CONTENT_FIELD_NOT_EDITABLE": (422, "Trường này không nhờ AI viết lại được."),
+    "CONTENT_AI_UNAVAILABLE": (503, "Chưa gọi được AI (thiếu ANTHROPIC_API_KEY / ANTHROPIC_MODEL hoặc lỗi mạng)."),
+    "CONTENT_REWRITE_NOT_READY": (409, "Yêu cầu viết lại chưa có bản mới (chờ xử lý hàng đợi)."),
     # Mã bổ sung cho các lỗi chung
     "FORBIDDEN": (403, "Bạn không có quyền thực hiện thao tác này."),
     "EMAIL_NOT_VERIFIED": (403, "Bạn cần xác thực email trước."),

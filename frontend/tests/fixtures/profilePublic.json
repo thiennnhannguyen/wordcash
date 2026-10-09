@@ -1,0 +1,17 @@
+{
+ "display_name": "Bạn Khác",
+ "username": "other",
+ "avatar_mascot_id": 2,
+ "rank": "dong",
+ "mastered_count": 120,
+ "streak_current": 3,
+ "streak_best": 9,
+ "current_level": "A1",
+ "mascots_owned": 4,
+ "showcase": [
+  {
+   "mascot_id": 2,
+   "copies": 1
+  }
+ ]
+}

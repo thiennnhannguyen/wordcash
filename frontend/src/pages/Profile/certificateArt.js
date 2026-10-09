@@ -217,7 +217,9 @@ function chipWidth(ctx, text) {
 }
 
 /**
- * @param cert { fullName, handle, rank, words, achievedAt, code, streak, level, mascots, mascot }
+ * @param cert { fullName, handle, rank, words, achievedAt, code?, streak, level?, mascots, mascot }
+ *   Thẻ thật vẽ từ GET /me/profile: `achievedAt` là ngày đạt LẦN ĐẦU rank hiện tại (sổ spin_grants; null với Tân Binh → bỏ dòng
+ *   ngày), không có mã chứng nhận (`code` chỉ có ở dữ liệu mẫu trang dev); `level` null thì bỏ chip cấp độ.
  * @param format "post" | "story"
  * @param scale thu nhỏ khi chỉ cần ảnh xem trước (vd. 0.4 cho lưới 8 thẻ)
  */
@@ -389,11 +391,11 @@ export async function drawCertificate(cert, format = 'post', scale = 1) {
   // 3 chỉ số nhỏ
   const chips = [
     { text: `STREAK ${cert.streak} NGÀY`, dot: token('orange') },
-    { text: `CẤP ĐỘ ${cert.level}`, dot: token(`level-${cert.level.toLowerCase()}`) },
+    cert.level && { text: `CẤP ĐỘ ${cert.level}`, dot: token(`level-${cert.level.toLowerCase()}`) },
     { text: `${cert.mascots} LINH VẬT`, dot: token('gold') },
-  ]
+  ].filter(Boolean)
   const gap = 18
-  const total = chips.reduce((sum, c) => sum + chipWidth(ctx, c.text), 0) + gap * 2
+  const total = chips.reduce((sum, c) => sum + chipWidth(ctx, c.text), 0) + gap * (chips.length - 1)
   let chipX = cx - total / 2
   chips.forEach((c) => {
     chipX += chip(ctx, chipX, L.chips, c.text, c.dot) + gap
@@ -419,12 +421,14 @@ export async function drawCertificate(cert, format = 'post', scale = 1) {
   const midX = (x0 + 48 + L.mascotW + qx) / 2
   ctx.font = '700 28px "Chakra Petch"'
   ctx.fillStyle = ink
-  ctx.fillText(`ĐẠT NGÀY ${formatDate(cert.achievedAt)}`, midX, L.date)
-  ctx.font = '700 30px "Chakra Petch"'
-  const codeW = ctx.measureText(cert.code).width + 40
-  block(ctx, midX - codeW / 2, L.code - 32, codeW, 48, 12, ink, { shadow: 0, line: 0 })
-  ctx.fillStyle = token('white')
-  ctx.fillText(cert.code, midX, L.code + 2)
+  if (cert.achievedAt) ctx.fillText(`NGÀY ĐẠT LẦN ĐẦU ${formatDate(cert.achievedAt)}`, midX, L.date)
+  if (cert.code) {
+    ctx.font = '700 30px "Chakra Petch"'
+    const codeW = ctx.measureText(cert.code).width + 40
+    block(ctx, midX - codeW / 2, L.code - 32, codeW, 48, 12, ink, { shadow: 0, line: 0 })
+    ctx.fillStyle = token('white')
+    ctx.fillText(cert.code, midX, L.code + 2)
+  }
   const tagFont = fitFont(ctx, 'Học từ như đánh trận.', (n) => `italic 900 ${n}px "Be Vietnam Pro"`, format === 'story' ? 52 : 40, qx - (x0 + 48 + L.mascotW) - 40)
   strokedText(ctx, 'Học từ như đánh trận.', midX, L.tagline, tagFont, token('white'), 10)
 

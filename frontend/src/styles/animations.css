@@ -392,7 +392,15 @@
 }
 .anim-ring-pulse { animation: wc-ring-pulse 1.6s ease-in-out infinite; }
 
+/* Khối chờ tải (components/ui/DataState.jsx): nhấp nháy nhẹ độ đậm */
+@keyframes wc-skeleton {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.anim-skeleton { animation: wc-skeleton 1.4s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
+  .anim-skeleton,
   .anim-eye-blink,
   .anim-spin,
   .anim-ring-pulse,

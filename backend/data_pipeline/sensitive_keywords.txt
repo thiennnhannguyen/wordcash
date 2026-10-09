@@ -1,0 +1,44 @@
+# Từ khóa bị gắn cờ "sensitive" trong câu ví dụ / nghĩa (04_validate). Một mục mỗi dòng, chữ thường; cụm từ được phép.
+# Thương hiệu
+coca-cola
+pepsi
+mcdonald's
+kfc
+starbucks
+iphone
+samsung
+apple store
+nike
+adidas
+facebook
+tiktok
+google
+youtube
+grab
+shopee
+vinfast
+# Người nổi tiếng (ví dụ; bổ sung khi gặp)
+messi
+ronaldo
+taylor swift
+son tung
+# Chủ đề nhạy cảm
+war
+gun
+kill
+die
+dead
+drunk
+beer
+wine
+alcohol
+cigarette
+smoke
+drug
+religion
+politics
+president
+sexy
+fat
+ugly
+stupid

@@ -17,7 +17,8 @@ import Modal from '../../components/ui/Modal'
 import MascotCard, { Stars } from '../../components/collection/MascotCard'
 import MascotPoses from '../../components/collection/MascotPoses'
 import CardBack from '../../components/collection/CardBack'
-import { GACHA, RARITIES } from '../../utils/constants'
+import { RARITIES } from '../../utils/constants'
+import { useGachaRates } from '../../store/ratesStore'
 import { formatDate, formatMascotNumber } from '../../utils/format'
 import MascotArt from './MascotArt'
 
@@ -117,6 +118,7 @@ export default function MascotDetail({ mascot, entry, isAvatar, isArena, onSetAv
   const open = Boolean(mascot && entry)
   const info = mascot ? RARITIES[mascot.rarity] : null
   const dupes = entry ? entry.count - 1 : 0
+  const perDuplicate = useGachaRates().rates?.shardsPerDuplicate
 
   const run = async (key, fn) => {
     setBusy(key)
@@ -158,7 +160,14 @@ export default function MascotDetail({ mascot, entry, isAvatar, isArena, onSetAv
                   {dupes > 0 && (
                     <span className="text-muted">
                       {' '}
-                      ({dupes} bản trùng → <span className="font-bold text-accent-deep">+{dupes * GACHA.shardsPerDuplicate[mascot.rarity]} mảnh</span>)
+                      ({dupes} bản trùng
+                      {perDuplicate && (
+                        <>
+                          {' '}
+                          → <span className="font-bold text-accent-deep">+{dupes * perDuplicate[mascot.rarity]} mảnh</span>
+                        </>
+                      )}
+                      )
                     </span>
                   )}
                 </Fact>

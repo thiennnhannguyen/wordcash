@@ -12,15 +12,14 @@ import Button from '../../components/ui/Button'
 import { IconBadge } from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
-import { LESSON } from './lessonMock'
 
 function tokenColors(names) {
   const style = getComputedStyle(document.documentElement)
   return names.map((n) => style.getPropertyValue(`--color-${n}`).trim()).filter(Boolean)
 }
 
-/** `lesson`: {id, level, topic, number} (mặc định bài mẫu khi chạy mock). */
-export default function LessonDone({ summary, lesson = LESSON }) {
+/** `lesson`: {id, level, topic, number} của bài vừa học (server trả). */
+export default function LessonDone({ summary, lesson }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
 

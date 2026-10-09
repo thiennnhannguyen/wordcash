@@ -381,7 +381,7 @@ async def find_system_matches(session: AsyncSession, headword: str, limit: int =
     key = course_import.headword_key(headword)
     return list(
         await session.scalars(
-            select(Entry).where(Entry.system_approved(), func.lower(Entry.headword) == key).order_by(Entry.cefr.nulls_last(), Entry.id).limit(limit)
+            select(Entry).where(Entry.teachable(), func.lower(Entry.headword) == key).order_by(Entry.cefr.nulls_last(), Entry.id).limit(limit)
         )
     )
 
@@ -547,7 +547,7 @@ async def _classify(session: AsyncSession, user: User, course: UserCourse, text:
     }
     system: dict[str, Entry] = {}
     for e in await session.scalars(
-        select(Entry).where(Entry.system_approved(), func.lower(Entry.headword).in_(keys)).order_by(Entry.cefr.nulls_last(), Entry.id)
+        select(Entry).where(Entry.teachable(), func.lower(Entry.headword).in_(keys)).order_by(Entry.cefr.nulls_last(), Entry.id)
     ):
         system.setdefault(e.headword.lower(), e)
 
@@ -643,7 +643,7 @@ async def bank_search(session: AsyncSession, user: User, q: str, course_id: uuid
     lowered = func.lower(Entry.headword)
     stmt = (
         select(Entry)
-        .where(Entry.system_approved(), lowered.like(f"{_escape_like(key)}%", escape="\\"))
+        .where(Entry.teachable(), lowered.like(f"{_escape_like(key)}%", escape="\\"))
         .order_by(case((lowered == key, 0), else_=1), func.length(Entry.headword), lowered, Entry.id)
         .limit(limit)
     )

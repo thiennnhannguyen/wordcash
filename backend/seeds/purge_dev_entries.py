@@ -10,7 +10,9 @@ Script xử lý thêm hai thứ cascade không tự làm:
 - Cửa Ải đang chờ (pending) có hỏi các từ này: xóa (lần mở sau tạo lại từ từ thật).
 - Học Viện (seeds/seed_dev_roadmap.py): xóa các bài có chứa mục DEV_SAMPLE (cascade unit_entries, user_unit_progress), cùng
   tiến độ chặng (user_topic_progress) và cấp (user_level_progress, boss_attempts → topic_practice_log) của các chặng/cấp có bài
-  bị xóa. Địa danh (levels, topics) giữ nguyên. Người học được mở lại A1 từ đầu khi có kho thật.
+  bị xóa. Địa danh (levels, topics) giữ nguyên. Người học được mở lại A1 từ đầu khi có kho thật. Riêng
+  `keep_position=True` (dùng bởi seeds/refresh_dev_content.py ở dev): giữ tiến độ chặng / cấp, người học quay về bài đầu
+  của chặng đang học.
 
 Chạy lại nhiều lần vẫn an toàn (lần sau không còn gì để xóa). Tất cả trong một transaction.
 Chạy trong backend/: `python -m seeds.purge_dev_entries` (ở production phải thêm `--yes`), `--dry-run` để chỉ đếm.
@@ -56,7 +58,9 @@ class PurgeResult:
     level_progress: int = 0
 
 
-async def purge(session: AsyncSession, *, dry_run: bool = False) -> PurgeResult:
+async def purge(session: AsyncSession, *, dry_run: bool = False, keep_position: bool = False) -> PurgeResult:
+    """`keep_position=True` (seeds/refresh_dev_content.py): giữ tiến độ chặng / cấp và lần đánh Boss, chỉ xóa bài mẫu và tiến
+    độ bài; lần mở app sau roadmap_service.ensure_initialized đưa người học về bài đầu của chặng hiện tại."""
     ids = list(await session.scalars(select(Entry.id).where(Entry.exam_tags.contains([DEV_TAG]))))
     result = PurgeResult(entries=len(ids))
     if not ids:
@@ -91,6 +95,8 @@ async def purge(session: AsyncSession, *, dry_run: bool = False) -> PurgeResult:
     topic_ids = list(await session.scalars(select(Unit.topic_id).where(Unit.id.in_(unit_ids)).distinct())) if unit_ids else []
     level_ids = list(await session.scalars(select(Topic.level_id).where(Topic.id.in_(topic_ids)).distinct())) if topic_ids else []
     result.units = len(unit_ids)
+    if keep_position:
+        level_ids, topic_ids = [], []
     result.topic_progress = await session.scalar(
         select(func.count()).select_from(UserTopicProgress).where(UserTopicProgress.topic_id.in_(topic_ids))) if topic_ids else 0
     result.level_progress = await session.scalar(

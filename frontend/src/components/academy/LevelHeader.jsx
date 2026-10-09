@@ -31,7 +31,7 @@ export function LevelTabs({ levels, selected, onSelect, size = 'md' }) {
               type="button"
               role="tab"
               aria-selected={active}
-              aria-label={`${level.code} · ${level.name}${locked ? ' · đã khóa' : level.status === 'done' ? ' · đã xong' : ''}`}
+              aria-label={`${level.code}${level.name ? ` · ${level.name}` : ' · sắp ra mắt'}${locked ? ' · đã khóa' : level.status === 'done' ? ' · đã xong' : ''}`}
               onClick={() => onSelect(level)}
               className={cx(
                 'relative flex shrink-0 items-center justify-center gap-1.5 rounded-btn border-thick border-line font-num',
@@ -121,7 +121,7 @@ export function LevelSummary({ level, region, summary, className }) {
           </p>
         </div>
       </div>
-      <ProgressBar value={summary.mastered} max={summary.total} label="Từ đã thuộc" showValue className="min-w-0 flex-1" />
+      <ProgressBar value={summary.mastered} max={Math.max(summary.total, 1)} label="Từ trong các bài đã qua" showValue className="min-w-0 flex-1" />
     </div>
   )
 }

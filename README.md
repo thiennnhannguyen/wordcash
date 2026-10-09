@@ -632,6 +632,10 @@ wordclash/
 - **Định nghĩa và ví dụ:** tự viết hoặc AI tạo bản nháp rồi duyệt.
 - **Phát âm:** TTS có giấy phép thương mại.
 - **Phát hành dần:** A1–A2 (khoảng 2.000 mục) trước.
+- **Đã dựng (06–07/10/2026):** quy trình chạy lại được trong `backend/data_pipeline/` (README riêng có sơ đồ). Nguồn A1 là
+  CEFR-J (giấy phép và ghi công ở `docs/data-sources.md`); IPA en-US từ CMUdict; AI soạn nháp theo
+  `docs/content-style-guide.md`; người duyệt ở `/dev/content`; nội dung đã duyệt là file JSON trong `backend/content/` và
+  DB chỉ nạp từ đó (mục bị bỏ thì ngừng dùng, không xóa).
 
 ---
 

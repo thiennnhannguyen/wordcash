@@ -1,7 +1,9 @@
 /*
- * Phần đầu album: tiêu đề "BỘ SƯU TẬP", số lớn "37/100", thanh tiến độ sưu tầm chia 4 màu độ hiếm kèm chú thích,
- * viên "LƯỢT QUAY" (hồng, có chấm thông báo) và viên "MẢNH" (nút "Đổi"). Nút "Tỉ lệ quay" mở bảng tỉ lệ công khai và bộ đếm pity
- * (`rates` từ GET /collection/rates: tỉ lệ hai loại lượt, PITY_EPIC, số con có thể ra theo độ hiếm với vùng đã mở).
+ * Phần đầu album: tiêu đề "BỘ SƯU TẬP", số lớn "x/y" (y = số ô trong danh mục GET /mascots), thanh tiến độ sưu tầm chia 4 màu
+ * độ hiếm kèm chú thích (`counts`: {độ hiếm: {owned, total}}, total đếm từ danh mục server), viên "LƯỢT QUAY" (hồng, có chấm
+ * thông báo) và viên "MẢNH" (nút "Đổi", mốc giá kế tiếp). Nút "Tỉ lệ quay" mở bảng tỉ lệ công khai và bộ đếm pity.
+ * Tỉ lệ, pity, giá đổi mảnh, số con có thể ra: GET /collection/rates (store/ratesStore.js); số lượt mỗi N từ: GET /public/stats.
+ * Chưa tải xong luật thì ẩn con số tương ứng (không dùng số tự đặt).
  * Không có mua lượt quay bằng tiền. Mobile: thu gọn thành một khối, hai viên nằm cạnh nhau.
  */
 
@@ -10,21 +12,25 @@ import Button from '../../components/ui/Button'
 import Icon from '../../components/ui/Icon'
 import Modal from '../../components/ui/Modal'
 import { Stars } from '../../components/collection/MascotCard'
+import { ErrorState, Skeleton } from '../../components/ui/DataState'
 import cx from '../../utils/cx'
-import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { useGachaRates } from '../../store/ratesStore'
+import { useRules } from '../../store/rulesStore'
 
 const LOCKED_STRIPES = 'repeating-linear-gradient(135deg, var(--color-surface) 0 5px, var(--color-raised) 5px 10px)'
 
 function ProgressSegments({ counts }) {
+  const all = RARITY_ORDER.reduce((n, r) => n + counts[r].total, 0) || 1
   return (
     <div className="flex h-7 w-full overflow-hidden rounded-pill border-thick border-line bg-surface shadow-hard-sm md:h-9" role="img" aria-label="Tiến độ sưu tầm theo độ hiếm">
       {RARITY_ORDER.map((r, i) => (
         <div
           key={r}
           className={cx('relative h-full', i > 0 && 'border-l-thick border-line')}
-          style={{ width: `${RARITIES[r].total}%`, background: LOCKED_STRIPES }}
+          style={{ width: `${(counts[r].total / all) * 100}%`, background: LOCKED_STRIPES }}
         >
-          <div className="h-full" style={{ width: `${(counts[r] / RARITIES[r].total) * 100}%`, background: RARITIES[r].color }} />
+          <div className="h-full" style={{ width: `${(counts[r].owned / Math.max(counts[r].total, 1)) * 100}%`, background: RARITIES[r].color }} />
         </div>
       ))}
     </div>
@@ -39,7 +45,7 @@ function Legend({ counts }) {
           <span className="size-3.5 shrink-0 rounded-[5px] border-2 border-line" style={{ background: RARITIES[r].color }} aria-hidden="true" />
           {RARITIES[r].name}{' '}
           <span className="font-num">
-            {counts[r]}/{RARITIES[r].total}
+            {counts[r].owned}/{counts[r].total}
           </span>
         </li>
       ))}
@@ -47,10 +53,11 @@ function Legend({ counts }) {
   )
 }
 
-// Mốc mảnh tiếp theo: giá rẻ nhất mà số mảnh hiện có chưa đủ
-function nextShardGoal(shards) {
-  const r = RARITY_ORDER.find((key) => GACHA.shardCost[key] > shards)
-  return r ? { rarity: r, cost: GACHA.shardCost[r] } : null
+// Mốc mảnh tiếp theo: giá rẻ nhất (theo server) mà số mảnh hiện có chưa đủ
+function nextShardGoal(shards, cost) {
+  if (!cost) return null
+  const r = RARITY_ORDER.find((key) => cost[key] > shards)
+  return r ? { rarity: r, cost: cost[r] } : null
 }
 
 function SpinPill({ spins, onSpin }) {
@@ -77,8 +84,10 @@ function SpinPill({ spins, onSpin }) {
 }
 
 function ShardPill({ shards, onExchange }) {
-  const goal = nextShardGoal(shards)
-  const canExchange = shards >= GACHA.shardCost.common
+  const { rates } = useGachaRates()
+  const cost = rates?.shardCost
+  const goal = nextShardGoal(shards, cost)
+  const canExchange = cost ? shards >= Math.min(...RARITY_ORDER.map((r) => cost[r])) : false
   return (
     <div className="flex min-h-16 min-w-0 flex-1 items-center gap-3 rounded-card border-thick border-line bg-surface px-3 shadow-hard md:min-w-64 md:px-4">
       <span className="grid size-10 shrink-0 place-items-center rounded-pill border-2 border-line bg-gold max-md:size-8">
@@ -103,13 +112,28 @@ function ShardPill({ shards, onExchange }) {
   )
 }
 
-export function OddsModal({ open, onClose, pity, rates }) {
-  const pityEpic = rates?.pityEpic ?? GACHA.pityEpic
-  const normalRate = (r) => rates?.normal[r] ?? RARITIES[r].rate
-  const specialRate = (r) => rates?.special[r] ?? GACHA.specialRates[r]
-  const left = Math.max(pityEpic - pity, 0)
+export function OddsModal({ open, onClose }) {
+  const { status, rates, retry } = useGachaRates()
+  const { rules } = useRules()
   return (
     <Modal open={open} onClose={onClose} title="Tỉ lệ quay" className="max-w-lg">
+      {status === 'loading' && (
+        <div className="flex flex-col gap-2" role="status" aria-label="Đang tải">
+          {RARITY_ORDER.map((r) => (
+            <Skeleton key={r} className="h-12 w-full" rounded="rounded-[16px]" />
+          ))}
+        </div>
+      )}
+      {status === 'error' && <ErrorState title="Chưa tải được tỉ lệ quay" onRetry={retry} />}
+      {rates && <OddsBody rates={rates} rules={rules} />}
+    </Modal>
+  )
+}
+
+function OddsBody({ rates, rules }) {
+  const { pityEpic, pity } = rates
+  const left = Math.max(pityEpic - pity, 0)
+  return (
       <div className="flex flex-col gap-5 text-ink">
         <div className="flex items-center gap-3 px-3 font-display text-[13px] font-bold uppercase tracking-wide text-muted" aria-hidden="true">
           <span className="flex-1">Độ hiếm</span>
@@ -123,12 +147,12 @@ export function OddsModal({ open, onClose, pity, rates }) {
               <span className="flex-1 font-heading font-extrabold">
                 {RARITIES[r].name}{' '}
                 <span className="whitespace-nowrap font-medium text-muted">
-                  · {rates?.poolSize ? `${rates.poolSize[r]} con có thể ra` : `${RARITIES[r].total} con`}
+                  · {rates.poolSize[r]} con có thể ra
                 </span>
               </span>
               <Stars count={RARITIES[r].stars} size={14} className="max-sm:hidden" />
-              <span className="w-16 text-right font-num text-xl" aria-label={`Lượt thường ${normalRate(r)}%`}>{normalRate(r)}%</span>
-              <span className="w-16 text-right font-num text-xl text-muted" aria-label={`Lượt đặc biệt ${specialRate(r)}%`}>{specialRate(r)}%</span>
+              <span className="w-16 text-right font-num text-xl" aria-label={`Lượt thường ${rates.normal[r]}%`}>{rates.normal[r]}%</span>
+              <span className="w-16 text-right font-num text-xl text-muted" aria-label={`Lượt đặc biệt ${rates.special[r]}%`}>{rates.special[r]}%</span>
             </li>
           ))}
         </ul>
@@ -143,25 +167,28 @@ export function OddsModal({ open, onClose, pity, rates }) {
           </p>
         </div>
         <ul className="flex flex-col gap-1.5 text-caption font-medium text-muted">
-          <li>• Mỗi {GACHA.wordsPerSpin} từ đã thuộc được 1 lượt; streak 7 ngày được 1 lượt.</li>
+          {rules && (
+            <li>
+              • Mỗi {rules.spin_every_n_words} từ đã thuộc được 1 lượt; streak mỗi {rules.streak_spin_every} ngày được 1 lượt.
+            </li>
+          )}
           <li>• Lần đầu lên mỗi rank và lần đầu thắng Boss mỗi cấp được 1 lượt đặc biệt (không ra Thường).</li>
           <li>• Chỉ ra linh vật thuộc vùng bạn đã mở; cùng độ hiếm thì mỗi con có khả năng ngang nhau.</li>
           <li>• Thẻ trùng đổi thành mảnh. Không bán lượt quay bằng tiền.</li>
         </ul>
       </div>
-    </Modal>
   )
 }
 
-export default function CollectionHeader({ ownedCount, counts, spins, shards, onSpin, onExchange, onOdds }) {
+export default function CollectionHeader({ ownedCount, total, counts, spins, shards, onSpin, onExchange, onOdds }) {
   return (
     <section className="relative flex flex-col gap-4 overflow-hidden rounded-panel border-thick border-line bg-gold p-4 shadow-hard-lg md:gap-5 md:p-8 lg:flex-row lg:items-end lg:justify-between">
       <div className="flex min-w-0 flex-1 flex-col gap-3 md:gap-4">
         <div className="flex items-end justify-between gap-3 lg:justify-start lg:gap-6">
           <h1 className="font-heading text-[28px] font-black uppercase leading-none md:text-h1">Bộ sưu tập</h1>
-          <p className="font-num leading-none" aria-label={`Đã có ${ownedCount} trên ${GACHA.totalMascots} linh vật`}>
+          <p className="font-num leading-none" aria-label={`Đã có ${ownedCount} trên ${total} linh vật`}>
             <span className="text-[44px] md:text-[72px]">{ownedCount}</span>
-            <span className="text-2xl text-ink/60 md:text-[40px]">/{GACHA.totalMascots}</span>
+            <span className="text-2xl text-ink/60 md:text-[40px]">/{total}</span>
           </p>
         </div>
         <ProgressSegments counts={counts} />

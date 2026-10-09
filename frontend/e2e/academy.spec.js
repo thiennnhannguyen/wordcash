@@ -42,7 +42,7 @@ test('1. người mới: miễn Cửa Ải → học bài 1 → kiểm tra ≥ 8
 
   // Học bài 1 từ card Học Viện ở Sảnh
   const learn = waitSession(page, '/learn-sessions')
-  await page.getByRole('button', { name: 'Học tiếp' }).click()
+  await page.getByRole('button', { name: 'Bắt đầu học' }).click() // người mới: chưa gặp từ nào trong bài
   const session = await learn
   expect(session.cards).toHaveLength(15)
   await flipAllCards(page)

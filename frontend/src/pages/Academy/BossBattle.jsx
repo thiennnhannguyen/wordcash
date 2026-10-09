@@ -9,7 +9,7 @@
  * Dữ liệu thật qua services/academyApi.js (`?level=A1`). Thua: điểm, chặng yếu kèm nút LUYỆN CHẶNG YẾU từng chặng, đồng hồ đếm
  * ngược tới lúc được đánh lại (theo `retry_in_seconds` của server). Đang trong thời gian chờ mà vào trận: màn chờ tương tự.
  * Thắng: con dấu Boss, +1 lượt đặc biệt (lần đầu), nút bay tới /travel.
- * Dev: `?level=B1`, `?q=22` (bản mock: vào thẳng câu 23), `?preview=win|lose`.
+ * `?level=A1` chọn cấp. Màn thắng / thua dựng sẵn (dữ liệu mẫu) chỉ có ở trang dev /dev/results.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -31,7 +31,6 @@ import { finishBoss, startBoss } from '../../services/academyApi'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
 import { AcademyError } from './AcademyLesson'
-import { PREVIEW_BOSS } from './testMock'
 import useTestRun from './useTestRun'
 
 function tokenColors(names) {
@@ -258,7 +257,7 @@ function DarkActions({ children, note }) {
   )
 }
 
-function WinResult({ result }) {
+export function WinResult({ result }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const pushToast = useToastStore((s) => s.push)
@@ -354,7 +353,7 @@ function WinResult({ result }) {
       </main>
 
       <DarkActions>
-        <Button size="lg" iconRight={ArrowRight} className="md:min-w-72" onClick={() => navigate(`/travel?from=${result.level}`)}>
+        <Button size="lg" iconRight={ArrowRight} className="md:min-w-72" onClick={() => navigate(`/travel?from=${result.level}`, { state: { specialSpins: result.reward?.specialSpins ?? 0 } })}>
           Bay tới {result.nextLevel}
         </Button>
         <Button size="lg" variant="secondary" icon={ShareNetwork} onClick={share}>
@@ -386,7 +385,7 @@ function RetryCountdown({ seconds }) {
   )
 }
 
-function LoseResult({ result, cooldownOnly = false }) {
+export function LoseResult({ result, cooldownOnly = false }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const seconds = result.retryInSeconds ?? (result.retryInHours != null ? result.retryInHours * 3600 : null)
@@ -466,16 +465,15 @@ function LoseResult({ result, cooldownOnly = false }) {
 export default function BossBattle() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const level = (params.get('level') ?? 'B1').toUpperCase()
-  const preview = PREVIEW_BOSS[params.get('preview')]
+  const level = (params.get('level') ?? 'A1').toUpperCase()
   const [session, setSession] = useState(null)
-  const [result, setResult] = useState(preview ?? null)
+  const [result, setResult] = useState(null)
   const [exitOpen, setExitOpen] = useState(false)
   const [error, setError] = useState(null)
 
   // Chỉ bắt đầu một lần khi vào trang (kể cả StrictMode)
   useStartOnce(() => {
-    if (!preview) startBoss({ level, resumeAt: Number(params.get('q')) || 0 }).then(setSession).catch(setError)
+    startBoss({ level }).then(setSession).catch(setError)
   }, [level])
 
   const finish = async () => {

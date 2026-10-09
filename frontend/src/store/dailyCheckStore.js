@@ -5,17 +5,14 @@
  * - `load()`: hỏi GET /daily-check/today một lần (gọi nhiều lần vẫn chỉ chạy một request). Lỗi mạng thì coi như done để
  *   không khóa người dùng ngoài app; server vẫn chặn route học bằng DAILY_CHECK_REQUIRED.
  * - `markPending()`: services/api.js gọi khi bất kỳ API nào trả DAILY_CHECK_REQUIRED (vd. qua nửa đêm khi đang mở app).
- * - Chế độ mock (VITE_USE_MOCK=true) không chặn.
  */
 
 import { create } from 'zustand'
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
-
 let loading = null
 
 export const useDailyCheckStore = create((set, get) => ({
-  status: USE_MOCK ? 'done' : 'unknown',
+  status: 'unknown',
 
   load: () => {
     if (get().status !== 'unknown') return Promise.resolve()
@@ -31,5 +28,5 @@ export const useDailyCheckStore = create((set, get) => ({
   },
   markPending: () => set({ status: 'pending' }),
   markDone: () => set({ status: 'done' }),
-  reset: () => set({ status: USE_MOCK ? 'done' : 'unknown' }),
+  reset: () => set({ status: 'unknown' }),
 }))

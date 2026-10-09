@@ -4,6 +4,8 @@ Vòng quay linh vật (hàm thuần, không phụ thuộc DB): quay độ hiếm
 
 - Số ngẫu nhiên lấy từ đối tượng `rng` truyền vào (cần `random()` và `choice()`): production dùng `secrets.SystemRandom()`
   (`system_rng`), test truyền `random.Random(seed)`. Client không bao giờ quyết định hay biết trước kết quả.
+  Riêng ENV=e2e có GACHA_SEED: `spin_rng` trả `random.Random` tất định theo (hạt giống, loại lượt, tổng lượt đã quay, pity)
+  để kịch bản e2e ổn định; ở mọi ENV khác GACHA_SEED bị bỏ qua.
 - Tỉ lệ: settings.GACHA_RATES_NORMAL / GACHA_RATES_SPECIAL (Thường 60 · Hiếm 28 · Sử Thi 10 · Huyền Thoại 2;
   đặc biệt 0 · 70 · 24 · 6).
 - Pity: `pity_counter` đếm số lượt LIÊN TIẾP (mọi loại lượt) chưa ra Sử Thi trở lên. Đạt PITY_EPIC (20) thì lượt kế chắc
@@ -15,6 +17,7 @@ Vòng quay linh vật (hàm thuần, không phụ thuộc DB): quay độ hiếm
   thì thử lần lượt các độ hiếm CAO hơn. `rarity_fallback = True` để ghi lịch sử.
 """
 
+import random
 import secrets
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
@@ -34,6 +37,15 @@ class Rng(Protocol):
 
 def system_rng() -> Rng:
     return secrets.SystemRandom()
+
+
+def spin_rng(kind: str, total_spins: int, pity_counter: int) -> Rng:
+    """Bộ sinh số cho một yêu cầu quay. Chỉ ENV=e2e có GACHA_SEED mới tất định (theo trạng thái người dùng, không theo
+    thứ tự chạy test); còn lại là SystemRandom."""
+    seed = settings.gacha_seed
+    if seed is None:
+        return system_rng()
+    return random.Random(f"{seed}|{kind}|{total_spins}|{pity_counter}")
 
 
 class EmptyPoolError(ValueError):
