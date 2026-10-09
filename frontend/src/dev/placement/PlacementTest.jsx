@@ -22,7 +22,17 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import QuestionView from '../../components/academy/QuestionView'
 import cx from '../../utils/cx'
-import { LEVELS, LEVEL_NAMES } from '../../utils/constants'
+import { LEVELS } from '../../utils/constants'
+
+// Tên cấp mẫu cho trang dev (bản thật lấy tên cấp từ server)
+const LEVEL_NAMES = {
+  A1: 'Mới bắt đầu',
+  A2: 'Sơ cấp',
+  B1: 'Trung cấp',
+  B2: 'Trung cao cấp',
+  C1: 'Cao cấp',
+  C2: 'Thành thạo',
+}
 import { PLACEMENT_TOTAL, PREVIEW_RESULT, finishPlacement, playPlacementAudio, startPlacement, submitPlacementAnswer } from './placementMock'
 
 const DARK_LEVELS = new Set(['C1', 'C2'])

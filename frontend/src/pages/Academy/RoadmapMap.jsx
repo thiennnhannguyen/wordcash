@@ -13,6 +13,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { animate } from 'framer-motion'
 import {
+  Article,
   BookOpenText,
   CaretDown,
   Clock,
@@ -216,6 +217,17 @@ function StationPopup({ row, level, nextLevel, onClose }) {
           <Icon icon={locked ? LockSimple : Target} size={18} className="mt-0.5 shrink-0" />
           {requirement}
         </p>
+        {row.kind === 'lesson' && (
+          // Chế độ "Trong ngữ cảnh" (đoạn đọc + câu hỏi hiểu bài) chưa có backend: chỉ giữ nút, vô hiệu
+          <div className="relative">
+            <Button variant="secondary" icon={Article} fullWidth disabled>
+              Học trong ngữ cảnh
+            </Button>
+            <span className="absolute -right-2 -top-3 rotate-6 rounded-pill border-2 border-line bg-gold px-2 py-0.5 font-display text-[13px] font-bold uppercase shadow-hard-sm">
+              Sắp ra mắt
+            </span>
+          </div>
+        )}
       </div>
     </Modal>
   )
