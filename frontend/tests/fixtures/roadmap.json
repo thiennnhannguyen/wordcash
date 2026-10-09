@@ -1,0 +1,21 @@
+{
+  "branch": "foundation",
+  "available": true,
+  "levels": [
+    {
+      "id": 1, "code": "A1", "name": "Mới bắt đầu", "order": 1, "region_theme": "vn-north", "status": "completed",
+      "topics": [{ "id": 11, "order": 1, "title": "Chào hỏi", "status": "completed", "landmark_key": "a1_ho_guom", "landmark_name": "Hồ Gươm & Tháp Rùa", "landmark_image": null, "stamped_at": "2026-10-01T03:00:00Z", "test": { "status": "passed", "best": 90 }, "units": [{ "id": 101, "position": 1, "title": "Xin chào", "status": "completed", "best_score": 95, "attempts": 1, "word_count": 18 }] }],
+      "boss": { "status": "won", "landmark_key": "a1_boss_ha_long", "landmark_name": "Vịnh Hạ Long", "questions": 50, "best": 90, "won_at": "2026-10-02T03:00:00Z", "can_retry": null },
+      "passport": { "visited": 2, "total": 2 }
+    },
+    {
+      "id": 2, "code": "A2", "name": "Sơ cấp", "order": 2, "region_theme": "vn-central-south", "status": "unlocked",
+      "topics": [{ "id": 21, "order": 1, "title": "Công việc hằng ngày", "status": "unlocked", "landmark_key": "a2_dai_noi_hue", "landmark_name": "Đại Nội Huế", "landmark_image": null, "stamped_at": null, "test": { "status": "locked", "best": null }, "units": [{ "id": 201, "position": 1, "title": "Buổi sáng", "status": "unlocked", "best_score": null, "attempts": 0, "word_count": 16 }, { "id": 202, "position": 2, "title": "Việc nhà", "status": "locked", "best_score": null, "attempts": 0, "word_count": 17 }] }],
+      "boss": { "status": "locked", "landmark_key": "a2_boss_cau_vang", "landmark_name": "Cầu Vàng", "questions": 50, "best": null, "won_at": null, "can_retry": null },
+      "passport": { "visited": 0, "total": 2 }
+    }
+  ],
+  "current": { "level_id": 2, "level_code": "A2", "topic_id": 21, "topic_order": 1, "topic_title": "Công việc hằng ngày", "stages_total": 1, "units_total": 2, "landmark_key": "a2_dai_noi_hue", "landmark_name": "Đại Nội Huế", "step": "unit", "unit_id": 201, "unit_position": 1, "unit_title": "Buổi sáng" },
+  "passport": { "visited": 2, "total": 4 },
+  "upcoming_levels": ["B1", "B2", "C1", "C2"]
+}

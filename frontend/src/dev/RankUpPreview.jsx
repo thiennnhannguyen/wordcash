@@ -5,6 +5,7 @@
  * Dev: `?to=bach_kim|huyen_thoai|…` (rank mới; rank cũ là rank liền trước), `?hold=a|b|c|d|e|f` (dừng ở một khung).
  */
 
+import { RANK_MINS } from './fixtures/ranks'
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import RankUpOverlay from '../components/layout/RankUpOverlay'
@@ -27,7 +28,7 @@ export default function RankUpPreview() {
         key={`${toKey}-${params.get('hold')}`}
         from={RANKS[index - 1].key}
         to={toKey}
-        words={RANKS[index].min}
+        words={RANK_MINS[toKey]}
         mascot={getMascot(1)}
         hold={params.get('hold')}
         onCertificate={() => setCertOpen(true)}

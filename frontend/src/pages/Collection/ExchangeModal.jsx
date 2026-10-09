@@ -18,7 +18,9 @@ import Modal from '../../components/ui/Modal'
 import MascotCard from '../../components/collection/MascotCard'
 import { formatMascotNumber } from '../../utils/format'
 import cx from '../../utils/cx'
-import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { ErrorState, Skeleton } from '../../components/ui/DataState'
+import { useGachaRates } from '../../store/ratesStore'
 import { messageFor } from '../../utils/errorMessages'
 import MascotArt from './MascotArt'
 
@@ -69,13 +71,15 @@ export default function ExchangeModal({ open, onClose, shards, owned, mascots, b
   const [busy, setBusy] = useState(false)
   const [received, setReceived] = useState(null)
   const [error, setError] = useState(null)
+  const gacha = useGachaRates()
+  const shardCost = gacha.rates?.shardCost
 
   const candidates = useMemo(
     () => mascots.filter((m) => m.status === 'available' && m.obtain === 'gacha' && unlockedRegions.includes(m.region) && !owned[m.id]),
     [mascots, owned, unlockedRegions],
   )
   const picked = pick != null ? byId[pick] : null
-  const cost = picked ? GACHA.shardCost[picked.rarity] : 0
+  const cost = picked && shardCost ? shardCost[picked.rarity] : 0
 
   const close = () => {
     setPick(null)
@@ -109,6 +113,16 @@ export default function ExchangeModal({ open, onClose, shards, owned, mascots, b
               Tuyệt!
             </Button>
           </div>
+        ) : !shardCost ? (
+          gacha.status === 'error' ? (
+            <ErrorState title="Chưa tải được giá đổi mảnh" onRetry={gacha.retry} />
+          ) : (
+            <div className="grid grid-cols-3 gap-3 md:grid-cols-6" role="status" aria-label="Đang tải">
+              {Array.from({ length: 6 }, (_, i) => (
+                <Skeleton key={i} className="aspect-[3/4] w-full" rounded="rounded-[20px]" />
+              ))}
+            </div>
+          )
         ) : (
           <div className="flex flex-col gap-4 text-ink">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -129,7 +143,7 @@ export default function ExchangeModal({ open, onClose, shards, owned, mascots, b
                   className="inline-flex items-center gap-1.5 rounded-pill border-2 border-line px-3 font-display text-[13px] font-bold uppercase leading-7"
                   style={{ background: RARITIES[r].color, color: r === 'epic' ? 'var(--color-white)' : 'var(--color-ink)' }}
                 >
-                  {RARITIES[r].name} · <span className="font-num">{GACHA.shardCost[r]}</span>
+                  {RARITIES[r].name} · <span className="font-num">{shardCost[r]}</span>
                 </li>
               ))}
             </ul>
@@ -138,7 +152,7 @@ export default function ExchangeModal({ open, onClose, shards, owned, mascots, b
               {candidates.length === 0 && <p className="py-6 text-center font-medium text-muted">Bạn đã có mọi linh vật đổi được ở các vùng đã mở.</p>}
               <ul className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 md:grid-cols-6">
                 {candidates.map((m) => {
-                  const price = GACHA.shardCost[m.rarity]
+                  const price = shardCost[m.rarity]
                   const affordable = shards >= price
                   const selected = pick === m.id
                   return (

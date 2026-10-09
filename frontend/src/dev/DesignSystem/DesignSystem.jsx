@@ -4,6 +4,7 @@
  * Dùng để duyệt giao diện trước khi làm các màn hình.
  */
 
+import { RANK_MINS } from '../fixtures/ranks'
 import { useState } from 'react'
 import {
   ArrowRight,
@@ -424,7 +425,7 @@ export default function DesignSystem() {
             {RANKS.map((r) => (
               <div key={r.key} className="flex flex-col gap-2">
                 <RankBadge rank={r.key} size="lg" />
-                <span className="font-num text-sm text-muted">Từ {formatNumber(r.min)} từ</span>
+                <span className="font-num text-sm text-muted">Từ {formatNumber(RANK_MINS[r.key])} từ</span>
               </div>
             ))}
           </div>

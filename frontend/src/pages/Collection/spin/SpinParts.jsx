@@ -10,7 +10,6 @@ import { ArrowLeft, FastForward, Info, PuzzlePiece } from '@phosphor-icons/react
 import { IconButton } from '../../../components/ui/Button'
 import Icon from '../../../components/ui/Icon'
 import cx from '../../../utils/cx'
-import { GACHA } from '../../../utils/constants'
 
 // Tia sáng tỏa chậm từ giữa màn; `color` là tên token, `fast` dùng cho lúc gợi ý Huyền Thoại
 export function Rays({ color = 'gold', opacity = 0.35, duration = 80, className }) {
@@ -111,22 +110,23 @@ export function TypeTabs({ type, spins, onChange }) {
   )
 }
 
-export function PityBar({ pity }) {
-  const ratio = Math.min(pity / GACHA.pityEpic, 1)
+/** `pityEpic`: mốc bảo đảm Sử Thi do server trả (GET /collection `pity_epic`). */
+export function PityBar({ pity, pityEpic }) {
+  const ratio = Math.min(pity / pityEpic, 1)
   const near = ratio >= 0.8
   return (
     <div className="flex w-full max-w-sm flex-col gap-1.5">
       <div className="flex items-baseline justify-between gap-3 font-display text-sm font-bold uppercase tracking-wide">
         <span>Đảm bảo Sử Thi</span>
         <span className={cx('font-num text-base', near && 'text-primary')}>
-          {pity}/{GACHA.pityEpic} lượt
+          {pity}/{pityEpic} lượt
         </span>
       </div>
       <div
         className={cx('h-5 overflow-hidden rounded-pill border-thick border-line bg-surface', near ? 'shadow-glow-epic anim-glow' : 'shadow-hard-sm')}
         role="progressbar"
         aria-valuemin={0}
-        aria-valuemax={GACHA.pityEpic}
+        aria-valuemax={pityEpic}
         aria-valuenow={pity}
         aria-label="Số lượt liên tiếp chưa ra Sử Thi"
       >

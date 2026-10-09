@@ -1,7 +1,6 @@
 /*
  * Danh mục 100 linh vật dùng chung mọi màn (Album, Quay thẻ, Sảnh, menu tài khoản, Onboarding…).
- * Chế độ thường tải từ GET /api/v1/mascots một lần mỗi phiên (ETag ở services/collectionApi.js); VITE_USE_MOCK dùng
- * data/mascots.js. `mascotById(id)` đọc ngoài React; `useMascotCatalog()` tự tải khi cần và trả {mascots, byId, ready}.
+ * Tải từ GET /api/v1/mascots một lần mỗi phiên (ETag ở services/collectionApi.js). `mascotById(id)` đọc ngoài React; `useMascotCatalog()` tự tải khi cần và trả {mascots, byId, ready}.
  */
 
 import { useEffect } from 'react'

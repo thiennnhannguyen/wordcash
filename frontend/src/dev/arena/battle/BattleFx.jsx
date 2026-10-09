@@ -16,7 +16,7 @@ import { Smiley, Sparkle, WifiSlash } from '@phosphor-icons/react'
 import MascotBlob from '../../../components/collection/MascotBlob'
 import Icon from '../../../components/ui/Icon'
 import cx from '../../../utils/cx'
-import { ARENA } from '../../../utils/constants'
+import { ARENA } from '../rules'
 
 const STROKE = '[-webkit-text-stroke:var(--stroke)_var(--color-ink)] [paint-order:stroke_fill]'
 

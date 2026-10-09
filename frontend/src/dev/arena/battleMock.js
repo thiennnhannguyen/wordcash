@@ -14,7 +14,7 @@
  * Câu hỏi dựng từ 18 mục từ nháp trong lessonMock.js. TODO: thay bằng services/socket.js + hooks/useSocket.js.
  */
 
-import { ARENA } from '../../utils/constants'
+import { ARENA } from './rules'
 import { speak } from '../../utils/speech'
 import { ENTRIES } from '../fixtures/lessonEntries'
 

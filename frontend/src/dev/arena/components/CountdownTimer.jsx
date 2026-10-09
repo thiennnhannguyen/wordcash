@@ -8,7 +8,7 @@
 
 import { useEffect, useState } from 'react'
 import cx from '../../../utils/cx'
-import { ARENA } from '../../../utils/constants'
+import { ARENA } from '../rules'
 
 const DANGER_SECONDS = 3
 

@@ -9,7 +9,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import cx from '../../../utils/cx'
-import { ARENA } from '../../../utils/constants'
+import { ARENA } from '../rules'
 
 const SHARDS = [
   { x: -18, y: -16, r: -60 },

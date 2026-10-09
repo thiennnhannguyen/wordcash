@@ -13,7 +13,7 @@ import ComboMeter from '../components/ComboMeter'
 import CountdownTimer from '../components/CountdownTimer'
 import RankBadge from '../../../components/ui/RankBadge'
 import cx from '../../../utils/cx'
-import { ARENA } from '../../../utils/constants'
+import { ARENA } from '../rules'
 
 function HpBar({ hp, color, anchor, height = 'h-7' }) {
   const percent = Math.max(0, Math.min(100, (hp / ARENA.MAX_HP) * 100))
