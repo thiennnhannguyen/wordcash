@@ -77,6 +77,7 @@ def build_questions(pairs: list[tuple[Entry, int]], pool: list[Entry], rng: rand
         ordered = same_pos if len(same_pos) >= QB.OPTION_COUNT - 1 else others
         q = QB.build_question(f"q{i}", entry_data(entry), level,
                               meaning_pool=[e.meaning_vi for e in ordered], word_pool=[e.headword for e in ordered], rng=rng)
+        q.public["reportable"] = not entry.is_custom  # nút "Báo lỗi" chỉ cho từ hệ thống
         public.append(q.public)
         # `public`: đề đúng như người học thấy (lưu cùng khóa ở server để "Báo lỗi" chụp lại câu hỏi, không tin client)
         keys.append({"id": q.public["id"], **q.key, "public": q.public})

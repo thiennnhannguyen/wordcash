@@ -2,6 +2,7 @@
  * Tấm phản hồi trượt từ đáy lên sau khi server chấm một câu (dùng cho Cửa Ải và Học bài).
  * Đúng: nền xanh chanh "Chuẩn luôn!". Sai: nền hồng nhạt, hiện đáp án đúng, phiên âm, nút loa, câu ví dụ.
  * Nhãn phụ khi sai: mức trừ từ thuộc (nếu server trả `masteredDelta` < 0) hoặc `note` do màn gọi truyền vào.
+ * `report`: tham chiếu câu vừa làm cho nút "Báo lỗi" (chỉ từ hệ thống; không truyền thì không hiện nút).
  */
 
 import { useEffect, useRef } from 'react'
@@ -12,8 +13,9 @@ import { IconBadge } from '../ui/Icon'
 import cx from '../../utils/cx'
 import { formatDelta } from '../../utils/format'
 import { speak } from '../../utils/speech'
+import ReportButton from './ReportButton'
 
-export default function FeedbackSheet({ result, onContinue, note }) {
+export default function FeedbackSheet({ result, onContinue, note, report }) {
   const buttonRef = useRef(null)
   const correct = result.correct
 
@@ -68,16 +70,19 @@ export default function FeedbackSheet({ result, onContinue, note }) {
             )}
           </div>
         </div>
-        <Button
-          ref={buttonRef}
-          size="lg"
-          variant={correct ? 'primary' : 'danger'}
-          iconRight={correct ? ArrowRight : undefined}
-          className="w-full shrink-0 md:w-auto md:min-w-52"
-          onClick={onContinue}
-        >
-          {correct ? 'Tiếp' : 'Đã nhớ'}
-        </Button>
+        <div className="flex shrink-0 flex-col-reverse gap-1 md:flex-row md:items-center md:gap-3">
+          {report && <ReportButton target={report} word={result.correctAnswer} className="self-end md:self-auto" />}
+          <Button
+            ref={buttonRef}
+            size="lg"
+            variant={correct ? 'primary' : 'danger'}
+            iconRight={correct ? ArrowRight : undefined}
+            className="w-full md:w-auto md:min-w-52"
+            onClick={onContinue}
+          >
+            {correct ? 'Tiếp' : 'Đã nhớ'}
+          </Button>
+        </div>
       </div>
     </motion.section>
   )

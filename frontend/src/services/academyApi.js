@@ -91,6 +91,9 @@ export async function submitTestAnswer(questionId, answer) {
   }
 }
 
+/** id phiên kiểm tra / Trận Boss đang làm (nút "Báo lỗi" gửi kèm để server chụp lại câu hỏi). */
+export const currentRunId = () => run?.id ?? null
+
 export function playTestAudio(questionId, opts) {
   playQuestion(run?.questions.find((q) => q.id === questionId), opts)
 }

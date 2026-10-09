@@ -3,6 +3,7 @@
  * - CardsStep: thẻ học từ mới (WordCard, vuốt ngang / phím mũi tên).
  * - QuestionsStep: câu hỏi 4 mức (QuestionView), nộp TỪNG câu lên server chấm (`submit(sessionId, answers)`), rồi hiện
  *   tấm phản hồi (FeedbackSheet). Chế độ test không hiện đúng/sai từng câu. Client không tự chấm.
+ * Thẻ học và tấm phản hồi có nút "Báo lỗi" (ReportButton) với từ hệ thống; từ tự tạo không có.
  * `top(value, max)`: thanh trên của từng màn (tên khóa học / bài học, tiến độ).
  */
 
@@ -13,9 +14,12 @@ import Button from '../ui/Button'
 import FeedbackSheet from './FeedbackSheet'
 import QuestionView from './QuestionView'
 import WordCard from './WordCard'
+import ReportButton from './ReportButton'
 import { speak } from '../../utils/speech'
 
 const SWIPE_THRESHOLD = 80
+// Nguồn của báo lỗi thẻ học theo loại phiên (server chỉ nhận các giá trị này)
+const CARD_SOURCES = { unit_learn: 'unit_learn', course: 'course', review: 'review' }
 
 export function play(text, audioUrl, slow = false) {
   if (audioUrl) {
@@ -97,6 +101,9 @@ export function CardsStep({ session, top, onFinish }) {
             />
           </motion.div>
         </AnimatePresence>
+        {card.source !== 'user' && (
+          <ReportButton key={card.entry_id} target={{ entry_id: card.entry_id, source: CARD_SOURCES[session.kind] ?? 'other' }} word={card.headword} className="mt-2 self-end" />
+        )}
         <p className="mt-4 text-center text-caption text-muted md:hidden">Vuốt ngang để chuyển thẻ</p>
       </main>
       <div className="fixed inset-x-0 bottom-0 z-30 border-t-thick border-line bg-surface px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 md:px-8">
@@ -190,6 +197,7 @@ export function QuestionsStep({ session, top, submit, onDone, onAnswered, note }
             key={index}
             result={feedback.result}
             onContinue={() => advance(feedback.res)}
+            report={question.reportable === false ? null : { question: { kind: 'study', session_id: session.id, question_id: question.id } }}
             note={feedback.res.results[0].became_mastered ? 'Bạn vừa thuộc từ này!' : (note ?? 'Từ này sẽ quay lại trong lượt ôn.')}
           />
         )}

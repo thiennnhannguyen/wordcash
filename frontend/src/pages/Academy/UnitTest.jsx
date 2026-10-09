@@ -29,7 +29,7 @@ import WordCard from '../../components/academy/WordCard'
 import cx from '../../utils/cx'
 import { speak } from '../../utils/speech'
 import RewardsLayer from '../../components/academy/RewardsLayer'
-import { finishUnitTest, startUnitTest } from '../../services/academyApi'
+import { currentRunId, finishUnitTest, startUnitTest } from '../../services/academyApi'
 import { AcademyError } from './AcademyLesson'
 import LessonTopBar from './LessonTopBar'
 import useTestRun from './useTestRun'
@@ -133,6 +133,7 @@ function TestStep({ session, onFinish, onExit }) {
       </main>
       <TestActionBar
         verdict={verdict}
+        report={question.reportable === false ? null : { question: { kind: 'study', session_id: currentRunId(), question_id: question.id } }}
         canSubmit={!!run.answer.trim()}
         pending={run.pending}
         onSubmit={run.submit}

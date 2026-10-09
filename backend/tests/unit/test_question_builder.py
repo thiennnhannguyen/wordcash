@@ -106,3 +106,14 @@ def test_session_engine_uses_entry_cloze_fields():
     assert public[0]["sentence"] == "People cook white ______ and eat it with fish." and keys[0]["answer"] == "rice"
     assert public[1]["type"] == "type_word" and keys[1]["level"] == 3
     assert session_engine.strong_level(plain, random.Random(1)) == 3
+    assert public[0]["reportable"] is True and keys[0]["public"] == public[0]  # phần đề lưu kèm khóa (cho "Báo lỗi")
+
+
+def test_custom_entries_are_not_reportable():
+    from app.models import Entry, EntrySource
+    from app.services import session_engine
+
+    mine = Entry(id=9, headword="refactor", meaning_vi="tái cấu trúc", pos="verb", source=EntrySource.USER)
+    other = Entry(id=10, headword="deploy", meaning_vi="triển khai", pos="verb", source=EntrySource.SYSTEM)
+    public, _ = session_engine.build_questions([(mine, 1), (other, 1)], [mine, other], random.Random(2))
+    assert [q["reportable"] for q in public] == [False, True]
