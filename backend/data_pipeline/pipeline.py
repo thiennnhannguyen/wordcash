@@ -13,7 +13,7 @@ import json
 import sys
 
 from data_pipeline import config
-from data_pipeline.lib import agent, cli, content, rewrite
+from data_pipeline.lib import agent, cli, content, rewrite, step_cloze
 from data_pipeline.lib.jsonio import read_json
 
 
@@ -48,6 +48,11 @@ def print_status(level: str) -> None:
     for r in rows:
         print(f"- {r['topic']:<13} chọn {r['selected']:>3} · soạn {r['drafted']:>3} · duyệt {r['approved']:>3} · từ chối {r['rejected']:>3}"
               f"{'  ✓' if r['done'] else ''}")
+    cloze = step_cloze.progress(level)
+    have, total = sum(r["with_cloze"] for r in cloze), sum(r["entries"] for r in cloze)
+    print(f"\n== Câu điền từ Mức 4 (bước 03b) — {have}/{total} mục có cloze_en + 3 đáp án nhiễu ==")
+    for r in cloze:
+        print(f"- {r['topic']:<13} {r['with_cloze']:>3}/{r['entries']:<3}{'  ✓' if r['with_cloze'] == r['entries'] else ''}")
     queue = rewrite.load_queue()
     by_status: dict[str, int] = {}
     for i in queue:

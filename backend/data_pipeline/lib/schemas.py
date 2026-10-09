@@ -61,6 +61,16 @@ class EnrichItem(_Model):
     ipa_suggestion: str = ""
 
 
+class ClozeItem(_Model):
+    """Một câu Mức 4 AI soạn nháp (prompts/cloze_v1.md). `why_wrong`: tự kiểm từng đáp án nhiễu (không lưu vào nội dung)."""
+
+    headword: str
+    pos: str
+    cloze_en: str
+    cloze_distractors: list[str] = Field(min_length=3, max_length=3)
+    why_wrong: list[str] = Field(min_length=3, max_length=3)
+
+
 class UnitTitleItem(_Model):
     position: int
     title: str

@@ -15,9 +15,9 @@ from pathlib import Path
 from data_pipeline.lib import content
 from data_pipeline.lib.schemas import ContentEntry
 
-LIST_COLUMNS = ("collocations", "word_family", "synonyms")
+LIST_COLUMNS = ("collocations", "word_family", "synonyms", "cloze_distractors")
 EDITABLE_COLUMNS = ("meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family", "synonyms",
-                    "mnemonic_vi", "image_keyword", "ipa", "status", "review_note", "reject_reason")
+                    "mnemonic_vi", "image_keyword", "cloze_en", "cloze_distractors", "ipa", "status", "review_note", "reject_reason")
 COLUMNS = ("content_key", "topic", "headword", "pos", *EDITABLE_COLUMNS, "flags")
 SEP = " | "
 

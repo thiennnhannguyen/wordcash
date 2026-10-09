@@ -22,6 +22,8 @@ class EntryPatchIn(BaseModel):
     mnemonic_vi: str | None = None
     image_keyword: str | None = None
     variant_note: str | None = Field(default=None, max_length=120)
+    cloze_en: str | None = Field(default=None, max_length=300)
+    cloze_distractors: list[str] | None = Field(default=None, max_length=3)
     commonness: int | None = Field(default=None, ge=1, le=5)
     basic_communication: bool | None = None
     subgroup: str | None = None

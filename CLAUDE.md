@@ -338,6 +338,7 @@ python -m data_pipeline.01_import_wordlist                       # raw/ → proc
 # Mặc định AI_PROVIDER=agent (không tốn phí API): bước có AI chạy --emit → agent soạn work/<bước>/batch_<số>.output.json → --ingest
 python -m data_pipeline.02_select_and_tag --level A1 --emit      # gói phân loại chủ đề (rồi --ingest, lặp tới khi hết gói)
 python -m data_pipeline.03_enrich_entries --level A1 --topic food --emit   # gói soạn nháp → --ingest → content/a1/*.json (draft)
+python -m data_pipeline.03b_cloze --level A1 --topic food --emit           # câu điền từ Mức 4 (cloze_en + 3 đáp án nhiễu) cho mục draft → --ingest
 python -m data_pipeline.04_validate --level A1                   # gắn cờ
 python -m data_pipeline.06_build_units --level A1 --emit         # chia bài (chỉ mục approved) + gói đặt tên bài (rồi --ingest)
 python -m data_pipeline.pipeline status                          # gói việc từng bước, tiến độ "x/10 chủ đề", hàng đợi viết lại

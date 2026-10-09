@@ -13,7 +13,8 @@ KW = {"coca-cola", "beer", "taylor swift"}
 def entry(**kw) -> ContentEntry:
     base = dict(content_key="a1.food.rice.noun", headword="rice", pos="noun", ipa="/raɪs/", meaning_vi="cơm",
                 definition_en="white grains that people cook and eat", example_en="We eat rice for lunch every day.",
-                example_vi="Nhà mình ăn cơm mỗi trưa.", collocations=["cook rice", "a bowl of rice"], image_keyword="bowl of rice")
+                example_vi="Nhà mình ăn cơm mỗi trưa.", collocations=["cook rice", "a bowl of rice"], image_keyword="bowl of rice",
+                cloze_en="In Vietnam, people cook white rice and eat it with fish.", cloze_distractors=["milk", "juice", "tea"])
     base.update(kw)
     return ContentEntry(**base)
 
@@ -81,12 +82,12 @@ def test_duplicates_across_level_and_topic():
 def test_run_on_files_recomputes_flags_and_reports(tmp_path):
     root = tmp_path / "content"
     t = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
-        entry(origin_flags=["phrase"], flags=["phrase", "stale_flag"]),
+        entry(origin_flags=["phrase"], flags=["phrase", "stale_flag"], cloze_en="We eat rice for lunch every day here."),
         entry(content_key="a1.food.egg.noun", headword="egg", meaning_vi="quả trứng", example_en="We eat rice for dinner here."),
     ])
     content.save_topic(t, root)
     write_json(tmp_path / "candidates.json", [{"headword": w, "pos": "noun", "cefr": {"cefrj": "A1"}} for w in
-                                              ["we", "eat", "lunch", "every", "day", "dinner", "here"]])
+                                              ["we", "eat", "lunch", "every", "day", "dinner", "here", "milk", "juice", "tea"]])
     report = validate.run("A1", processed=tmp_path, content_root=root)
     saved = content.by_key(content.load_topic(content.topic_path("A1", "food", root)))
     assert saved["a1.food.rice.noun"].flags == ["phrase"]  # cờ cũ không còn đúng bị bỏ, giữ origin_flags
@@ -176,3 +177,68 @@ def test_duplicate_meaning_in_level():
                "a1.food.drink.noun", "a1.food.drink.verb"):
         assert ok not in flagged, ok
     assert "duplicate_meaning_in_level" in validate.FLAG_HELP
+
+
+# ---------- Câu Mức 4 (cloze_en + cloze_distractors) ----------
+
+def cloze_index(extra_entries=()):
+    cands = [{"headword": w, "pos": p, "cefr": {"cefrj": lv}} for w, p, lv in [
+        ("milk", "noun", "A1"), ("juice", "noun", "A1"), ("tea", "noun", "A1"), ("bread", "noun", "A1"),
+        ("eat", "verb", "A1"), ("happy", "adjective", "A1"), ("cereal", "noun", "B1"), ("grain", "noun", "B2"),
+        ("cook", "verb", "A1"), ("cook", "noun", "A2"), ("cooker", "noun", "A2"), ("apartment", "noun", "A1"), ("flat", "noun", "A1"),
+        ("teacher", "noun", "A1"), ("teach", "verb", "A1"), ("sun", "noun", "A1"), ("sunny", "adjective", "A1")]]
+    topics = [TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[entry(), *extra_entries])]
+    return validate.build_cloze_index("A1", cands, topics)
+
+
+def cloze_flags(e, index=None):
+    return dict(validate.cloze_rules(e, whitelist=None, index=index or cloze_index()))
+
+
+def test_cloze_clean_and_missing():
+    assert cloze_flags(entry()) == {}
+    assert "cloze_missing" in cloze_flags(entry(cloze_en="", cloze_distractors=[]))
+    assert "cloze_missing" in cloze_flags(entry(cloze_distractors=[]))
+
+
+def test_cloze_sentence_rules():
+    assert "cloze_missing_headword" in cloze_flags(entry(cloze_en="People in Vietnam eat white grains with fish."))
+    assert "cloze_missing_headword" in cloze_flags(entry(cloze_en="We cook rice, and rice is good with fish."))  # 2 lần
+    assert "cloze_length" in cloze_flags(entry(cloze_en="I cook rice."))
+    assert "cloze_length" in cloze_flags(entry(cloze_en="In Vietnam " + "very " * 16 + "many people cook rice."))
+    flag, detail = validate.rule_cloze_hard_words(entry(), {"in", "vietnam", "people", "cook", "white", "and", "eat", "it", "with"})
+    assert flag == "cloze_hard_words" and detail == "fish"
+
+
+def test_cloze_distractor_structure():
+    detail = cloze_flags(entry(cloze_distractors=["milk", "juice"]))["cloze_distractors_invalid"]
+    assert "có 2 đáp án" in detail
+    assert "trùng nhau" in cloze_flags(entry(cloze_distractors=["milk", "Milk", "tea"]))["cloze_distractors_invalid"]
+    assert "trùng đáp án đúng" in cloze_flags(entry(cloze_distractors=["milk", "rice", "tea"]))["cloze_distractors_invalid"]
+    assert "có sẵn trong câu: fish" in cloze_flags(entry(cloze_distractors=["milk", "fish", "tea"]))["cloze_distractors_invalid"]
+
+
+def test_cloze_distractor_level_and_pos():
+    f = cloze_flags(entry(cloze_distractors=["milk", "cereal", "zzqx"]))
+    assert f["cloze_distractor_level"] == "cereal, zzqx"  # B1 và không có trong nguồn
+    f = cloze_flags(entry(cloze_distractors=["milk", "eat", "happy"]))
+    assert f["cloze_distractor_pos"].startswith("cần noun: eat (verb), happy (adjective)")  # đoán được bằng ngữ pháp
+    assert "cloze_distractor_pos" not in cloze_flags(entry(cloze_distractors=["milk", "cook", "tea"]))  # cook có cả noun
+
+
+def test_cloze_distractor_related():
+    # đồng nghĩa (synonyms của mục, hoặc nghĩa tiếng Việt trùng với mục của đáp án nhiễu)
+    assert "bread: đồng nghĩa" in cloze_flags(entry(synonyms=["bread"], cloze_distractors=["milk", "bread", "tea"]))["cloze_distractor_related"]
+    meal = entry(content_key="a1.food.juice.noun", headword="juice", meaning_vi="cơm (bữa)")
+    assert "juice: trùng nghĩa tiếng Việt" in cloze_flags(entry(), cloze_index([meal]))["cloze_distractor_related"]
+    # biến thể Anh-Mỹ
+    flat = entry(content_key="a1.home.apartment.noun", headword="apartment", meaning_vi="căn hộ",
+                 cloze_en="We live in a small apartment on the third floor.", cloze_distractors=["flat", "milk", "tea"])
+    assert "flat: biến thể Anh-Mỹ" in cloze_flags(flat)["cloze_distractor_related"]
+    # cùng họ từ: word_family, hoặc cùng gốc + hậu tố
+    cook = entry(content_key="a1.food.cook.noun", headword="cook", meaning_vi="đầu bếp",
+                 cloze_en="My uncle is a cook at a big hotel in town.", cloze_distractors=["cooker", "milk", "tea"])
+    assert "cooker: cùng họ từ" in cloze_flags(cook)["cloze_distractor_related"]
+    assert validate.same_family("teach", "teacher") and validate.same_family("sun", "sunny")
+    assert validate.same_family("happy", "happiness") and not validate.same_family("car", "card")
+    assert not validate.same_family("tea", "teacher")  # "cher" không phải hậu tố

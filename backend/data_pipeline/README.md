@@ -10,13 +10,15 @@ flowchart TD
     RAW["raw/ (CEFR-J…)<br/>vendor/cmudict"] --> S01["01 nhập + chuẩn hóa<br/>processed/candidates.json"]
     S01 --> S02["02 chọn cấp + AI chia chủ đề<br/>+ cụm từ cố định, cân bằng<br/>processed/a1_selection.json"]
     S02 --> S03["03 AI soạn nháp<br/>IPA từ CMUdict<br/>content/a1/*.json (draft)"]
-    S03 --> S04["04 kiểm tra tự động<br/>gắn cờ flags"]
+    S03 --> S03B["03b AI soạn câu điền từ Mức 4<br/>cloze_en + 3 đáp án nhiễu (draft)"]
+    S03B --> S04["04 kiểm tra tự động<br/>gắn cờ flags"]
     S04 --> REVIEW{"Người duyệt<br/>/dev/content hoặc<br/>05 xuất / nhập bảng tính"}
     REVIEW -->|sửa, AI viết lại một trường| S04
     REVIEW -->|approved| S06["06 chia bài 4–5 × 16–20<br/>AI đặt tên bài (draft)"]
     S06 --> TITLES{"Duyệt tên bài<br/>tab Bài học"}
     S02 -.->|"gói việc work/02_select"| AGENT(["agent soạn output<br/>--emit → output → --ingest"])
     S03 -.->|"gói việc work/03_enrich"| AGENT
+    S03B -.->|"gói việc work/03b_cloze"| AGENT
     S06 -.->|"gói việc work/06_units"| AGENT
     TITLES --> S07["07 nạp DB theo content_key<br/>(--dry-run trước)"]
     S07 --> S08["08 âm thanh mp3<br/>(chuẩn bị, chưa chạy thật)"]
@@ -36,7 +38,7 @@ flowchart TD
 
 ## Chế độ agent (cách chính)
 
-Các bước có AI (02 phân loại chủ đề, 03 soạn nháp, 06 đặt tên bài, viết lại một trường) đi đúng đường của provider API, chỉ
+Các bước có AI (02 phân loại chủ đề, 03 soạn nháp, 03b câu điền từ, 06 đặt tên bài, viết lại một trường) đi đúng đường của provider API, chỉ
 thay lệnh gọi mạng bằng **gói việc**:
 
 1. `--emit`: mỗi request chưa có trong cache thành `work/<bước>/batch_<số>.input.json`: mục cần xử lý, `output_schema` (JSON
@@ -69,6 +71,7 @@ file).
 | 01 | `python -m data_pipeline.01_import_wordlist` | In số dòng mỗi nguồn, số trùng, số bị loại kèm lý do |
 | 02 | `python -m data_pipeline.02_select_and_tag --level A1 [--limit 40] --emit` rồi `--ingest` (lặp tới khi hết gói) | Gói 40 từ; gửi kèm gợi ý chủ đề của CEFR-J. Còn gói chờ thì chưa ghi selection. `--limit`: chạy thử, không thêm cụm từ / cân bằng |
 | 03 | `python -m data_pipeline.03_enrich_entries --level A1 [--topic food …] [--per-topic 10] [--limit 40] [--redo-drafts] --emit` rồi `--ingest` | Gói 15 mục cùng chủ đề; lỗi → `processed/failed_03.json` |
+| 03b | `python -m data_pipeline.03b_cloze --level A1 [--topic food …] [--limit 40] [--redo] --emit` rồi `--ingest` | Câu Mức 4 `cloze_en` (chỉ đúng 1 đáp án hợp) + đúng 3 `cloze_distractors` cùng từ loại cho mục draft chưa có câu; gói 15 mục kèm kho từ của cấp theo từ loại; output có `why_wrong` (tự kiểm từng đáp án nhiễu, không lưu). Quy tắc: `docs/content-style-guide.md` mục 7b |
 | 04 | `python -m data_pipeline.04_validate --level A1` | Không gọi AI; báo cáo `processed/report_04.json` |
 | duyệt | Mở `/dev/content` (backend `ENV=development`, frontend `npm run dev`) | Phím A duyệt · R từ chối (bắt buộc lý do) · S bỏ qua · J mục sau · K mục trước (quy ước Gmail / Vim); tab Bài học |
 | 05 | `python -m data_pipeline.05_review_export export --level A1 --out reviewed/a1.xlsx` rồi `import --file … [--apply]` | Tùy chọn: duyệt bằng bảng tính, xem trước khác biệt trước khi ghi |
