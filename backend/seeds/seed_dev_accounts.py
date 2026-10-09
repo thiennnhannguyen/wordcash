@@ -7,9 +7,11 @@ người dùng khác), nên Sảnh, Hồ Sơ, Bảng xếp hạng hiện đúng 
 - `dev_shaky`: xong 10 chặng A1 (tới Trận Boss), 290 từ đã thuộc nhưng rank Bạc (mốc 300) → lung lay, còn 2 ngày để gỡ;
   Cửa Ải hôm nay có câu sai.
 - `dev_new`: vừa xong onboarding (linh vật khởi đầu #1), chưa học gì.
+- `dev_admin`: role admin, chưa học gì, không hiện trên bảng xếp hạng — để xem tab "Báo lỗi" trên /dev/content (API
+  /admin/content-reports chỉ cho admin).
 Mật khẩu chung: DEV_PASSWORD (chỉ dev/e2e). Email `<username>@dev.wordclash.vn`, múi giờ Asia/Ho_Chi_Minh.
 
-- Chạy lại an toàn: xóa 3 tài khoản này (kèm mọi dữ liệu liên quan, ON DELETE CASCADE) rồi tạo lại, nên số liệu luôn "tươi"
+- Chạy lại an toàn: xóa 4 tài khoản này (kèm mọi dữ liệu liên quan, ON DELETE CASCADE) rồi tạo lại, nên số liệu luôn "tươi"
   theo ngày chạy (streak, Cửa Ải hôm nay, từ trong tuần). Không đụng tài khoản khác.
 - Cần lộ trình A1 (kho thật hoặc lộ trình mẫu): chưa có bài nào thì tự chạy seeds/seed_dev_roadmap trước.
 - Chỉ chạy khi ENV là development hoặc e2e (từ chối mọi môi trường khác). Chạy trong backend/: `python -m seeds.seed_dev_accounts`.
@@ -35,6 +37,7 @@ from app.models import (
     MascotObtain,
     MascotSource,
     MascotStatus,
+    Role,
     SpinGrant,
     SpinKind,
     SpinReason,
@@ -50,7 +53,7 @@ from app.utils.time import local_date
 
 DEV_PASSWORD = "Wordclash2026"
 ALLOWED_ENVS = ("development", "e2e")
-USERNAMES = ("dev_normal", "dev_shaky", "dev_new")
+USERNAMES = ("dev_normal", "dev_shaky", "dev_new", "dev_admin")
 
 
 @dataclass(frozen=True)
@@ -69,12 +72,14 @@ class Plan:
     spins_normal: int
     learning: int
     today_check: DailyCheckStatus | None
+    role: Role = Role.USER
 
 
 PLANS = (
     Plan("dev_normal", "Dev Bình Thường", 2, 5, 150, 30, "dong", None, 5, 9, 5, 2, 20, DailyCheckStatus.PASSED),
     Plan("dev_shaky", "Dev Lung Lay", 3, 10, 290, 12, "bac", 2, 2, 14, 9, 0, 25, DailyCheckStatus.PARTIAL),
     Plan("dev_new", "Dev Người Mới", 1, 0, 0, 0, "tan_binh", None, 0, 0, 0, 0, 0, None),
+    Plan("dev_admin", "Dev Quản Trị", 1, 0, 0, 0, "tan_binh", None, 0, 0, 0, 0, 0, None, Role.ADMIN),
 )
 
 
@@ -98,7 +103,8 @@ async def _a1_entries(session: AsyncSession, st: roadmap_service.Structure, topi
 async def _create(session: AsyncSession, plan: Plan, now: datetime, st: roadmap_service.Structure) -> User:
     user = User(email=f"{plan.username}@dev.wordclash.vn", username=plan.username, display_name=plan.display_name,
                 password_hash=hash_password(DEV_PASSWORD), timezone="Asia/Ho_Chi_Minh", goal=Goal.GENERAL, daily_minutes=15,
-                onboarding_completed_at=now - timedelta(days=60 if plan.mastered else 0), avatar_mascot_id=plan.starter)
+                onboarding_completed_at=now - timedelta(days=60 if plan.mastered else 0), avatar_mascot_id=plan.starter,
+                role=plan.role, show_on_leaderboard=plan.role != Role.ADMIN)
     session.add(user)
     await session.flush()
     today = local_date(user, now)
@@ -179,7 +185,7 @@ async def _create(session: AsyncSession, plan: Plan, now: datetime, st: roadmap_
 
 
 async def seed(session: AsyncSession, now: datetime | None = None) -> list[User]:
-    """Xóa rồi tạo lại 3 tài khoản mẫu. Không kiểm tra ENV (main() kiểm tra); test gọi thẳng."""
+    """Xóa rồi tạo lại 4 tài khoản mẫu. Không kiểm tra ENV (main() kiểm tra); test gọi thẳng."""
     now = now or datetime.now(UTC)
     st = await roadmap_service.load_structure(session)
     if not any(st.units.values()):
@@ -200,7 +206,7 @@ async def main() -> None:
         users = await seed(session)
     await engine.dispose()
     for u in users:
-        print(f"{u.username:12} {u.email:32} mật khẩu: {DEV_PASSWORD}  ({u.mastered_count} từ đã thuộc)")
+        print(f"{u.username:12} {u.email:32} mật khẩu: {DEV_PASSWORD}  ({u.mastered_count} từ đã thuộc{', admin' if u.role == Role.ADMIN else ''})")
 
 
 if __name__ == "__main__":

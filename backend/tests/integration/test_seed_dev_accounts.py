@@ -18,7 +18,7 @@ async def test_seed_dev_accounts_variants_and_rerun(db_session, clock_at):
     clock_at(NOW)
     await seed_dev_accounts.seed(db_session, NOW)
     users = await seed_dev_accounts.seed(db_session, NOW)  # chạy lại: không trùng
-    assert await db_session.scalar(select(func.count()).select_from(User).where(User.username.in_(seed_dev_accounts.USERNAMES))) == 3
+    assert await db_session.scalar(select(func.count()).select_from(User).where(User.username.in_(seed_dev_accounts.USERNAMES))) == 4
     by = {u.username: u for u in users}
 
     normal = await me_service.get_stats(db_session, by["dev_normal"], NOW)
@@ -38,3 +38,6 @@ async def test_seed_dev_accounts_variants_and_rerun(db_session, clock_at):
     board = await leaderboard_service.get_leaderboard(db_session, None, by["dev_new"], "weekly", 50, NOW)
     scores = {r["username"]: r["score"] for r in board["entries"]}
     assert scores["dev_normal"] == 30 and scores["dev_shaky"] == 12 and "dev_new" not in scores
+    # dev_admin: role admin (xem tab "Báo lỗi"), không hiện trên bảng xếp hạng; còn lại là người dùng thường
+    assert by["dev_admin"].role.value == "admin" and not by["dev_admin"].show_on_leaderboard
+    assert {u.role.value for name, u in by.items() if name != "dev_admin"} == {"user"}

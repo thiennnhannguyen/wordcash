@@ -21,7 +21,7 @@ const box = 'w-full rounded-btn border-thick border-line bg-surface px-3 py-2 te
 
 export default function EntryDetail({
   entry, flagHelp, infoFlags = [], level, topic, busy, onSave, onApprove, onReject, onSkip, onPrev, onNext, saveRef,
-  queueMode = true, rewrites = [], onRewriteQueued, onResolveRewrite,
+  queueMode = true, rewrites = [], onRewriteQueued, onResolveRewrite, focusFields = [], onResolveReports,
 }) {
   const [form, setForm] = useState(() => toForm(entry))
   const [note, setNote] = useState(entry.review_note ?? '')
@@ -36,6 +36,14 @@ export default function EntryDetail({
   const dirty = Object.keys(changes).length > 0 || note !== (entry.review_note ?? '')
   const patch = () => ({ ...changes, ...(note !== (entry.review_note ?? '') ? { review_note: note } : {}) })
   if (saveRef) saveRef.current = { patch, dirty }
+
+  // Mở từ tab "Báo lỗi": cuộn tới dải báo lỗi (ngay trên câu điền từ) khi lỗi là "Đáp án gây nhầm", không thì tới trường đầu
+  const focusKey = focusFields.join(',')
+  useEffect(() => {
+    if (!focusKey) return
+    const target = focusKey.includes('cloze') ? 'report-banner' : `f-${focusKey.split(',')[0]}`
+    document.getElementById(target)?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [focusKey, entry.content_key])
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
   const current = fromForm(form)
@@ -86,6 +94,18 @@ export default function EntryDetail({
           ))}
         </ul>
       )}
+      {focusFields.length > 0 && (
+        <div id="report-banner" className="flex scroll-mt-4 flex-wrap items-center gap-3 rounded-btn border-thick border-danger bg-danger/10 px-3 py-2 text-[14px]" role="status">
+          <span className="min-w-0 flex-1">
+            <b>Mở từ Báo lỗi</b> — xem các trường tô đỏ, sửa rồi Lưu / Duyệt, xong bấm "Đã sửa xong" để đóng mọi báo cáo của mục.
+          </span>
+          {onResolveReports && (
+            <Button size="sm" variant="accent" icon={CheckCircle} disabled={busy || dirty} onClick={onResolveReports}>
+              Đã sửa xong
+            </Button>
+          )}
+        </div>
+      )}
       {entry.status === 'rejected' && entry.reject_reason && (
         <p className="rounded-btn border-2 border-line bg-danger/20 px-3 py-2 text-[14px]">Lý do từ chối: {entry.reject_reason}</p>
       )}
@@ -99,7 +119,8 @@ export default function EntryDetail({
         {FIELDS.map((f) => {
           const pending = rewrites.find((r) => r.field === f.key)
           return (
-            <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list' || pending) && 'md:col-span-2')}>
+            <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list' || pending) && 'md:col-span-2',
+              focusFields.includes(f.key) && 'rounded-btn p-2 ring-4 ring-danger/60')} data-focus={focusFields.includes(f.key) || undefined}>
               <div className="flex items-center justify-between gap-2">
                 <label htmlFor={`f-${f.key}`} className="hud-label">
                   {f.label}

@@ -15,3 +15,14 @@ export const REPORT_KINDS = [
 ]
 
 export const reportContent = (body) => request({ method: 'post', url: '/content-reports', data: body })
+
+/* ---------- Quản trị (CHỈ role admin; dùng ở tab "Báo lỗi" của /dev/content) ---------- */
+
+/** Báo cáo gom theo mục, sắp theo số báo cáo. `status`: open | resolved | dismissed | all. */
+export const fetchReports = (status = 'open') => request({ url: '/admin/content-reports', params: { status } })
+
+/** resolved / dismissed: mọi báo cáo đang mở của mục; open: mở lại. Trả {updated}. */
+export const setEntryReportStatus = (entryId, status) =>
+  request({ method: 'patch', url: `/admin/content-reports/entries/${entryId}`, data: { status } })
+
+export const setReportStatus = (id, status) => request({ method: 'patch', url: `/admin/content-reports/${id}`, data: { status } })
