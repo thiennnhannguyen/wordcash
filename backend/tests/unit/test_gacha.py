@@ -4,9 +4,11 @@ Logic quay thuần (services/gacha.py) với seed cố định:
 - Cùng độ hiếm ngang xác suất (chi-square).
 - Pity: 20 lượt không ra Sử Thi thì lượt 21 là Sử Thi; Huyền Thoại giữ nguyên và đặt lại bộ đếm; lượt đặc biệt cũng tăng / đặt lại.
 - Hạ bậc khi pool thiếu độ hiếm; không bao giờ ra coming_soon, achievement, vùng chưa mở.
+- GACHA_SEED: chỉ ENV=e2e mới tất định; production / development / testing bỏ qua, dùng SystemRandom.
 """
 
 import random
+import secrets
 from collections import Counter
 
 import pytest
@@ -155,3 +157,31 @@ def test_system_rng_is_secrets():
     import secrets
 
     assert isinstance(gacha.system_rng(), secrets.SystemRandom)
+
+
+# ---------- GACHA_SEED (chỉ e2e) ----------
+
+@pytest.mark.parametrize("env", ["production", "development", "testing"])
+def test_gacha_seed_ignored_outside_e2e(monkeypatch, env):
+    monkeypatch.setattr(settings, "ENV", env)
+    monkeypatch.setattr(settings, "GACHA_SEED", 2026)
+    assert settings.gacha_seed is None
+    assert isinstance(gacha.spin_rng("normal", 0, 20), secrets.SystemRandom)
+
+
+def test_gacha_seed_deterministic_in_e2e(monkeypatch):
+    monkeypatch.setattr(settings, "ENV", "e2e")
+    monkeypatch.setattr(settings, "GACHA_SEED", 2026)
+    a, b = gacha.spin_rng("normal", 0, 20), gacha.spin_rng("normal", 0, 20)
+    assert not isinstance(a, secrets.SystemRandom)
+    assert [a.random() for _ in range(5)] == [b.random() for _ in range(5)]
+    assert gacha.spin_rng("normal", 1, 20).random() != gacha.spin_rng("normal", 0, 20).random()  # đổi theo trạng thái
+    # Hạt giống của e2e (start-backend.sh): người mới, pity 20 → lượt thường gốc chưa tới Sử Thi, nên pity thật sự kích hoạt
+    res = gacha.spin_once("normal", 20, gacha.build_pool(CATALOG, {"A1"}), gacha.spin_rng("normal", 0, 20))
+    assert res.pity_triggered and res.final_rarity == "epic"
+
+
+def test_gacha_seed_unset_in_e2e_uses_system_random(monkeypatch):
+    monkeypatch.setattr(settings, "ENV", "e2e")
+    monkeypatch.setattr(settings, "GACHA_SEED", None)
+    assert isinstance(gacha.spin_rng("normal", 0, 0), secrets.SystemRandom)

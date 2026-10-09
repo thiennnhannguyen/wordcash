@@ -15,6 +15,8 @@ export JWT_SECRET_KEY="${E2E_JWT_SECRET:-wordclash-e2e-secret-key-only-for-tests
 export REDIS_URL="redis://localhost:6379/15"
 export REGISTER_MAX_PER_HOUR=1000
 export LOGIN_MAX_ATTEMPTS=100
+# Hạt giống vòng quay (chỉ có hiệu lực khi ENV=e2e): kết quả quay tất định theo trạng thái người dùng, kịch bản pity ổn định
+export GACHA_SEED="${E2E_GACHA_SEED:-2026}"
 
 .venv/bin/python - <<'PY'
 import asyncio

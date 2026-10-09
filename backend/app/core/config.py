@@ -114,6 +114,9 @@ class Settings(BaseSettings):
 
     # Vòng quay
     SPIN_EVERY_N_WORDS: int = 50
+    # Hạt giống vòng quay CHỈ cho kiểm thử đầu-cuối: có hiệu lực duy nhất khi ENV=e2e (xem `gacha_seed`); mọi môi trường
+    # khác bỏ qua và dùng secrets.SystemRandom.
+    GACHA_SEED: int | None = None
     PITY_EPIC: int = 20  # pity_counter (chung mọi loại lượt) đạt mức này → lượt kế chắc chắn Sử Thi (Huyền Thoại thì giữ)
     # Tỉ lệ công khai theo độ hiếm (tổng = 1). Lượt đặc biệt (lên rank, thắng Boss) không ra Thường.
     GACHA_RATES_NORMAL: dict[str, float] = {"common": 0.60, "rare": 0.28, "epic": 0.10, "legendary": 0.02}
@@ -170,6 +173,11 @@ class Settings(BaseSettings):
     def debug_time_enabled(self) -> bool:
         """Header X-Debug-Now chỉ có tác dụng khi dev và e2e; production, testing luôn bỏ qua (core/debug_time.py)."""
         return self.ENV in ("development", "e2e")
+
+    @property
+    def gacha_seed(self) -> int | None:
+        """GACHA_SEED chỉ có hiệu lực khi ENV=e2e; production, development, testing luôn trả None (quay bằng SystemRandom)."""
+        return self.GACHA_SEED if self.ENV == "e2e" else None
 
     @property
     def docs_enabled(self) -> bool:

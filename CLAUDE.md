@@ -257,7 +257,7 @@ Khi rơi dưới mốc, người dùng có **vùng đệm 3 ngày** trước khi
 - **Không gửi đáp án đúng xuống client** trước khi lượt hoặc bài kiểm tra kết thúc.
 - Thời gian trả lời đo ở server.
 - Kết quả quay thẻ sinh ở server.
-- **Mọi kết quả ngẫu nhiên có giá trị (quay thẻ…) do server quyết định bằng secrets.SystemRandom; mọi thao tác tiêu tài nguyên (lượt quay, mảnh) bắt buộc có Idempotency-Key và khóa dòng.** Thứ tự khóa trong backend: khởi tạo lộ trình (khóa advisory) → `users` → `user_stats`.
+- **Mọi kết quả ngẫu nhiên có giá trị (quay thẻ…) do server quyết định bằng secrets.SystemRandom (ngoại lệ duy nhất: `GACHA_SEED` khi `ENV=e2e`, mọi ENV khác bỏ qua); mọi thao tác tiêu tài nguyên (lượt quay, mảnh) bắt buộc có Idempotency-Key và khóa dòng.** Thứ tự khóa trong backend: khởi tạo lộ trình (khóa advisory) → `users` → `user_stats`.
 - Mật khẩu phải được băm; API cần đăng nhập phải dùng JWT.
 
 ## Giao diện
