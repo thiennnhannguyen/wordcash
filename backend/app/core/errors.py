@@ -57,6 +57,7 @@ ERRORS: dict[str, tuple[int, str]] = {
     "DAILY_CHECK_DONE": (409, "Bạn đã hoàn thành Cửa Ải hôm nay."),
     # Bộ Sưu Tập, vòng quay
     "MASCOT_NOT_FOUND": (404, "Không tìm thấy linh vật."),
+    "USER_NOT_FOUND": (404, "Không tìm thấy người chơi."),
     "NO_SPINS_LEFT": (409, "Bạn không đủ lượt quay. Học thêm ở Học Viện để nhận lượt mới nhé."),
     "INVALID_SPIN_COUNT": (422, "Mỗi lần chỉ mở được từ 1 tới 10 lượt."),
     "NOT_ENOUGH_SHARDS": (409, "Bạn chưa đủ mảnh để đổi linh vật này."),

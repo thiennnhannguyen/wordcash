@@ -12,7 +12,7 @@ Trường, đánh dấu đã xem, cấp linh vật khởi đầu. Luật quay th
   3. làm toàn bộ thay đổi (lượt, pity, sở hữu, mảnh, lịch sử, bản ghi idempotency) trong MỘT transaction rồi commit.
 - Pool quay / đổi mảnh: vùng = cấp người dùng đã mở (user_level_progress unlocked | completed); người mới được mở A1 ngay
   (roadmap_service.ensure_initialized). Ô coming_soon và linh vật achievement không bao giờ quay ra hay đổi được.
-- Số ngẫu nhiên: `gacha.system_rng()` (secrets.SystemRandom); test truyền `rng` có seed.
+- Số ngẫu nhiên: `gacha.spin_rng()` (secrets.SystemRandom; riêng ENV=e2e có GACHA_SEED thì tất định); test truyền `rng` có seed.
 - `force_next` (chỉ dev/e2e, qua POST /dev/force-next): ép độ hiếm / linh vật của lượt kế tiếp của một người để dựng hiệu
   ứng. Lưu trong bộ nhớ tiến trình, chỉ có tác dụng khi `settings.debug_time_enabled`, ép đúng MỘT lượt; lượt bị ép ghi
   `spin_history.forced = true` và `"forced": true` trong kết quả.
@@ -235,7 +235,7 @@ async def spin(session: AsyncSession, user: User, kind: str, count: int, idempot
     if available < count:
         raise AppError("NO_SPINS_LEFT", details={"kind": kind, "available": available, "requested": count})
 
-    rng = rng or gacha.system_rng()
+    rng = rng or gacha.spin_rng(kind, stats.total_spins, stats.pity_counter)
     catalog = await load_catalog(session)
     by_id = {m.id: m for m in catalog}
     pool = gacha.build_pool(catalog, regions)

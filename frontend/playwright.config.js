@@ -36,7 +36,7 @@ export default defineConfig({
       url: `http://localhost:${WEB_PORT}`,
       timeout: 60_000,
       reuseExistingServer: false,
-      env: { VITE_PORT: String(WEB_PORT), API_PROXY_TARGET: `http://localhost:${API_PORT}`, VITE_USE_MOCK: 'false' },
+      env: { VITE_PORT: String(WEB_PORT), API_PROXY_TARGET: `http://localhost:${API_PORT}` },
     },
   ],
 })

@@ -6,49 +6,30 @@
  * cột phải 4 (widget) — hai cột kết thúc gần bằng nhau. Hàng dưới trải hết 12 cột: Khóa học của tôi (7) + Hành trình (5)
  * (đặt cả hai trong cột trái làm cột trái dài hơn cột phải ~800px). Mobile xếp dọc: chào hỏi → Học Viện → Đấu Trường → Mục tiêu → Từ của ngày → Khóa học →
  * Hành trình → widget. Các khối hiện lần lượt (cách nhau 60ms); nền có họa tiết chấm và hình vẽ tay rất nhạt.
- * Số liệu thật từ GET /me/stats (pages/Lobby/useLobbyData.js); phần chưa có API vẫn lấy từ data/mockLobby.js.
- * Biến thể dữ liệu mẫu (chỉ dev) xem bằng `?variant=shaky` hoặc `?variant=new`;
- * thanh chuyển biến thể chỉ hiện ở môi trường dev.
+ *
+ * Mọi số liệu lấy từ server (pages/Lobby/useLobbyData.js); mỗi khối tự có trạng thái đang tải / lỗi + Thử lại / trống.
+ * Đấu Trường chưa có backend: card hiện "Sắp mở". Sticker và họa tiết chỉ là trang trí.
+ * Xem các biến thể bằng tài khoản dev (backend/seeds/seed_dev_accounts.py): dev_normal, dev_shaky, dev_new.
  */
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useSearchParams } from 'react-router-dom'
 import { Check, CheckCircle, Star, WarningCircle } from '@phosphor-icons/react'
 import Icon from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import StatusBar from '../../components/layout/StatusBar'
+import { ErrorState, Skeleton } from '../../components/ui/DataState'
 import cx from '../../utils/cx'
+import useServerData from '../../hooks/useServerData'
 import * as coursesApi from '../../services/coursesApi'
+import { getRoadmap } from '../../services/academyApi'
+import { getDailyWord, getLeaderboard } from '../../services/profileApi'
 import { useAuthStore } from '../../store/authStore'
-import { LOBBY_VARIANTS } from '../../data/mockLobby'
-import useLobbyData from './useLobbyData'
+import { useMascot } from '../../store/mascotStore'
+import useLobbyStats from './useLobbyData'
 import { AcademyCard, ArenaCard } from './LobbyCards'
 import { DailyGoals, JourneyStrip, MyCourses, WordOfDay } from './LobbyBlocks'
-import { FriendsWidget, MascotWidget, NextRankWidget, NextSpinWidget } from './LobbyWidgets'
-
-function VariantSwitcher({ current, onChange }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 rounded-[16px] border-2 border-dashed border-line/40 bg-bg p-2">
-      <span className="hud-label px-1">Biến thể (dev)</span>
-      {LOBBY_VARIANTS.map((v) => (
-        <button
-          key={v.key}
-          type="button"
-          onClick={() => onChange(v.key)}
-          aria-pressed={current === v.key}
-          className={cx(
-            'h-9 rounded-pill border-2 border-line px-3 font-display text-xs font-bold uppercase',
-            current === v.key ? 'bg-ink text-white' : 'bg-surface text-ink hover:bg-raised',
-          )}
-        >
-          {v.label}
-        </button>
-      ))}
-    </div>
-  )
-}
+import { MascotWidget, NextRankWidget, NextSpinWidget, TopWeekWidget } from './LobbyWidgets'
 
 /** Hiện lần lượt khi tải trang: khối thứ `i` trễ i × 60ms. Giảm chuyển động thì chỉ mờ dần (MotionConfig ở App). */
 function Appear({ i, className, children }) {
@@ -120,40 +101,53 @@ function WeekRow({ days }) {
   )
 }
 
-function Greeting({ data }) {
-  const { mascot } = data
+function Greeting({ name, mascot, core }) {
+  const data = core.data
   return (
     <header className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <div className="anim-breathe shrink-0" title={`${mascot.name} đang chờ bạn`}>
+        <div className="anim-breathe shrink-0" title={mascot.name ? `${mascot.name} đang chờ bạn` : undefined}>
           <MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={72} blink />
         </div>
         <h1 className="text-[30px] leading-[1.08] md:text-[38px]">
-          Chào {data.user.name}! <br />
-          Hôm nay đánh trận nào?
+          Chào {name}! <br />
+          Hôm nay học gì nào?
         </h1>
       </div>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        {data.dailyCheck ? (
-          <p
-            className={cx(
-              'inline-flex items-center gap-2 rounded-pill border-thick border-line px-3.5 py-1.5 text-caption font-semibold shadow-hard-sm',
-              data.dailyCheck.correct === data.dailyCheck.total ? 'bg-accent' : 'bg-gold',
-            )}
-          >
-            <Icon icon={CheckCircle} size={18} color="ink" />
-            Cửa Ải hôm nay: {data.dailyCheck.correct}/{data.dailyCheck.total} đúng
-            {data.dailyCheck.streakGained && ' · Streak +1'}
-          </p>
-        ) : (
-          <p className="inline-flex items-center gap-2 rounded-pill border-thick border-line bg-surface px-3.5 py-1.5 text-caption font-semibold shadow-hard-sm">
-            <Icon icon={Star} size={18} color="gold" />
-            Ngày đầu tiên của bạn ở WORDCLASH
-          </p>
-        )}
-        <WeekRow days={data.week} />
-      </div>
-      {data.shaky && (
+      {core.status === 'loading' && (
+        <div className="flex flex-wrap items-center gap-3" role="status" aria-label="Đang tải">
+          <Skeleton className="h-9 w-56" rounded="rounded-pill" />
+          <Skeleton className="h-9 w-72" rounded="rounded-pill" />
+        </div>
+      )}
+      {core.status === 'error' && (
+        <ErrorState compact title="Chưa tải được số liệu hôm nay" onRetry={core.reload} className="items-start text-left" />
+      )}
+      {data && (
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+          {data.dailyCheck ? (
+            <p
+              className={cx(
+                'inline-flex items-center gap-2 rounded-pill border-thick border-line px-3.5 py-1.5 text-caption font-semibold shadow-hard-sm',
+                data.dailyCheck.correct === data.dailyCheck.total ? 'bg-accent' : 'bg-gold',
+              )}
+            >
+              <Icon icon={CheckCircle} size={18} color="ink" />
+              Cửa Ải hôm nay: {data.dailyCheck.correct}/{data.dailyCheck.total} đúng
+              {data.dailyCheck.streakGained && ' · Streak +1'}
+            </p>
+          ) : (
+            data.firstDay && (
+              <p className="inline-flex items-center gap-2 rounded-pill border-thick border-line bg-surface px-3.5 py-1.5 text-caption font-semibold shadow-hard-sm">
+                <Icon icon={Star} size={18} color="gold" />
+                Ngày đầu tiên của bạn ở WORDCLASH
+              </p>
+            )
+          )}
+          <WeekRow days={data.week} />
+        </div>
+      )}
+      {data?.shaky && (
         <p className="anim-alert inline-flex items-center gap-2 self-start rounded-pill border-thick border-danger bg-surface px-3.5 py-1.5 text-caption font-semibold">
           <Icon icon={WarningCircle} size={18} color="danger-deep" />
           Rank lung lay · còn {data.shaky.daysLeft} ngày · Ôn {data.shaky.wordsToReview} từ để giữ rank
@@ -172,50 +166,37 @@ function Deco({ className, children }) {
   )
 }
 
-// Khóa học đang học lấy từ coursesApi (API thật hoặc mock). Biến thể "Người mới" luôn xem trạng thái chưa có khóa nào.
-function useMyCourses(isNew) {
-  const [courses, setCourses] = useState(null)
-  useEffect(() => {
-    if (isNew) {
-      setCourses([])
-      return undefined
-    }
-    let alive = true
-    coursesApi
-      .listCourses()
-      .then((res) => alive && setCourses(res.items))
-      .catch(() => alive && setCourses([]))
-    return () => {
-      alive = false
-    }
-  }, [isNew])
-  return courses
+function StatusBarSlot({ core, mascot }) {
+  if (core.data) return <StatusBar stats={core.data.stats} mascot={{ ...mascot, bg: 'raised' }} />
+  return (
+    <div className="flex items-center gap-2.5 overflow-hidden py-2 md:justify-end md:gap-3" role="status" aria-label="Đang tải">
+      {[112, 168, 120, 132].map((w) => (
+        <Skeleton key={w} className="h-12 shrink-0" rounded="rounded-pill" style={{ width: w }} />
+      ))}
+    </div>
+  )
 }
 
 export default function Lobby() {
-  const [params, setParams] = useSearchParams()
-  const variant = params.get('variant')
   const user = useAuthStore((s) => s.user)
-  const data = useLobbyData(variant, user)
-  const isNew = Boolean(data?.academy.isNew)
-  const courses = useMyCourses(isNew)
-  if (!data) return <div className="min-h-[60vh]" aria-busy="true" />
+  const mascot = useMascot(user?.avatar_mascot_id)
+  const core = useLobbyStats()
+  const roadmap = useServerData(() => getRoadmap(), [])
+  const word = useServerData(getDailyWord, [])
+  const top = useServerData(() => getLeaderboard('weekly', 3), [])
+  const courses = useServerData(() => coursesApi.listCourses().then((res) => res.items), [])
 
   return (
     <>
       <Backdrop />
       <div className="relative z-10 flex flex-col gap-6">
-        {import.meta.env.DEV && (
-          <VariantSwitcher current={variant ?? 'default'} onChange={(key) => setParams(key === 'default' ? {} : { variant: key })} />
-        )}
-
-        <StatusBar stats={data.stats} mascot={{ ...data.mascot, bg: 'raised' }} />
+        <StatusBarSlot core={core} mascot={mascot} />
 
         <div className="grid gap-6 xl:grid-cols-12 xl:gap-8">
           {/* Cột trái (8/12) */}
           <div className="order-1 flex min-w-0 flex-col gap-6 xl:col-span-8">
             <Appear i={0} className="relative">
-              <Greeting data={data} />
+              <Greeting name={user?.display_name ?? ''} mascot={mascot} core={core} />
               <Deco className="right-2 top-3 max-md:hidden">
                 <Sticker bg="gold" tilt={8} size="sm">
                   Combo x3
@@ -225,10 +206,10 @@ export default function Lobby() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Appear i={1} className="flex">
-                <AcademyCard academy={data.academy} />
+                <AcademyCard core={core} />
               </Appear>
               <Appear i={2} className="relative flex">
-                <ArenaCard arena={data.arena} mascot={data.mascot} isNew={isNew} />
+                <ArenaCard mascot={mascot} />
                 <Deco className="-right-3 -top-4 max-md:hidden">
                   <Sticker bg="danger" tilt={7} size="sm">
                     +15 DMG
@@ -240,7 +221,7 @@ export default function Lobby() {
             <div className="grid gap-6 md:grid-cols-2">
               {/* Mobile: Mục tiêu đứng trước Từ của ngày; từ md trở lên Từ của ngày ở bên trái */}
               <Appear i={4} className="relative flex md:order-2">
-                <DailyGoals goals={data.goals} mascot={data.mascot} className="w-full" />
+                <DailyGoals core={core} mascot={mascot} className="w-full" />
                 <Deco className="-right-2 -top-4 max-md:hidden">
                   <span className="block -rotate-6 drop-shadow-[2px_2px_0_var(--color-line)]">
                     <Icon icon={Star} size={36} color="gold" />
@@ -248,37 +229,36 @@ export default function Lobby() {
                 </Deco>
               </Appear>
               <Appear i={3} className="flex md:order-1">
-                <WordOfDay word={data.wordOfDay} className="w-full" />
+                <WordOfDay state={word} mascot={mascot} className="w-full" />
               </Appear>
             </div>
-
           </div>
 
           {/* Cột phải (4/12): widget */}
           <aside aria-label="Tiện ích" className="order-3 grid gap-5 sm:grid-cols-2 xl:order-2 xl:col-span-4 xl:flex xl:flex-col">
             <Appear i={7}>
-              <NextRankWidget nextRank={data.nextRank} shaky={data.shaky} />
+              <NextRankWidget core={core} />
             </Appear>
             <Appear i={8}>
-              <NextSpinWidget nextSpin={data.nextSpin} spins={data.stats.spins} />
+              <NextSpinWidget core={core} />
             </Appear>
             <Appear i={9}>
-              <MascotWidget mascot={data.mascot} />
+              <MascotWidget mascot={mascot} />
             </Appear>
             {/* Widget cuối giãn hết phần còn lại để cột phải kết thúc ngang cột trái */}
             <Appear i={10} className="flex xl:flex-1">
-              <FriendsWidget friends={data.friends} className="w-full" />
+              <TopWeekWidget state={top} mascot={mascot} className="w-full" />
             </Appear>
           </aside>
 
           {/* Hàng dưới, trải hết 12 cột */}
           <div className="order-2 grid min-w-0 gap-6 xl:order-3 xl:col-span-12 xl:grid-cols-12 xl:gap-8">
             <Appear i={5} className="relative flex min-w-0 xl:col-span-7">
-              <MyCourses courses={courses} emptyMascot={data.courseEmptyMascot} className="w-full min-w-0" />
+              <MyCourses state={courses} mascot={mascot} className="w-full min-w-0" />
             </Appear>
 
             <Appear i={6} className="relative flex xl:col-span-5">
-              <JourneyStrip journey={data.journey} />
+              <JourneyStrip state={roadmap} />
               <Deco className="-top-4 left-6">
                 <Sticker bg="accent" tilt={-6} size="sm">
                   A1 → C2

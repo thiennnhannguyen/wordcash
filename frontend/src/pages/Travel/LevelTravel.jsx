@@ -7,7 +7,7 @@
  * → (d) hạ cánh, sương tan để lộ Tượng Nữ thần Tự do và New York, chữ "CHÀO MỪNG ĐẾN VỚI B2 · MỸ & CANADA" đập xuống
  * → (e) card tổng kết: số từ đã thuộc, số địa danh, trang hộ chiếu đủ con dấu, "+1 LƯỢT QUAY ĐẶC BIỆT", nút bắt đầu cấp mới.
  * Có nút "Bỏ qua" (nhảy tới card tổng kết). Khi người dùng bật giảm chuyển động thì hiện thẳng card tổng kết.
- * `hold` ("a"…"e") dừng ở một khung để xem thử. Dữ liệu (`data`) do server trả, xem travelMock.js.
+ * `hold` ("a"…"e") dừng ở một khung để xem thử. Dữ liệu (`data`) dựng từ API thật ở pages/Travel/Travel.jsx.
  */
 
 import { useEffect, useState } from 'react'
@@ -68,15 +68,17 @@ function Summary({ data, onStart }) {
         </h3>
         <Passport map={data.passportMap} withBoss={false} caption={false} />
       </div>
-      <div className="anim-glow flex items-center gap-3 rounded-[18px] border-thick border-line bg-gold px-4 py-3 shadow-glow-legendary">
-        <span className="grid size-11 shrink-0 place-items-center rounded-pill border-thick border-line bg-surface">
-          <Icon icon={Gift} size={24} color="primary" />
-        </span>
-        <span className="font-display text-lg font-bold uppercase md:text-xl">+{reward.specialSpins} lượt quay đặc biệt</span>
-      </div>
+      {reward && (
+        <div className="anim-glow flex items-center gap-3 rounded-[18px] border-thick border-line bg-gold px-4 py-3 shadow-glow-legendary">
+          <span className="grid size-11 shrink-0 place-items-center rounded-pill border-thick border-line bg-surface">
+            <Icon icon={Gift} size={24} color="primary" />
+          </span>
+          <span className="font-display text-lg font-bold uppercase md:text-xl">+{reward.specialSpins} lượt quay đặc biệt</span>
+        </div>
+      )}
       {to && (
         <Button size="lg" iconRight={ArrowRight} fullWidth className="whitespace-nowrap max-md:text-[15px]" onClick={onStart}>
-          Bắt đầu hành trình {to.code}
+          {to.soon ? `${to.code} sắp mở · Về bản đồ` : `Bắt đầu hành trình ${to.code}`}
         </Button>
       )}
     </motion.div>

@@ -82,3 +82,12 @@ export async function authState(page) {
     return { status: s.status, token: s.accessToken, userId: s.user?.id }
   })
 }
+
+/** Đăng nhập qua giao diện bằng một tài khoản có sẵn (vd. tài khoản dev của seeds/seed_dev_accounts.py). */
+export async function loginAs(page, identifier, password = PASSWORD) {
+  await page.goto('/login')
+  await page.getByRole('textbox', { name: 'Email hoặc tên người dùng' }).fill(identifier)
+  await page.locator('input[type=password]').fill(password)
+  await page.locator('input[type=password]').press('Enter')
+  await page.waitForURL((url) => !url.pathname.startsWith('/login'))
+}

@@ -3,17 +3,17 @@
  *
  * Trang tổng quan ôn tập theo lặp lại ngắt quãng: số từ đến hạn và nút bắt đầu ôn, 4 thẻ thống kê theo
  * trạng thái, biểu đồ lịch ôn 7 ngày tới, phần "Ôn gấp" (từ vừa quên ở Cửa Ải) và danh sách từ có tìm
- * kiếm, lọc theo cấp/trạng thái. Mọi con số và ngày ôn tiếp do server tính (GET /review/due qua services/academyApi.js;
- * VITE_USE_MOCK=true dùng reviewMock.js).
+ * kiếm, lọc theo cấp/trạng thái. Mọi con số và ngày ôn tiếp do server tính (GET /review/due qua services/academyApi.js).
+ * Đang tải: khối chờ; lỗi: thông báo + Thử lại; chưa có từ nào: linh vật + gợi ý vào Học Viện.
  * Mobile: thẻ thống kê lưới 2x2, danh sách dạng card gọn, nút chính dính ở đáy màn hình (trên thanh tab).
  */
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowsClockwise, BookOpenText, CalendarBlank, CheckCircle, Lightning, MagnifyingGlass, Plant, Siren, XCircle } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
-import Icon, { IconBadge } from '../../components/ui/Icon'
+import { IconBadge } from '../../components/ui/Icon'
 import Input from '../../components/ui/Input'
 import LevelTag from '../../components/ui/LevelTag'
 import Select from '../../components/ui/Select'
@@ -21,11 +21,12 @@ import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
 import cx from '../../utils/cx'
 import { formatDueIn, formatNumber } from '../../utils/format'
-import { USE_MOCK, getReviewDue } from '../../services/academyApi'
-import { REVIEW_SUMMARY as MOCK_SUMMARY, URGENT as MOCK_URGENT, WORDS as MOCK_WORDS } from './reviewMock'
+import { getReviewDue } from '../../services/academyApi'
+import useServerData from '../../hooks/useServerData'
+import { EmptyState, ErrorState, Skeleton } from '../../components/ui/DataState'
 
-/** Dữ liệu trang (thật hoặc mock) cùng một dạng: {summary, urgent, words}. */
-const ReviewData = createContext({ summary: MOCK_SUMMARY, urgent: MOCK_URGENT, words: MOCK_WORDS })
+/** Dữ liệu trang từ server: {summary, urgent, words}. */
+const ReviewData = createContext(null)
 
 const DAY_MS = 86400000
 
@@ -41,7 +42,6 @@ function fromServer(due) {
   return {
     summary: {
       due: due.due_count,
-      estimatedMinutes: Math.max(1, Math.ceil(due.due_count / 4)),
       counts: due.status_counts,
       forecast: [due.due_count, ...due.schedule.slice(0, 6).map((d) => d.count)],
     },
@@ -70,17 +70,17 @@ function dayLabel(offset) {
 }
 
 function StartButton({ className }) {
-  const { summary, urgent, words } = useContext(ReviewData)
+  const { summary } = useContext(ReviewData)
   const navigate = useNavigate()
   return (
-    <Button size="lg" icon={Lightning} className={className} onClick={() => navigate('/academy/review/session')}>
-      Bắt đầu ôn (≈ {summary.estimatedMinutes} phút)
+    <Button size="lg" icon={Lightning} className={className} disabled={summary.due === 0} onClick={() => navigate('/academy/review/session')}>
+      {summary.due > 0 ? 'Bắt đầu ôn' : 'Chưa có từ đến hạn'}
     </Button>
   )
 }
 
 function Hero() {
-  const { summary, urgent, words } = useContext(ReviewData)
+  const { summary } = useContext(ReviewData)
   return (
     <section className="relative flex flex-col gap-5 overflow-hidden rounded-panel border-thick border-line bg-sky p-6 shadow-hard-lg md:flex-row md:items-center md:justify-between md:p-10">
       <div className="flex flex-col gap-3">
@@ -105,7 +105,7 @@ function Hero() {
 }
 
 function StatCards() {
-  const { summary, urgent, words } = useContext(ReviewData)
+  const { summary } = useContext(ReviewData)
   return (
     <section aria-label="Số từ theo trạng thái" className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
       {Object.entries(STATUSES).map(([key, s]) => (
@@ -126,8 +126,8 @@ function StatCards() {
 }
 
 function ForecastChart() {
-  const { summary, urgent, words } = useContext(ReviewData)
-  const max = Math.max(...summary.forecast)
+  const { summary } = useContext(ReviewData)
+  const max = Math.max(1, ...summary.forecast)
   return (
     <section className="flex flex-col gap-4 rounded-panel border-thick border-line bg-surface p-5 shadow-hard md:p-6">
       <div className="flex items-center gap-3">
@@ -155,8 +155,9 @@ function ForecastChart() {
 }
 
 function UrgentBox() {
-  const { summary, urgent, words } = useContext(ReviewData)
+  const { urgent } = useContext(ReviewData)
   const navigate = useNavigate()
+  if (urgent.length === 0) return null
   return (
     <section className="flex flex-col gap-4 rounded-panel border-thick border-danger bg-[color-mix(in_srgb,var(--color-danger)_10%,var(--color-surface))] p-5 shadow-hard md:p-6">
       <div className="flex items-center gap-3">
@@ -204,7 +205,7 @@ function DueLabel({ days }) {
 }
 
 function WordList() {
-  const { summary, urgent, words } = useContext(ReviewData)
+  const { words } = useContext(ReviewData)
   const [query, setQuery] = useState('')
   const [level, setLevel] = useState('all')
   const [status, setStatus] = useState('all')
@@ -217,7 +218,7 @@ function WordList() {
         (status === 'all' || w.status === status) &&
         (!q || w.word.toLowerCase().includes(q) || w.meaning.toLowerCase().includes(q)),
     )
-  }, [query, level, status])
+  }, [words, query, level, status])
 
   const chips = [['all', { label: 'Tất cả' }], ...Object.entries(STATUSES)]
 
@@ -306,11 +307,35 @@ function WordList() {
 }
 
 export default function Review() {
-  const [data, setData] = useState(USE_MOCK ? { summary: MOCK_SUMMARY, urgent: MOCK_URGENT, words: MOCK_WORDS } : null)
-  useEffect(() => {
-    if (!USE_MOCK) getReviewDue().then((due) => setData(fromServer(due)))
-  }, [])
-  if (!data) return <div className="min-h-[60vh]" aria-busy="true" />
+  const navigate = useNavigate()
+  const state = useServerData(() => getReviewDue().then(fromServer), [])
+  if (state.status === 'loading') {
+    return (
+      <div className="flex flex-col gap-6" role="status" aria-label="Đang tải">
+        <Skeleton className="h-56 w-full" rounded="rounded-panel" />
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {[0, 1, 2, 3].map((k) => (
+            <Skeleton key={k} className="h-28" rounded="rounded-card" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  if (state.status === 'error') return <ErrorState title="Chưa tải được danh sách ôn tập" onRetry={state.reload} />
+  const data = state.data
+  if (data.words.length === 0 && data.summary.due === 0) {
+    return (
+      <EmptyState
+        title="Chưa có từ nào để ôn"
+        message="Học bài đầu tiên trong Học Viện, từ đã học sẽ hiện ở đây đúng lúc cần ôn."
+        action={
+          <Button icon={BookOpenText} onClick={() => navigate('/academy')}>
+            Vào Học Viện
+          </Button>
+        }
+      />
+    )
+  }
   return (
     <ReviewData.Provider value={data}>
     <div className="flex flex-col gap-6 pb-20 md:gap-8 md:pb-0">

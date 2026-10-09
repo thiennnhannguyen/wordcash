@@ -5,7 +5,9 @@ Luật đã chốt ở `docs/game-rules.md`; hằng số trong `backend/app/core
 `SPIN_RATE_LIMIT_PER_MINUTE`, `IDEMPOTENCY_TTL_HOURS`).
 
 **Mọi kết quả quay do server quyết định** bằng `secrets.SystemRandom()`. Client chỉ gửi loại lượt và số lượt, rồi diễn hoạt
-cảnh theo kết quả nhận được. Linh vật chỉ để trang trí, không có chỉ số sức mạnh. Không có cách nào mua lượt quay hay mảnh.
+cảnh theo kết quả nhận được. Ngoại lệ duy nhất: khi `ENV=e2e` và có `GACHA_SEED`, `gacha.spin_rng` dùng `random.Random`
+tất định theo (hạt giống, loại lượt, tổng lượt đã quay, pity) để kịch bản e2e ổn định; mọi ENV khác bỏ qua biến này (có test).
+Linh vật chỉ để trang trí, không có chỉ số sức mạnh. Không có cách nào mua lượt quay hay mảnh.
 
 ## Dữ liệu
 

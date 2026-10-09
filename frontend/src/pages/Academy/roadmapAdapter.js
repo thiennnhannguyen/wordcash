@@ -1,25 +1,33 @@
 /*
- * Chuyển GET /academy/roadmap (server) sang đúng cấu trúc bản đồ mà RoadmapMap và map/layout.js đang vẽ
- * (cùng dạng getLevelMap trong roadmapMock.js), để giữ nguyên tranh bản đồ, sương mù, con dấu, Hộ chiếu.
+ * Chuyển GET /academy/roadmap (server) sang đúng cấu trúc bản đồ mà RoadmapMap và map/layout.js vẽ, để giữ nguyên tranh bản
+ * đồ, sương mù, con dấu, Hộ chiếu. Mọi số liệu (trạng thái, điểm, số từ, ngày đóng dấu, Hộ chiếu) lấy từ server.
  *
  * - Bài: completed → done, unlocked → current, locked → locked. Bài tổng hợp chặng: passed → done, available → current.
  * - Địa danh: chặng đã đóng dấu → visited (ngày đóng dấu), chặng đang học → target, còn lại → unexplored.
  * - Boss: won → done, available/cooldown → current, locked → locked.
  * - Hộ chiếu: theo số liệu server (địa danh = chặng + Boss; chỉ đếm cấp đang có).
  * - Cấp chưa có trong DB (B1–C2) hiện ở thanh tab là "đang khóa / sắp ra mắt".
- * Icon, chữ trên con dấu, quái vật canh giữ, câu "Bạn có biết?" là phần trang trí của frontend (roadmapMock.js).
+ * - Thanh tiến độ cấp: số từ trong các bài đã qua / tổng số từ của cấp (không phải số từ "đã thuộc").
+ * Icon, chữ trên con dấu, quái vật canh giữ, câu "Bạn có biết?" là phần trang trí của frontend (map/decor.js); vùng đất
+ * theo `region_theme` (utils/regions.js).
  */
 
 import { House } from '@phosphor-icons/react'
-import { LEVELS, REGIONS } from '../../data/roadmap'
-import { BOSSES, DEFAULT_BOSS, LANDMARK_FACTS, STAGE_ART, STAMP_STYLE } from './roadmapMock'
+import { LEVEL_CODES, REGION_BY_LEVEL, regionOf } from '../../utils/regions'
+import { BOSSES, DEFAULT_BOSS, LANDMARK_FACTS, STAGE_ART, STAMP_STYLE } from './map/decor'
 
 const LEVEL_STATUS = { completed: 'done', unlocked: 'current', locked: 'locked' }
 
-/** Thanh tab cấp: 6 cấp, trạng thái lấy từ server (cấp chưa có dữ liệu thì khóa). */
+const wordsOf = (level) => level.topics.flatMap((t) => t.units).reduce((n, u) => n + u.word_count, 0)
+
+/** Thanh tab cấp: 6 cấp; cấp có trong DB lấy tên, vùng, trạng thái, số từ từ server; cấp chưa có thì khóa, "sắp ra mắt". */
 export function buildLevelTabs(roadmap) {
   const byCode = Object.fromEntries((roadmap?.levels ?? []).map((l) => [l.code, l]))
-  return LEVELS.map((l) => ({ ...l, status: byCode[l.code] ? LEVEL_STATUS[byCode[l.code].status] : 'locked', id: byCode[l.code]?.id, comingSoon: !byCode[l.code] }))
+  return LEVEL_CODES.map((code) => {
+    const l = byCode[code]
+    if (!l) return { code, name: null, region_theme: REGION_BY_LEVEL[code], status: 'locked', id: undefined, words: null, comingSoon: true }
+    return { code, name: l.name, region_theme: l.region_theme ?? REGION_BY_LEVEL[code], status: LEVEL_STATUS[l.status], id: l.id, words: wordsOf(l), comingSoon: false }
+  })
 }
 
 function stampText(name) {
@@ -31,8 +39,8 @@ export function buildLevelMap(roadmap, code) {
   const tab = tabs.find((l) => l.code === code) ?? tabs[0]
   const index = tabs.indexOf(tab)
   const next = tabs[index + 1] ?? null
-  const region = REGIONS[tab.region_theme]
-  const nextLevel = next ? { code: next.code, region: REGIONS[next.region_theme], status: next.status } : null
+  const region = regionOf(tab.code, tab.region_theme)
+  const nextLevel = next ? { code: next.code, region: regionOf(next.code, next.region_theme), status: next.status } : null
   const data = roadmap?.levels.find((l) => l.code === tab.code)
   if (!data || data.status === 'locked') return { level: tab, region, nextLevel, locked: true, comingSoon: !data }
 
@@ -72,7 +80,7 @@ export function buildLevelMap(roadmap, code) {
   const target = stages.find((s) => s.visit.status === 'target')
 
   return {
-    level: { ...tab, words: allUnits.reduce((n, u) => n + u.word_count, 0) },
+    level: tab,
     levelId: data.id,
     region,
     nextLevel,

@@ -1,35 +1,41 @@
 /*
- * Hồ sơ: rank, số từ thuộc, thống kê học và đấu.
+ * Hồ sơ: rank, số từ thuộc, thống kê học.
  *
- * Hai chế độ: "Hồ sơ của tôi" (`/profile`: chỉnh sửa, chia sẻ, tải thẻ chứng nhận, cài đặt, thống kê riêng như độ ghi nhớ
- * và từ khó nhất, trạng thái rank lung lay) và "Hồ sơ người khác" (`/profile/:handle`: THÁCH ĐẤU, Kết bạn, thành tích đối đầu).
- * Bố cục: phần đầu (ảnh bìa theo rank, linh vật đại diện, tên, rank), thang rank, kệ trưng bày linh vật,
- * thống kê học tập, Đấu Trường và tủ huy hiệu. Mobile: thống kê chia 3 tab trượt, lịch nhiệt còn 8 tuần.
- * Dữ liệu do server trả (hiện lấy từ profileMock.js).
+ * Hai chế độ:
+ * - "Hồ sơ của tôi" (`/profile`, GET /me/profile): chỉnh sửa (tên hiển thị, hiện trên bảng xếp hạng), chia sẻ, tải thẻ chứng
+ *   nhận, rank lung lay (đếm ngược từ số giây server trả), tiến độ từng cấp, lịch hoạt động 12 tuần, tỉ lệ đúng Cửa Ải 30 ngày,
+ *   5 từ hay quên nhất, số khóa học, từ tự tạo đã thuộc. Tủ trưng bày đổi được (PATCH /users/me, server kiểm tra sở hữu).
+ * - "Hồ sơ người khác" (`/profile/:handle`, GET /users/{username}/profile): CHỈ phần công khai (tên, username, avatar, rank,
+ *   số từ đã thuộc, streak, cấp hiện tại, số linh vật, tủ trưng bày). Thách đấu và Kết bạn: "Sắp ra mắt".
+ * Thống kê Đấu Trường và tủ huy hiệu: "Sắp ra mắt" (chưa có backend). Mobile: thống kê chia tab trượt, lịch nhiệt 8 tuần.
+ * Mọi khối có trạng thái tải / lỗi / trống; không có số liệu nào không lấy từ server.
  *
- * Dev: `/profile?variant=shaky` (rank lung lay), `/profile/minhthu` (hồ sơ người khác), `?tab=learn|arena|badges` (tab mobile),
- * `?cert=1` (mở thẻ chứng nhận), `?edit=1` (mở chỉnh sửa).
+ * Dev: `?tab=learn|arena|badges` (tab mobile), `?cert=1` (mở thẻ chứng nhận), `?edit=1` (mở chỉnh sửa). Biến thể: đăng nhập
+ * bằng tài khoản dev_normal / dev_shaky / dev_new (backend/seeds/seed_dev_accounts.py).
  */
 
 import { useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FloppyDisk } from '@phosphor-icons/react'
+import { FloppyDisk, MagnifyingGlass, Medal, Sword } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Modal from '../../components/ui/Modal'
+import Switch from '../../components/ui/Switch'
+import { EmptyState, ErrorState, Skeleton } from '../../components/ui/DataState'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import useServerData from '../../hooks/useServerData'
+import { getMyProfile, getPublicProfile, updateMe } from '../../services/profileApi'
+import { useAuthStore } from '../../store/authStore'
+import { useMascot } from '../../store/mascotStore'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
-import { MASCOT_BY_ID } from '../../data/mascots'
-import Achievements from './Achievements'
-import ArenaStats from './ArenaStats'
+import { messageFor } from '../../utils/errorMessages'
 import CertificateModal from './Certificate'
-import { HardestWords, Heatmap, LevelProgress, Retention } from './LearningStats'
+import { CoursesStat, HardestWords, Heatmap, LevelProgress, Retention, SoonCard } from './LearningStats'
 import ProfileHeader from './ProfileHeader'
 import RankLadder from './RankLadder'
 import Showcase from './Showcase'
-import { fetchCertificate, fetchProfile, sendFriendRequest, updateProfile, updateShowcase } from './profileMock'
 
 const TABS = [
   { key: 'learn', label: 'Học tập' },
@@ -37,17 +43,55 @@ const TABS = [
   { key: 'badges', label: 'Huy hiệu' },
 ]
 
+/** JSON hồ sơ của server → dạng các khối dùng. Hàm thuần (test ở tests/profile.test.jsx). */
+export function toProfile(p, isMe) {
+  const base = {
+    isMe,
+    name: p.display_name,
+    handle: p.username,
+    avatarId: p.avatar_mascot_id,
+    rank: p.rank,
+    masteredWords: p.mastered_count,
+    streak: p.streak_current,
+    bestStreak: p.streak_best,
+    level: p.current_level,
+    mascotsOwned: p.mascots_owned,
+    showcase: p.showcase,
+  }
+  if (!isMe) return base
+  return {
+    ...base,
+    joined: p.created_at,
+    rankProgress: p.rank_progress,
+    shaky: p.rank_shaky ? { wordsNeeded: p.words_to_recover, secondsLeft: p.shaky_seconds_left, threshold: p.rank_progress.current_min } : null,
+    levels: p.levels,
+    activity: p.activity.map((d) => ({ date: d.date, words: d.new_words + d.reviews })),
+    accuracy: p.daily_check_accuracy,
+    hardest: p.most_forgotten.map((w) => ({ id: w.entry_id, word: w.headword, meaning: w.meaning_vi, forgot: w.lapse_count })),
+    courses: p.courses_count,
+    customMastered: p.custom_mastered_count,
+    showOnLeaderboard: p.show_on_leaderboard,
+    rankFirstReachedAt: p.rank_first_reached_at,
+  }
+}
+
 function EditModal({ open, onClose, profile, onSaved }) {
   const [name, setName] = useState(profile.name)
-  const [handle, setHandle] = useState(profile.handle)
+  const [visible, setVisible] = useState(profile.showOnLeaderboard)
   const [busy, setBusy] = useState(false)
-  const handleOk = /^[a-z0-9._]{3,24}$/.test(handle)
+  const [error, setError] = useState(null)
 
   const save = async () => {
     setBusy(true)
-    const next = await updateProfile({ name: name.trim(), handle })
-    setBusy(false)
-    onSaved(next)
+    setError(null)
+    try {
+      const user = await updateMe({ display_name: name.trim(), show_on_leaderboard: visible })
+      onSaved(user)
+    } catch (e) {
+      setError(messageFor(e))
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -60,22 +104,28 @@ function EditModal({ open, onClose, profile, onSaved }) {
           <Button variant="secondary" onClick={onClose}>
             Hủy
           </Button>
-          <Button icon={FloppyDisk} onClick={save} disabled={busy || !name.trim() || !handleOk}>
+          <Button icon={FloppyDisk} onClick={save} disabled={busy || !name.trim()}>
             Lưu
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4">
-        <Input label="Tên hiển thị" value={name} maxLength={24} onChange={(e) => setName(e.target.value)} />
-        <Input
-          label="Tên người dùng"
-          value={handle}
-          onChange={(e) => setHandle(e.target.value.toLowerCase())}
-          hint={handleOk ? 'Bạn bè tìm bạn bằng tên này.' : 'Từ 3–24 ký tự: chữ thường, số, dấu chấm hoặc gạch dưới.'}
-          status={handleOk ? undefined : 'error'}
-        />
-        <p className="text-caption text-muted">Linh vật đại diện đổi trong Bộ Sưu Tập (nút “Đặt làm avatar”).</p>
+        <Input label="Tên hiển thị" value={name} maxLength={30} onChange={(e) => setName(e.target.value)} />
+        <p className="text-caption text-muted">
+          Tên người dùng <b>@{profile.handle}</b> chưa đổi được. Linh vật đại diện đổi trong Bộ Sưu Tập (nút “Đặt làm avatar”).
+        </p>
+        <div className="flex flex-col gap-1">
+          <Switch checked={visible} onChange={setVisible}>
+            <span className="font-semibold">Hiện trên bảng xếp hạng</span>
+          </Switch>
+          <p className="text-caption text-muted">Tắt thì người khác không thấy bạn trên bảng xếp hạng; bạn vẫn xem được hạng của mình.</p>
+        </div>
+        {error && (
+          <p role="alert" className="text-caption font-semibold text-danger-deep">
+            {error}
+          </p>
+        )}
       </div>
     </Modal>
   )
@@ -141,32 +191,23 @@ function MobileTabs({ tab, setTab, panes }) {
   )
 }
 
-export default function Profile() {
-  const navigate = useNavigate()
-  const { handle } = useParams()
-  const [params] = useSearchParams()
+function ProfileSkeleton() {
+  return (
+    <div className="flex flex-col gap-5 md:gap-8" role="status" aria-label="Đang tải hồ sơ">
+      <Skeleton className="h-[360px] w-full md:h-[400px]" rounded="rounded-panel" />
+      <Skeleton className="h-48 w-full" rounded="rounded-panel" />
+      <Skeleton className="h-64 w-full" rounded="rounded-panel" />
+    </div>
+  )
+}
+
+function ProfileBody({ profile, setProfile, params }) {
   const desktop = useMediaQuery('(min-width: 768px)')
   const pushToast = useToastStore((s) => s.push)
-
-  const [profile, setProfile] = useState(() => fetchProfile(handle, params.get('variant') ?? 'default'))
-  const [showcase, setShowcase] = useState(profile.showcase)
-  const [friendState, setFriendState] = useState(profile.friendship ?? 'none')
+  const mascot = useMascot(profile.avatarId)
   const [tab, setTab] = useState(params.get('tab') ?? 'learn')
   const [editOpen, setEditOpen] = useState(params.get('edit') === '1')
   const [certOpen, setCertOpen] = useState(params.get('cert') === '1')
-  const [cert] = useState(fetchCertificate)
-
-  // Đổi URL giữa hồ sơ mình và người khác thì nạp lại
-  const [loadedFor, setLoadedFor] = useState(handle)
-  if (loadedFor !== handle) {
-    const next = fetchProfile(handle, params.get('variant') ?? 'default')
-    setLoadedFor(handle)
-    setProfile(next)
-    setShowcase(next.showcase)
-    setFriendState(next.friendship ?? 'none')
-  }
-
-  const mascot = MASCOT_BY_ID[profile.avatar.id]
 
   const share = async () => {
     const url = `${window.location.origin}/profile/${profile.handle}`
@@ -183,75 +224,52 @@ export default function Profile() {
   }
 
   const learning = profile.isMe
-    ? {
-        a: <LevelProgress levels={profile.levels} />,
-        b: <Retention retention={profile.retention} />,
-        c: <Heatmap activity={profile.activity} weeks={desktop ? 12 : 8} />,
-        d: <HardestWords words={profile.hardest} />,
-      }
-    : { a: <LevelProgress levels={profile.levels} />, c: <Heatmap activity={profile.activity} weeks={desktop ? 12 : 8} /> }
+    ? [
+        <LevelProgress key="levels" levels={profile.levels} />,
+        <Retention key="retention" accuracy={profile.accuracy} />,
+        <Heatmap key="heat" activity={profile.activity} weeks={desktop ? 12 : 8} />,
+        <HardestWords key="hard" words={profile.hardest} />,
+        <CoursesStat key="courses" courses={profile.courses} customMastered={profile.customMastered} />,
+      ]
+    : null
 
   const panes = {
-    learn: (
-      <>
-        {learning.a}
-        {learning.c}
-        {learning.b}
-        {learning.d}
-      </>
-    ),
-    arena: <ArenaStats arena={profile.arena} />,
-    badges: <Achievements achievements={profile.achievements} />,
+    learn: learning,
+    arena: <SoonCard title="Thống kê Đấu Trường" icon={Sword} iconBg="orange" text="Số trận, tỉ lệ thắng, chuỗi thắng sẽ có khi Đấu Trường mở." />,
+    badges: <SoonCard title="Tủ huy hiệu" icon={Medal} iconBg="gold" text="Huy hiệu thành tích đang được chuẩn bị." />,
+  }
+
+  const cert = profile.isMe && {
+    fullName: profile.name,
+    handle: profile.handle,
+    rank: profile.rank,
+    words: profile.masteredWords,
+    achievedAt: profile.rankFirstReachedAt,
+    streak: profile.streak,
+    level: profile.level,
+    mascots: profile.mascotsOwned,
+    mascot,
   }
 
   return (
     <div className="flex flex-col gap-5 pb-20 md:gap-8 md:pb-0">
-      <ProfileHeader
-        profile={profile}
-        mascot={mascot}
-        friendState={friendState}
-        onEdit={() => setEditOpen(true)}
-        onShare={share}
-        onCertificate={() => setCertOpen(true)}
-        onSettings={() => pushToast({ variant: 'info', title: 'Cài đặt sắp ra mắt', message: 'Âm thanh, thông báo và quyền riêng tư sẽ có ở đây.' })}
-        onChallenge={() => {
-          pushToast({ variant: 'info', title: `Đã gửi lời thách đấu tới ${profile.name}`, message: 'Chờ bạn ấy vào phòng nhé.' })
-          navigate('/arena/room/WX7K2?state=waiting')
-        }}
-        onFriend={async () => {
-          setFriendState(await sendFriendRequest(profile.handle))
-          pushToast({ variant: 'success', title: 'Đã gửi lời mời kết bạn', message: `Chờ ${profile.name} đồng ý nhé.` })
-        }}
-      />
+      <ProfileHeader profile={profile} mascot={mascot} onEdit={() => setEditOpen(true)} onShare={share} onCertificate={() => setCertOpen(true)} />
 
-      <RankLadder rank={profile.rank} masteredWords={profile.masteredWords} shaky={profile.shaky} />
+      <RankLadder rank={profile.rank} masteredWords={profile.masteredWords} shaky={profile.isMe ? profile.shaky : null} />
 
       <Showcase
-        ids={showcase}
-        mascots={MASCOT_BY_ID}
-        collection={profile.collection}
-        isMe={profile.isMe}
-        onChange={async (ids) => {
-          setShowcase(ids)
-          await updateShowcase(ids)
-        }}
+        profile={profile}
+        onSaved={(user) => setProfile((p) => ({ ...p, showcaseIds: user.showcase_mascot_ids }))}
+        onChange={(showcase) => setProfile((p) => ({ ...p, showcase }))}
       />
 
       {desktop ? (
         <>
-          <h2 className="hud-label -mb-3 mt-2">Học tập</h2>
-          {profile.isMe ? (
-            <div className="grid gap-6 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-              {learning.a}
-              {learning.b}
-              {learning.c}
-              {learning.d}
-            </div>
-          ) : (
-            <div className="grid gap-6 xl:grid-cols-2">
-              {learning.a}
-              {learning.c}
-            </div>
+          {learning && (
+            <>
+              <h2 className="hud-label -mb-3 mt-2">Học tập</h2>
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">{learning}</div>
+            </>
           )}
           <h2 className="hud-label -mb-3 mt-2">Đấu trường</h2>
           {panes.arena}
@@ -259,7 +277,7 @@ export default function Profile() {
           {panes.badges}
         </>
       ) : (
-        <MobileTabs tab={tab} setTab={setTab} panes={panes} />
+        <MobileTabs tab={tab} setTab={setTab} panes={learning ? panes : { ...panes, learn: <SoonCard title="Thống kê học tập" icon={Medal} iconBg="sky" text="Chỉ chủ hồ sơ xem được thống kê học tập chi tiết." /> }} />
       )}
 
       {profile.isMe && (
@@ -268,8 +286,9 @@ export default function Profile() {
             open={editOpen}
             onClose={() => setEditOpen(false)}
             profile={profile}
-            onSaved={(next) => {
-              setProfile({ ...next })
+            onSaved={(user) => {
+              useAuthStore.getState().refreshUser()
+              setProfile((p) => ({ ...p, name: user.display_name, showOnLeaderboard: user.show_on_leaderboard }))
               setEditOpen(false)
               pushToast({ variant: 'success', title: 'Đã lưu hồ sơ' })
             }}
@@ -279,4 +298,39 @@ export default function Profile() {
       )}
     </div>
   )
+}
+
+export default function Profile() {
+  const navigate = useNavigate()
+  const { handle } = useParams()
+  const [params] = useSearchParams()
+  const me = useAuthStore((s) => s.user)
+  const isMe = !handle
+  const state = useServerData(() => (isMe ? getMyProfile() : getPublicProfile(handle)), [handle])
+  const [override, setOverride] = useState(null)
+
+  // /profile/<username của chính mình> → hồ sơ của tôi
+  if (handle && me && handle.toLowerCase() === me.username) return <Navigate to="/profile" replace />
+  if (state.status === 'loading') return <ProfileSkeleton />
+  if (state.status === 'error') {
+    if (state.error?.code === 'USER_NOT_FOUND') {
+      return (
+        <EmptyState
+          title="Không tìm thấy người chơi"
+          message={`Không có hồ sơ nào với tên @${handle}.`}
+          action={
+            <Button icon={MagnifyingGlass} variant="secondary" onClick={() => navigate('/leaderboard')}>
+              Xem bảng xếp hạng
+            </Button>
+          }
+        />
+      )
+    }
+    return <ErrorState title="Chưa tải được hồ sơ" onRetry={state.reload} />
+  }
+
+  const base = toProfile(state.data, isMe)
+  const profile = override?.for === state.data ? override.profile : base
+  const setProfile = (update) => setOverride({ for: state.data, profile: typeof update === 'function' ? update(profile) : update })
+  return <ProfileBody key={handle ?? '@me'} profile={profile} setProfile={setProfile} params={params} />
 }

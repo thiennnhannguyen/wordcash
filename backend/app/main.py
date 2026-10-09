@@ -15,12 +15,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import api_router
 from app.core.config import settings
-from app.core.database import engine, ping_database
+from app.core.database import SessionLocal, engine, ping_database
 from app.core.debug_time import DebugNowMiddleware
 from app.core.errors import register_exception_handlers
 from app.core.redis import close_redis, connect_redis
 from app.game import events  # noqa: F401 - đăng ký sự kiện Socket.IO
 from app.game.sio_server import sio
+from app.services.startup_checks import check_no_dev_accounts
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,8 @@ def configure_dev_logging() -> None:
 async def lifespan(_: FastAPI):
     if not await ping_database():
         logger.warning("Không kết nối được cơ sở dữ liệu (%s).", engine.url.render_as_string(hide_password=True))
+    else:
+        await check_no_dev_accounts(SessionLocal)  # chỉ production: log ERROR nếu còn tài khoản mẫu dev_
     await connect_redis()
     yield
     await close_redis()

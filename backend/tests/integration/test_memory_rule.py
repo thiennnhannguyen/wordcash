@@ -3,6 +3,7 @@ Luật ghi nhớ thống nhất: chỉ Cửa Ải Hôm Nay được làm mất "
 - Ôn ở nơi khác (khóa học, Học Viện, Đấu Trường) trả lời sai: lịch SRS đặt lại (khoảng ngắn nhất, ease giảm, lapse +1),
   trạng thái vẫn `mastered`, mastered_count không đổi.
 - Cửa Ải trả lời sai: `forgotten`, mastered_count trừ DAILY_FORGET_PENALTY.
+- `first_mastered_at` ghi lần đầu thuộc và không đổi khi quên rồi thuộc lại; `mastered_at` là lần thuộc gần nhất.
 """
 
 from datetime import UTC, date, datetime, timedelta
@@ -77,3 +78,25 @@ async def test_custom_word_forget_only_touches_custom_counter(db_session):
     await progress_service.forget_entry(db_session, user, entry, NOW)
     await db_session.refresh(user)
     assert (user.mastered_count, user.custom_mastered_count) == (0, 0)
+
+
+async def _answer_strong_on_days(db, user, entry, start, days):
+    for d in range(days):
+        await progress_service.record_answer(db, user, entry, 3, True, start + timedelta(days=d), source="academy")
+
+
+async def test_first_mastered_at_kept_after_forget_and_remaster(db_session):
+    user = await make_user(db_session)
+    entry = await make_entry(db_session, "harbor", "bến cảng")
+    await _answer_strong_on_days(db_session, user, entry, NOW, 3)
+    progress = await db_session.get(UserEntryProgress, (user.id, entry.id))
+    first = NOW + timedelta(days=2)
+    assert progress.status == EntryState.MASTERED
+    assert progress.first_mastered_at == first and progress.mastered_at == first
+
+    await progress_service.forget_entry(db_session, user, entry, NOW + timedelta(days=5))
+    again = NOW + timedelta(days=6)
+    await _answer_strong_on_days(db_session, user, entry, again, 3)
+    assert progress.status == EntryState.MASTERED
+    assert progress.mastered_at == again + timedelta(days=2)
+    assert progress.first_mastered_at == first

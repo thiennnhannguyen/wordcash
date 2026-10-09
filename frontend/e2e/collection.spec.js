@@ -116,6 +116,7 @@ test('6. pity 20: lượt kế ra Sử Thi', async ({ page, context }) => {
   const spun = page.waitForResponse((r) => r.url().includes('/collection/spins') && r.request().method() === 'POST')
   await page.getByRole('button', { name: 'Mở thẻ' }).click()
   const result = (await (await spun).json()).results[0]
+  // Backend e2e chạy với GACHA_SEED cố định: lượt gốc của người mới ở pity 20 chưa tới Sử Thi, nên pity luôn kích hoạt
   expect(result.rarity).toBe('epic')
   expect(result.pity_triggered).toBe(true)
   await expect(page.getByText('Sử Thi', { exact: true }).first()).toBeVisible()

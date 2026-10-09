@@ -3,15 +3,15 @@
  *
  * Luồng: màn mở đầu → từng câu hỏi (phản hồi trượt từ đáy lên) → màn kết quả. Không có nút bỏ qua,
  * không có đồng hồ đếm ngược. Mọi đúng/sai, mức trừ từ thuộc và streak do server quyết định
- * (GET /daily-check/today, POST /daily-check/today/answers qua services/academyApi.js; VITE_USE_MOCK=true dùng dailyCheckMock).
+ * (GET /daily-check/today, POST /daily-check/today/answers qua services/academyApi.js).
  * Đã làm xong hoặc được miễn hôm nay thì chuyển thẳng về trang định vào (hoặc Sảnh). Làm dở thì tiếp từ câu chưa trả lời.
  *
- * Dev: `?streak=13` để thử mốc 7 ngày; `?preview=perfect|milestone|mistake` mở thẳng màn kết quả.
+ * Màn kết quả dựng sẵn (dữ liệu mẫu) chỉ có ở trang dev /dev/results.
  */
 
 import { useState } from 'react'
 import useStartOnce from '../../hooks/useStartOnce'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Fire, LockKeyOpen } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
@@ -20,7 +20,7 @@ import { Wordmark } from '../../components/layout/NavBar'
 import cx from '../../utils/cx'
 import { fetchDailyCheck, finishDailyCheck, submitDailyAnswer as submitAnswer } from '../../services/academyApi'
 import { useDailyCheckStore } from '../../store/dailyCheckStore'
-import { PREVIEW_RESULTS } from './dailyCheckMock'
+import { ErrorState } from '../../components/ui/DataState'
 import DailyCheckResult from './DailyCheckResult'
 import FeedbackSheet from '../../components/academy/FeedbackSheet'
 import GateIllustration from './GateIllustration'
@@ -82,13 +82,10 @@ function Intro({ data, onStart }) {
 }
 
 export default function DailyCheck() {
-  const [params] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from
   const backTo = from ? `${from.pathname}${from.search ?? ''}` : '/lobby'
-  const preview = params.get('preview')
-  const streakParam = Number(params.get('streak')) || undefined
 
   const [data, setData] = useState(null)
   const [phase, setPhase] = useState('intro') // intro | question | result
@@ -98,10 +95,11 @@ export default function DailyCheck() {
   const [results, setResults] = useState([])
   const [pending, setPending] = useState(false)
   const [finalResult, setFinalResult] = useState(null)
+  const [loadError, setLoadError] = useState(null)
 
-  useStartOnce(() => {
-    if (preview) return
-    fetchDailyCheck({ streak: streakParam }).then((d) => {
+  const load = () => {
+    setLoadError(null)
+    fetchDailyCheck().then((d) => {
       // Đã làm / được miễn hôm nay: không có gì để làm ở đây
       if (d.status && d.status !== 'pending') {
         useDailyCheckStore.getState().markDone()
@@ -113,10 +111,19 @@ export default function DailyCheck() {
         setIndex(Math.min(d.answered.length, d.questions.length - 1))
       }
       setData(d)
-    })
-  }, [streakParam, preview])
+    }).catch(setLoadError)
+  }
+  useStartOnce(load, [])
 
-  if (preview && PREVIEW_RESULTS[preview]) return <DailyCheckResult result={PREVIEW_RESULTS[preview]} />
+  if (loadError) {
+    return (
+      <div className="grid min-h-dvh place-items-center bg-gold px-4">
+        <div className="rounded-card border-thick border-line bg-surface px-6 shadow-hard">
+          <ErrorState title="Chưa tải được Cửa Ải hôm nay" onRetry={load} />
+        </div>
+      </div>
+    )
+  }
   if (!data) return <div className="min-h-dvh bg-gold" aria-busy="true" />
   if (phase === 'intro') return <Intro data={data} onStart={() => setPhase('question')} />
   if (phase === 'result' && finalResult) return <DailyCheckResult result={finalResult} continueTo={backTo} />

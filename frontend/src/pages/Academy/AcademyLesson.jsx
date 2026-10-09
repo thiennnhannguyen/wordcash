@@ -5,7 +5,7 @@
  * lên server chấm → màn hoàn thành (LessonDone) có nút "Làm kiểm tra cuối bài". Hết từ mới thì server trả phiên luyện lại cả bài.
  * Mục tiêu từ mới trong ngày chỉ để động viên: vừa vượt mục tiêu thì khen + gợi ý nghỉ (không chặn); chạm hạn mức cứng của
  * server thì báo "học đủ nhiều rồi" và mời ôn tập (utils/dailyGoal.js).
- * Giao diện dùng chung với Khóa học của tôi (components/academy/SessionSteps.jsx). Bản mock (VITE_USE_MOCK=true) là Lesson.jsx.
+ * Giao diện dùng chung với Khóa học của tôi (components/academy/SessionSteps.jsx).
  */
 
 import { useState } from 'react'

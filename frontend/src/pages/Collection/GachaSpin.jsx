@@ -12,9 +12,10 @@
  * Nút MỞ THẺ bị khóa ngay khi bấm (ref, không chờ React vẽ lại) để bấm hai lần chỉ tiêu một lượt; Idempotency-Key
  * giữ nguyên khi thử lại vì lỗi mạng. Có nút "Bỏ qua hiệu ứng"; khi người dùng bật giảm chuyển động thì đi thẳng tới kết quả.
  *
- * Dev: `?type=special`, `?auto=1|all` (tự mở), `?hold=charge|burst|hint|await|reveal|flipping|featured` (dừng ở một khung).
- * Chỉ bản mock: `?result=legendary` (ép độ hiếm; `common-dupe` = thẻ trùng), `?pity=18`, `?state=empty`. Với backend thật,
- * ép kết quả bằng POST /api/v1/dev/force-next (chỉ có ở dev/e2e).
+ * Pity (mốc + bộ đếm) lấy từ GET /collection; số lượt tối đa của "Mở tất cả" và bảng tỉ lệ từ GET /collection/rates
+ * (store/ratesStore.js). Chưa có luật thì chỉ mở từng thẻ.
+ * `?type=special`, `?auto=1|all` (tự mở), `?hold=charge|burst|hint|await|reveal|flipping|featured` (dừng ở một khung).
+ * Ép kết quả khi dev/e2e: POST /api/v1/dev/force-next (chỉ có ở dev/e2e).
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -32,11 +33,12 @@ import { useCollectionStore } from '../../store/collectionStore'
 import { useMascotCatalog } from '../../store/mascotStore'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
-import { GACHA, RARITIES, RARITY_ORDER } from '../../utils/constants'
+import { RARITIES, RARITY_ORDER } from '../../utils/constants'
 import { messageFor } from '../../utils/errorMessages'
 import { formatMascotNumber } from '../../utils/format'
-import { USE_MOCK, fetchCollection, fetchRates, openPack, updateMascots } from '../../services/collectionApi'
-import { devEmptySpins } from './collectionMock'
+import { fetchCollection, openPack, updateMascots } from '../../services/collectionApi'
+import { useGachaRates, useRatesStore } from '../../store/ratesStore'
+import { ErrorState } from '../../components/ui/DataState'
 import { OddsModal } from './CollectionHeader'
 import RevealCard from './spin/RevealCard'
 import { NextSpinLine, PityBar, Rays, SpinHud, TypeTabs } from './spin/SpinParts'
@@ -207,27 +209,25 @@ function EmptyState({ nextSpin, onAcademy }) {
 }
 
 export default function GachaSpin() {
-  const [params] = useSearchParams()
   const catalog = useMascotCatalog()
   const [initial, setInitial] = useState(null)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    const load = USE_MOCK && params.get('state') === 'empty' ? Promise.resolve({ ...devEmptySpins(), nextSpin: { current: 38, target: 50, left: 12 } }) : fetchCollection()
-    load
+  const load = () => {
+    setError(null)
+    fetchCollection()
       .then((c) => {
         useCollectionStore.getState().setFrom(c)
         setInitial(c)
       })
       .catch(setError)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
+  useEffect(load, [])
 
   if (error || catalog.error)
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-bg px-4 text-center">
-        <p className="font-heading text-xl font-extrabold">Chưa tải được lượt quay</p>
-        <Button onClick={() => window.location.reload()}>Thử lại</Button>
+      <div className="grid min-h-dvh place-items-center bg-bg px-4">
+        <ErrorState title="Chưa tải được lượt quay" onRetry={() => (catalog.error ? catalog.retry() : load())} />
       </div>
     )
   if (!initial || !catalog.ready) return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Đang tải" />
@@ -241,7 +241,6 @@ function SpinScreen({ initial, byId }) {
   const pushToast = useToastStore((s) => s.push)
   const setUser = useAuthStore((s) => s.setUser)
   const hold = params.get('hold')
-  const force = USE_MOCK ? (params.get('result')?.split(',') ?? []) : []
 
   const [data, setData] = useState(initial)
   const [type, setType] = useState(() => {
@@ -259,7 +258,7 @@ function SpinScreen({ initial, byId }) {
   const [oddsOpen, setOddsOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [shareImage, setShareImage] = useState(null)
-  const [rates, setRates] = useState(null)
+  const maxBatch = useGachaRates().rates?.maxBatch
   const busyRef = useRef(false) // khóa ngay khi bấm: hai cú bấm liên tiếp chỉ gửi một yêu cầu
 
   const shardRef = useRef(null)
@@ -268,9 +267,9 @@ function SpinScreen({ initial, byId }) {
   const latestRef = useRef(data)
   const autoRef = useRef(false)
 
-  const pity = USE_MOCK && params.get('pity') ? Number(params.get('pity')) : data.pity
+  const pity = data.pity
   const spinsLeft = totalSpins(data.spins)
-  const count = Math.min(data.spins[type], GACHA.maxBatch) // "Mở tất cả" tối đa 10 lượt mỗi lần
+  const count = maxBatch ? Math.min(data.spins[type], maxBatch) : Math.min(data.spins[type], 1) // "Mở tất cả" tối đa theo luật server
   const opening = phase !== 'ready' && phase !== 'result'
 
   const finish = useCallback(() => {
@@ -293,13 +292,14 @@ function SpinScreen({ initial, byId }) {
       setPhase('charge')
       try {
         // Đủ kết quả (đã ghi ở server) rồi mới diễn hiệu ứng
-        const [res] = await Promise.all([openPack(type, n, force), wait(reduceMotion ? 0 : T.charge)])
+        const [res] = await Promise.all([openPack(type, n), wait(reduceMotion ? 0 : T.charge)])
         latestRef.current = res.state
         useCollectionStore.getState().setFrom(res.state)
         if (res.replayed) pushToast({ variant: 'info', title: 'Kết quả lần mở trước', message: 'Mạng chập chờn nên đây là kết quả đã mở, không trừ thêm lượt.' })
         setResults(res.results)
         setFeatured(rarest(res.results))
         setData(res.state)
+        useRatesStore.getState().refresh() // pity mới
         if (skipRef.current) finish()
         else if (hold !== 'charge') setPhase('burst')
       } catch (err) {
@@ -387,9 +387,6 @@ function SpinScreen({ initial, byId }) {
   const featuredResult = results[featured]
   const featuredMascot = featuredResult ? byId[featuredResult.id] : null
 
-  useEffect(() => {
-    if (oddsOpen && !rates) fetchRates().then(setRates).catch(() => {})
-  }, [oddsOpen, rates])
 
   const choose = async (patch, toast) => {
     try {
@@ -455,7 +452,7 @@ function SpinScreen({ initial, byId }) {
               <CardPack variant={type} mode="idle" />
             </div>
             <div className="mt-6 flex w-full flex-col items-center gap-2">
-              <PityBar pity={pity} />
+              <PityBar pity={pity} pityEpic={data.pityEpic} />
               <button type="button" onClick={() => setOddsOpen(true)} className="min-h-11 font-display text-[13px] font-bold uppercase tracking-wide text-muted underline decoration-2 underline-offset-4">
                 Xem tỉ lệ công khai
               </button>
@@ -572,7 +569,7 @@ function SpinScreen({ initial, byId }) {
         )}
       </main>
 
-      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} pity={rates?.pity ?? pity} rates={rates} />
+      <OddsModal open={oddsOpen} onClose={() => setOddsOpen(false)} />
       <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} image={shareImage} />
     </div>
   )

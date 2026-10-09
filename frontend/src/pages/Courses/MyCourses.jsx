@@ -1,7 +1,7 @@
 /*
  * Trang /courses "KHÓA HỌC CỦA TÔI": chỉ số "Từ của tôi đã thuộc", bộ lọc Đang học / Đã lưu trữ, lưới card khóa học
  * (3 cột desktop, 1 cột mobile), card "+ TẠO KHÓA HỌC" viền nét đứt. Chưa có khóa nào: linh vật Bánh Mì Bé
- * và 3 gợi ý tạo nhanh. Dữ liệu qua services/coursesApi.js (API thật hoặc mock).
+ * và 3 gợi ý tạo nhanh. Dữ liệu qua services/coursesApi.js (API thật).
  * Dev: `?demo=empty` xem trạng thái chưa có khóa học.
  */
 
@@ -13,7 +13,8 @@ import Button from '../../components/ui/Button'
 import Icon, { IconBadge } from '../../components/ui/Icon'
 import Sticker from '../../components/ui/Sticker'
 import MascotBlob from '../../components/collection/MascotBlob'
-import { getMascot } from '../../data/mascots'
+import { useAuthStore } from '../../store/authStore'
+import { useMascot } from '../../store/mascotStore'
 import * as coursesApi from '../../services/coursesApi'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
@@ -21,7 +22,6 @@ import { COURSE_TEMPLATES, courseIcon } from '../../utils/courseIcons'
 import CourseCard from './CourseCard'
 import CourseFormModal from './CourseFormModal'
 
-const EMPTY_MASCOT = getMascot(4) // Bánh Mì Bé
 
 const toast = (variant, title, message) => useToastStore.getState().push({ variant, title, message })
 
@@ -68,11 +68,13 @@ function CreateCard({ onClick }) {
 }
 
 function EmptyState({ onCreate, onTemplate }) {
+  // Linh vật minh họa: avatar thật của người dùng (danh mục GET /mascots)
+  const mascot = useMascot(useAuthStore((st) => st.user?.avatar_mascot_id))
   return (
     <section className="flex flex-col items-center gap-6 rounded-panel border-thick border-dashed border-line bg-surface px-5 py-10 text-center md:py-14">
       <div className="relative">
         <div className="anim-breathe">
-          <MascotBlob color={EMPTY_MASCOT.color} shape={EMPTY_MASCOT.shape} traits={EMPTY_MASCOT.traits} size={128} blink />
+          <MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={128} blink />
         </div>
         <Sticker bg="gold" tilt={8} size="sm" className="absolute -right-16 -top-2">
           Bộ từ của bạn!
@@ -81,7 +83,7 @@ function EmptyState({ onCreate, onTemplate }) {
       <div className="flex max-w-lg flex-col gap-2">
         <h2 className="text-h2">Tạo bộ từ đầu tiên của bạn</h2>
         <p className="text-muted">
-          Gom từ trong phim, trong công việc hay bài đọc trên lớp thành một khóa học riêng. {EMPTY_MASCOT.name} sẽ nhắc bạn ôn đúng lúc.
+          Gom từ trong phim, trong công việc hay bài đọc trên lớp thành một khóa học riêng. {mascot.name ?? 'Linh vật của bạn'} sẽ nhắc bạn ôn đúng lúc.
         </p>
       </div>
       <div className="grid w-full max-w-2xl gap-3 sm:grid-cols-3">

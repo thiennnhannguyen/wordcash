@@ -14,6 +14,12 @@ import { create } from 'zustand'
 import { broadcastLogout, broadcastSession, refreshSession, request } from '../services/api'
 import { useDailyCheckStore } from './dailyCheckStore'
 
+// Số liệu riêng của người vừa đăng xuất (tỉ lệ quay kèm pity): xóa. Import khi cần để tránh vòng import với services/api.js.
+function resetUserStores() {
+  useDailyCheckStore.getState().reset()
+  import('./ratesStore').then(({ useRatesStore }) => useRatesStore.getState().reset())
+}
+
 let bootstrapping = null
 
 export const useAuthStore = create((set, get) => ({
@@ -61,7 +67,7 @@ export const useAuthStore = create((set, get) => ({
       await request({ method: 'post', url: '/auth/logout' })
     } finally {
       broadcastLogout()
-      useDailyCheckStore.getState().reset()
+      resetUserStores()
       set({ accessToken: null, user: null, status: 'anonymous', expired: false })
     }
   },
@@ -71,7 +77,7 @@ export const useAuthStore = create((set, get) => ({
       await request({ method: 'post', url: '/auth/logout-all' })
     } finally {
       broadcastLogout()
-      useDailyCheckStore.getState().reset()
+      resetUserStores()
       set({ accessToken: null, user: null, status: 'anonymous', expired: false })
     }
   },

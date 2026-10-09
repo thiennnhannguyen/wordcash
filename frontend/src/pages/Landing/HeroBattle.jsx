@@ -1,7 +1,8 @@
 /*
- * "Mini màn đấu" ở hero landing: mô phỏng một lượt đấu thật.
+ * "Mini màn đấu" ở hero landing: HÌNH MINH HỌA TĨNH mô phỏng một lượt đấu (không phải dữ liệu thật).
  * Lặp lại nhẹ: tia đạn bay từ trái sang phải, trúng thì máu đối thủ tụt. Tắt chuyển động khi người dùng
- * bật giảm chuyển động. Chỉ là minh họa, không có logic chấm điểm.
+ * bật giảm chuyển động. Máu, sát thương, câu hỏi ở đây là số minh họa cố định, không hiện số người hay thành tích nào;
+ * không có logic chấm điểm.
  */
 
 import { useEffect, useState } from 'react'

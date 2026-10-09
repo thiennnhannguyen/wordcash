@@ -1,7 +1,8 @@
 /*
  * Bục vinh quang top 3 kiểu sân khấu: hạng 1 ở giữa và cao nhất, hạng 2 bên trái, hạng 3 bên phải.
  * Trên mỗi bục: linh vật đại diện, tên, huy hiệu rank và số liệu. Bục màu vàng / bạc / đồng với số khổng lồ ở mặt trước.
- * Hạng 1 có vương miện và tia sáng xoay phía sau. Mobile thu nhỏ nhưng vẫn giữ chiều cao so le.
+ * Hạng 1 có vương miện và tia sáng xoay phía sau. Mobile thu nhỏ nhưng vẫn giữ chiều cao so le. Ít hơn 3 người thì chỉ có
+ * từng ấy bục.
  */
 
 import { motion, useReducedMotion } from 'framer-motion'
@@ -37,9 +38,9 @@ function Rays() {
   )
 }
 
-function Step({ row, unit }) {
-  const s = STEPS[row.place]
-  const first = row.place === 1
+function Step({ row, slot, unit }) {
+  const s = STEPS[slot]
+  const first = slot === 1
   return (
     <li className={cx('relative flex min-w-0 flex-1 flex-col items-center', s.order)}>
       {first && <Rays />}
@@ -70,7 +71,7 @@ function Step({ row, unit }) {
         style={{ background: s.color }}
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 0.5, delay: (3 - row.place) * 0.12, ease: 'easeOut' }}
+        transition={{ duration: 0.5, delay: (3 - slot) * 0.12, ease: 'easeOut' }}
       >
         <span className="absolute inset-x-0 top-0 h-3 border-b-thick border-line bg-white/40 md:h-4" aria-hidden="true" />
         <span className={cx('font-display font-bold italic leading-none text-white', STROKE, s.num)} style={{ '--stroke': '7px', textShadow: '5px 5px 0 var(--color-ink)' }}>
@@ -86,8 +87,9 @@ export default function Podium({ rows, unit }) {
   return (
     <section aria-label="Top 3" className="relative isolate overflow-hidden rounded-panel border-thick border-line bg-primary px-3 pt-12 shadow-hard-lg md:px-10 md:pt-16">
       <ol className="relative mx-auto flex max-w-3xl items-end gap-2 md:gap-6">
-        {top.map((r) => (
-          <Step key={r.id} row={r} unit={unit} />
+        {/* Vị trí bục theo thứ tự trong danh sách; số trên bục là hạng thật (bằng điểm thì cùng hạng) */}
+        {top.map((r, i) => (
+          <Step key={r.id} row={r} slot={i + 1} unit={unit} />
         ))}
       </ol>
       {/* Sàn sân khấu */}

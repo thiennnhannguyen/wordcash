@@ -1,0 +1,561 @@
+{
+ "display_name": "Người Thử",
+ "username": "tester",
+ "avatar_mascot_id": 1,
+ "rank": "tan_binh",
+ "mastered_count": 0,
+ "streak_current": 0,
+ "streak_best": 0,
+ "current_level": "A1",
+ "mascots_owned": 1,
+ "showcase": [
+  {
+   "mascot_id": 1,
+   "copies": 1
+  }
+ ],
+ "rank_progress": {
+  "next": "dong",
+  "current_min": 0,
+  "next_min": 100,
+  "remaining": 100
+ },
+ "rank_shaky": false,
+ "shaky_seconds_left": null,
+ "words_to_recover": 0,
+ "custom_mastered_count": 0,
+ "courses_count": 0,
+ "show_on_leaderboard": true,
+ "showcase_mascot_ids": null,
+ "levels": [
+  {
+   "code": "A1",
+   "name": "Mới bắt đầu",
+   "mastered": 0,
+   "total": 300,
+   "unlocked": true
+  },
+  {
+   "code": "A2",
+   "name": "Sơ cấp",
+   "mastered": 0,
+   "total": 300,
+   "unlocked": false
+  }
+ ],
+ "activity": [
+  {
+   "date": "2026-07-17",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-18",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-19",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-20",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-21",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-22",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-23",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-24",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-25",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-26",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-27",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-28",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-29",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-30",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-07-31",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-01",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-02",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-03",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-04",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-05",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-06",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-07",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-08",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-09",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-10",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-11",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-12",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-13",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-14",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-15",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-16",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-17",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-18",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-19",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-20",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-21",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-22",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-23",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-24",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-25",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-26",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-27",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-28",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-29",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-30",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-08-31",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-01",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-02",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-03",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-04",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-05",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-06",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-07",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-08",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-09",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-10",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-11",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-12",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-13",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-14",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-15",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-16",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-17",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-18",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-19",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-20",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-21",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-22",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-23",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-24",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-25",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-26",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-27",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-28",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-29",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-09-30",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-01",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-02",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-03",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-04",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-05",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-06",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-07",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  },
+  {
+   "date": "2026-10-08",
+   "new_words": 0,
+   "reviews": 0,
+   "answers": 0
+  }
+ ],
+ "daily_check_accuracy": {
+  "days": 30,
+  "correct": 0,
+  "total": 0,
+  "rate": null
+ },
+ "most_forgotten": [],
+ "rank_first_reached_at": null,
+ "created_at": "2026-10-01T03:00:00Z"
+}

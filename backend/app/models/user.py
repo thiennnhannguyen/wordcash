@@ -4,6 +4,7 @@ Email và username luôn lưu chữ thường (duy nhất). Múi giờ dùng đ�
 
 Avatar (`avatar_mascot_id`) và linh vật dùng ở Đấu Trường (`arena_mascot_id`, null = dùng avatar) chỉ được là linh vật
 đang sở hữu (user_mascots); kiểm tra ở services/collection_service.py. Streak, lượt quay, mảnh nằm ở user_stats.
+Tủ trưng bày hồ sơ (`showcase_mascot_ids`) và cài đặt hiện trên bảng xếp hạng (`show_on_leaderboard`).
 """
 
 import enum
@@ -11,6 +12,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func, true
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.core.config import settings
@@ -42,6 +44,10 @@ class User(Base):
     timezone: Mapped[str] = mapped_column(String(64), default=lambda: settings.DEFAULT_TIMEZONE)
     avatar_mascot_id: Mapped[int | None] = mapped_column(ForeignKey("mascots.id"))
     arena_mascot_id: Mapped[int | None] = mapped_column(ForeignKey("mascots.id"))
+    # Tủ trưng bày ở hồ sơ: tối đa 3 id linh vật đang sở hữu; NULL = mặc định 3 con hiếm nhất (services/profile_service.py)
+    showcase_mascot_ids: Mapped[list[int] | None] = mapped_column(JSONB)
+    # Tắt thì không xuất hiện trong bảng xếp hạng (vẫn thấy hạng của mình)
+    show_on_leaderboard: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     goal: Mapped[Goal | None] = mapped_column(str_enum(Goal, "user_goal"))
     daily_minutes: Mapped[int | None] = mapped_column(Integer)
     onboarding_completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
