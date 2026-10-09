@@ -22,9 +22,11 @@ jobs:
   backend:
     name: Backend (alembic + pytest)
     runs-on: ubuntu-latest
+    # Image chính thức lấy qua bản sao AWS ECR Public: Docker Hub giới hạn lượt tải ẩn danh theo IP (runner dùng chung IP
+    # nên hay gặp "toomanyrequests" ở bước Initialize containers)
     services:
       postgres:
-        image: postgres:15-alpine
+        image: public.ecr.aws/docker/library/postgres:15-alpine
         env:
           POSTGRES_USER: wordclash
           POSTGRES_PASSWORD: wordclash_ci
@@ -37,7 +39,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
       redis:
-        image: redis:7-alpine
+        image: public.ecr.aws/docker/library/redis:7-alpine
         ports:
           - 6379:6379
         options: >-
