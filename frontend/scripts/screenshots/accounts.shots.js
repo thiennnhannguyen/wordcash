@@ -30,9 +30,9 @@ for (const width of WIDTHS) {
     await page.goto('/')
     // Cuộn hết trang để các khối hiện dần (Reveal) xuất hiện trước khi chụp
     await page.evaluate(async () => {
-      for (let y = 0; y < document.body.scrollHeight; y += 400) {
+      for (let y = 0; y < document.body.scrollHeight; y += 250) {
         window.scrollTo(0, y)
-        await new Promise((r) => setTimeout(r, 60))
+        await new Promise((r) => setTimeout(r, 250))
       }
       window.scrollTo(0, 0)
     })
