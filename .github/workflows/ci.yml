@@ -1,7 +1,8 @@
 # CI: chạy khi push hoặc mở pull request.
 # - backend: kiểm tra schema backend/content/**/*.json → PostgreSQL + Redis (service containers) → alembic upgrade head →
 #   pytest (database test riêng wordclash_test).
-# - frontend: npm ci → npm test (dữ liệu thuần) → npm run build (postbuild kiểm tra dist không chứa chuỗi dev).
+# - frontend: npm ci → npm run lint (chặn import src/dev, tests, mock) → npm test (Vitest) → npm run build (postbuild kiểm tra dist
+#   không chứa chuỗi dev hay dữ liệu giả).
 # Chưa chạy e2e (Playwright) trên CI.
 
 name: CI
@@ -90,6 +91,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: npm ci
         run: npm ci
+      - name: npm run lint
+        run: npm run lint
       - name: npm test
         run: npm test
       - name: npm run build
