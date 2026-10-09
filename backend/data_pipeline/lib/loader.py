@@ -33,7 +33,7 @@ FIELD_MAP = {
     "headword": "headword", "pos": "pos", "ipa": "ipa", "ipa_unverified": "ipa_unverified", "meaning_vi": "meaning_vi",
     "definition_en": "definition_en", "example": "example_en", "example_vi": "example_vi", "collocations": "collocations",
     "word_family": "word_family", "synonyms": "synonyms", "mnemonic_vi": "mnemonic_vi", "image_keyword": "image_keyword",
-    "variant_note": "variant_note",
+    "variant_note": "variant_note", "cloze_en": "cloze_en", "cloze_distractors": "cloze_distractors",
 }
 
 
@@ -77,7 +77,7 @@ def desired_values(level: str, topic: TopicFile, e: ContentEntry) -> dict:
     values["entry_type"] = EntryType(e.entry_type)
     values["cefr"] = level
     values["topic"] = topic.topic_title
-    for col in ("definition_en", "example", "example_vi", "mnemonic_vi", "image_keyword", "variant_note"):
+    for col in ("definition_en", "example", "example_vi", "mnemonic_vi", "image_keyword", "variant_note", "cloze_en"):
         values[col] = values[col] or None
     return values
 

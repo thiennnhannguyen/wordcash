@@ -188,7 +188,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 ## Luật nghiệp vụ bắt buộc (không tự ý đổi)
 
 ### Học tập
-- Câu hỏi có 4 mức: (1) chọn nghĩa, (2) nghe chọn từ, (3) gõ từ từ nghĩa, (4) điền vào câu.
+- Câu hỏi có 4 mức: (1) chọn nghĩa, (2) nghe chọn từ, (3) gõ từ từ nghĩa, (4) điền vào câu. **Mức 4 chỉ dùng câu riêng `cloze_en` + đúng 3 đáp án nhiễu soạn sẵn `cloze_distractors`** (đã duyệt cùng mục; KHÔNG dùng `example_en`, KHÔNG bốc đáp án nhiễu ngẫu nhiên vì dễ có nhiều đáp án đúng). Mục thiếu hai trường này (kể cả từ tự tạo) → lùi về Mức 3.
 - **Đã thuộc (`mastered`)**: đúng ở mức ≥ 3, vào ≥ 3 ngày khác nhau.
 - Trạng thái mục từ: `new` → `learning` → `mastered` → `forgotten` (quay về `learning` khi ôn).
 - **Luật ghi nhớ thống nhất:** chỉ Cửa Ải Hôm Nay được làm mất trạng thái `mastered` (`progress_service.forget_entry`). Ở mọi nơi khác (ôn trong khóa học, ôn Học Viện, Đấu Trường), trả lời sai chỉ đặt lại lịch SRS (khoảng ôn về mức ngắn nhất, ease giảm theo SM-2, `lapse_count` +1) và **giữ** `mastered` (`progress_service.record_answer`).

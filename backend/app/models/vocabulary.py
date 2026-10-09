@@ -141,6 +141,10 @@ class Entry(Base):
     collocations: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     word_family: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     synonyms: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
+    # Câu hỏi Mức 4 (điền vào câu): câu RIÊNG chỉ đúng một đáp án hợp + đúng 3 đáp án nhiễu soạn sẵn (cùng từ loại, đã duyệt).
+    # Trống → không ra câu Mức 4 cho mục này (lùi về Mức 3). Từ tự tạo luôn trống.
+    cloze_en: Mapped[str | None] = mapped_column(String(300))
+    cloze_distractors: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))
     cefr: Mapped[str | None] = mapped_column(String(2))  # từ tự tạo: rỗng
     topic: Mapped[str | None] = mapped_column(String(64))  # chủ đề (vd. "Gia đình"); từ tự tạo: rỗng
     exam_tags: Mapped[list[str]] = mapped_column(JSONB, default=list, server_default=text("'[]'::jsonb"))

@@ -6,7 +6,10 @@ Hàm thuần, không phụ thuộc DB (nơi gọi truyền sẵn mục từ và 
 - `key`: phần chỉ lưu ở server (đáp án, entry_id) để chấm khi người học nộp.
 
 Mức 2 (nghe) chỉ tạo khi mục từ có `audio_url`: nếu client tự đọc bằng Web Speech API thì phải biết chữ của từ, tức là lộ đáp án.
-Mức 4 chỉ tạo khi câu ví dụ có chứa đúng từ đó. Không đủ điều kiện thì lùi về mức gần nhất (2 → 1, 4 → 3).
+Mức 4 (điền vào câu) chỉ dùng câu RIÊNG `cloze_en` (viết sao cho chỉ đúng một đáp án hợp, KHÔNG dùng câu ví dụ của thẻ học)
+và đúng 3 đáp án nhiễu soạn sẵn `cloze_distractors` (đã qua kiểm tra tự động + người duyệt); không bốc đáp án nhiễu ngẫu nhiên
+vì từ cùng bài thường cùng chủ đề, cùng từ loại nên dễ có nhiều đáp án đúng. Mục chưa có đủ hai trường (từ tự tạo, mục cũ) →
+Mức 4 lùi về Mức 3. Không đủ điều kiện thì lùi về mức gần nhất (2 → 1, 4 → 3).
 Câu chọn đáp án cần ít nhất 1 đáp án nhiễu; không có thì đổi sang câu gõ từ (mức 3).
 """
 
@@ -30,6 +33,8 @@ class EntryData:
     ipa: str | None = None
     example: str | None = None
     audio_url: str | None = None
+    cloze_en: str | None = None
+    cloze_distractors: tuple[str, ...] = ()
 
 
 @dataclass
@@ -59,12 +64,21 @@ def blank_sentence(example: str | None, headword: str) -> str | None:
     return pattern.sub(BLANK, example, count=1)
 
 
+def cloze_ready(entry: EntryData) -> bool:
+    """Đủ điều kiện câu Mức 4: câu cloze chứa đúng từ, đúng OPTION_COUNT - 1 đáp án nhiễu khác nhau và khác đáp án đúng."""
+    distractors = [normalize(d) for d in entry.cloze_distractors if d and d.strip()]
+    return (blank_sentence(entry.cloze_en, entry.headword) is not None
+            and len(distractors) == OPTION_COUNT - 1
+            and len(set(distractors)) == len(distractors)
+            and normalize(entry.headword) not in distractors)
+
+
 def available_levels(entry: EntryData) -> list[int]:
     levels = [1]
     if entry.audio_url:
         levels.append(2)
     levels.append(3)
-    if blank_sentence(entry.example, entry.headword):
+    if cloze_ready(entry):
         levels.append(4)
     return levels
 
@@ -72,7 +86,7 @@ def available_levels(entry: EntryData) -> list[int]:
 def resolve_level(entry: EntryData, level: int) -> int:
     if level == 2 and not entry.audio_url:
         return 1
-    if level == 4 and not blank_sentence(entry.example, entry.headword):
+    if level == 4 and not cloze_ready(entry):
         return 3
     return level
 
@@ -107,7 +121,8 @@ def build_question(qid: str, entry: EntryData, level: int, *, meaning_pool: list
             correct, pool = entry.meaning_vi, meaning_pool
         else:
             correct, pool = entry.headword, word_pool
-        distractors = _pick_distractors(correct, pool, rng)
+        # Mức 4: đáp án nhiễu soạn sẵn cho đúng câu cloze (resolve_level đã bảo đảm đủ 3)
+        distractors = list(entry.cloze_distractors) if level == 4 else _pick_distractors(correct, pool, rng)
         if not distractors:
             level = 3  # không có đáp án nhiễu thì câu chọn đáp án vô nghĩa
             key["level"] = 3
@@ -119,7 +134,7 @@ def build_question(qid: str, entry: EntryData, level: int, *, meaning_pool: list
             elif level == 2:
                 public.update(audio_url=entry.audio_url)
             else:
-                public.update(sentence=blank_sentence(entry.example, entry.headword))
+                public.update(sentence=blank_sentence(entry.cloze_en, entry.headword))
             return Question(public, {**key, "answer": correct})
 
     # Mức 3: nhìn nghĩa, gõ từ. Gửi số chữ cái (không tính khoảng trắng) để vẽ ô chữ.

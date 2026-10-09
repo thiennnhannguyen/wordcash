@@ -93,6 +93,10 @@ class ContentEntry(_Model):
     mnemonic_vi: str = ""
     image_keyword: str = ""
     variant_note: str = ""  # ghi chú biến thể Anh-Mỹ (uk_us_vocab.tsv, không do AI soạn), vd. "Mỹ thường dùng: fall"
+    # Câu Mức 4 (điền vào câu), TÁCH khỏi example_en: chỉ đúng 1 đáp án hợp, có manh mối rõ về nghĩa; đúng 3 đáp án nhiễu
+    # cùng từ loại (bước 03_cloze soạn nháp, bước 04 kiểm tra, duyệt cùng mục). Trống → câu Mức 4 lùi về Mức 3.
+    cloze_en: str = ""
+    cloze_distractors: list[str] = Field(default_factory=list)
     # Chọn từ (bước 02) — người duyệt chỉnh được
     commonness: int = Field(default=3, ge=1, le=5)
     basic_communication: bool = False

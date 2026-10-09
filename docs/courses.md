@@ -73,7 +73,7 @@ daily_limit), `STUDY_SESSION_NOT_FOUND`, `STUDY_SESSION_EXPIRED`, `STUDY_SESSION
 
 - Mỗi cặp (từ, mức) chỉ hỏi một lần trong phiên `quick`/`test`; khóa nhỏ thì phiên có ít hơn 20 câu.
 - Mức 2 (nghe) chỉ có khi mục từ có `audio_url` (đọc bằng Web Speech API thì client phải biết chữ, tức là lộ đáp án);
-  mức 4 chỉ có khi câu ví dụ chứa đúng từ đó. Thiếu điều kiện thì lùi về mức 1 / mức 3.
+  mức 4 chỉ có khi mục có câu riêng `cloze_en` (chỉ đúng một đáp án hợp) và đúng 3 đáp án nhiễu soạn sẵn `cloze_distractors` đã duyệt — từ tự tạo không có nên luôn lùi về mức 3. Thiếu điều kiện thì lùi về mức 1 / mức 3.
 - Đáp án nhiễu ưu tiên nghĩa/từ của các mục khác trong cùng khóa (cùng loại từ nếu đủ); khóa dưới 4 từ lấy thêm từ kho hệ thống.
 - `entry_ids` giới hạn phiên vào các từ chỉ định (nút "Ôn lại từ sai").
 - Phiên hết hạn sau `STUDY_SESSION_TTL_HOURS` (24 giờ). Gửi lại một câu đã chấm thì nhận lại kết quả cũ, không ghi tiến độ lần hai.

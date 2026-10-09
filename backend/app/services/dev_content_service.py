@@ -147,7 +147,8 @@ def sample_questions(level: str, code: str, key: str, seed: int = 7) -> list[dic
     entry = _entry(topic, key)
     others = [e for e in topic.entries if e.content_key != key and e.status != "rejected"]
     data = qb.EntryData(id=0, headword=entry.headword, meaning_vi=entry.meaning_vi, pos=entry.pos, ipa=entry.ipa,
-                        example=entry.example_en, audio_url="dev:tts")
+                        example=entry.example_en, audio_url="dev:tts", cloze_en=entry.cloze_en,
+                        cloze_distractors=tuple(entry.cloze_distractors))
     out = []
     for level_no in (1, 2, 3, 4):
         q = qb.build_question(f"q{level_no}", data, level_no, meaning_pool=[e.meaning_vi for e in others if e.meaning_vi],

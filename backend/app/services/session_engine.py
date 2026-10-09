@@ -21,7 +21,8 @@ from app.services import question_builder as QB
 
 
 def entry_data(entry: Entry) -> QB.EntryData:
-    return QB.EntryData(entry.id, entry.headword, entry.meaning_vi, entry.pos, entry.ipa, entry.example, entry.audio_url)
+    return QB.EntryData(entry.id, entry.headword, entry.meaning_vi, entry.pos, entry.ipa, entry.example, entry.audio_url,
+                        entry.cloze_en, tuple(entry.cloze_distractors or ()))
 
 
 def card(entry: Entry, personal_note: str | None = None) -> dict:
@@ -87,7 +88,7 @@ def easy_level(entry: Entry, rng: random.Random) -> int:
 
 
 def strong_level(entry: Entry, rng: random.Random) -> int:
-    """Mức 3 hoặc 4 (4 chỉ khi câu ví dụ chứa đúng từ)."""
+    """Mức 3 hoặc 4 (4 chỉ khi mục có câu cloze + 3 đáp án nhiễu đã duyệt)."""
     return rng.choice([lvl for lvl in QB.available_levels(entry_data(entry)) if lvl >= 3])
 
 
