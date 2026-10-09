@@ -4,6 +4,7 @@ Gom import tất cả model để Alembic (alembic/env.py) thấy đủ bảng. 
 
 from app.core.database import Base
 from app.models.academy import BossAttempt, ProgressStatus, TopicPracticeLog, UserLevelProgress, UserTopicProgress, UserUnitProgress
+from app.models.content_report import ContentReport, ReportContext, ReportKind, ReportStatus
 from app.models.course import CourseVisibility, SessionKind, StudyMode, StudySession, UserCourse, UserCourseEntry
 from app.models.daily_check import DailyCheck, DailyCheckStatus
 from app.models.mascot import (
@@ -29,6 +30,7 @@ __all__ = [
     "AudioJobStatus",
     "Base",
     "BossAttempt",
+    "ContentReport",
     "CourseVisibility",
     "DailyCheck",
     "DailyCheckStatus",
@@ -38,6 +40,9 @@ __all__ = [
     "EntryStatus",
     "EntryType",
     "Goal",
+    "ReportContext",
+    "ReportKind",
+    "ReportStatus",
     "IdempotencyKey",
     "Level",
     "Mascot",

@@ -78,7 +78,8 @@ def build_questions(pairs: list[tuple[Entry, int]], pool: list[Entry], rng: rand
         q = QB.build_question(f"q{i}", entry_data(entry), level,
                               meaning_pool=[e.meaning_vi for e in ordered], word_pool=[e.headword for e in ordered], rng=rng)
         public.append(q.public)
-        keys.append({"id": q.public["id"], **q.key})
+        # `public`: đề đúng như người học thấy (lưu cùng khóa ở server để "Báo lỗi" chụp lại câu hỏi, không tin client)
+        keys.append({"id": q.public["id"], **q.key, "public": q.public})
     return public, keys
 
 
