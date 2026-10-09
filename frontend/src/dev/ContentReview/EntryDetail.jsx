@@ -1,6 +1,7 @@
 /*
  * Khung chi tiết một mục trên trang duyệt: mọi trường sửa trực tiếp, loa đọc thử (Web Speech API, en-US), các cờ kèm giải thích,
- * câu hỏi mẫu mức 1–4, viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
+ * câu điền từ Mức 4 xem trước như người học thấy (ClozePreview, dựng từ ô đang sửa), câu hỏi mẫu mức 1–4,
+ * viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
  * đã xử lý thì bản cũ / bản mới hiện cạnh nhau ngay dưới trường để chọn), ghi chú duyệt. Thanh hành động: Duyệt (A), Từ chối (R, bắt buộc lý do),
  * Bỏ qua (S), Mục sau (J), Mục trước (K) — theo quy ước Gmail / Vim, Lưu (khi có thay đổi chưa lưu).
  */
@@ -14,6 +15,7 @@ import cx from '../../utils/cx'
 import { FIELDS, STATUS_LABEL, STATUS_TONE, changedFields, fromForm, toForm } from './fields'
 import RewriteModal, { VersionCompare } from './RewriteModal'
 import SampleQuestions from './SampleQuestions'
+import ClozePreview from './ClozePreview'
 
 const box = 'w-full rounded-btn border-thick border-line bg-surface px-3 py-2 text-[15px] text-ink shadow-hard outline-none focus:border-primary'
 
@@ -88,6 +90,11 @@ export default function EntryDetail({
         <p className="rounded-btn border-2 border-line bg-danger/20 px-3 py-2 text-[14px]">Lý do từ chối: {entry.reject_reason}</p>
       )}
 
+      <div id="cloze-preview" className="scroll-mt-4">
+        <h3 className="mb-2 font-display text-[15px] font-bold uppercase tracking-wider text-ink">Câu điền từ — như người học thấy</h3>
+        <ClozePreview headword={entry.headword} sentence={current.cloze_en} distractors={current.cloze_distractors} />
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         {FIELDS.map((f) => {
           const pending = rewrites.find((r) => r.field === f.key)
@@ -154,7 +161,7 @@ export default function EntryDetail({
 
       <div>
         <h3 className="mb-2 font-display text-[15px] font-bold uppercase tracking-wider text-ink">Câu hỏi mẫu</h3>
-        <SampleQuestions level={level} topic={topic} entryKey={entry.content_key} version={`${entry.example_en}|${entry.meaning_vi}`} />
+        <SampleQuestions level={level} topic={topic} entryKey={entry.content_key} version={`${entry.example_en}|${entry.meaning_vi}|${entry.cloze_en}|${entry.cloze_distractors?.join(',')}`} />
       </div>
 
       <div className="sticky bottom-0 -mx-1 flex flex-wrap gap-2 border-t-2 border-line bg-bg px-1 py-3">
