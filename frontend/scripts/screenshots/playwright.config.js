@@ -1,6 +1,7 @@
 /*
  * Cấu hình Playwright cho script chụp ảnh (`npm run screenshots`), tách khỏi `npm run e2e`.
- * Dùng lại backend + Vite của e2e (cổng 8100/5180, ENV=e2e), chỉ chạy các file *.shots.js trong thư mục này.
+ * Dùng lại backend + Vite của e2e (cổng 8100/5180, ENV=e2e; backend tự seed 3 tài khoản dev_normal / dev_shaky / dev_new),
+ * chỉ chạy các file *.shots.js trong thư mục này (accounts.shots.js đăng nhập bằng các tài khoản đó).
  * Ảnh lưu vào E2E_SHOTS (mặc định frontend/screenshots/, đã gitignore).
  */
 
