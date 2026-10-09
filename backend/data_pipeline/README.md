@@ -79,6 +79,7 @@ file).
 | 07 | `python -m data_pipeline.07_load_to_db --level A1 --dry-run`, rồi bỏ `--dry-run` | Production: chạy `sh scripts/backup_db.sh` trước và thêm `--yes` |
 | 08 | `python -m data_pipeline.08_generate_audio --level A1 --provider fake [--dry-run]` | Chưa có nhà cung cấp TTS thật |
 | CI | `python -m data_pipeline.check_content` | Kiểm tra schema mọi `content/**/*.json` |
+| mẫu duyệt | `python -m data_pipeline.pipeline sample --level A1 --per-topic 10 [--seed N] [--force]` | Chọn ngẫu nhiên N mục mỗi chủ đề (hạt giống ghi vào `work/review_sample_a1.json`) để duyệt kỹ trước; DỪNG nếu còn mục draft chưa có câu điền từ Mức 4 (chạy 03b trước). `/dev/content` có bộ lọc "Mẫu duyệt"; `pipeline status` hiện tiến độ mẫu |
 | tình trạng | `python -m data_pipeline.pipeline status [--level A1]` | Gói việc từng bước + tiến độ nội dung + hàng đợi viết lại |
 | viết lại | `python -m data_pipeline.pipeline rewrite --emit` / `--ingest` | Hàng đợi "viết lại một trường" từ `/dev/content` |
 

@@ -6,6 +6,8 @@ Lệnh tổng của quy trình kho từ (chạy trong backend/):
   giữa chừng thì lệnh này cho biết chính xác làm tiếp từ đâu.
 - `python -m data_pipeline.pipeline rewrite --emit | --ingest`: xử lý hàng đợi "viết lại một trường" (work/rewrite_queue.json)
   do người duyệt gửi từ /dev/content. AI_PROVIDER=anthropic: `rewrite` không cần cờ, gọi API cho từng yêu cầu.
+- `python -m data_pipeline.pipeline sample --level A1 --per-topic 10 [--seed N] [--force]`: đợt chọn mẫu duyệt (lib/sample.py;
+  dừng nếu còn mục draft chưa có câu điền từ Mức 4); /dev/content lọc "Mẫu duyệt".
 """
 
 import argparse
@@ -13,7 +15,7 @@ import json
 import sys
 
 from data_pipeline import config
-from data_pipeline.lib import agent, cli, content, rewrite, step_cloze
+from data_pipeline.lib import agent, cli, content, rewrite, sample, step_cloze
 from data_pipeline.lib.jsonio import read_json
 
 
@@ -53,6 +55,12 @@ def print_status(level: str) -> None:
     print(f"\n== Câu điền từ Mức 4 (bước 03b) — {have}/{total} mục có cloze_en + 3 đáp án nhiễu ==")
     for r in cloze:
         print(f"- {r['topic']:<13} {r['with_cloze']:>3}/{r['entries']:<3}{'  ✓' if r['with_cloze'] == r['entries'] else ''}")
+    smp = sample.progress(level)
+    if smp:
+        done = sum(r["approved"] + r["rejected"] for r in smp["topics"])
+        total = sum(r["total"] for r in smp["topics"])
+        print(f"\n== Mẫu duyệt (seed {smp['seed']}, {smp['per_topic']}/chủ đề) — đã xem {done}/{total} · "
+              f"duyệt {sum(r['approved'] for r in smp['topics'])} · từ chối {sum(r['rejected'] for r in smp['topics'])} ==")
     queue = rewrite.load_queue()
     by_status: dict[str, int] = {}
     for i in queue:
@@ -67,9 +75,24 @@ def main() -> None:
     st.add_argument("--level", default="A1")
     rw = sub.add_parser("rewrite", help="xử lý hàng đợi viết lại")
     cli.add_ai_args(rw)
+    sm = sub.add_parser("sample", help="đợt chọn mẫu duyệt: N mục ngẫu nhiên mỗi chủ đề")
+    sm.add_argument("--level", default="A1")
+    sm.add_argument("--per-topic", type=int, default=10)
+    sm.add_argument("--seed", type=int, default=None, help="hạt giống (mặc định ngẫu nhiên, được ghi lại trong file mẫu)")
+    sm.add_argument("--force", action="store_true", help="chọn lại dù đã có mẫu")
+    sm.add_argument("--allow-missing-cloze", action="store_true", help="không dừng khi còn mục chưa có câu điền từ")
     args = parser.parse_args()
     if args.command == "status":
         print_status(args.level.upper())
+        return
+    if args.command == "sample":
+        try:
+            data = sample.choose(args.level, args.per_topic, seed=args.seed, force=args.force, allow_missing_cloze=args.allow_missing_cloze)
+        except sample.SampleError as e:
+            sys.exit(f"Không chọn mẫu: {e}")
+        total = sum(len(v) for v in data["keys"].values())
+        print(f"Đã chọn {total} mục mẫu ({data['per_topic']}/chủ đề, seed {data['seed']}) → {sample.sample_path(data['level'])}")
+        print("Mở /dev/content, bộ lọc \"Mẫu duyệt\".")
         return
     queued = sum(i["status"] == "queued" for i in rewrite.load_queue())
     est = {"items": queued, "requests": queued, "input_tokens": queued * 2500, "output_tokens": queued * 80,

@@ -2,7 +2,7 @@
  * Trang duyệt nội dung kho từ /dev/content (CHỈ bản dev; backend chỉ có API khi ENV=development).
  *
  * - Thanh bên: các chủ đề của cấp, mỗi chủ đề "đã duyệt x/y" và số mục có cờ.
- * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ), tìm theo từ, nghĩa, câu ví dụ.
+ * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ / mẫu duyệt — `pipeline sample`), tìm theo từ, nghĩa, câu ví dụ.
  * - Khung chi tiết (EntryDetail): sửa trường, loa, cờ, câu hỏi mẫu, viết lại một trường (chế độ agent: hàng đợi, mục hiện
  *   "Đang chờ viết lại"; có bản mới thì chọn bản cũ / mới), Duyệt / Từ chối / Bỏ qua.
  * - Phím tắt (khi không gõ trong ô): A duyệt, R từ chối (hỏi lý do), S bỏ qua, J mục sau, K mục trước (quy ước Gmail / Vim).
@@ -36,6 +36,7 @@ const FILTERS = [
   { value: 'approved', label: 'Đã duyệt' },
   { value: 'rejected', label: 'Từ chối' },
   { value: 'flagged', label: 'Có cờ' },
+  { value: 'sample', label: 'Mẫu duyệt' },
 ]
 const toast = (variant, title, message) => useToastStore.getState().push({ variant, title, message })
 const warnings = (e, info = []) => e.flags.filter((f) => !info.includes(f))
@@ -80,8 +81,11 @@ export default function ContentReview() {
   const list = useMemo(() => {
     if (!data?.entries) return []
     const q = query.trim().toLowerCase()
+    const sampleKeys = new Set(data.sample_keys ?? [])
     return data.entries.filter((e) => {
-      if (status === 'flagged' ? !(warnings(e, data.info_flags).length && e.status !== 'rejected') : status !== 'all' && e.status !== status) return false
+      if (status === 'sample') {
+        if (!sampleKeys.has(e.content_key)) return false
+      } else if (status === 'flagged' ? !(warnings(e, data.info_flags).length && e.status !== 'rejected') : status !== 'all' && e.status !== status) return false
       return !q || [e.headword, e.meaning_vi, e.example_en].some((s) => s?.toLowerCase().includes(q))
     })
   }, [data, status, query])
@@ -247,7 +251,7 @@ export default function ContentReview() {
             <section aria-label="Danh sách mục" className="flex flex-col gap-3">
               <Input icon={MagnifyingGlass} placeholder="Tìm từ, nghĩa, câu ví dụ" value={query} onChange={(e) => setParam({ q: e.target.value })} aria-label="Tìm" />
               <div className="flex flex-wrap gap-1.5">
-                {FILTERS.map((f) => (
+                {FILTERS.filter((f) => f.value !== 'sample' || data?.sample_keys?.length).map((f) => (
                   <button
                     key={f.value}
                     onClick={() => setParam({ status: f.value === 'all' ? null : f.value, key: null })}
@@ -258,7 +262,14 @@ export default function ContentReview() {
                   </button>
                 ))}
               </div>
-              <p className="text-[13px] text-muted">{list.length} mục</p>
+              <p className="text-[13px] text-muted">
+                {list.length} mục
+                {data?.sample_keys?.length > 0 && (() => {
+                  const keys = new Set(data.sample_keys)
+                  const seen = data.entries.filter((e) => keys.has(e.content_key) && e.status !== 'draft').length
+                  return ` · mẫu duyệt: đã xem ${seen}/${keys.size}`
+                })()}
+              </p>
               <ul className="flex max-h-[70dvh] flex-col gap-1.5 overflow-y-auto pr-1">
                 {data?.missing && <li className="text-[14px] text-muted">Chưa có file nội dung cho chủ đề này (chạy bước 03).</li>}
                 {list.map((e, i) => (

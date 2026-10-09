@@ -90,6 +90,11 @@ async def test_list_get_edit_and_revalidate(dev_api):
     assert next(t for t in levels[0]["topics"] if t["code"] == "home")["total"] == 0  # chưa có file
     topic = (await c.get(f"{API}/dev/content/A1/food")).json()
     assert [e["headword"] for e in topic["entries"]] == ["rice", "egg", "noodle"] and "hard_words" in topic["flag_help"]
+    assert topic["sample_keys"] == []  # chưa có đợt chọn mẫu
+    from data_pipeline.lib import sample
+    sample.choose("A1", 2, seed=3, allow_missing_cloze=True, content_root=root, work_root=svc.WORK_ROOT)
+    keys = (await c.get(f"{API}/dev/content/A1/food")).json()["sample_keys"]
+    assert len(keys) == 2 and set(keys) <= {"a1.food.rice.noun", "a1.food.egg.noun", "a1.food.noodle.noun"}
     assert (await c.get(f"{API}/dev/content/A1/nope")).json()["error"]["code"] == "CONTENT_NOT_FOUND"
 
     res = await c.patch(f"{API}/dev/content/A1/food/entries/a1.food.egg.noun", json={"example_en": "We eat rice at home today."})

@@ -7,6 +7,7 @@ Công cụ duyệt nội dung kho từ (CHỈ dev; router api/v1/routers/dev_con
 - Duyệt / Từ chối ghi `reviewed_at` (giờ thật) và `review_note`; Từ chối bắt buộc có lý do;
 - câu hỏi mẫu mức 1–4 sinh bằng services/question_builder.py với đáp án nhiễu lấy trong cùng chủ đề (như người học sẽ thấy;
   mức 2 dùng âm thanh giả để người duyệt xem được đáp án nhiễu);
+- Đợt chọn mẫu duyệt (data_pipeline/lib/sample.py): `sample_keys` của chủ đề để trang lọc "Mẫu duyệt";
 - Viết lại một trường (data_pipeline/lib/rewrite.py): chế độ agent (AI_PROVIDER mặc định) → "Gửi yêu cầu viết lại" ghi vào
   work/rewrite_queue.json, mục hiện "Đang chờ viết lại"; sau `pipeline rewrite --ingest` yêu cầu có bản mới, người duyệt chọn
   bản cũ / bản mới (`resolve_rewrite`, chọn bản mới mới ghi file). AI_PROVIDER=anthropic → gọi AI ngay, trả bản cũ và bản
@@ -21,7 +22,7 @@ from app.core import clock
 from app.core.errors import AppError
 from app.services import question_builder as qb
 from data_pipeline import config as pconfig
-from data_pipeline.lib import content, rewrite, validate
+from data_pipeline.lib import content, rewrite, sample, validate
 from data_pipeline.lib.ai import AIError, AIJsonError, call_json
 from data_pipeline.lib.schemas import ContentEntry, RewriteItem, TopicFile
 
@@ -87,7 +88,8 @@ def list_levels() -> list[dict]:
 def get_topic(level: str, code: str) -> dict:
     topic = _load(level, code)
     return {**content.dump(topic), "summary": summary(topic), "flag_help": validate.FLAG_HELP, "info_flags": sorted(validate.INFO_FLAGS),
-            "ai_provider": ai_provider(), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT)}
+            "ai_provider": ai_provider(), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT),
+            "sample_keys": sample.keys_for(level, code, WORK_ROOT)}
 
 
 async def _save_and_revalidate(topic: TopicFile) -> TopicFile:

@@ -343,6 +343,7 @@ python -m data_pipeline.04_validate --level A1                   # gắn cờ
 python -m data_pipeline.06_build_units --level A1 --emit         # chia bài (chỉ mục approved) + gói đặt tên bài (rồi --ingest)
 python -m data_pipeline.pipeline status                          # gói việc từng bước, tiến độ "x/10 chủ đề", hàng đợi viết lại
 python -m data_pipeline.pipeline rewrite --emit                  # hàng đợi "viết lại một trường" từ /dev/content (rồi --ingest)
+python -m data_pipeline.pipeline sample --level A1 --per-topic 10   # đợt chọn mẫu duyệt (sau 03b); /dev/content lọc "Mẫu duyệt"
 python -m data_pipeline.07_load_to_db --level A1 --dry-run       # rồi bỏ --dry-run; production: backup trước + --yes
 python -m data_pipeline.check_content                            # CI: schema mọi content/**/*.json
 python -m seeds.refresh_dev_content                              # dev: thay lộ trình mẫu bằng kho thật, giữ vị trí học
