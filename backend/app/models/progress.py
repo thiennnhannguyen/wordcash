@@ -29,8 +29,8 @@ class UserEntryProgress(Base):
     __tablename__ = "user_entry_progress"
     __table_args__ = (
         Index("ix_user_entry_progress_user_due", "user_id", "due_at"),
-        # Bảng xếp hạng tuần: từ mới đạt "đã thuộc" trong tuần
-        Index("ix_user_entry_progress_status_mastered_at", "status", "mastered_at"),
+        # Bảng xếp hạng tuần: từ đạt "đã thuộc" LẦN ĐẦU trong tuần
+        Index("ix_user_entry_progress_status_first_mastered_at", "status", "first_mastered_at"),
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
@@ -52,7 +52,10 @@ class UserEntryProgress(Base):
     # Ngày (theo múi giờ người học) lần đầu học từ này: dùng cho giới hạn số từ mới mỗi ngày
     first_seen_day: Mapped[date | None] = mapped_column(Date)
     last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Lần thuộc gần nhất (đổi mỗi khi quên rồi thuộc lại)
     mastered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Lần ĐẦU TIÊN đạt "đã thuộc", không bao giờ đổi: bảng xếp hạng tuần chỉ tính mốc này
+    first_mastered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class ReviewLog(Base):

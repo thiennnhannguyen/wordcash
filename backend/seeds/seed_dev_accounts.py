@@ -130,7 +130,7 @@ async def _create(session: AsyncSession, plan: Plan, now: datetime, st: roadmap_
         recent = i >= plan.mastered - plan.mastered_this_week
         at = min(max(week_start, now - timedelta(days=2)) + timedelta(minutes=i), now) if recent else now - timedelta(days=40 - (i % 30))
         session.add(UserEntryProgress(
-            user_id=user.id, entry_id=eid, status=EntryState.MASTERED, strong_days=3, last_strong_day=at.date(), mastered_at=at,
+            user_id=user.id, entry_id=eid, status=EntryState.MASTERED, strong_days=3, last_strong_day=at.date(), mastered_at=at, first_mastered_at=at,
             interval_days=16, repetitions=4, due_at=now + timedelta(days=1 + i % 14), correct_count=6, wrong_count=i % 3,
             lapse_count=i % 3, first_seen_at=at - timedelta(days=10), first_seen_day=(at - timedelta(days=10)).date(), last_seen_at=at))
     for j, eid in enumerate(ids[plan.mastered:plan.mastered + plan.learning]):

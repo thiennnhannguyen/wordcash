@@ -1,10 +1,11 @@
 """
 Bảng xếp hạng (GET /leaderboard?board=weekly|alltime&limit=).
 
-- weekly: số mục từ HỆ THỐNG mà người đó đạt "đã thuộc" trong tuần hiện tại và vẫn đang thuộc
-  (`user_entry_progress.status = mastered` và `mastered_at` trong tuần). Tuần ISO theo giờ LEADERBOARD_TIMEZONE
+- weekly: số mục từ HỆ THỐNG mà người đó đạt "đã thuộc" LẦN ĐẦU TIÊN trong tuần hiện tại và vẫn đang thuộc
+  (`user_entry_progress.status = mastered` và `first_mastered_at` trong tuần). Tuần ISO theo giờ LEADERBOARD_TIMEZONE
   (Asia/Ho_Chi_Minh), từ thứ Hai 00:00 tới thứ Hai tuần sau 00:00 (không tính mốc cuối). Từ tự tạo KHÔNG tính.
-  Từ quên rồi thuộc lại trong tuần được tính (mastered_at là lần thuộc gần nhất).
+  Từ quên rồi thuộc lại KHÔNG được cộng điểm tuần lần nữa (`first_mastered_at` không đổi khi thuộc lại; `mastered_at`
+  là lần thuộc gần nhất, không dùng ở đây).
 - alltime: `users.mastered_count` (bộ đếm chỉ gồm từ hệ thống).
 - Chỉ người dùng đang hoạt động, đã xong onboarding, bật `show_on_leaderboard`, điểm > 0 xuất hiện trong danh sách.
 - Hạng kiểu thi đấu: bằng điểm thì cùng hạng (1, 1, 3); trong cùng điểm sắp theo username.
@@ -52,7 +53,7 @@ def _scores(board: str, start: datetime | None, end: datetime | None) -> Select:
         .join(Entry, Entry.id == UserEntryProgress.entry_id)
         .join(User, User.id == UserEntryProgress.user_id)
         .where(_eligible(), UserEntryProgress.status == EntryState.MASTERED, Entry.system_approved(),
-               UserEntryProgress.mastered_at >= start, UserEntryProgress.mastered_at < end)
+               UserEntryProgress.first_mastered_at >= start, UserEntryProgress.first_mastered_at < end)
         .group_by(UserEntryProgress.user_id)
     )
 

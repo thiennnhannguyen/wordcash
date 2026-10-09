@@ -57,9 +57,10 @@ Một mục từ hệ thống dạy được (`Entry.teachable()`: approved, ch�
 
 ### `GET /leaderboard?board=weekly|alltime&limit=50` (đăng nhập)
 
-- **Điểm của bảng `weekly`:** số mục từ **hệ thống** có `status = mastered` và `mastered_at` nằm trong tuần ISO hiện tại.
+- **Điểm của bảng `weekly`:** số mục từ **hệ thống** đang `status = mastered` mà lần **đầu tiên** đạt "đã thuộc" (`first_mastered_at`) nằm trong tuần ISO hiện tại.
   - Tuần tính theo giờ `LEADERBOARD_TIMEZONE` (Asia/Ho_Chi_Minh), từ thứ Hai 00:00, không gồm thứ Hai tuần sau 00:00.
-  - Từ quên rồi thuộc lại trong tuần vẫn được tính.
+  - Quên rồi thuộc lại **không** được cộng điểm tuần lần nữa: `first_mastered_at` ghi một lần, không đổi; `mastered_at` là lần thuộc gần nhất.
+  - Migration `d8e3f9a2b4c6` thêm cột `user_entry_progress.first_mastered_at`, điền dữ liệu cũ từ `mastered_at` (mốc gần nhất biết được), đổi chỉ mục sang `(status, first_mastered_at)`.
 - **Điểm của bảng `alltime`:** `users.mastered_count`. Từ tự tạo không tính ở cả hai bảng.
 - **Ai có mặt trong danh sách:** tài khoản đang hoạt động, đã xong onboarding, bật `show_on_leaderboard`, và có điểm > 0.
 - **Cách xếp hạng:** bằng điểm thì cùng hạng (1, 1, 3). Trong cùng điểm, sắp theo username.

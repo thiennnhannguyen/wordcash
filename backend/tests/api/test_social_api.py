@@ -4,7 +4,8 @@ API Từ của ngày, Hồ sơ, Bảng xếp hạng, số liệu công khai (Pos
 - /words/daily: tất định theo (ngày theo múi giờ người dùng, cấp), đúng cấp đã mở, bỏ qua mục retired / draft, trạng thái học.
 - /me/profile, /users/{username}/profile: hồ sơ người khác không lộ email, khóa học, từ hay quên, lịch hoạt động; username không
   tồn tại → 404; tủ trưng bày (mặc định 3 con hiếm nhất, PATCH kiểm tra sở hữu).
-- /leaderboard: tuần ISO theo giờ Việt Nam (ranh giới thứ Hai 00:00), bỏ từ tự tạo, show_on_leaderboard, my_entry, cache.
+- /leaderboard: tuần ISO theo giờ Việt Nam (ranh giới thứ Hai 00:00), chỉ tính lần ĐẦU thuộc (thuộc lại không cộng),
+  bỏ từ tự tạo, show_on_leaderboard, my_entry, cache.
 - /public/stats: không cần đăng nhập, ngưỡng hiện số người học, đếm mục dạy được theo cấp, luật game.
 """
 
@@ -48,8 +49,10 @@ async def _player(db, name: str, *, mastered: int = 0, show: bool = True):
     return user, {"Authorization": f"Bearer {create_access_token(user.id, user.role.value)[0]}"}
 
 
-async def _master(db, user, entry, at):
-    db.add(UserEntryProgress(user_id=user.id, entry_id=entry.id, status=EntryState.MASTERED, mastered_at=at))
+async def _master(db, user, entry, at, first=None):
+    """`first`: lần đầu thuộc (mặc định = `at`); khác `at` nghĩa là đã quên rồi thuộc lại lúc `at`."""
+    db.add(UserEntryProgress(user_id=user.id, entry_id=entry.id, status=EntryState.MASTERED, mastered_at=at,
+                             first_mastered_at=first or at))
     await db.flush()
 
 
@@ -215,7 +218,7 @@ async def test_weekly_leaderboard_rules(client, db_session, clock_at):
         await _master(db_session, c, e, NOW)  # điểm cao nhất nhưng đã tắt hiện trên bảng
     custom = await make_custom(db_session, d, "mine", "của tôi")
     await _master(db_session, d, custom, NOW)  # từ tự tạo: không tính
-    db_session.add(UserEntryProgress(user_id=d.id, entry_id=entries[5].id, status=EntryState.FORGOTTEN, mastered_at=NOW))  # đã quên
+    db_session.add(UserEntryProgress(user_id=d.id, entry_id=entries[5].id, status=EntryState.FORGOTTEN, mastered_at=NOW, first_mastered_at=NOW))  # đã quên
     await db_session.flush()
 
     res = await client.get(f"{API}/leaderboard", params={"board": "weekly"}, headers=ha)
@@ -237,6 +240,22 @@ async def test_weekly_leaderboard_rules(client, db_session, clock_at):
     # Thứ Hai tuần sau 00:00 giờ VN: bảng tuần về trống
     clock_at(datetime(2026, 10, 11, 17, 0, tzinfo=UTC))
     assert (await client.get(f"{API}/leaderboard", params={"board": "weekly"}, headers=ha)).json()["entries"] == []
+
+
+async def test_weekly_leaderboard_counts_only_first_mastery(client, db_session, clock_at):
+    """Quên rồi thuộc lại trong tuần không cộng điểm tuần: chỉ `first_mastered_at` trong tuần mới tính."""
+    clock_at(NOW)
+    cache.memory.clear()
+    entries = [await make_entry(db_session, f"r{i}", f"nghĩa {i}", cefr="A1") for i in range(3)]
+    monday = datetime(2026, 10, 4, 17, 0, tzinfo=UTC)
+    a, ha = await _player(db_session, "an")
+    await _master(db_session, a, entries[0], NOW - timedelta(hours=2))  # lần đầu trong tuần: tính
+    await _master(db_session, a, entries[1], NOW - timedelta(hours=1), first=monday - timedelta(days=3))  # thuộc lại: không tính
+    await _master(db_session, a, entries[2], NOW, first=monday + timedelta(hours=5))  # lần đầu trong tuần, quên rồi thuộc lại: tính 1 lần
+
+    body = (await client.get(f"{API}/leaderboard", params={"board": "weekly"}, headers=ha)).json()
+    assert [(r["username"], r["score"]) for r in body["entries"]] == [(a.username, 2)]
+    assert body["my_entry"]["score"] == 2
 
 
 async def test_alltime_leaderboard_and_cache(client, db_session, clock_at, fake_redis):

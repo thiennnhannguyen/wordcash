@@ -99,6 +99,8 @@ async def record_answer(session: AsyncSession, user: User, entry: Entry, level: 
     progress.status, progress.strong_days, progress.last_strong_day = change.state.status, change.state.strong_days, change.state.last_strong_day
     if change.became_mastered:
         progress.mastered_at = now
+        if progress.first_mastered_at is None:
+            progress.first_mastered_at = now
 
     rewards = await _counters_changed(session, user, *mastery.counter_deltas(change, entry.is_custom), now)
     await _track_activity(session, user, today, new_word=first_time, review=progress.first_seen_day != today, correct=correct)
