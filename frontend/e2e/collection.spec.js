@@ -116,9 +116,11 @@ test('6. pity 20: lượt kế ra Sử Thi', async ({ page, context }) => {
   const spun = page.waitForResponse((r) => r.url().includes('/collection/spins') && r.request().method() === 'POST')
   await page.getByRole('button', { name: 'Mở thẻ' }).click()
   const result = (await (await spun).json()).results[0]
-  expect(result.rarity).toBe('epic')
-  expect(result.pity_triggered).toBe(true)
-  await expect(page.getByText('Sử Thi', { exact: true }).first()).toBeVisible()
+  // Bảo đảm: lượt kế ra ít nhất Sử Thi. Lượt quay tự nhiên đã ra Sử Thi / Huyền Thoại (~12%) thì server không cần kích hoạt
+  // pity (pity_triggered = false) nên chỉ kiểm tra độ hiếm (trước đây kiểm tra pity_triggered làm test thỉnh thoảng hỏng)
+  expect(['epic', 'legendary']).toContain(result.rarity)
+  if (result.rarity === 'epic' && !result.pity_triggered) console.log('pity: lượt tự nhiên đã ra Sử Thi')
+  await expect(page.getByText(result.rarity === 'epic' ? 'Sử Thi' : 'Huyền Thoại', { exact: true }).first()).toBeVisible()
   expect((await collection(page)).pity_counter).toBe(0)
 })
 
