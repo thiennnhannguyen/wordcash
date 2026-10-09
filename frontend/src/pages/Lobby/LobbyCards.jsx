@@ -193,7 +193,7 @@ export function ArenaCard({ mascot }) {
       <VersusBox mascot={mascot} />
 
       <p id="arena-soon" className="font-medium">
-        Đấu 1v1 thời gian thực đang được xây dựng. Học thêm từ ngay hôm nay để vào trận với vốn từ thật.
+        Đấu đối kháng thời gian thực đang được xây dựng. Học thêm từ ngay hôm nay để vào trận với vốn từ thật.
       </p>
 
       <div className="mt-auto flex flex-col gap-4">

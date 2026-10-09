@@ -122,13 +122,18 @@ export function MascotWidget({ mascot }) {
       <WidgetTitle>Linh vật đang dùng</WidgetTitle>
       <div className="flex items-center gap-4">
         <div className="w-32 shrink-0">
-          <MascotCard
-            rarity={mascot.rarity}
-            name={mascot.name}
-            number={mascot.number}
-            compact
-            art={<MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={80} blink />}
-          />
+          {mascot.name ? (
+            <MascotCard
+              rarity={mascot.rarity}
+              name={mascot.name}
+              number={mascot.number}
+              compact
+              art={<MascotBlob color={mascot.color} shape={mascot.shape} traits={mascot.traits} size={80} blink />}
+            />
+          ) : (
+            // Danh mục chưa tải xong hoặc chưa có avatar: không vẽ khung độ hiếm / số thứ tự giả
+            <Skeleton className="aspect-[3/4] w-full" rounded="rounded-[20px]" />
+          )}
         </div>
         <div className="flex min-w-0 flex-col gap-3">
           {mascot.name ? (

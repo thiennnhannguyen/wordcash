@@ -301,7 +301,7 @@ export default function Leaderboard() {
         <h1 className="font-heading text-[32px] font-black uppercase leading-none md:text-h1">Bảng xếp hạng</h1>
         <ChipTabs items={BOARDS} value={board} onChange={(key) => setParams(key === 'weekly' ? {} : { board: key }, { replace: true })} label="Nội dung xếp hạng" />
         <p className="text-caption font-medium text-muted">
-          {board === 'weekly' && 'Xếp theo số từ mới thuộc trong tuần (từ thứ Hai 00:00, giờ Việt Nam). Từ tự tạo không tính.'}
+          {board === 'weekly' && 'Xếp theo số từ mới thuộc trong tuần (tính từ đầu ngày thứ Hai, giờ Việt Nam). Từ tự tạo không tính.'}
           {board === 'alltime' && 'Xếp theo tổng số từ đã thuộc. Từ tự tạo không tính.'}
         </p>
       </header>

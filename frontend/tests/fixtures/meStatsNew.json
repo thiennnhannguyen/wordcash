@@ -1,0 +1,18 @@
+{
+  "mastered_count": 0,
+  "custom_mastered_count": 0,
+  "rank": { "current": "tan_binh", "highest": "tan_binh", "by_words": "tan_binh", "next": "dong", "current_min": 0, "next_min": 100, "remaining": 100, "shaky": false, "shaky_since": null, "shaky_deadline": null, "shaky_seconds_left": null, "words_to_recover": 0 },
+  "streak": { "current": 0, "best": 0, "last_date": null, "week": [
+    { "date": "2026-10-05", "status": "missed", "today": false },
+    { "date": "2026-10-06", "status": "missed", "today": false },
+    { "date": "2026-10-07", "status": "missed", "today": false },
+    { "date": "2026-10-08", "status": "pending", "today": true },
+    { "date": "2026-10-09", "status": "future", "today": false },
+    { "date": "2026-10-10", "status": "future", "today": false },
+    { "date": "2026-10-11", "status": "future", "today": false }
+  ] },
+  "spins": { "normal": 0, "special": 0, "progress": { "current": 0, "target": 50, "remaining": 50 } },
+  "today": { "date": "2026-10-08", "new_words": 0, "new_words_goal": 15, "new_words_cap": 40, "reviews_done": 0, "reviews_total": 0, "due_now": 0, "answers": 0, "correct": 0, "daily_check": "pending", "daily_check_correct": 0, "daily_check_total": 0 },
+  "position": { "level_id": 1, "level_code": "A1", "topic_id": 11, "topic_order": 1, "topic_title": "Chào hỏi", "stages_total": 10, "units_total": 2, "landmark_key": "a1_ho_guom", "landmark_name": "Hồ Gươm & Tháp Rùa", "step": "unit", "unit_id": 101, "unit_position": 1, "unit_title": "Xin chào" },
+  "passport": { "visited": 0, "total": 22 }
+}
