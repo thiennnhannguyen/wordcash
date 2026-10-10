@@ -24,6 +24,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family on bus",
       "variant_note": "",
+      "cloze_en": "Every summer, we go to Hue by train.",
+      "cloze_distractors": [
+        "eat",
+        "read",
+        "cook"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "going places",
@@ -61,6 +67,12 @@
       "mnemonic_vi": "",
       "image_keyword": "city bus",
       "variant_note": "",
+      "cloze_en": "The number 9 bus stops near my school and takes us to the zoo.",
+      "cloze_distractors": [
+        "book",
+        "cake",
+        "river"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "transport",
@@ -98,6 +110,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small car",
       "variant_note": "",
+      "cloze_en": "My uncle drives his car to work every day.",
+      "cloze_distractors": [
+        "house",
+        "cake",
+        "book"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "transport",
@@ -139,6 +157,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid riding bike",
       "variant_note": "",
+      "cloze_en": "I ride my bike to the park and back on weekends.",
+      "cloze_distractors": [
+        "book",
+        "bed",
+        "tree"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "transport",
@@ -176,6 +200,12 @@
       "mnemonic_vi": "",
       "image_keyword": "city at night",
       "variant_note": "",
+      "cloze_en": "Hanoi is a big city with many people, shops and tall buildings.",
+      "cloze_distractors": [
+        "farm",
+        "river",
+        "dog"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -213,6 +243,12 @@
       "mnemonic_vi": "",
       "image_keyword": "students on bus",
       "variant_note": "",
+      "cloze_en": "I wait at the bus stop and go to school by bus.",
+      "cloze_distractors": [
+        "on foot",
+        "half past",
+        "a cup of"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -252,6 +288,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friend at door",
       "variant_note": "",
+      "cloze_en": "It's my birthday on Sunday. Can you come to my party?",
+      "cloze_distractors": [
+        "eat",
+        "sell",
+        "read"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "going places",
@@ -289,6 +331,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pointing here",
       "variant_note": "",
+      "cloze_en": "Come here and sit next to me.",
+      "cloze_distractors": [
+        "there",
+        "yesterday",
+        "ago"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "directions",
@@ -326,6 +374,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small town",
       "variant_note": "",
+      "cloze_en": "My grandparents live in a small town near the sea.",
+      "cloze_distractors": [
+        "box",
+        "cup",
+        "shoe"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -365,6 +419,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids walking to school",
       "variant_note": "",
+      "cloze_en": "I don't have a bike, so I walk to school every day.",
+      "cloze_distractors": [
+        "fly",
+        "swim",
+        "sing"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "going places",
@@ -402,6 +462,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pointing there",
       "variant_note": "",
+      "cloze_en": "Do you see the market over there, next to the bank?",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "directions",
@@ -439,6 +505,12 @@
       "mnemonic_vi": "",
       "image_keyword": "train",
       "variant_note": "",
+      "cloze_en": "At the station, we get on the train to Hue.",
+      "cloze_distractors": [
+        "cake",
+        "house",
+        "river"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "transport",
@@ -476,6 +548,12 @@
       "mnemonic_vi": "",
       "image_keyword": "busy street",
       "variant_note": "",
+      "cloze_en": "There are many small shops on this street.",
+      "cloze_distractors": [
+        "sky",
+        "cup",
+        "cloud"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -515,6 +593,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plane in sky",
       "variant_note": "",
+      "cloze_en": "We fly to Da Nang by plane for our vacation.",
+      "cloze_distractors": [
+        "swim",
+        "cook",
+        "sing"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -552,6 +636,12 @@
       "mnemonic_vi": "",
       "image_keyword": "city map",
       "variant_note": "",
+      "cloze_en": "Let's look at the map to find the way to the hotel.",
+      "cloze_distractors": [
+        "clock",
+        "cake",
+        "song"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -589,6 +679,12 @@
       "mnemonic_vi": "",
       "image_keyword": "signpost",
       "variant_note": "",
+      "cloze_en": "Excuse me, is this the way to the train station?",
+      "cloze_distractors": [
+        "name",
+        "color",
+        "price"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -626,6 +722,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus stop sign",
       "variant_note": "",
+      "cloze_en": "I wait for the number 5 bus at the bus stop near my school.",
+      "cloze_distractors": [
+        "best friend",
+        "orange juice",
+        "sunny day"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -665,6 +767,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bank building",
       "variant_note": "",
+      "cloze_en": "My mom goes to the bank to get money.",
+      "cloze_distractors": [
+        "zoo",
+        "beach",
+        "farm"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -702,6 +810,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small boat",
       "variant_note": "",
+      "cloze_en": "We take a boat across the river to the island.",
+      "cloze_distractors": [
+        "bike",
+        "cow",
+        "desk"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -741,6 +855,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fast train",
       "variant_note": "",
+      "cloze_en": "The plane is very fast. It takes us to Hanoi in two hours.",
+      "cloze_distractors": [
+        "slow",
+        "sick",
+        "hungry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -778,6 +898,12 @@
       "mnemonic_vi": "",
       "image_keyword": "left arrow",
       "variant_note": "",
+      "cloze_en": "Lan writes with her left hand, not her right hand.",
+      "cloze_distractors": [
+        "hungry",
+        "sweet",
+        "sad"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -817,6 +943,12 @@
       "mnemonic_vi": "",
       "image_keyword": "riding motorbike",
       "variant_note": "",
+      "cloze_en": "I ride my bike to school every morning.",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "cook"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -856,6 +988,12 @@
       "mnemonic_vi": "",
       "image_keyword": "slow traffic",
       "variant_note": "",
+      "cloze_en": "The bus is very slow today because of the rain, so I am late.",
+      "cloze_distractors": [
+        "fast",
+        "sweet",
+        "gold"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -893,6 +1031,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hotel near beach",
       "variant_note": "",
+      "cloze_en": "We stay at a small hotel near the beach for three nights.",
+      "cloze_distractors": [
+        "sell",
+        "sing",
+        "drink"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -930,6 +1074,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus stopping",
       "variant_note": "",
+      "cloze_en": "The light is red, so all the cars stop and wait.",
+      "cloze_distractors": [
+        "fly",
+        "swim",
+        "sing"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -969,6 +1119,12 @@
       "mnemonic_vi": "",
       "image_keyword": "yellow taxi",
       "variant_note": "",
+      "cloze_en": "We call a taxi to take us to the airport.",
+      "cloze_distractors": [
+        "cake",
+        "tree",
+        "pen"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1006,6 +1162,12 @@
       "mnemonic_vi": "",
       "image_keyword": "school trip bus",
       "variant_note": "",
+      "cloze_en": "Our class goes on a trip to Ha Long Bay next week.",
+      "cloze_distractors": [
+        "test",
+        "page",
+        "song"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1043,6 +1205,12 @@
       "mnemonic_vi": "",
       "image_keyword": "turning arrow",
       "variant_note": "",
+      "cloze_en": "At the corner, turn right and you can see the bank.",
+      "cloze_distractors": [
+        "eat",
+        "sleep",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -1080,6 +1248,12 @@
       "mnemonic_vi": "",
       "image_keyword": "left turn sign",
       "variant_note": "",
+      "cloze_en": "To find the bank, go to the corner and turn left. The bank is on your left.",
+      "cloze_distractors": [
+        "get up",
+        "have lunch",
+        "take a shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -1119,6 +1293,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waiting at gate",
       "variant_note": "",
+      "cloze_en": "I wait for the bus at the bus stop every morning.",
+      "cloze_distractors": [
+        "drink",
+        "sell",
+        "paint"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1156,6 +1336,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hotel with pool",
       "variant_note": "",
+      "cloze_en": "On vacation, we sleep in a hotel near the beach for three nights.",
+      "cloze_distractors": [
+        "bank",
+        "school",
+        "zoo"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1193,6 +1379,12 @@
       "mnemonic_vi": "",
       "image_keyword": "train leaving",
       "variant_note": "",
+      "cloze_en": "Our train will leave at seven, so please come to the station early.",
+      "cloze_distractors": [
+        "sing",
+        "cook",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1230,6 +1422,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old town street",
       "variant_note": "",
+      "cloze_en": "Hoi An is a beautiful place to visit.",
+      "cloze_distractors": [
+        "song",
+        "color",
+        "word"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1269,6 +1467,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plane landing",
       "variant_note": "",
+      "cloze_en": "We fly to Da Nang on a big plane.",
+      "cloze_distractors": [
+        "boat",
+        "horse",
+        "bike"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1306,6 +1510,12 @@
       "mnemonic_vi": "",
       "image_keyword": "right hand",
       "variant_note": "",
+      "cloze_en": "Lan writes with her right hand, not her left hand.",
+      "cloze_distractors": [
+        "hungry",
+        "sweet",
+        "sad"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -1345,6 +1555,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family visiting grandparents",
       "variant_note": "",
+      "cloze_en": "Every Tet, we visit our grandparents at their house.",
+      "cloze_distractors": [
+        "sell",
+        "cook",
+        "paint"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1384,6 +1600,12 @@
       "mnemonic_vi": "",
       "image_keyword": "arriving at hotel",
       "variant_note": "",
+      "cloze_en": "Our plane leaves Hanoi at ten and will arrive in Da Nang at eleven.",
+      "cloze_distractors": [
+        "sing",
+        "read",
+        "cook"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1423,6 +1645,12 @@
       "mnemonic_vi": "",
       "image_keyword": "movie theater",
       "variant_note": "Mỹ thường dùng: movie theater",
+      "cloze_en": "We watch a new movie at the cinema on Saturday.",
+      "cloze_distractors": [
+        "bank",
+        "hospital",
+        "farm"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1462,6 +1690,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus driver",
       "variant_note": "",
+      "cloze_en": "The bus driver stops the bus and opens the door for us.",
+      "cloze_distractors": [
+        "student",
+        "farmer",
+        "singer"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1499,6 +1733,12 @@
       "mnemonic_vi": "",
       "image_keyword": "right turn sign",
       "variant_note": "",
+      "cloze_en": "Turn right at the corner. The bank is on your right.",
+      "cloze_distractors": [
+        "get up",
+        "have lunch",
+        "take a shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -1538,6 +1778,12 @@
       "mnemonic_vi": "",
       "image_keyword": "office desk",
       "variant_note": "",
+      "cloze_en": "My dad works at a desk with a computer in his office.",
+      "cloze_distractors": [
+        "river",
+        "sky",
+        "tree"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1575,6 +1821,12 @@
       "mnemonic_vi": "",
       "image_keyword": "train ticket",
       "variant_note": "",
+      "cloze_en": "You need a ticket to get on the train.",
+      "cloze_distractors": [
+        "kite",
+        "cake",
+        "song"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1614,6 +1866,12 @@
       "mnemonic_vi": "",
       "image_keyword": "suitcase and map",
       "variant_note": "",
+      "cloze_en": "My parents like to travel to new places by train.",
+      "cloze_distractors": [
+        "sing",
+        "eat",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1651,6 +1909,12 @@
       "mnemonic_vi": "",
       "image_keyword": "airport",
       "variant_note": "",
+      "cloze_en": "We go to the airport to take a plane to Hanoi.",
+      "cloze_distractors": [
+        "hospital",
+        "farm",
+        "library"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1692,6 +1956,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old bicycle",
       "variant_note": "",
+      "cloze_en": "Grandpa rides his old bicycle to the market.",
+      "cloze_distractors": [
+        "bed",
+        "book",
+        "tree"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1729,6 +1999,12 @@
       "mnemonic_vi": "",
       "image_keyword": "holiday decorations",
       "variant_note": "Mỹ thường dùng: vacation",
+      "cloze_en": "Tet is a big holiday, and we don't go to school or work.",
+      "cloze_distractors": [
+        "test",
+        "job",
+        "lesson"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1766,6 +2042,12 @@
       "mnemonic_vi": "",
       "image_keyword": "train station",
       "variant_note": "",
+      "cloze_en": "We wait for the train at the station.",
+      "cloze_distractors": [
+        "hospital",
+        "kitchen",
+        "bank"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1805,6 +2087,12 @@
       "mnemonic_vi": "",
       "image_keyword": "airplane drawing",
       "variant_note": "",
+      "cloze_en": "We fly to Hanoi on a big airplane with many seats.",
+      "cloze_distractors": [
+        "boat",
+        "horse",
+        "bike"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "transport",
@@ -1844,6 +2132,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tall building",
       "variant_note": "",
+      "cloze_en": "This tall building in the city has fifty floors.",
+      "cloze_distractors": [
+        "tree",
+        "river",
+        "cat"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1881,6 +2175,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hospital",
       "variant_note": "",
+      "cloze_en": "My aunt is a doctor, and she works at the hospital.",
+      "cloze_distractors": [
+        "zoo",
+        "beach",
+        "farm"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -1918,6 +2218,12 @@
       "mnemonic_vi": "",
       "image_keyword": "straight arrow",
       "variant_note": "",
+      "cloze_en": "Don't turn left or right. Go straight, and you will see the park.",
+      "cloze_distractors": [
+        "get up",
+        "have lunch",
+        "take a shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "directions",
@@ -1957,6 +2263,12 @@
       "mnemonic_vi": "",
       "image_keyword": "beach vacation",
       "variant_note": "",
+      "cloze_en": "In summer, we go to the beach for our vacation.",
+      "cloze_distractors": [
+        "homework",
+        "test",
+        "lesson"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "going places",
@@ -1994,6 +2306,12 @@
       "mnemonic_vi": "",
       "image_keyword": "far road",
       "variant_note": "",
+      "cloze_en": "The beach is two hours away by car.",
+      "cloze_distractors": [
+        "yesterday",
+        "tomorrow",
+        "again"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -2031,6 +2349,12 @@
       "mnemonic_vi": "",
       "image_keyword": "returning home",
       "variant_note": "",
+      "cloze_en": "We go to Hue on Friday and come back home on Sunday night.",
+      "cloze_distractors": [
+        "ago",
+        "yesterday",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -2070,6 +2394,12 @@
       "mnemonic_vi": "",
       "image_keyword": "car on wet road",
       "variant_note": "",
+      "cloze_en": "Dad, please don't drive so fast! The street is wet.",
+      "cloze_distractors": [
+        "carefully",
+        "yesterday",
+        "ago"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2107,6 +2437,12 @@
       "mnemonic_vi": "",
       "image_keyword": "notebook plan",
       "variant_note": "",
+      "cloze_en": "What is your plan for the weekend? Do you want to go to the zoo?",
+      "cloze_distractors": [
+        "color",
+        "size",
+        "age"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2146,6 +2482,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bike ride",
       "variant_note": "",
+      "cloze_en": "Can I have a ride on your new bike?",
+      "cloze_distractors": [
+        "song",
+        "color",
+        "name"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -2185,6 +2527,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus seats",
       "variant_note": "",
+      "cloze_en": "Excuse me, is this seat free? Can I sit here?",
+      "cloze_distractors": [
+        "book",
+        "cake",
+        "cup"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2222,6 +2570,12 @@
       "mnemonic_vi": "",
       "image_keyword": "big ship",
       "variant_note": "",
+      "cloze_en": "The big ship carries people across the sea to the island.",
+      "cloze_distractors": [
+        "bus",
+        "horse",
+        "bike"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -2259,6 +2613,12 @@
       "mnemonic_vi": "",
       "image_keyword": "road sign",
       "variant_note": "",
+      "cloze_en": "The sign on the door says the shop is closed.",
+      "cloze_distractors": [
+        "dog",
+        "cake",
+        "cloud"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2296,6 +2656,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus stop",
       "variant_note": "",
+      "cloze_en": "We wait at the stop for the number 9 bus.",
+      "cloze_distractors": [
+        "sky",
+        "cake",
+        "river"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2333,6 +2699,12 @@
       "mnemonic_vi": "",
       "image_keyword": "train station",
       "variant_note": "",
+      "cloze_en": "We buy tickets at the train station and wait for the train.",
+      "cloze_distractors": [
+        "best friend",
+        "orange juice",
+        "sunny day"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2372,6 +2744,12 @@
       "mnemonic_vi": "",
       "image_keyword": "road with turns",
       "variant_note": "",
+      "cloze_en": "Take the second turn on the left, and the bank is there.",
+      "cloze_distractors": [
+        "cake",
+        "song",
+        "color"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -2409,6 +2787,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family walking",
       "variant_note": "",
+      "cloze_en": "After dinner, we go for a walk in the park.",
+      "cloze_distractors": [
+        "test",
+        "page",
+        "color"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2446,6 +2830,12 @@
       "mnemonic_vi": "",
       "image_keyword": "right arrow",
       "variant_note": "",
+      "cloze_en": "At the corner, go right, not left.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -2483,6 +2873,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tower",
       "variant_note": "",
+      "cloze_en": "From the top of the tall tower, we can see the city.",
+      "cloze_distractors": [
+        "shoe",
+        "cup",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2520,6 +2916,12 @@
       "mnemonic_vi": "",
       "image_keyword": "truck",
       "variant_note": "",
+      "cloze_en": "A big truck brings rice to the market every morning.",
+      "cloze_distractors": [
+        "cat",
+        "cake",
+        "book"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -2559,6 +2961,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family tour",
       "variant_note": "",
+      "cloze_en": "Our visit to Grandma's house is short but fun.",
+      "cloze_distractors": [
+        "color",
+        "name",
+        "price"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2596,6 +3004,12 @@
       "mnemonic_vi": "",
       "image_keyword": "globe",
       "variant_note": "",
+      "cloze_en": "I want to travel around the world and see many places.",
+      "cloze_distractors": [
+        "desk",
+        "cup",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2633,6 +3047,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old bridge",
       "variant_note": "",
+      "cloze_en": "We walk across the old bridge over the river.",
+      "cloze_distractors": [
+        "cake",
+        "cloud",
+        "song"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2670,6 +3090,12 @@
       "mnemonic_vi": "",
       "image_keyword": "camera",
       "variant_note": "",
+      "cloze_en": "Take your camera on the trip so you can take many photos.",
+      "cloze_distractors": [
+        "umbrella",
+        "towel",
+        "map"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2707,6 +3133,12 @@
       "mnemonic_vi": "",
       "image_keyword": "subway train",
       "variant_note": "",
+      "cloze_en": "In big cities, many people go to work by subway under the ground.",
+      "cloze_distractors": [
+        "boat",
+        "horse",
+        "plane"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -2744,6 +3176,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old temple",
       "variant_note": "",
+      "cloze_en": "The old temple on the hill has a big bell and many trees.",
+      "cloze_distractors": [
+        "cup",
+        "shoe",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2781,6 +3219,12 @@
       "mnemonic_vi": "",
       "image_keyword": "people boarding bus",
       "variant_note": "",
+      "cloze_en": "The bus is here. Let's get on and find a seat.",
+      "cloze_distractors": [
+        "go to bed",
+        "have lunch",
+        "wash the dishes"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -2822,6 +3266,12 @@
       "mnemonic_vi": "",
       "image_keyword": "crossing street",
       "variant_note": "",
+      "cloze_en": "Be careful when you walk across the street. Look left and right.",
+      "cloze_distractors": [
+        "hungry",
+        "lazy",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -2859,6 +3309,12 @@
       "mnemonic_vi": "",
       "image_keyword": "factory",
       "variant_note": "",
+      "cloze_en": "My uncle works at a factory that makes shoes.",
+      "cloze_distractors": [
+        "beach",
+        "river",
+        "zoo"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2898,6 +3354,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tourists with map",
       "variant_note": "",
+      "cloze_en": "\"Hello\" is an English word, not a Vietnamese word. For us, it is a foreign word.",
+      "cloze_distractors": [
+        "hungry",
+        "sick",
+        "tired"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -2935,6 +3397,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing outside",
       "variant_note": "",
+      "cloze_en": "It's sunny today. Let's go and play outside.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -2976,6 +3444,12 @@
       "mnemonic_vi": "",
       "image_keyword": "running to bus",
       "variant_note": "",
+      "cloze_en": "Eat your breakfast quickly. The bus is here!",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "tomorrow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -3013,6 +3487,12 @@
       "mnemonic_vi": "",
       "image_keyword": "theater stage",
       "variant_note": "",
+      "cloze_en": "We buy tickets to see singers at the theater tonight.",
+      "cloze_distractors": [
+        "kitchen",
+        "bathroom",
+        "hospital"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -3050,6 +3530,12 @@
       "mnemonic_vi": "",
       "image_keyword": "straight road",
       "variant_note": "",
+      "cloze_en": "Don't turn left or right. Walk straight, and the bank is there.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -3089,6 +3575,12 @@
       "mnemonic_vi": "",
       "image_keyword": "careful driving",
       "variant_note": "",
+      "cloze_en": "Dad drives carefully in the rain because the street is wet.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "going places",
@@ -3128,6 +3620,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tourist asking directions",
       "variant_note": "",
+      "cloze_en": "A foreigner on vacation in Hanoi asks me the way to the market.",
+      "cloze_distractors": [
+        "cat",
+        "cake",
+        "tree"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -3165,6 +3663,12 @@
       "mnemonic_vi": "",
       "image_keyword": "flowers everywhere",
       "variant_note": "",
+      "cloze_en": "At Tet, there are flowers everywhere: in the house, on the street and at the market.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "directions",
@@ -3202,6 +3706,12 @@
       "mnemonic_vi": "",
       "image_keyword": "walking feet",
       "variant_note": "",
+      "cloze_en": "My school is near my house, so I go on foot every day.",
+      "cloze_distractors": [
+        "half past",
+        "a cup of",
+        "last week"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "transport",
@@ -3241,6 +3751,12 @@
       "mnemonic_vi": "",
       "image_keyword": "jet in sky",
       "variant_note": "",
+      "cloze_en": "A jet flies very fast high over our house.",
+      "cloze_distractors": [
+        "cow",
+        "cake",
+        "table"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "transport",
@@ -3278,6 +3794,12 @@
       "mnemonic_vi": "",
       "image_keyword": "city blocks",
       "variant_note": "",
+      "cloze_en": "Our school is one block from my house, so I walk there.",
+      "cloze_distractors": [
+        "cake",
+        "song",
+        "color"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "places in town",
@@ -3317,6 +3839,12 @@
       "mnemonic_vi": "",
       "image_keyword": "car on road",
       "variant_note": "",
+      "cloze_en": "It's a short drive to the beach by car.",
+      "cloze_distractors": [
+        "song",
+        "cake",
+        "page"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "transport",
@@ -3354,6 +3882,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bike wheel",
       "variant_note": "",
+      "cloze_en": "My bike has a new back wheel.",
+      "cloze_distractors": [
+        "hat",
+        "cake",
+        "song"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "transport",
@@ -3391,6 +3925,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old palace",
       "variant_note": "",
+      "cloze_en": "We visit the old palace in Hue.",
+      "cloze_distractors": [
+        "cup",
+        "shoe",
+        "egg"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "places in town",
