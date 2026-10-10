@@ -45,6 +45,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -90,6 +92,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -135,6 +139,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -178,6 +184,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -224,6 +232,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -269,6 +279,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -314,6 +326,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -357,6 +371,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -402,6 +418,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -447,6 +465,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -490,6 +510,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -535,6 +557,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -578,6 +602,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -623,6 +649,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -666,6 +694,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -709,6 +739,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -752,6 +784,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#36daf8e9bc28"
@@ -795,6 +829,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -838,6 +874,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -881,6 +919,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -924,6 +964,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -967,6 +1009,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1010,6 +1054,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1053,6 +1099,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1096,6 +1144,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1139,6 +1189,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1184,6 +1236,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1227,6 +1281,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1270,6 +1326,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1313,6 +1371,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1356,6 +1416,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1399,6 +1461,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1442,6 +1506,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1485,6 +1551,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1528,6 +1596,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1571,6 +1641,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1614,6 +1686,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1657,6 +1731,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1700,6 +1776,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1745,6 +1823,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1788,6 +1868,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1831,6 +1913,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1874,6 +1958,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1919,6 +2005,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -1962,6 +2050,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2005,6 +2095,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2048,6 +2140,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2091,6 +2185,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2134,6 +2230,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2177,6 +2275,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2220,6 +2320,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2265,6 +2367,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2308,6 +2412,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2351,6 +2457,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2394,6 +2502,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2437,6 +2547,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2484,6 +2596,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2527,6 +2641,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2570,6 +2686,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2613,6 +2731,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2658,6 +2778,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2701,6 +2823,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2746,6 +2870,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2789,6 +2915,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2832,6 +2960,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2875,6 +3005,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2918,6 +3050,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -2961,6 +3095,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -3006,6 +3142,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -3049,6 +3187,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -3094,6 +3234,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -3137,6 +3279,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"
@@ -3182,6 +3326,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#8e7f99160cc2"

@@ -121,6 +121,10 @@ class ContentEntry(_Model):
     # Duyệt
     status: STATUS = "draft"
     reviewed_at: datetime | None = None
+    # Cách duyệt: "manual" = người duyệt bấm Duyệt / Từ chối (/dev/content, bảng tính bước 05); "sample" = duyệt hàng loạt
+    # theo mẫu (`pipeline approve-by-sample`); "" = chưa duyệt / về lại draft
+    review_method: Literal["", "manual", "sample"] = ""
+    review_sample: bool = False  # thuộc đợt mẫu duyệt của chủ đề (`pipeline sample`, lib/sample.py)
     review_note: str = ""
     reject_reason: str = ""
     ai_prompt: str = ""  # vd. "enrich_v1#<mã băm>" — prompt đã soạn bản nháp

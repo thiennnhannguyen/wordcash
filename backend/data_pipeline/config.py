@@ -67,6 +67,9 @@ CLOZE_DISTRACTORS = 3
 AI_PROVIDERS = ("agent", "anthropic")
 ENRICH_BATCH_SIZE = 15  # 10–20 mục mỗi request
 CLOZE_BATCH_SIZE = 15  # bước 03_cloze: mục mỗi request (cùng chủ đề)
+
+# Đợt mẫu duyệt (lib/sample.py): số mục ngẫu nhiên mỗi chủ đề (cộng thêm mục bắt buộc phải xem)
+SAMPLE_PER_TOPIC = 15
 CLASSIFY_BATCH_SIZE = 40
 AI_MAX_RETRIES = 3
 TOPIC_CONFIDENCE_MIN = 0.6  # thấp hơn → needs_topic_review
