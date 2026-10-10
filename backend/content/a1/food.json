@@ -24,6 +24,12 @@
       "mnemonic_vi": "",
       "image_keyword": "lunch tray",
       "variant_note": "",
+      "cloze_en": "At twelve o'clock, we have lunch at school: rice, fish and soup.",
+      "cloze_distractors": [
+        "have breakfast",
+        "have dinner",
+        "take a shower"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -63,6 +69,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family at dinner table",
       "variant_note": "",
+      "cloze_en": "At seven in the evening, my family and I have dinner together.",
+      "cloze_distractors": [
+        "have breakfast",
+        "have lunch",
+        "get up"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -102,6 +114,12 @@
       "mnemonic_vi": "",
       "image_keyword": "breakfast table",
       "variant_note": "",
+      "cloze_en": "Every morning at six thirty, I have breakfast with bread and milk.",
+      "cloze_distractors": [
+        "have dinner",
+        "have lunch",
+        "go to bed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -141,6 +159,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cup of green tea",
       "variant_note": "",
+      "cloze_en": "My grandpa drinks hot green tea every morning.",
+      "cloze_distractors": [
+        "bread",
+        "rice",
+        "egg"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -181,6 +205,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father cooking",
       "variant_note": "",
+      "cloze_en": "My dad likes to cook fish soup in the kitchen on Sundays.",
+      "cloze_distractors": [
+        "read",
+        "sing",
+        "ride"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "cooking",
@@ -218,6 +248,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plate of fried rice",
       "variant_note": "",
+      "cloze_en": "My mom cooks rice in a pan with eggs and vegetables to make fried rice.",
+      "cloze_distractors": [
+        "orange juice",
+        "best friend",
+        "bus stop"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -257,6 +293,12 @@
       "mnemonic_vi": "",
       "image_keyword": "person holding stomach",
       "variant_note": "",
+      "cloze_en": "I didn't eat lunch today. I'm hungry. Let's eat pho now.",
+      "cloze_distractors": [
+        "Happy birthday",
+        "Turn left",
+        "See you tomorrow"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "meals",
@@ -296,6 +338,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fish on plate",
       "variant_note": "",
+      "cloze_en": "A fish lives in water and can swim, but it can't walk.",
+      "cloze_distractors": [
+        "cow",
+        "dog",
+        "bird"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -333,6 +381,12 @@
       "mnemonic_vi": "",
       "image_keyword": "glass of orange juice",
       "variant_note": "",
+      "cloze_en": "I drink a glass of orange juice made from fresh oranges.",
+      "cloze_distractors": [
+        "fried rice",
+        "best friend",
+        "dry season"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -372,6 +426,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cup of tea",
       "variant_note": "",
+      "cloze_en": "My dad drinks a cup of hot tea after lunch.",
+      "cloze_distractors": [
+        "on sale",
+        "half past",
+        "best friend"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -411,6 +471,12 @@
       "mnemonic_vi": "",
       "image_keyword": "street food stall",
       "variant_note": "",
+      "cloze_en": "The market sells a lot of food: rice, meat, fish and fruit.",
+      "cloze_distractors": [
+        "clothes",
+        "jewelry",
+        "paper"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -448,6 +514,12 @@
       "mnemonic_vi": "",
       "image_keyword": "glass of water",
       "variant_note": "",
+      "cloze_en": "It is hot, so I drink a glass of cold water.",
+      "cloze_distractors": [
+        "on sale",
+        "half past",
+        "last week"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -487,6 +559,12 @@
       "mnemonic_vi": "",
       "image_keyword": "glass of milk",
       "variant_note": "",
+      "cloze_en": "Cows give us milk, and we drink it every morning.",
+      "cloze_distractors": [
+        "tea",
+        "coffee",
+        "juice"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -526,6 +604,12 @@
       "mnemonic_vi": "",
       "image_keyword": "person eating rice",
       "variant_note": "",
+      "cloze_en": "We eat rice with fish and vegetables for dinner.",
+      "cloze_distractors": [
+        "read",
+        "wear",
+        "sing"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -563,6 +647,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bowl of rice",
       "variant_note": "",
+      "cloze_en": "In Vietnam, people grow rice in the fields and eat it every day.",
+      "cloze_distractors": [
+        "bread",
+        "milk",
+        "cheese"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -600,6 +690,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red apple",
       "variant_note": "",
+      "cloze_en": "An apple is a round fruit that can be red or green.",
+      "cloze_distractors": [
+        "banana",
+        "egg",
+        "bread"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -637,6 +733,12 @@
       "mnemonic_vi": "",
       "image_keyword": "eggs in a bowl",
       "variant_note": "",
+      "cloze_en": "We break an egg and cook it in the pan for breakfast.",
+      "cloze_distractors": [
+        "apple",
+        "banana",
+        "cup"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -674,6 +776,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fresh bread",
       "variant_note": "",
+      "cloze_en": "I eat banh mi, a kind of bread with meat inside.",
+      "cloze_distractors": [
+        "soup",
+        "fruit",
+        "drink"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -711,6 +819,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cold drinks",
       "variant_note": "",
+      "cloze_en": "It is very hot. Can I have a cold drink, please?",
+      "cloze_distractors": [
+        "shirt",
+        "chair",
+        "book"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -748,6 +862,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid drinking water",
       "variant_note": "",
+      "cloze_en": "Drink a lot of water on hot days.",
+      "cloze_distractors": [
+        "read",
+        "wear",
+        "draw"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -785,6 +905,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fruit basket",
       "variant_note": "",
+      "cloze_en": "Bananas, apples and oranges are kinds of fruit.",
+      "cloze_distractors": [
+        "meat",
+        "fish",
+        "bread"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -822,6 +948,12 @@
       "mnemonic_vi": "",
       "image_keyword": "school lunch tray",
       "variant_note": "",
+      "cloze_en": "At twelve o'clock, we eat lunch at school.",
+      "cloze_distractors": [
+        "breakfast",
+        "dinner",
+        "homework"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -859,6 +991,12 @@
       "mnemonic_vi": "",
       "image_keyword": "glass of water",
       "variant_note": "",
+      "cloze_en": "Fish live in water, and we drink it every day.",
+      "cloze_distractors": [
+        "milk",
+        "coffee",
+        "juice"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -896,6 +1034,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bunch of bananas",
       "variant_note": "",
+      "cloze_en": "A banana is a long yellow fruit, and monkeys love it.",
+      "cloze_distractors": [
+        "apple",
+        "orange",
+        "grape"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -933,6 +1077,12 @@
       "mnemonic_vi": "",
       "image_keyword": "iced coffee",
       "variant_note": "",
+      "cloze_en": "My dad drinks black coffee to stay awake in the morning.",
+      "cloze_distractors": [
+        "milk",
+        "juice",
+        "water"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -970,6 +1120,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family dinner",
       "variant_note": "",
+      "cloze_en": "At seven in the evening, dinner is ready, so come and eat.",
+      "cloze_distractors": [
+        "breakfast",
+        "lunch",
+        "homework"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1009,6 +1165,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hungry baby",
       "variant_note": "",
+      "cloze_en": "The baby cries because he is hungry, so his mom gives him milk.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "cloudy"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1046,6 +1208,12 @@
       "mnemonic_vi": "",
       "image_keyword": "chicken soup",
       "variant_note": "",
+      "cloze_en": "We get eggs from the chicken in our yard.",
+      "cloze_distractors": [
+        "cow",
+        "dog",
+        "cat"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -1083,6 +1251,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bowl of pho",
       "variant_note": "",
+      "cloze_en": "I eat pho for breakfast at six in the morning before school.",
+      "cloze_distractors": [
+        "dinner",
+        "lunch",
+        "homework"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1120,6 +1294,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green vegetables",
       "variant_note": "",
+      "cloze_en": "A potato is a vegetable that grows under the ground.",
+      "cloze_distractors": [
+        "fruit",
+        "meat",
+        "drink"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -1157,6 +1337,12 @@
       "mnemonic_vi": "",
       "image_keyword": "restaurant table",
       "variant_note": "",
+      "cloze_en": "We eat dinner at a restaurant, and a waiter brings our food.",
+      "cloze_distractors": [
+        "bank",
+        "school",
+        "library"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "eating out",
@@ -1194,6 +1380,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cup with handle",
       "variant_note": "",
+      "cloze_en": "I drink hot tea from a cup.",
+      "cloze_distractors": [
+        "knife",
+        "bag",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -1231,6 +1423,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cutting cake",
       "variant_note": "",
+      "cloze_en": "Mom uses a knife to cut the cake into eight pieces.",
+      "cloze_distractors": [
+        "drink",
+        "sing",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "cooking",
@@ -1268,6 +1466,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bowl of rice",
       "variant_note": "",
+      "cloze_en": "I eat a big bowl of rice for dinner.",
+      "cloze_distractors": [
+        "bottle",
+        "knife",
+        "chair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -1305,6 +1509,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small cafe",
       "variant_note": "",
+      "cloze_en": "Lan and I sit at a cafe and drink coffee after class.",
+      "cloze_distractors": [
+        "hospital",
+        "bank",
+        "factory"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "eating out",
@@ -1342,6 +1552,12 @@
       "mnemonic_vi": "",
       "image_keyword": "chocolate cake",
       "variant_note": "",
+      "cloze_en": "Mom makes a sweet chocolate cake for my birthday.",
+      "cloze_distractors": [
+        "soup",
+        "meat",
+        "fish"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -1379,6 +1595,12 @@
       "mnemonic_vi": "",
       "image_keyword": "meal on table",
       "variant_note": "",
+      "cloze_en": "Breakfast is the first meal of the day.",
+      "cloze_distractors": [
+        "month",
+        "week",
+        "year"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1416,6 +1638,12 @@
       "mnemonic_vi": "",
       "image_keyword": "meat at market",
       "variant_note": "",
+      "cloze_en": "My brother does not eat meat, so he never eats chicken or beef.",
+      "cloze_distractors": [
+        "fruit",
+        "bread",
+        "cake"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -1453,6 +1681,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bowl of soup",
       "variant_note": "",
+      "cloze_en": "Grandma cooks hot chicken soup that we eat with a spoon.",
+      "cloze_distractors": [
+        "bread",
+        "apple",
+        "candy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -1492,6 +1726,12 @@
       "mnemonic_vi": "",
       "image_keyword": "colorful candy",
       "variant_note": "",
+      "cloze_en": "Too much candy is bad for your teeth because it is very sweet.",
+      "cloze_distractors": [
+        "water",
+        "rice",
+        "fish"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -1529,6 +1769,12 @@
       "mnemonic_vi": "",
       "image_keyword": "drinking glasses",
       "variant_note": "",
+      "cloze_en": "Please give me a glass of water.",
+      "cloze_distractors": [
+        "knife",
+        "chair",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -1566,6 +1812,12 @@
       "mnemonic_vi": "",
       "image_keyword": "glass of juice",
       "variant_note": "",
+      "cloze_en": "I make juice from fresh apples and drink it with ice.",
+      "cloze_distractors": [
+        "soup",
+        "bread",
+        "meat"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "drinks",
@@ -1603,6 +1855,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pizza",
       "variant_note": "",
+      "cloze_en": "We order a big pizza with cheese on top on Friday night.",
+      "cloze_distractors": [
+        "juice",
+        "milk",
+        "tea"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -1642,6 +1900,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sweet mango",
       "variant_note": "",
+      "cloze_en": "These bananas are very sweet, like candy.",
+      "cloze_distractors": [
+        "angry",
+        "broken",
+        "cloudy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1679,6 +1943,12 @@
       "mnemonic_vi": "",
       "image_keyword": "water bottle",
       "variant_note": "",
+      "cloze_en": "Take a bottle of water to school on hot days.",
+      "cloze_distractors": [
+        "knife",
+        "chair",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -1716,6 +1986,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plate of cookies",
       "variant_note": "",
+      "cloze_en": "A cookie is a small, sweet, hard cake that you can eat with milk.",
+      "cloze_distractors": [
+        "soup",
+        "fish",
+        "salad"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -1753,6 +2029,12 @@
       "mnemonic_vi": "",
       "image_keyword": "orange fruit",
       "variant_note": "",
+      "cloze_en": "My favorite fruit is round, sweet and has the same name as its color: orange.",
+      "cloze_distractors": [
+        "banana",
+        "apple",
+        "grape"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -1790,6 +2072,12 @@
       "mnemonic_vi": "",
       "image_keyword": "potatoes",
       "variant_note": "",
+      "cloze_en": "A potato grows under the ground, and we can cook it in many ways.",
+      "cloze_distractors": [
+        "banana",
+        "apple",
+        "grape"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -1827,6 +2115,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red tomatoes",
       "variant_note": "",
+      "cloze_en": "A tomato is red and round, and we put it in soup and salad.",
+      "cloze_distractors": [
+        "banana",
+        "potato",
+        "corn"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -1864,6 +2158,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cheese sandwich",
       "variant_note": "",
+      "cloze_en": "I put cheese and meat between two pieces of bread to make a sandwich.",
+      "cloze_distractors": [
+        "soup",
+        "juice",
+        "salad"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -1901,6 +2201,12 @@
       "mnemonic_vi": "",
       "image_keyword": "chocolate bar",
       "variant_note": "",
+      "cloze_en": "My little brother loves sweet brown chocolate.",
+      "cloze_distractors": [
+        "rice",
+        "fish",
+        "milk"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -1940,6 +2246,12 @@
       "mnemonic_vi": "",
       "image_keyword": "delicious dish",
       "variant_note": "",
+      "cloze_en": "The fish soup is delicious, so I eat two bowls of it.",
+      "cloze_distractors": [
+        "broken",
+        "angry",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "meals",
@@ -1977,6 +2289,12 @@
       "mnemonic_vi": "",
       "image_keyword": "ice cream cone",
       "variant_note": "",
+      "cloze_en": "On hot days, we eat cold ice cream with chocolate on top.",
+      "cloze_distractors": [
+        "soup",
+        "rice",
+        "fish"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -2014,6 +2332,12 @@
       "mnemonic_vi": "",
       "image_keyword": "adding sugar",
       "variant_note": "",
+      "cloze_en": "The coffee is not sweet, so I add some sugar to it.",
+      "cloze_distractors": [
+        "sell",
+        "cut",
+        "close"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "cooking",
@@ -2051,6 +2375,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green beans",
       "variant_note": "",
+      "cloze_en": "Coffee comes from a small brown bean that grows on a tree.",
+      "cloze_distractors": [
+        "egg",
+        "fish",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -2088,6 +2418,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sliced beef",
       "variant_note": "",
+      "cloze_en": "Beef is the meat that comes from a cow.",
+      "cloze_distractors": [
+        "chicken",
+        "fish",
+        "bread"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -2129,6 +2465,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cook in kitchen",
       "variant_note": "",
+      "cloze_en": "My aunt is a cook: she makes food for people at a hotel.",
+      "cloze_distractors": [
+        "singer",
+        "driver",
+        "doctor"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "cooking",
@@ -2166,6 +2508,12 @@
       "mnemonic_vi": "",
       "image_keyword": "corn on the cob",
       "variant_note": "",
+      "cloze_en": "We buy hot yellow corn at the night market.",
+      "cloze_distractors": [
+        "rice",
+        "fish",
+        "milk"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -2203,6 +2551,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plate of food",
       "variant_note": "",
+      "cloze_en": "Fried rice is an easy dish to make at home.",
+      "cloze_distractors": [
+        "drink",
+        "game",
+        "song"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -2240,6 +2594,12 @@
       "mnemonic_vi": "",
       "image_keyword": "full stomach",
       "variant_note": "",
+      "cloze_en": "No more rice, thanks. I ate a lot and I am full.",
+      "cloze_distractors": [
+        "hungry",
+        "cloudy",
+        "broken"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "meals",
@@ -2279,6 +2639,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bowl of cream",
       "variant_note": "",
+      "cloze_en": "I like my coffee with white cream on top.",
+      "cloze_distractors": [
+        "fish",
+        "rice",
+        "meat"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -2316,6 +2682,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bunch of grapes",
       "variant_note": "",
+      "cloze_en": "A grape is a small, round, purple or green fruit.",
+      "cloze_distractors": [
+        "banana",
+        "orange",
+        "potato"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "fruit and vegetables",
@@ -2355,6 +2727,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kitchen knife",
       "variant_note": "",
+      "cloze_en": "Mom uses a knife to cut the meat for dinner.",
+      "cloze_distractors": [
+        "cup",
+        "towel",
+        "ball"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "tableware",
@@ -2392,6 +2770,12 @@
       "mnemonic_vi": "",
       "image_keyword": "salad bowl",
       "variant_note": "",
+      "cloze_en": "Mom makes a cold salad with tomatoes, eggs and green leaves.",
+      "cloze_distractors": [
+        "juice",
+        "cake",
+        "coffee"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -2429,6 +2813,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fresh bread smell",
       "variant_note": "",
+      "cloze_en": "I love the smell of fresh bread from the kitchen.",
+      "cloze_distractors": [
+        "noise",
+        "weather",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "meals",
@@ -2466,6 +2856,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sugar bowl",
       "variant_note": "",
+      "cloze_en": "The tea is not sweet. Can I have some sugar, please?",
+      "cloze_distractors": [
+        "rice",
+        "meat",
+        "paper"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -2503,6 +2899,12 @@
       "mnemonic_vi": "",
       "image_keyword": "butter on bread",
       "variant_note": "",
+      "cloze_en": "Butter is made from milk, and we put it on hot bread.",
+      "cloze_distractors": [
+        "juice",
+        "sugar",
+        "coffee"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -2540,6 +2942,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cheese",
       "variant_note": "",
+      "cloze_en": "Cheese is a yellow food made from milk, and we put it on pizza.",
+      "cloze_distractors": [
+        "juice",
+        "coffee",
+        "rice"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -2579,6 +2987,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waiter with tray",
       "variant_note": "",
+      "cloze_en": "At the restaurant, the waiter brings us two bowls of soup.",
+      "cloze_distractors": [
+        "driver",
+        "doctor",
+        "singer"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "eating out",
@@ -2616,6 +3030,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cup of yogurt",
       "variant_note": "",
+      "cloze_en": "I eat cold yogurt made from milk after lunch every day.",
+      "cloze_distractors": [
+        "rice",
+        "bread",
+        "fish"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sweets",
@@ -2655,6 +3075,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hamburger",
       "variant_note": "",
+      "cloze_en": "A hamburger has meat between two pieces of round bread.",
+      "cloze_distractors": [
+        "salad",
+        "soup",
+        "juice"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "rice and bread",
@@ -2692,6 +3118,12 @@
       "mnemonic_vi": "",
       "image_keyword": "roast turkey",
       "variant_note": "",
+      "cloze_en": "A turkey is a big bird, and its meat is good to eat.",
+      "cloze_distractors": [
+        "cow",
+        "fish",
+        "horse"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "meat and fish",
@@ -2731,6 +3163,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waitress with menu",
       "variant_note": "",
+      "cloze_en": "The waitress is a young woman who gives us the menu at the restaurant.",
+      "cloze_distractors": [
+        "farmer",
+        "doctor",
+        "driver"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "eating out",
