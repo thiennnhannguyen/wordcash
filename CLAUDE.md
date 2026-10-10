@@ -344,7 +344,7 @@ python -m data_pipeline.06_build_units --level A1 --emit         # chia bài (ch
 python -m data_pipeline.pipeline status                          # gói việc từng bước, tiến độ "x/10 chủ đề", hàng đợi viết lại
 python -m data_pipeline.pipeline rewrite --emit                  # hàng đợi "viết lại một trường" từ /dev/content (rồi --ingest)
 python -m data_pipeline.pipeline sample --level A1 --per-topic 15   # đợt chọn mẫu duyệt (sau 03b): 15 ngẫu nhiên + mục bắt buộc xem; review_sample trong file; /dev/content lọc "Mẫu duyệt"
-python -m data_pipeline.pipeline approve-by-sample --level a1 --all  # mẫu đã xem hết và từ chối ≤ 5% → draft còn lại thành approved (review_method "sample"); vượt ngưỡng thì dừng chủ đề
+python -m data_pipeline.pipeline approve-by-sample --level a1 --all  # mẫu đã xem hết và từ chối ≤ 7% (tối đa 1 mục/chủ đề) → draft còn lại thành approved (review_method "sample"); vượt ngưỡng thì dừng chủ đề
 python -m data_pipeline.07_load_to_db --level A1 --dry-run       # rồi bỏ --dry-run; production: backup trước + --yes
 python -m data_pipeline.check_content                            # CI: schema mọi content/**/*.json
 python -m seeds.refresh_dev_content                              # dev: thay lộ trình mẫu bằng kho thật, giữ vị trí học

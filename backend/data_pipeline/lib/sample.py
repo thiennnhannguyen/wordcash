@@ -13,7 +13,8 @@ Chọn mẫu (`choose`, lệnh `pipeline sample`):
 
 Duyệt hàng loạt theo mẫu (`approve_by_sample`, lệnh `pipeline approve-by-sample`), từng chủ đề:
 - chỉ chạy khi MỌI mục mẫu đã approved hoặc rejected (còn draft → bỏ qua, báo số mục chưa xem);
-- tỉ lệ rejected trong mẫu > `config.SAMPLE_MAX_REJECT_RATE` (5%) → DỪNG chủ đề, báo "cần duyệt toàn bộ";
+- tỉ lệ rejected trong mẫu > `config.SAMPLE_MAX_REJECT_RATE` (7%: với mẫu 15–28 mục là
+  cho phép 1 mục bị từ chối, từ 2 mục trở lên) → DỪNG chủ đề, báo "cần duyệt toàn bộ";
 - đạt → mục draft còn lại (ngoài mẫu) chuyển approved, `review_method = "sample"`, `reviewed_at` = lúc chạy. Mục draft còn cờ
   kiểm tra tự động KHÔNG được duyệt hàng loạt (để người duyệt xem tay). Mục duyệt tay giữ `review_method = "manual"`.
 """

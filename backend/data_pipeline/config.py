@@ -69,9 +69,10 @@ ENRICH_BATCH_SIZE = 15  # 10–20 mục mỗi request
 CLOZE_BATCH_SIZE = 15  # bước 03_cloze: mục mỗi request (cùng chủ đề)
 
 # Đợt mẫu duyệt (lib/sample.py): số mục ngẫu nhiên mỗi chủ đề (cộng thêm mục bắt buộc phải xem) và ngưỡng từ chối của
-# `approve-by-sample`: tỉ lệ rejected trong mẫu VƯỢT ngưỡng này thì chủ đề phải duyệt toàn bộ.
+# `approve-by-sample`: tỉ lệ rejected trong mẫu VƯỢT ngưỡng này thì chủ đề phải duyệt toàn bộ. 7%: mẫu 15–28 mục cho phép
+# đúng 1 mục bị từ chối (1/15 ≈ 6,7%), từ 2 mục trở lên thì dừng (2/28 ≈ 7,1%). Mẫu dưới 15 mục: 1 mục đã vượt ngưỡng.
 SAMPLE_PER_TOPIC = 15
-SAMPLE_MAX_REJECT_RATE = 0.05
+SAMPLE_MAX_REJECT_RATE = 0.07
 CLASSIFY_BATCH_SIZE = 40
 AI_MAX_RETRIES = 3
 TOPIC_CONFIDENCE_MIN = 0.6  # thấp hơn → needs_topic_review

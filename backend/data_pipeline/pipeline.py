@@ -10,7 +10,7 @@ Lệnh tổng của quy trình kho từ (chạy trong backend/):
   N mục ngẫu nhiên mỗi chủ đề + mọi mục bắt buộc xem (ai_suggested_headword, ipa_unverified, variant_note, còn cờ); ghi
   `review_sample` vào file nội dung; dừng nếu còn mục draft chưa có câu điền từ Mức 4; /dev/content lọc "Mẫu duyệt".
 - `python -m data_pipeline.pipeline approve-by-sample --level a1 --topic <mã> | --all [--dry-run]`: duyệt hàng loạt theo mẫu —
-  chủ đề có mọi mục mẫu đã approved / rejected và tỉ lệ rejected ≤ 5% thì mục draft còn lại thành approved
+  chủ đề có mọi mục mẫu đã approved / rejected và tỉ lệ rejected ≤ 7% (mẫu 15–28 mục: tối đa 1 mục bị từ chối) thì mục draft còn lại thành approved
   (`review_method = "sample"`); vượt ngưỡng thì dừng chủ đề đó ("cần duyệt toàn bộ"). In bảng tổng kết.
 """
 
