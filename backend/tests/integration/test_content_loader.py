@@ -1,6 +1,7 @@
 """
 Nạp nội dung vào DB (data_pipeline/lib/loader.py) trên PostgreSQL test, quy mô bài thu nhỏ (monkeypatch config):
-- lần đầu thêm đủ mục approved + bài; chạy lại không đổi gì; sửa nội dung (kể cả variant_note) → cập nhật, content_version + 1;
+- lần đầu thêm đủ mục approved + bài; chạy lại không đổi gì; sửa nội dung (kể cả variant_note, cloze_en, cloze_distractors) →
+  cập nhật, content_version + 1;
 - mục bị bỏ khỏi file → retired_at, KHÔNG xóa, tiến độ học giữ nguyên; approved trở lại → bỏ retired_at;
 - --dry-run không ghi; kiểm tra trước khi nạp (thiếu file, tên bài chưa duyệt, còn bài DEV_SAMPLE, bài có tiến độ bị bỏ);
 - dev: purge(keep_position) + nạp kho thật → người đang học dở được mở bài đầu của chặng hiện tại (ensure_initialized);
@@ -105,6 +106,17 @@ async def test_load_twice_update_and_retire(db_session, tmp_path, small):
     assert diff.updated == {"a1.food.wfoo0.noun": ["variant_note"]}
     await db.refresh(rice)
     assert rice.variant_note == "Mỹ thường dùng: fall" and rice.content_version == 3
+
+    # Câu Mức 4 (cloze_en + 3 đáp án nhiễu) nạp như mọi trường nội dung; rỗng trong file → NULL / []
+    assert rice.cloze_en is None and rice.cloze_distractors == []
+    food.entries[0].cloze_en = "I see wfoo0 at the zoo today."
+    food.entries[0].cloze_distractors = ["wfoo1", "wfoo2", "wfoo3"]
+    content.save_topic(food, root)
+    diff = await load(db, root)
+    assert diff.updated == {"a1.food.wfoo0.noun": ["cloze_en", "cloze_distractors"]}
+    await db.refresh(rice)
+    assert rice.cloze_en == "I see wfoo0 at the zoo today." and rice.cloze_distractors == ["wfoo1", "wfoo2", "wfoo3"]
+    assert rice.content_version == 4
 
     # Người học đã thuộc mục 5; mục bị bỏ khỏi file (thay bằng mục mới trong bài) → retired, không xóa, tiến độ còn
     user = await make_user(db)

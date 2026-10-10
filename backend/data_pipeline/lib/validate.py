@@ -15,6 +15,17 @@ Quy tắc trên từng mục (trả `(cờ, chi tiết)` hoặc None):
 - collocation_missing_headword: có cụm đi kèm không chứa headword (mục từ đơn);
 - phrase_related_repeats_headword: mục cụm từ cố định (pos = phrase) có "cụm liên quan" chứa nguyên văn headword (với phrase,
   collocations là 2–3 cụm liên quan: biến thể, câu đáp lại, cụm cùng nhóm — không phải chính cụm đó thêm một chữ).
+Câu Mức 4 (cloze_en + cloze_distractors, tách khỏi example_en; quy tắc soạn ở docs/content-style-guide.md):
+- cloze_missing: chưa có câu điền từ hoặc đáp án nhiễu (mục vẫn duyệt được, nhưng câu Mức 4 sẽ lùi về Mức 3);
+- cloze_missing_headword: câu không chứa đúng nguyên dạng headword (chỗ trống thay đúng chữ này) / chứa hơn một lần;
+- cloze_length: ngoài CLOZE_EN_MIN_WORDS–CLOZE_EN_MAX_WORDS từ; cloze_hard_words: từ ngoài danh sách trắng như câu ví dụ;
+- cloze_distractors_invalid: không đúng 3 đáp án nhiễu, trùng nhau, trùng đáp án đúng, hoặc đã có sẵn trong câu;
+- cloze_distractor_level: đáp án nhiễu không thuộc cấp cho phép (A1 → A1–A2: CEFR-J hoặc headword đã soạn của cấp);
+- cloze_distractor_pos: đáp án nhiễu KHÁC từ loại với đáp án đúng (đoán được bằng ngữ pháp) hoặc không tra được từ loại;
+- cloze_distractor_related: đáp án nhiễu là từ đồng nghĩa (synonyms hai chiều, nghĩa tiếng Việt trùng / biến thể), biến thể
+  Anh-Mỹ (uk_us_vocab.tsv) hoặc cùng họ từ (word_family hai chiều, cùng gốc + hậu tố: teach ~ teacher, sun ~ sunny).
+  Việc "thay đáp án nhiễu vào chỗ trống thì câu SAI rõ ràng về nghĩa" do người soạn tự kiểm và người duyệt xác nhận.
+uk_vocab, sensitive cũng quét cloze_en.
 Quy tắc so sánh nhiều mục (bỏ qua mục rejected):
 - duplicate_headword: trùng (headword, pos) trong cùng cấp; duplicate_example: trùng câu ví dụ trong cùng cấp;
 - same_meaning_vi: trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm);
@@ -29,6 +40,7 @@ Quy tắc so sánh nhiều mục (bỏ qua mục rejected):
 import re
 import unicodedata
 from collections import Counter, defaultdict
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from data_pipeline import config
@@ -54,6 +66,14 @@ FLAG_HELP = {
     "collocation_missing_headword": "Có cụm đi kèm không chứa từ này.",
     "uk_vocab": "Có từ vựng Anh-Anh (kho từ theo chuẩn Anh-Mỹ) — đổi sang từ Mỹ, hoặc thêm ghi chú biến thể.",
     "phrase_related_repeats_headword": "Cụm liên quan lặp lại nguyên cụm này (cần biến thể, câu đáp lại hoặc cụm cùng nhóm).",
+    "cloze_missing": "Chưa có câu điền từ (cloze_en) hoặc 3 đáp án nhiễu — câu Mức 4 của mục này sẽ lùi về Mức 3.",
+    "cloze_missing_headword": "Câu điền từ phải chứa đúng một lần nguyên dạng từ này (chỗ trống thay đúng chữ đó).",
+    "cloze_length": f"Câu điền từ phải có {config.CLOZE_EN_MIN_WORDS}–{config.CLOZE_EN_MAX_WORDS} từ.",
+    "cloze_hard_words": "Câu điền từ có từ ngoài danh sách A1–A2 cho phép.",
+    "cloze_distractors_invalid": f"Cần đúng {config.CLOZE_DISTRACTORS} đáp án nhiễu khác nhau, khác đáp án đúng, không có sẵn trong câu.",
+    "cloze_distractor_level": "Đáp án nhiễu nằm ngoài cấp cho phép (A1: chỉ từ A1–A2).",
+    "cloze_distractor_pos": "Đáp án nhiễu khác từ loại với đáp án đúng (người học đoán được bằng ngữ pháp).",
+    "cloze_distractor_related": "Đáp án nhiễu là từ đồng nghĩa, biến thể Anh-Mỹ hoặc cùng họ từ với đáp án đúng — có thể cũng đúng.",
     "duplicate_headword": "Trùng từ + từ loại với mục khác trong cùng cấp.",
     "duplicate_example": "Trùng câu ví dụ với mục khác trong cùng cấp.",
     "same_meaning_vi": "Trùng nghĩa tiếng Việt với mục khác cùng chủ đề (dễ nhầm khi làm trắc nghiệm).",
@@ -164,7 +184,7 @@ def rule_ipa(e: ContentEntry):
 
 
 def rule_sensitive(e: ContentEntry, keywords: set[str]):
-    text = " " + " ".join(morph.tokens(" ".join([e.example_en, e.definition_en, *e.collocations, e.headword]))) + " "
+    text = " " + " ".join(morph.tokens(" ".join([e.example_en, e.definition_en, e.cloze_en, *e.collocations, e.headword]))) + " "
     hits = sorted(k for k in keywords if " " + " ".join(morph.tokens(k)) + " " in text)
     if hits:
         return "sensitive", ", ".join(hits)
@@ -178,7 +198,8 @@ def rule_uk_vocab(e: ContentEntry):
     note = ukus.variant_note(e.headword, e.pos)
     if note and not e.variant_note:
         found.append(f"headword: thiếu variant_note \"{note}\"")
-    for field, texts in (("example_en", [e.example_en]), ("collocations", e.collocations), ("definition_en", [e.definition_en])):
+    for field, texts in (("example_en", [e.example_en]), ("collocations", e.collocations), ("definition_en", [e.definition_en]),
+                         ("cloze_en", [e.cloze_en])):
         for p in {p for text in texts for p in ukus.text_terms(text)}:
             found.append(f"{field}: {p.uk} → {p.us}")
     if found:
@@ -197,12 +218,161 @@ def rule_collocations(e: ContentEntry):
         return "collocation_missing_headword", "; ".join(bad)
 
 
-def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str], vn: set[str] | None = None) -> list[tuple[str, str]]:
+# ---------- Câu Mức 4 (cloze) ----------
+
+@dataclass
+class WordInfo:
+    """Thông tin tra cứu một từ có thể làm đáp án nhiễu (từ CEFR-J candidates + các mục đã soạn của cấp)."""
+
+    pos: set[str] = field(default_factory=set)
+    levels: set[str] = field(default_factory=set)
+    entries: list[ContentEntry] = field(default_factory=list)  # mục đã soạn (nghĩa, đồng nghĩa, họ từ)
+
+
+@dataclass
+class ClozeIndex:
+    level: str
+    words: dict[str, WordInfo]
+
+    def info(self, word: str) -> WordInfo | None:
+        return self.words.get(word.strip().lower())
+
+
+def build_cloze_index(level: str, candidates: list[dict] | None, topics: list[TopicFile]) -> ClozeIndex:
+    words: dict[str, WordInfo] = defaultdict(WordInfo)
+    for c in candidates or []:
+        w = words[c["headword"].strip().lower()]
+        w.pos.add(c.get("pos") or "")
+        w.levels |= set((c.get("cefr") or {}).values())
+    for t in topics:
+        for e in t.entries:
+            if e.status == "rejected":
+                continue
+            w = words[e.headword.strip().lower()]
+            w.pos.add(e.pos)
+            w.levels.add(level)
+            w.entries.append(e)
+    return ClozeIndex(level, dict(words))
+
+
+FAMILY_SUFFIXES = ("s", "es", "er", "ers", "or", "ing", "ed", "y", "ly", "ful", "ness", "ment", "tion", "ion", "ist",
+                   "ian", "al", "ish", "less", "en", "est", "ty", "th")
+
+
+def same_family(a: str, b: str) -> bool:
+    """Cùng gốc (dạng biến đổi của nhau, hoặc từ ngắn + hậu tố: teach ~ teacher, sun ~ sunny, happy ~ happiness)."""
+    a, b = a.strip().lower(), b.strip().lower()
+    if a == b or morph.word_forms(a) & morph.word_forms(b):
+        return True
+    short, long_ = sorted((a, b), key=len)
+    if len(short) < 3 or " " in short or " " in long_:
+        return False
+    stems = {short, short[:-1] + "i" if short.endswith("y") else short, short[:-1] if short.endswith("e") else short}
+    if short[-1] not in "aeiouy" and len(short) >= 3:
+        stems.add(short + short[-1])  # sun → sunny, run → runner
+    return any(long_.startswith(s) and long_[len(s):] in FAMILY_SUFFIXES for s in stems)
+
+
+def cloze_headword_count(sentence: str, headword: str) -> int:
+    pattern = re.compile(rf"(?<![\w'-]){re.escape(headword.strip())}(?![\w'-])", re.IGNORECASE)
+    return len(pattern.findall(sentence or ""))
+
+
+def rule_cloze_missing(e: ContentEntry):
+    if not e.cloze_en.strip() or not e.cloze_distractors:
+        return "cloze_missing", "thiếu câu" if not e.cloze_en.strip() else "thiếu đáp án nhiễu"
+
+
+def rule_cloze_sentence(e: ContentEntry) -> list[tuple[str, str]]:
+    if not e.cloze_en.strip():
+        return []
+    out = []
+    n = cloze_headword_count(e.cloze_en, e.headword)
+    if n != 1:
+        out.append(("cloze_missing_headword", f"{n} lần \"{e.headword}\" trong: {e.cloze_en}"))
+    count = len(morph.tokens(e.cloze_en)) + len([t for t in words(e.cloze_en) if NUMBER_TOKEN.match(t.strip(".,!?"))])
+    if not config.CLOZE_EN_MIN_WORDS <= count <= config.CLOZE_EN_MAX_WORDS:
+        out.append(("cloze_length", f"{count} từ"))
+    return out
+
+
+def rule_cloze_hard_words(e: ContentEntry, whitelist: set[str] | None):
+    if whitelist is None or not e.cloze_en.strip():
+        return None
+    allowed = whitelist | morph.headword_forms(e.headword, e.pos)
+    hard = sorted({t for t in morph.tokens(e.cloze_en) if t not in allowed and contraction_base(t) not in allowed})
+    if hard:
+        return "cloze_hard_words", ", ".join(hard)
+
+
+def rule_cloze_distractors(e: ContentEntry, index: ClozeIndex | None) -> list[tuple[str, str]]:
+    if not e.cloze_distractors:
+        return []
+    out = []
+    head = e.headword.strip().lower()
+    ds = [d.strip() for d in e.cloze_distractors]
+    problems = []
+    if len(ds) != config.CLOZE_DISTRACTORS:
+        problems.append(f"có {len(ds)} đáp án")
+    lowered = [d.lower() for d in ds]
+    if any(not d for d in ds) or len(set(lowered)) != len(lowered):
+        problems.append("trùng nhau / rỗng")
+    if head in lowered:
+        problems.append(f"trùng đáp án đúng \"{e.headword}\"")
+    in_sentence = [d for d in ds if d and cloze_headword_count(e.cloze_en, d)]
+    if in_sentence:
+        problems.append("có sẵn trong câu: " + ", ".join(in_sentence))
+    if problems:
+        out.append(("cloze_distractors_invalid", "; ".join(problems)))
+    if index is None:
+        return out
+    allowed_levels = set(ALLOWED_EXAMPLE_LEVELS[index.level][:2])  # A1 → A1–A2
+    bad_level, bad_pos, related = [], [], []
+    pairs = ukus.load()
+    mine = meaning_senses(e.meaning_vi)
+    for d in ds:
+        if not d:
+            continue
+        low = d.lower()
+        info = index.info(d)
+        if info is None or not info.levels & allowed_levels:
+            bad_level.append(d)
+        if info is None or e.pos not in info.pos:
+            bad_pos.append(f"{d} ({', '.join(sorted(p for p in (info.pos if info else set()) if p)) or 'không rõ'})")
+        reasons = []
+        if low in {s.lower() for s in e.synonyms} or any(head in {s.lower() for s in o.synonyms} for o in (info.entries if info else [])):
+            reasons.append("đồng nghĩa")
+        elif info and any(senses_overlap(mine, meaning_senses(o.meaning_vi)) for o in info.entries if o.meaning_vi.strip()):
+            reasons.append("trùng nghĩa tiếng Việt")
+        if any({p.uk, p.us.lower()} == {head, low} for p in pairs):
+            reasons.append("biến thể Anh-Mỹ")
+        if (low in {w.lower() for w in e.word_family}
+                or any(head in {w.lower() for w in o.word_family} for o in (info.entries if info else []))
+                or same_family(head, low)):
+            reasons.append("cùng họ từ")
+        if reasons:
+            related.append(f"{d}: {', '.join(reasons)}")
+    if bad_level:
+        out.append(("cloze_distractor_level", ", ".join(bad_level)))
+    if bad_pos:
+        out.append(("cloze_distractor_pos", f"cần {e.pos}: " + ", ".join(bad_pos)))
+    if related:
+        out.append(("cloze_distractor_related", "; ".join(related)))
+    return out
+
+
+def cloze_rules(e: ContentEntry, *, whitelist: set[str] | None, index: ClozeIndex | None) -> list[tuple[str, str]]:
+    found = [rule_cloze_missing(e), *rule_cloze_sentence(e), rule_cloze_hard_words(e, whitelist), *rule_cloze_distractors(e, index)]
+    return [f for f in found if f]
+
+
+def entry_rules(e: ContentEntry, *, whitelist: set[str] | None, keywords: set[str], vn: set[str] | None = None,
+                cloze_index: ClozeIndex | None = None) -> list[tuple[str, str]]:
     vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST) if vn is None else vn
     found = [rule_example_contains_headword(e), rule_meaning(e), rule_meaning_pronoun(e), rule_definition_length(e), rule_example_length(e),
              rule_hard_words(e, whitelist), rule_vn_context(e, vn), rule_ipa(e), rule_sensitive(e, keywords), rule_collocations(e),
              rule_uk_vocab(e)]
-    return [f for f in found if f]
+    return [f for f in found if f] + cloze_rules(e, whitelist=whitelist, index=cloze_index)
 
 
 # ---------- Quy tắc so sánh nhiều mục ----------
@@ -331,6 +501,7 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
     whitelist = build_whitelist(level, candidates, topics)
     keywords = config.read_word_list(config.SENSITIVE_KEYWORDS)
     vn = config.read_word_list(config.VN_CONTEXT_ALLOWLIST)
+    cloze_index = build_cloze_index(level, candidates, topics)
     dupes = rule_duplicates(topics)
     for key, found in rule_duplicate_meaning_in_level(topics).items():
         dupes[key] = dupes.get(key, []) + found
@@ -341,7 +512,7 @@ def run(level: str, *, processed: Path = config.PROCESSED, content_root: Path | 
         for e in t.entries:
             if e.status == "rejected":
                 continue
-            found = entry_rules(e, whitelist=whitelist, keywords=keywords, vn=vn) + dupes.get(e.content_key, [])
+            found = entry_rules(e, whitelist=whitelist, keywords=keywords, vn=vn, cloze_index=cloze_index) + dupes.get(e.content_key, [])
             details = {flag: detail for flag, detail in found}
             e.flags = list(dict.fromkeys([*e.origin_flags, *(f for f, _ in found)]))
             e.flag_details = details

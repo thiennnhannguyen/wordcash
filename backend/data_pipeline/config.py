@@ -57,11 +57,22 @@ MEANING_VI_MAX_WORDS = 6
 DEFINITION_EN_MAX_WORDS = 12
 EXAMPLE_EN_MIN_WORDS = 5
 EXAMPLE_EN_MAX_WORDS = 12
+# Câu Mức 4 (cloze_en): dài hơn câu ví dụ được để có manh mối rõ, chỉ đúng 1 đáp án hợp; đúng 3 đáp án nhiễu
+CLOZE_EN_MIN_WORDS = 6
+CLOZE_EN_MAX_WORDS = 20
+CLOZE_DISTRACTORS = 3
 
 # AI. AI_PROVIDER: "agent" (mặc định, KHÔNG gọi API trả phí: agent đang code soạn output cho các gói việc trong work/) hoặc
 # "anthropic" (chỉ khi đặt rõ; cần ANTHROPIC_API_KEY + ANTHROPIC_MODEL).
 AI_PROVIDERS = ("agent", "anthropic")
 ENRICH_BATCH_SIZE = 15  # 10–20 mục mỗi request
+CLOZE_BATCH_SIZE = 15  # bước 03_cloze: mục mỗi request (cùng chủ đề)
+
+# Đợt mẫu duyệt (lib/sample.py): số mục ngẫu nhiên mỗi chủ đề (cộng thêm mục bắt buộc phải xem) và ngưỡng từ chối của
+# `approve-by-sample`: tỉ lệ rejected trong mẫu VƯỢT ngưỡng này thì chủ đề phải duyệt toàn bộ. 7%: mẫu 15–28 mục cho phép
+# đúng 1 mục bị từ chối (1/15 ≈ 6,7%), từ 2 mục trở lên thì dừng (2/28 ≈ 7,1%). Mẫu dưới 15 mục: 1 mục đã vượt ngưỡng.
+SAMPLE_PER_TOPIC = 15
+SAMPLE_MAX_REJECT_RATE = 0.07
 CLASSIFY_BATCH_SIZE = 40
 AI_MAX_RETRIES = 3
 TOPIC_CONFIDENCE_MIN = 0.6  # thấp hơn → needs_topic_review

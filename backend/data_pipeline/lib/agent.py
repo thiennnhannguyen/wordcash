@@ -33,6 +33,7 @@ from data_pipeline.lib.jsonio import read_json, write_json
 STEPS = {
     "02_select": "python -m data_pipeline.02_select_and_tag --level {level} --ingest",
     "03_enrich": "python -m data_pipeline.03_enrich_entries --level {level} --ingest",
+    "03b_cloze": "python -m data_pipeline.03b_cloze --level {level} --ingest",
     "06_units": "python -m data_pipeline.06_build_units --level {level} --ingest",
     "rewrite": "python -m data_pipeline.pipeline rewrite --ingest",
 }

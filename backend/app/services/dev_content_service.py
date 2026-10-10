@@ -4,9 +4,10 @@ Công cụ duyệt nội dung kho từ (CHỈ dev; router api/v1/routers/dev_con
 Đọc và ghi TRỰC TIẾP các file backend/content/<cấp>/<chủ-đề>.json (nguồn chính của nội dung, DB chỉ nạp từ đây):
 - ghi nguyên tử, định dạng ổn định (data_pipeline/lib/content.py); một khóa asyncio để hai lần lưu không đè nhau;
 - sau mỗi lần sửa chạy lại kiểm tra tự động của cả cấp (data_pipeline/lib/validate.py), chỉ ghi file thật sự đổi;
-- Duyệt / Từ chối ghi `reviewed_at` (giờ thật) và `review_note`; Từ chối bắt buộc có lý do;
+- Duyệt / Từ chối ghi `reviewed_at` (giờ thật), `review_note` và `review_method = "manual"`; Từ chối bắt buộc có lý do;
 - câu hỏi mẫu mức 1–4 sinh bằng services/question_builder.py với đáp án nhiễu lấy trong cùng chủ đề (như người học sẽ thấy;
   mức 2 dùng âm thanh giả để người duyệt xem được đáp án nhiễu);
+- Đợt chọn mẫu duyệt (data_pipeline/lib/sample.py): `sample_keys` = mục có `review_sample` để trang lọc "Mẫu duyệt";
 - Viết lại một trường (data_pipeline/lib/rewrite.py): chế độ agent (AI_PROVIDER mặc định) → "Gửi yêu cầu viết lại" ghi vào
   work/rewrite_queue.json, mục hiện "Đang chờ viết lại"; sau `pipeline rewrite --ingest` yêu cầu có bản mới, người duyệt chọn
   bản cũ / bản mới (`resolve_rewrite`, chọn bản mới mới ghi file). AI_PROVIDER=anthropic → gọi AI ngay, trả bản cũ và bản
@@ -29,7 +30,8 @@ CONTENT_ROOT: Path = pconfig.CONTENT  # test đổi sang thư mục tạm
 PROCESSED: Path = pconfig.PROCESSED
 WORK_ROOT: Path = pconfig.WORK
 EDITABLE = ("headword", "pos", "ipa", "meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family",
-            "synonyms", "mnemonic_vi", "image_keyword", "variant_note", "commonness", "basic_communication", "subgroup", "rank_in_topic")
+            "synonyms", "mnemonic_vi", "image_keyword", "variant_note", "commonness", "basic_communication", "subgroup", "rank_in_topic",
+            "cloze_en", "cloze_distractors")
 REWRITABLE = rewrite.REWRITABLE
 _lock = asyncio.Lock()
 
@@ -86,7 +88,8 @@ def list_levels() -> list[dict]:
 def get_topic(level: str, code: str) -> dict:
     topic = _load(level, code)
     return {**content.dump(topic), "summary": summary(topic), "flag_help": validate.FLAG_HELP, "info_flags": sorted(validate.INFO_FLAGS),
-            "ai_provider": ai_provider(), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT)}
+            "ai_provider": ai_provider(), "rewrites": rewrite.open_for_topic(level, code, WORK_ROOT),
+            "sample_keys": [e.content_key for e in topic.entries if e.review_sample]}
 
 
 async def _save_and_revalidate(topic: TopicFile) -> TopicFile:
@@ -116,6 +119,7 @@ async def update_entry(level: str, code: str, key: str, patch: dict) -> dict:
                 data["reject_reason"] = ""
             data["status"] = status
             data["reviewed_at"] = clock.real_now()
+            data["review_method"] = "" if status == "draft" else "manual"
         try:
             updated = ContentEntry.model_validate(data)
         except ValueError as e:
@@ -147,7 +151,8 @@ def sample_questions(level: str, code: str, key: str, seed: int = 7) -> list[dic
     entry = _entry(topic, key)
     others = [e for e in topic.entries if e.content_key != key and e.status != "rejected"]
     data = qb.EntryData(id=0, headword=entry.headword, meaning_vi=entry.meaning_vi, pos=entry.pos, ipa=entry.ipa,
-                        example=entry.example_en, audio_url="dev:tts")
+                        example=entry.example_en, audio_url="dev:tts", cloze_en=entry.cloze_en,
+                        cloze_distractors=tuple(entry.cloze_distractors))
     out = []
     for level_no in (1, 2, 3, 4):
         q = qb.build_question(f"q{level_no}", data, level_no, meaning_pool=[e.meaning_vi for e in others if e.meaning_vi],

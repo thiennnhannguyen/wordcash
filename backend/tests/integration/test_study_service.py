@@ -107,8 +107,9 @@ async def test_submit_grades_and_reveals_after_answer(db_session, clock):
 async def test_test_mode_hides_answers_until_finished(db_session, clock):
     user, course, _ = await _setup(db_session)
     out = await _start(db_session, user, course, "test")
-    # Khóa nhỏ: mỗi cặp (từ, mức) chỉ hỏi một lần → 5 từ × mức 1, 3 (+ mức 4 khi câu ví dụ chứa đúng từ) = 14 câu < 20
-    assert out["total"] == 14
+    # Khóa nhỏ: mỗi cặp (từ, mức) chỉ hỏi một lần → 5 từ × mức 1, 3 = 10 câu < 20 (mức 4 chỉ có khi mục có câu cloze
+    # + 3 đáp án nhiễu đã duyệt; các mục ở đây không có nên lùi về mức 3)
+    assert out["total"] == 10
     key = await _answer_key(db_session, out["id"])
     qs = out["questions"]
     partial = await study_service.submit_answers(db_session, user, out["id"], [AnswerIn(question_id=qs[0]["id"], answer="sai")])
@@ -116,9 +117,9 @@ async def test_test_mode_hides_answers_until_finished(db_session, clock):
     assert "correct_answer" not in partial["results"][0] or partial["results"][0]["correct_answer"] is None
     rest = [AnswerIn(question_id=q["id"], answer=key[q["id"]]) for q in qs[1:]]
     final = await study_service.submit_answers(db_session, user, out["id"], rest)
-    assert final["finished"] and final["summary"]["score"] == 93  # 13/14
+    assert final["finished"] and final["summary"]["score"] == 90  # 9/10
     assert final["results"][0]["correct_answer"] is not None
-    assert len(final["summary"]["review"]) == 14 and len(final["summary"]["wrong"]) == 1
+    assert len(final["summary"]["review"]) == 10 and len(final["summary"]["wrong"]) == 1
     with pytest.raises(AppError) as exc:
         await study_service.submit_answers(db_session, user, out["id"], [AnswerIn(question_id="q99", answer="x")])
     assert exc.value.code == "SESSION_FINISHED"
@@ -203,7 +204,7 @@ async def test_session_belongs_to_owner_and_expires(db_session, clock):
     user, course, _ = await _setup(db_session)
     other = await make_user(db_session, "binh")
     out = await _start(db_session, user, course, "quick")
-    assert out["total"] == 14
+    assert out["total"] == 10
     answer = [AnswerIn(question_id="q1", answer="x")]
     with pytest.raises(AppError) as exc:
         await study_service.submit_answers(db_session, other, out["id"], answer)

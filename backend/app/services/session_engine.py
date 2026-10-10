@@ -21,7 +21,8 @@ from app.services import question_builder as QB
 
 
 def entry_data(entry: Entry) -> QB.EntryData:
-    return QB.EntryData(entry.id, entry.headword, entry.meaning_vi, entry.pos, entry.ipa, entry.example, entry.audio_url)
+    return QB.EntryData(entry.id, entry.headword, entry.meaning_vi, entry.pos, entry.ipa, entry.example, entry.audio_url,
+                        entry.cloze_en, tuple(entry.cloze_distractors or ()))
 
 
 def card(entry: Entry, personal_note: str | None = None) -> dict:
@@ -76,8 +77,10 @@ def build_questions(pairs: list[tuple[Entry, int]], pool: list[Entry], rng: rand
         ordered = same_pos if len(same_pos) >= QB.OPTION_COUNT - 1 else others
         q = QB.build_question(f"q{i}", entry_data(entry), level,
                               meaning_pool=[e.meaning_vi for e in ordered], word_pool=[e.headword for e in ordered], rng=rng)
+        q.public["reportable"] = not entry.is_custom  # nút "Báo lỗi" chỉ cho từ hệ thống
         public.append(q.public)
-        keys.append({"id": q.public["id"], **q.key})
+        # `public`: đề đúng như người học thấy (lưu cùng khóa ở server để "Báo lỗi" chụp lại câu hỏi, không tin client)
+        keys.append({"id": q.public["id"], **q.key, "public": q.public})
     return public, keys
 
 
@@ -87,7 +90,7 @@ def easy_level(entry: Entry, rng: random.Random) -> int:
 
 
 def strong_level(entry: Entry, rng: random.Random) -> int:
-    """Mức 3 hoặc 4 (4 chỉ khi câu ví dụ chứa đúng từ)."""
+    """Mức 3 hoặc 4 (4 chỉ khi mục có câu cloze + 3 đáp án nhiễu đã duyệt)."""
     return rng.choice([lvl for lvl in QB.available_levels(entry_data(entry)) if lvl >= 3])
 
 

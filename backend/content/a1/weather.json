@@ -24,6 +24,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sun and sweating person",
       "variant_note": "",
+      "cloze_en": "It's hot today. Let's go swimming and drink cold water.",
+      "cloze_distractors": [
+        "It's cold",
+        "Thank you",
+        "See you later"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -39,6 +45,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -63,6 +71,12 @@
       "mnemonic_vi": "",
       "image_keyword": "person in winter coat",
       "variant_note": "",
+      "cloze_en": "It's cold today, so put on your warm coat.",
+      "cloze_distractors": [
+        "It's hot",
+        "Thank you",
+        "You're welcome"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -78,6 +92,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -102,6 +118,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cold river",
       "variant_note": "",
+      "cloze_en": "In winter, the wind in Hanoi is very cold, so I wear a coat.",
+      "cloze_distractors": [
+        "hot",
+        "sweet",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -115,6 +137,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -139,6 +163,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sunny sky",
       "variant_note": "",
+      "cloze_en": "On a sunny day, we wear hats and play in the park.",
+      "cloze_distractors": [
+        "best friend",
+        "orange juice",
+        "bus stop"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -154,6 +184,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -178,6 +210,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dry field",
       "variant_note": "",
+      "cloze_en": "In the dry season, there is very little rain.",
+      "cloze_distractors": [
+        "rainy season",
+        "best friend",
+        "bus stop"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -193,6 +231,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -217,6 +257,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rain and umbrella",
       "variant_note": "",
+      "cloze_en": "It's raining, so take your umbrella.",
+      "cloze_distractors": [
+        "Thank you",
+        "You're welcome",
+        "Nice to meet you"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -232,6 +278,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -258,6 +306,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing in rain",
       "variant_note": "",
+      "cloze_en": "We play soccer in the rain and get very wet.",
+      "cloze_distractors": [
+        "sun",
+        "kitchen",
+        "bus"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "weather",
@@ -271,6 +325,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -295,6 +351,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rainy street",
       "variant_note": "",
+      "cloze_en": "In the rainy season, it rains every afternoon.",
+      "cloze_distractors": [
+        "dry season",
+        "best friend",
+        "bus stop"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -310,6 +372,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -337,6 +401,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sunny sky",
       "variant_note": "",
+      "cloze_en": "It is sunny today, so wear a hat. The sun is hot.",
+      "cloze_distractors": [
+        "snowy",
+        "hungry",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "weather",
@@ -350,6 +420,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -374,6 +446,12 @@
       "mnemonic_vi": "",
       "image_keyword": "summer beach",
       "variant_note": "",
+      "cloze_en": "In summer, it is very hot, and we go to the beach.",
+      "cloze_distractors": [
+        "winter",
+        "homework",
+        "music"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -387,6 +465,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -411,6 +491,12 @@
       "mnemonic_vi": "",
       "image_keyword": "trees in strong wind",
       "variant_note": "",
+      "cloze_en": "It is very windy today, so it's a good day to fly a kite.",
+      "cloze_distractors": [
+        "best friend",
+        "orange juice",
+        "bus stop"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -426,6 +512,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -450,6 +538,12 @@
       "mnemonic_vi": "",
       "image_keyword": "weather map on tv",
       "variant_note": "",
+      "cloze_en": "I watch the weather forecast on TV to know if it will rain tomorrow.",
+      "cloze_distractors": [
+        "orange juice",
+        "bus stop",
+        "fried rice"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -465,6 +559,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -489,6 +585,12 @@
       "mnemonic_vi": "",
       "image_keyword": "winter street",
       "variant_note": "",
+      "cloze_en": "In winter, it is very cold in Hanoi, so we wear coats.",
+      "cloze_distractors": [
+        "summer",
+        "lunch",
+        "music"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -502,6 +604,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -528,6 +632,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thermometer high",
       "variant_note": "",
+      "cloze_en": "Don't drink the soup now. It is too hot!",
+      "cloze_distractors": [
+        "angry",
+        "tired",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -541,6 +651,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -565,6 +677,12 @@
       "mnemonic_vi": "",
       "image_keyword": "weather icons",
       "variant_note": "",
+      "cloze_en": "What is the weather like today? — It's sunny and hot.",
+      "cloze_distractors": [
+        "music",
+        "homework",
+        "price"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "weather",
@@ -578,6 +696,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -605,6 +725,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bright sun",
       "variant_note": "",
+      "cloze_en": "The sun is very hot in the middle of the day, so I stay in the house.",
+      "cloze_distractors": [
+        "moon",
+        "snow",
+        "ice"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "weather",
@@ -618,6 +744,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v1#7f8d3a8b9818"
@@ -642,6 +770,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sun hat",
       "variant_note": "",
+      "cloze_en": "Put on your hat. The sun is hot on your head.",
+      "cloze_distractors": [
+        "shoe",
+        "jeans",
+        "apron"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes for weather",
@@ -655,6 +789,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -679,6 +815,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue sky",
       "variant_note": "",
+      "cloze_en": "Birds fly high in the sky.",
+      "cloze_distractors": [
+        "river",
+        "kitchen",
+        "box"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -692,6 +834,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -716,6 +860,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wet shoes",
       "variant_note": "",
+      "cloze_en": "I don't have an umbrella, so my shoes are wet from the rain.",
+      "cloze_distractors": [
+        "dry",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -733,6 +883,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -757,6 +909,12 @@
       "mnemonic_vi": "",
       "image_keyword": "winter coat",
       "variant_note": "",
+      "cloze_en": "It's very cold outside, so wear a warm coat.",
+      "cloze_distractors": [
+        "egg",
+        "cake",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes for weather",
@@ -770,6 +928,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -796,6 +956,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dark evening",
       "variant_note": "",
+      "cloze_en": "At night, there is no sun, so it is dark outside.",
+      "cloze_distractors": [
+        "bright",
+        "hungry",
+        "sweet"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -809,6 +975,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -833,6 +1001,12 @@
       "mnemonic_vi": "",
       "image_keyword": "full moon",
       "variant_note": "",
+      "cloze_en": "At night, the moon is big and bright in the sky.",
+      "cloze_distractors": [
+        "sun",
+        "cake",
+        "cow"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -846,6 +1020,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -872,6 +1048,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rain falling",
       "variant_note": "",
+      "cloze_en": "Take an umbrella. It will rain this afternoon.",
+      "cloze_distractors": [
+        "sing",
+        "eat",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -885,6 +1067,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -911,6 +1095,12 @@
       "mnemonic_vi": "",
       "image_keyword": "snow in mountains",
       "variant_note": "",
+      "cloze_en": "In cold places, children play in the white snow.",
+      "cloze_distractors": [
+        "fire",
+        "soup",
+        "music"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -924,6 +1114,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -948,6 +1140,12 @@
       "mnemonic_vi": "",
       "image_keyword": "stars at night",
       "variant_note": "",
+      "cloze_en": "At night, we look up and see a bright star in the sky.",
+      "cloze_distractors": [
+        "sun",
+        "fish",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -961,6 +1159,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -987,6 +1187,12 @@
       "mnemonic_vi": "",
       "image_keyword": "warm spring day",
       "variant_note": "",
+      "cloze_en": "It is winter, but my thick coat keeps me warm.",
+      "cloze_distractors": [
+        "cold",
+        "wet",
+        "hungry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1000,6 +1206,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1026,6 +1234,12 @@
       "mnemonic_vi": "",
       "image_keyword": "trees in wind",
       "variant_note": "",
+      "cloze_en": "The strong wind blows my hat off my head.",
+      "cloze_distractors": [
+        "sun",
+        "cake",
+        "book"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1039,6 +1253,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1065,6 +1281,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dark clouds",
       "variant_note": "",
+      "cloze_en": "There is a big black cloud in the sky. It will rain soon.",
+      "cloze_distractors": [
+        "bird",
+        "star",
+        "moon"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1078,6 +1300,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1104,6 +1328,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rainy day window",
       "variant_note": "",
+      "cloze_en": "On rainy days, I take my umbrella.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1117,6 +1347,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1143,6 +1375,12 @@
       "mnemonic_vi": "",
       "image_keyword": "storm clouds",
       "variant_note": "",
+      "cloze_en": "The storm is very strong. There is a lot of wind and rain.",
+      "cloze_distractors": [
+        "cake",
+        "song",
+        "party"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1160,6 +1398,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1186,6 +1426,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids flying kite",
       "variant_note": "",
+      "cloze_en": "It is windy today, so we can fly a kite.",
+      "cloze_distractors": [
+        "hungry",
+        "closed",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1203,6 +1449,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1229,6 +1477,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cloudy sky",
       "variant_note": "",
+      "cloze_en": "It is cloudy, so we can't see the sun.",
+      "cloze_distractors": [
+        "sunny",
+        "hungry",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1242,6 +1496,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1266,6 +1522,12 @@
       "mnemonic_vi": "",
       "image_keyword": "jacket",
       "variant_note": "",
+      "cloze_en": "It's cold tonight, so take a jacket.",
+      "cloze_distractors": [
+        "egg",
+        "cake",
+        "kite"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes for weather",
@@ -1279,6 +1541,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1303,6 +1567,12 @@
       "mnemonic_vi": "",
       "image_keyword": "spring flowers",
       "variant_note": "",
+      "cloze_en": "After winter comes spring, and there are many new flowers.",
+      "cloze_distractors": [
+        "lunch",
+        "homework",
+        "music"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -1316,6 +1586,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1340,6 +1612,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open umbrella",
       "variant_note": "",
+      "cloze_en": "It's raining. Don't forget your umbrella.",
+      "cloze_distractors": [
+        "ice cream",
+        "kite",
+        "fan"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1353,6 +1631,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1377,6 +1657,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thermometer",
       "variant_note": "",
+      "cloze_en": "It's very hot. The temperature today is thirty-five.",
+      "cloze_distractors": [
+        "name",
+        "color",
+        "song"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1394,6 +1680,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1418,6 +1706,12 @@
       "mnemonic_vi": "",
       "image_keyword": "baseball cap",
       "variant_note": "",
+      "cloze_en": "Nam wears a cap on his head on sunny days.",
+      "cloze_distractors": [
+        "shoe",
+        "jeans",
+        "apron"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "clothes for weather",
@@ -1431,6 +1725,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1455,6 +1751,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clothes drying",
       "variant_note": "",
+      "cloze_en": "Put the wet clothes in the sun, and soon they will be dry.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1468,6 +1770,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1494,6 +1798,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fog on mountains",
       "variant_note": "",
+      "cloze_en": "There is thick fog this morning, so we can't see the mountain.",
+      "cloze_distractors": [
+        "cake",
+        "music",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1511,6 +1821,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1537,6 +1849,12 @@
       "mnemonic_vi": "",
       "image_keyword": "ice cubes",
       "variant_note": "",
+      "cloze_en": "Put some ice in my drink. I want it cold.",
+      "cloze_distractors": [
+        "fire",
+        "sugar",
+        "soup"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1550,6 +1868,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1574,6 +1894,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wind blowing leaves",
       "variant_note": "",
+      "cloze_en": "The strong wind can blow my hat away.",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "read"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1587,6 +1913,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1611,6 +1939,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid with tissue",
       "variant_note": "",
+      "cloze_en": "I have a cold, so I stay home and drink hot tea.",
+      "cloze_distractors": [
+        "gift",
+        "dog",
+        "ticket"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1624,6 +1958,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1648,6 +1984,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cool evening",
       "variant_note": "",
+      "cloze_en": "After the rain, the evening is cool and nice.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "expensive"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "hot and cold",
@@ -1661,6 +2003,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1687,6 +2031,12 @@
       "mnemonic_vi": "",
       "image_keyword": "foggy road",
       "variant_note": "",
+      "cloze_en": "It is foggy this morning, so we can't see the bridge.",
+      "cloze_distractors": [
+        "sunny",
+        "hungry",
+        "closed"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1700,6 +2050,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1726,6 +2078,12 @@
       "mnemonic_vi": "",
       "image_keyword": "snowy mountains",
       "variant_note": "",
+      "cloze_en": "In winter, the high mountains are white and snowy.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1739,6 +2097,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1765,6 +2125,12 @@
       "mnemonic_vi": "",
       "image_keyword": "autumn leaves",
       "variant_note": "Mỹ thường dùng: fall",
+      "cloze_en": "After summer comes autumn, and the leaves turn yellow.",
+      "cloze_distractors": [
+        "lunch",
+        "homework",
+        "music"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "seasons",
@@ -1778,6 +2144,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1804,6 +2172,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bright sun",
       "variant_note": "",
+      "cloze_en": "The sun is very bright, so I can't look at it.",
+      "cloze_distractors": [
+        "dark",
+        "hungry",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1817,6 +2191,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"
@@ -1844,6 +2220,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat in sunshine",
       "variant_note": "",
+      "cloze_en": "The cat sleeps in the warm sunshine by the window.",
+      "cloze_distractors": [
+        "snow",
+        "music",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "weather",
@@ -1857,6 +2239,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#402f7dd0378c"

@@ -21,10 +21,10 @@ from data_pipeline.lib.schemas import ContentEntry, RewriteItem, TopicFile
 
 REWRITE_V = 1
 REWRITABLE = ("meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family", "synonyms",
-              "mnemonic_vi", "image_keyword")
-LIST_FIELDS = ("collocations", "word_family", "synonyms")
+              "mnemonic_vi", "image_keyword", "cloze_en", "cloze_distractors")
+LIST_FIELDS = ("collocations", "word_family", "synonyms", "cloze_distractors")
 CARD_FIELDS = {"headword", "pos", "meaning_vi", "definition_en", "example_en", "example_vi", "collocations", "word_family",
-               "synonyms", "mnemonic_vi", "image_keyword"}
+               "synonyms", "mnemonic_vi", "image_keyword", "cloze_en", "cloze_distractors"}
 OPEN = ("queued", "ready")
 
 

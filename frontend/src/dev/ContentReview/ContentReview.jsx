@@ -2,13 +2,15 @@
  * Trang duyệt nội dung kho từ /dev/content (CHỈ bản dev; backend chỉ có API khi ENV=development).
  *
  * - Thanh bên: các chủ đề của cấp, mỗi chủ đề "đã duyệt x/y" và số mục có cờ.
- * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ), tìm theo từ, nghĩa, câu ví dụ.
+ * - Danh sách: lọc theo trạng thái (nháp / đã duyệt / từ chối / có cờ / mẫu duyệt — `pipeline sample`), tìm theo từ, nghĩa, câu ví dụ.
  * - Khung chi tiết (EntryDetail): sửa trường, loa, cờ, câu hỏi mẫu, viết lại một trường (chế độ agent: hàng đợi, mục hiện
  *   "Đang chờ viết lại"; có bản mới thì chọn bản cũ / mới), Duyệt / Từ chối / Bỏ qua.
  * - Phím tắt (khi không gõ trong ô): A duyệt, R từ chối (hỏi lý do), S bỏ qua, J mục sau, K mục trước (quy ước Gmail / Vim).
  * - Tab "Bài học": duyệt tên bài do bước 06 đề xuất.
+ * - Tab "Báo lỗi" (ReportsPanel, chỉ admin): báo lỗi của người học gom theo mục; "Mở mục" mở đúng mục ở tab Mục từ, tô các trường
+ *   cần xem (?focus=cloze_en,cloze_distractors&rid=<entry id>) và có nút "Đã sửa xong" để đóng mọi báo cáo của mục.
  * Mọi thay đổi ghi thẳng file backend/content/<cấp>/<chủ-đề>.json qua API; sau mỗi lần lưu backend kiểm lại cờ.
- * Tham số xem nhanh: ?topic=food&status=draft&q=rice&key=a1.food.rice.noun&tab=units
+ * Tham số xem nhanh: ?topic=food&status=draft&q=rice&key=a1.food.rice.noun&tab=units|reports
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -25,6 +27,8 @@ import cx from '../../utils/cx'
 import { STATUS_TONE } from './fields'
 import EntryDetail from './EntryDetail'
 import UnitsPanel from './UnitsPanel'
+import ReportsPanel from './ReportsPanel'
+import { setEntryReportStatus } from '../../services/contentReportApi'
 
 const FILTERS = [
   { value: 'all', label: 'Tất cả' },
@@ -32,6 +36,7 @@ const FILTERS = [
   { value: 'approved', label: 'Đã duyệt' },
   { value: 'rejected', label: 'Từ chối' },
   { value: 'flagged', label: 'Có cờ' },
+  { value: 'sample', label: 'Mẫu duyệt' },
 ]
 const toast = (variant, title, message) => useToastStore.getState().push({ variant, title, message })
 const warnings = (e, info = []) => e.flags.filter((f) => !info.includes(f))
@@ -76,13 +81,20 @@ export default function ContentReview() {
   const list = useMemo(() => {
     if (!data?.entries) return []
     const q = query.trim().toLowerCase()
+    const sampleKeys = new Set(data.sample_keys ?? [])
     return data.entries.filter((e) => {
-      if (status === 'flagged' ? !(warnings(e, data.info_flags).length && e.status !== 'rejected') : status !== 'all' && e.status !== status) return false
+      if (status === 'sample') {
+        if (!sampleKeys.has(e.content_key)) return false
+      } else if (status === 'flagged' ? !(warnings(e, data.info_flags).length && e.status !== 'rejected') : status !== 'all' && e.status !== status) return false
       return !q || [e.headword, e.meaning_vi, e.example_en].some((s) => s?.toLowerCase().includes(q))
     })
   }, [data, status, query])
-  const index = Math.max(0, list.findIndex((e) => e.content_key === params.get('key')))
-  const entry = list[index]
+  const wantedKey = params.get('key')
+  const found = list.findIndex((e) => e.content_key === wantedKey)
+  // Mở từ Báo lỗi mà mục không còn trong file / bộ lọc: báo rõ, không lặng lẽ mở mục khác
+  const missingReported = Boolean(params.get('rid') && wantedKey && data?.entries && found < 0)
+  const index = Math.max(0, found)
+  const entry = missingReported ? null : list[index]
 
   const go = useCallback((delta) => {
     const next = list[index + delta]
@@ -177,7 +189,7 @@ export default function ContentReview() {
         <h1 className="font-heading text-h3 font-black text-ink">Duyệt nội dung</h1>
         <span className="rounded-full border-2 border-line bg-gold px-2.5 py-0.5 font-display text-[13px] font-bold uppercase">Chỉ dev</span>
         <div className="ml-auto flex gap-2" role="tablist">
-          {[['entries', 'Mục từ'], ['units', 'Bài học']].map(([v, label]) => (
+          {[['entries', 'Mục từ'], ['units', 'Bài học'], ['reports', 'Báo lỗi']].map(([v, label]) => (
             <button
               key={v}
               role="tab"
@@ -222,7 +234,15 @@ export default function ContentReview() {
           </ul>
         </nav>
 
-        {tab === 'units' ? (
+        {tab === 'reports' ? (
+          <div className="lg:col-span-2">
+            <ReportsPanel
+              onOpen={({ level: lv, topic, key, fields, entryId }) => setParam({
+                tab: null, level: lv, topic, key, status: null, q: null, focus: fields.join(','), rid: String(entryId),
+              })}
+            />
+          </div>
+        ) : tab === 'units' ? (
           <div className="lg:col-span-2">
             {data?.units ? <UnitsPanel units={data.units} entries={data.entries} onSave={saveUnit} busy={busy} /> : <p className="text-muted">Đang tải…</p>}
           </div>
@@ -231,7 +251,7 @@ export default function ContentReview() {
             <section aria-label="Danh sách mục" className="flex flex-col gap-3">
               <Input icon={MagnifyingGlass} placeholder="Tìm từ, nghĩa, câu ví dụ" value={query} onChange={(e) => setParam({ q: e.target.value })} aria-label="Tìm" />
               <div className="flex flex-wrap gap-1.5">
-                {FILTERS.map((f) => (
+                {FILTERS.filter((f) => f.value !== 'sample' || data?.sample_keys?.length).map((f) => (
                   <button
                     key={f.value}
                     onClick={() => setParam({ status: f.value === 'all' ? null : f.value, key: null })}
@@ -242,7 +262,14 @@ export default function ContentReview() {
                   </button>
                 ))}
               </div>
-              <p className="text-[13px] text-muted">{list.length} mục</p>
+              <p className="text-[13px] text-muted">
+                {list.length} mục
+                {data?.sample_keys?.length > 0 && (() => {
+                  const keys = new Set(data.sample_keys)
+                  const seen = data.entries.filter((e) => keys.has(e.content_key) && e.status !== 'draft').length
+                  return ` · mẫu duyệt: đã xem ${seen}/${keys.size}`
+                })()}
+              </p>
               <ul className="flex max-h-[70dvh] flex-col gap-1.5 overflow-y-auto pr-1">
                 {data?.missing && <li className="text-[14px] text-muted">Chưa có file nội dung cho chủ đề này (chạy bước 03).</li>}
                 {list.map((e, i) => (
@@ -290,9 +317,23 @@ export default function ContentReview() {
                   rewrites={rewritesOf(entry.content_key)}
                   onRewriteQueued={onRewriteQueued}
                   onResolveRewrite={onResolveRewrite}
+                  focusFields={params.get('key') === entry.content_key ? (params.get('focus') ?? '').split(',').filter(Boolean) : []}
+                  onResolveReports={params.get('rid') && params.get('key') === entry.content_key ? async () => {
+                    try {
+                      const res = await setEntryReportStatus(Number(params.get('rid')), 'resolved')
+                      toast('success', 'Đã đóng báo lỗi của mục', `${res.updated} báo cáo → đã sửa`)
+                      setParam({ rid: null, focus: null })
+                    } catch (e) {
+                      toast('error', 'Chưa cập nhật được', e.message)
+                    }
+                  } : null}
                 />
               ) : (
-                <p className="text-[15px] text-muted">{data ? 'Không có mục nào khớp bộ lọc.' : 'Đang tải…'}</p>
+                <p className="text-[15px] text-muted">
+                  {missingReported
+                    ? `Không thấy mục ${wantedKey} trong file nội dung của chủ đề này (đã đổi tên / bỏ khỏi file?).`
+                    : data ? 'Không có mục nào khớp bộ lọc.' : 'Đang tải…'}
+                </p>
               )}
             </main>
           </>

@@ -10,13 +10,15 @@ flowchart TD
     RAW["raw/ (CEFR-J…)<br/>vendor/cmudict"] --> S01["01 nhập + chuẩn hóa<br/>processed/candidates.json"]
     S01 --> S02["02 chọn cấp + AI chia chủ đề<br/>+ cụm từ cố định, cân bằng<br/>processed/a1_selection.json"]
     S02 --> S03["03 AI soạn nháp<br/>IPA từ CMUdict<br/>content/a1/*.json (draft)"]
-    S03 --> S04["04 kiểm tra tự động<br/>gắn cờ flags"]
+    S03 --> S03B["03b AI soạn câu điền từ Mức 4<br/>cloze_en + 3 đáp án nhiễu (draft)"]
+    S03B --> S04["04 kiểm tra tự động<br/>gắn cờ flags"]
     S04 --> REVIEW{"Người duyệt<br/>/dev/content hoặc<br/>05 xuất / nhập bảng tính"}
     REVIEW -->|sửa, AI viết lại một trường| S04
     REVIEW -->|approved| S06["06 chia bài 4–5 × 16–20<br/>AI đặt tên bài (draft)"]
     S06 --> TITLES{"Duyệt tên bài<br/>tab Bài học"}
     S02 -.->|"gói việc work/02_select"| AGENT(["agent soạn output<br/>--emit → output → --ingest"])
     S03 -.->|"gói việc work/03_enrich"| AGENT
+    S03B -.->|"gói việc work/03b_cloze"| AGENT
     S06 -.->|"gói việc work/06_units"| AGENT
     TITLES --> S07["07 nạp DB theo content_key<br/>(--dry-run trước)"]
     S07 --> S08["08 âm thanh mp3<br/>(chuẩn bị, chưa chạy thật)"]
@@ -36,7 +38,7 @@ flowchart TD
 
 ## Chế độ agent (cách chính)
 
-Các bước có AI (02 phân loại chủ đề, 03 soạn nháp, 06 đặt tên bài, viết lại một trường) đi đúng đường của provider API, chỉ
+Các bước có AI (02 phân loại chủ đề, 03 soạn nháp, 03b câu điền từ, 06 đặt tên bài, viết lại một trường) đi đúng đường của provider API, chỉ
 thay lệnh gọi mạng bằng **gói việc**:
 
 1. `--emit`: mỗi request chưa có trong cache thành `work/<bước>/batch_<số>.input.json`: mục cần xử lý, `output_schema` (JSON
@@ -69,6 +71,7 @@ file).
 | 01 | `python -m data_pipeline.01_import_wordlist` | In số dòng mỗi nguồn, số trùng, số bị loại kèm lý do |
 | 02 | `python -m data_pipeline.02_select_and_tag --level A1 [--limit 40] --emit` rồi `--ingest` (lặp tới khi hết gói) | Gói 40 từ; gửi kèm gợi ý chủ đề của CEFR-J. Còn gói chờ thì chưa ghi selection. `--limit`: chạy thử, không thêm cụm từ / cân bằng |
 | 03 | `python -m data_pipeline.03_enrich_entries --level A1 [--topic food …] [--per-topic 10] [--limit 40] [--redo-drafts] --emit` rồi `--ingest` | Gói 15 mục cùng chủ đề; lỗi → `processed/failed_03.json` |
+| 03b | `python -m data_pipeline.03b_cloze --level A1 [--topic food …] [--limit 40] [--redo] --emit` rồi `--ingest` | Câu Mức 4 `cloze_en` (chỉ đúng 1 đáp án hợp) + đúng 3 `cloze_distractors` cùng từ loại cho mục draft chưa có câu; gói 15 mục kèm kho từ của cấp theo từ loại; output có `why_wrong` (tự kiểm từng đáp án nhiễu, không lưu). Quy tắc: `docs/content-style-guide.md` mục 7b |
 | 04 | `python -m data_pipeline.04_validate --level A1` | Không gọi AI; báo cáo `processed/report_04.json` |
 | duyệt | Mở `/dev/content` (backend `ENV=development`, frontend `npm run dev`) | Phím A duyệt · R từ chối (bắt buộc lý do) · S bỏ qua · J mục sau · K mục trước (quy ước Gmail / Vim); tab Bài học |
 | 05 | `python -m data_pipeline.05_review_export export --level A1 --out reviewed/a1.xlsx` rồi `import --file … [--apply]` | Tùy chọn: duyệt bằng bảng tính, xem trước khác biệt trước khi ghi |
@@ -76,6 +79,8 @@ file).
 | 07 | `python -m data_pipeline.07_load_to_db --level A1 --dry-run`, rồi bỏ `--dry-run` | Production: chạy `sh scripts/backup_db.sh` trước và thêm `--yes` |
 | 08 | `python -m data_pipeline.08_generate_audio --level A1 --provider fake [--dry-run]` | Chưa có nhà cung cấp TTS thật |
 | CI | `python -m data_pipeline.check_content` | Kiểm tra schema mọi `content/**/*.json` |
+| mẫu duyệt | `python -m data_pipeline.pipeline sample --level A1 --per-topic 15 [--seed N] [--force]` | Chọn ngẫu nhiên N mục mỗi chủ đề (mặc định 15) CỘNG mọi mục bắt buộc xem (`ai_suggested_headword`, `ipa_unverified`, có `variant_note`, còn cờ kiểm tra); ghi `review_sample = true` vào file nội dung (bản ghi hạt giống ở `work/review_sample_a1.json`); in số mục mẫu từng chủ đề. DỪNG nếu còn mục draft chưa có câu điền từ Mức 4 (chạy 03b trước). `/dev/content` có bộ lọc "Mẫu duyệt"; `pipeline status` hiện tiến độ mẫu |
+| duyệt theo mẫu | `python -m data_pipeline.pipeline approve-by-sample --level a1 --topic <mã> \| --all [--dry-run]` | Chỉ chạy khi MỌI mục mẫu của chủ đề đã approved / rejected. Tỉ lệ rejected trong mẫu > 7% (`SAMPLE_MAX_REJECT_RATE`; mẫu 15–28 mục: cho phép 1 mục bị từ chối, từ 2 mục trở lên) → dừng chủ đề, "cần duyệt toàn bộ" (mã thoát 2). Đạt → mục draft còn lại thành approved, `review_method = "sample"`, `reviewed_at`; mục còn cờ kiểm tra thì giữ draft để xem tay. Mục duyệt tay (`/dev/content`, bảng tính bước 05) có `review_method = "manual"`. In bảng tổng kết theo chủ đề |
 | tình trạng | `python -m data_pipeline.pipeline status [--level A1]` | Gói việc từng bước + tiến độ nội dung + hàng đợi viết lại |
 | viết lại | `python -m data_pipeline.pipeline rewrite --emit` / `--ingest` | Hàng đợi "viết lại một trường" từ `/dev/content` |
 

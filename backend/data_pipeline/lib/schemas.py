@@ -61,6 +61,16 @@ class EnrichItem(_Model):
     ipa_suggestion: str = ""
 
 
+class ClozeItem(_Model):
+    """Một câu Mức 4 AI soạn nháp (prompts/cloze_v1.md). `why_wrong`: tự kiểm từng đáp án nhiễu (không lưu vào nội dung)."""
+
+    headword: str
+    pos: str
+    cloze_en: str
+    cloze_distractors: list[str] = Field(min_length=3, max_length=3)
+    why_wrong: list[str] = Field(min_length=3, max_length=3)
+
+
 class UnitTitleItem(_Model):
     position: int
     title: str
@@ -93,6 +103,10 @@ class ContentEntry(_Model):
     mnemonic_vi: str = ""
     image_keyword: str = ""
     variant_note: str = ""  # ghi chú biến thể Anh-Mỹ (uk_us_vocab.tsv, không do AI soạn), vd. "Mỹ thường dùng: fall"
+    # Câu Mức 4 (điền vào câu), TÁCH khỏi example_en: chỉ đúng 1 đáp án hợp, có manh mối rõ về nghĩa; đúng 3 đáp án nhiễu
+    # cùng từ loại (bước 03_cloze soạn nháp, bước 04 kiểm tra, duyệt cùng mục). Trống → câu Mức 4 lùi về Mức 3.
+    cloze_en: str = ""
+    cloze_distractors: list[str] = Field(default_factory=list)
     # Chọn từ (bước 02) — người duyệt chỉnh được
     commonness: int = Field(default=3, ge=1, le=5)
     basic_communication: bool = False
@@ -107,6 +121,10 @@ class ContentEntry(_Model):
     # Duyệt
     status: STATUS = "draft"
     reviewed_at: datetime | None = None
+    # Cách duyệt: "manual" = người duyệt bấm Duyệt / Từ chối (/dev/content, bảng tính bước 05); "sample" = duyệt hàng loạt
+    # theo mẫu (`pipeline approve-by-sample`); "" = chưa duyệt / về lại draft
+    review_method: Literal["", "manual", "sample"] = ""
+    review_sample: bool = False  # thuộc đợt mẫu duyệt của chủ đề (`pipeline sample`, lib/sample.py)
     review_note: str = ""
     reject_reason: str = ""
     ai_prompt: str = ""  # vd. "enrich_v1#<mã băm>" — prompt đã soạn bản nháp

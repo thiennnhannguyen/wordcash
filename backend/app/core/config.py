@@ -107,6 +107,9 @@ class Settings(BaseSettings):
     IMPORT_MAX_ROWS: int = 200
     CUSTOM_ENTRY_MAX_PER_USER: int = 1000
     STUDY_SESSION_TTL_HOURS: int = 24
+    # Báo lỗi nội dung (nút "Báo lỗi"): tối đa N báo cáo mỗi người mỗi ngày địa phương; ghi chú tối đa N ký tự
+    CONTENT_REPORT_DAILY_LIMIT: int = 20
+    CONTENT_REPORT_NOTE_MAX: int = 500
     STUDY_DEFAULT_LIMIT: int = 10
     STUDY_MAX_LIMIT: int = 50
     STUDY_QUICK_QUESTIONS: int = 20

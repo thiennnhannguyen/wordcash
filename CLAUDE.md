@@ -85,7 +85,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - Nguồn số liệu: Sảnh `GET /me/stats` + `/academy/roadmap` + `/words/daily` + `/leaderboard?board=weekly&limit=3` + `/courses`; Hồ Sơ `/me/profile`, `/users/{username}/profile`; Bảng xếp hạng `/leaderboard`; Landing và luật game công khai `/public/stats` (`store/rulesStore.js`: mốc rank, lượt quay mỗi N từ, ngưỡng qua bài/Boss, Cửa Ải, cỡ bài); Bộ Sưu Tập `/collection`, `/mascots`, `/collection/rates` (`store/ratesStore.js`: tỉ lệ, pity, giá mảnh, mảnh khi trùng, "Mở tất cả"). Chi tiết hợp đồng: `docs/real-data.md`, `docs/collection.md`, `docs/academy.md`, `docs/courses.md`.
 - Phần trang trí không phải dữ liệu, được giữ: vùng đất (`utils/regions.js`), tranh địa danh, icon và chữ con dấu, quái vật canh giữ, câu "Bạn có biết?" (`pages/Academy/map/decor.js`), sticker, hình minh họa tĩnh ở Landing (mini màn đấu, bản đồ trạm, mã phòng mẫu, dải streak; ghi rõ trong code).
 - Giao diện Đấu Trường giữ nguyên hợp đồng đã thiết kế trong `src/dev/arena` (`battleMock.js` đóng vai server: `round_start` không kèm đáp án, sai chỉ nhận `self_result`, đáp án chỉ có trong `round_result`, câu tới muộn nhận `late`; mã phòng do server sinh; câu hỏi chỉ lấy từ cấp cả hai đã mở). Luật số mẫu ở `src/dev/arena/rules.js`; bản thật phải lấy từ server.
-- Tài khoản mẫu cho dev / e2e: `python -m seeds.seed_dev_accounts` (dev_normal, dev_shaky, dev_new; mật khẩu Wordclash2026; chỉ ENV development/e2e; chạy lại để làm mới theo ngày). Production không được có username bắt đầu bằng `dev_`: backend tự kiểm tra lúc khởi động khi `ENV=production` và log ERROR (`services/startup_checks.py`, câu SQL trong `docs/deploy-checklist.md`). Backend e2e tự seed; `npm run screenshots` chụp bằng các tài khoản này.
+- Tài khoản mẫu cho dev / e2e: `python -m seeds.seed_dev_accounts` (dev_normal, dev_shaky, dev_new, dev_admin (role admin: xem tab "Báo lỗi" ở /dev/content); mật khẩu Wordclash2026; chỉ ENV development/e2e; chạy lại để làm mới theo ngày). Production không được có username bắt đầu bằng `dev_`: backend tự kiểm tra lúc khởi động khi `ENV=production` và log ERROR (`services/startup_checks.py`, câu SQL trong `docs/deploy-checklist.md`). Backend e2e tự seed; `npm run screenshots` chụp bằng các tài khoản này.
 - Tài khoản gọi API thật: `store/authStore.js` (user + access token CHỈ trong bộ nhớ; `bootstrap`, `login`, `register`, `logout`, `logoutAll`, `refreshUser`, `completeOnboarding`), `services/api.js` (axios `/api/v1` + `withCredentials`; 401 TOKEN_EXPIRED → `/auth/refresh` đúng một lần cho mọi request đang chờ; `navigator.locks` + `BroadcastChannel` giữa các tab), `utils/errorMessages.js` (mã lỗi → tiếng Việt, `fieldErrors` cho lỗi theo từng ô), `components/layout/RouteGuards.jsx` (`RequireAuth`, `GuestOnly`, màn chờ `BootSplash`), `components/layout/UserMenu.jsx`, `services/socket.js` + `hooks/useSocket.js`. Chỉ khi chạy dev, `window.__wcAuthStore` mở store cho e2e.
 
 ### Tham số xem nhanh (dev)
@@ -188,7 +188,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 ## Luật nghiệp vụ bắt buộc (không tự ý đổi)
 
 ### Học tập
-- Câu hỏi có 4 mức: (1) chọn nghĩa, (2) nghe chọn từ, (3) gõ từ từ nghĩa, (4) điền vào câu.
+- Câu hỏi có 4 mức: (1) chọn nghĩa, (2) nghe chọn từ, (3) gõ từ từ nghĩa, (4) điền vào câu. **Mức 4 chỉ dùng câu riêng `cloze_en` + đúng 3 đáp án nhiễu soạn sẵn `cloze_distractors`** (đã duyệt cùng mục; KHÔNG dùng `example_en`, KHÔNG bốc đáp án nhiễu ngẫu nhiên vì dễ có nhiều đáp án đúng). Mục thiếu hai trường này (kể cả từ tự tạo) → lùi về Mức 3.
 - **Đã thuộc (`mastered`)**: đúng ở mức ≥ 3, vào ≥ 3 ngày khác nhau.
 - Trạng thái mục từ: `new` → `learning` → `mastered` → `forgotten` (quay về `learning` khi ôn).
 - **Luật ghi nhớ thống nhất:** chỉ Cửa Ải Hôm Nay được làm mất trạng thái `mastered` (`progress_service.forget_entry`). Ở mọi nơi khác (ôn trong khóa học, ôn Học Viện, Đấu Trường), trả lời sai chỉ đặt lại lịch SRS (khoảng ôn về mức ngắn nhất, ease giảm theo SM-2, `lapse_count` +1) và **giữ** `mastered` (`progress_service.record_answer`).
@@ -216,7 +216,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - **Địa danh chỉ là trang trí giao diện**, tượng trưng cho chặng trên bản đồ. Từ vựng của chặng do CHỦ ĐỀ quyết định. Khóa nối nội dung là `topics.topic_code` (= mã chủ đề, tên file `content/<cấp>/<topic_code>.json`, phần giữa `content_key`), KHÔNG phải `landmark_key`; `landmark_key/name/image` chỉ để hiển thị, đổi địa danh không đổi entries, units hay tiến độ. Prompt bước 02/03/06 không nhắc địa danh; tên bài theo nội dung từ vựng. `vn_context_allowlist.txt` chỉ là từ được phép trong câu ví dụ, không bắt buộc, không gắn với chặng. Mã chủ đề A2 trong seed là TẠM: khi làm A2, chủ đề chọn theo nhóm từ vựng A2 của CEFR-J (cột gợi ý chủ đề), rồi mới gắn địa danh.
 - **Nội dung là code:** nguồn chính của nội dung đã duyệt là `backend/content/<cấp>/<mã-chủ-đề>.json`; DB CHỈ được nạp từ các file này (`python -m data_pipeline.07_load_to_db`), production không sửa nội dung trực tiếp.
 - **Không xóa entry đã có tiến độ, chỉ retire:** mục bị bỏ khỏi file thì loader đặt `retired_at`: không dạy mới, không vào Cửa Ải Hôm Nay và Đấu Trường (`Entry.teachable()`), vẫn ôn được trong ôn tập cá nhân, giữ mastered và `mastered_count`. Bài đã có người học thì không xóa.
-- **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05); chỉ mục `approved` được nạp.
+- **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05, `review_method = "manual"`; hoặc duyệt hàng loạt khi mẫu của chủ đề đạt, `pipeline approve-by-sample`, `review_method = "sample"`); chỉ mục `approved` được nạp.
 - Chuẩn en-US cả chính tả lẫn từ vựng (`data_pipeline/uk_us_vocab.tsv`: từ chỉ dùng ở Anh đổi sang từ Mỹ; từ người Mỹ vẫn dùng như autumn, shop giữ kèm `variant_note` "Mỹ thường dùng: …", cột `entries.variant_note`, migration `b41e7c2d9a10`, hiện dưới nghĩa trên thẻ học); IPA từ CMUdict (AI không ghi đè, từ thiếu thì `ipa_unverified`; từ đồng tự khác âm chọn theo từ loại). Chỉ dùng nguồn có trong `docs/data-sources.md`. Prompt AI trích từ `docs/content-style-guide.md`.
 - Chỉ các mục có `status = approved` mới được hiện cho người học.
 - Ba nhánh dùng chung mục từ: tiến độ gắn với mục từ, không gắn với nhánh.
@@ -338,10 +338,13 @@ python -m data_pipeline.01_import_wordlist                       # raw/ → proc
 # Mặc định AI_PROVIDER=agent (không tốn phí API): bước có AI chạy --emit → agent soạn work/<bước>/batch_<số>.output.json → --ingest
 python -m data_pipeline.02_select_and_tag --level A1 --emit      # gói phân loại chủ đề (rồi --ingest, lặp tới khi hết gói)
 python -m data_pipeline.03_enrich_entries --level A1 --topic food --emit   # gói soạn nháp → --ingest → content/a1/*.json (draft)
+python -m data_pipeline.03b_cloze --level A1 --topic food --emit           # câu điền từ Mức 4 (cloze_en + 3 đáp án nhiễu) cho mục draft → --ingest
 python -m data_pipeline.04_validate --level A1                   # gắn cờ
 python -m data_pipeline.06_build_units --level A1 --emit         # chia bài (chỉ mục approved) + gói đặt tên bài (rồi --ingest)
 python -m data_pipeline.pipeline status                          # gói việc từng bước, tiến độ "x/10 chủ đề", hàng đợi viết lại
 python -m data_pipeline.pipeline rewrite --emit                  # hàng đợi "viết lại một trường" từ /dev/content (rồi --ingest)
+python -m data_pipeline.pipeline sample --level A1 --per-topic 15   # đợt chọn mẫu duyệt (sau 03b): 15 ngẫu nhiên + mục bắt buộc xem; review_sample trong file; /dev/content lọc "Mẫu duyệt"
+python -m data_pipeline.pipeline approve-by-sample --level a1 --all  # mẫu đã xem hết và từ chối ≤ 7% (tối đa 1 mục/chủ đề) → draft còn lại thành approved (review_method "sample"); vượt ngưỡng thì dừng chủ đề
 python -m data_pipeline.07_load_to_db --level A1 --dry-run       # rồi bỏ --dry-run; production: backup trước + --yes
 python -m data_pipeline.check_content                            # CI: schema mọi content/**/*.json
 python -m seeds.refresh_dev_content                              # dev: thay lộ trình mẫu bằng kho thật, giữ vị trí học

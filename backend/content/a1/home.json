@@ -26,6 +26,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tv in living room",
       "variant_note": "",
+      "cloze_en": "We watch the news on TV in the living room.",
+      "cloze_distractors": [
+        "radio",
+        "sofa",
+        "window"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -39,6 +45,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -65,6 +73,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat on bed",
       "variant_note": "",
+      "cloze_en": "Every night, I sleep in my soft bed.",
+      "cloze_distractors": [
+        "table",
+        "bowl",
+        "box"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -78,6 +92,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -104,6 +120,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids sitting",
       "variant_note": "",
+      "cloze_en": "There is a free chair next to me. Please sit here.",
+      "cloze_distractors": [
+        "swim",
+        "fly",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -117,6 +139,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -141,6 +165,12 @@
       "mnemonic_vi": "",
       "image_keyword": "front door",
       "variant_note": "",
+      "cloze_en": "Please open the door for the guests. They are here.",
+      "cloze_distractors": [
+        "table",
+        "cup",
+        "floor"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -154,6 +184,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -178,6 +210,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cozy home",
       "variant_note": "",
+      "cloze_en": "On Sunday, I stay at home and watch TV with my family.",
+      "cloze_distractors": [
+        "bank",
+        "office",
+        "airport"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -191,6 +229,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -215,6 +255,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family watching tv",
       "variant_note": "",
+      "cloze_en": "After dinner, we sit on the sofa and watch TV together.",
+      "cloze_distractors": [
+        "take a shower",
+        "go swimming",
+        "climb a mountain"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -230,6 +276,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -254,6 +302,12 @@
       "mnemonic_vi": "",
       "image_keyword": "opening window",
       "variant_note": "",
+      "cloze_en": "It is hot. Can you open the window, please?",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sing"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -267,6 +321,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -291,6 +347,12 @@
       "mnemonic_vi": "",
       "image_keyword": "house rooms",
       "variant_note": "",
+      "cloze_en": "My room is small, but it has a bed and a desk.",
+      "cloze_distractors": [
+        "car",
+        "bag",
+        "box"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -304,6 +366,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -328,6 +392,12 @@
       "mnemonic_vi": "",
       "image_keyword": "washing hands",
       "variant_note": "",
+      "cloze_en": "Wash your hands with water before you eat.",
+      "cloze_distractors": [
+        "read",
+        "sing",
+        "draw"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "chores",
@@ -341,6 +411,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -365,6 +437,12 @@
       "mnemonic_vi": "",
       "image_keyword": "chairs around table",
       "variant_note": "",
+      "cloze_en": "There is a chair at my desk, and I sit on it to study.",
+      "cloze_distractors": [
+        "cup",
+        "window",
+        "wall"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -378,6 +456,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -404,6 +484,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cleaning house",
       "variant_note": "",
+      "cloze_en": "We clean the house before Tet, so it looks new.",
+      "cloze_distractors": [
+        "break",
+        "sell",
+        "eat"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "chores",
@@ -417,6 +503,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -445,6 +533,12 @@
       "mnemonic_vi": "",
       "image_keyword": "closing door",
       "variant_note": "",
+      "cloze_en": "It is very cold, so please close the window.",
+      "cloze_distractors": [
+        "open",
+        "eat",
+        "sing"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -458,6 +552,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -482,6 +578,12 @@
       "mnemonic_vi": "",
       "image_keyword": "house with yard",
       "variant_note": "",
+      "cloze_en": "My grandparents live in a big house with a garden.",
+      "cloze_distractors": [
+        "car",
+        "bag",
+        "cup"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -495,6 +597,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -521,6 +625,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sleeping child",
       "variant_note": "",
+      "cloze_en": "I am tired, so I go to bed and sleep for eight hours.",
+      "cloze_distractors": [
+        "swim",
+        "cook",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -534,6 +644,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -558,6 +670,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dining table",
       "variant_note": "",
+      "cloze_en": "Put the bowls on the table, please. Dinner is ready.",
+      "cloze_distractors": [
+        "sky",
+        "river",
+        "tree"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -571,6 +689,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -595,6 +715,12 @@
       "mnemonic_vi": "",
       "image_keyword": "window with view",
       "variant_note": "",
+      "cloze_en": "I open the window to let fresh air into the room.",
+      "cloze_distractors": [
+        "book",
+        "bag",
+        "box"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -608,6 +734,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -632,6 +760,12 @@
       "mnemonic_vi": "",
       "image_keyword": "light switch on",
       "variant_note": "",
+      "cloze_en": "It's dark in here. Please turn on the light.",
+      "cloze_distractors": [
+        "turn off",
+        "take off",
+        "try on"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -647,6 +781,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -673,6 +809,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bedroom",
       "variant_note": "",
+      "cloze_en": "My bed is in my bedroom, and I sleep there every night.",
+      "cloze_distractors": [
+        "kitchen",
+        "bathroom",
+        "garden"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -686,6 +828,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -710,6 +854,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kitchen",
       "variant_note": "",
+      "cloze_en": "Mom cooks dinner in the kitchen.",
+      "cloze_distractors": [
+        "bedroom",
+        "bathroom",
+        "classroom"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -723,6 +873,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -747,6 +899,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bathroom",
       "variant_note": "",
+      "cloze_en": "I take a shower in the bathroom every evening.",
+      "cloze_distractors": [
+        "kitchen",
+        "bedroom",
+        "classroom"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -760,6 +918,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -784,6 +944,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cardboard box of toys",
       "variant_note": "",
+      "cloze_en": "We keep old toys in a big box under the bed.",
+      "cloze_distractors": [
+        "cup",
+        "glass",
+        "bottle"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -797,6 +963,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -821,6 +989,12 @@
       "mnemonic_vi": "",
       "image_keyword": "house key",
       "variant_note": "",
+      "cloze_en": "I can't open the door because I can't find my key.",
+      "cloze_distractors": [
+        "pen",
+        "cup",
+        "hat"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -834,6 +1008,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -858,6 +1034,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shoes by the door",
       "variant_note": "",
+      "cloze_en": "Put your shoes next to the door before you come in.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -871,6 +1053,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -895,6 +1079,12 @@
       "mnemonic_vi": "",
       "image_keyword": "toy cars",
       "variant_note": "",
+      "cloze_en": "My little brother plays with his new toy car every day.",
+      "cloze_distractors": [
+        "tree",
+        "river",
+        "cloud"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -908,6 +1098,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -934,6 +1126,12 @@
       "mnemonic_vi": "",
       "image_keyword": "electric fan",
       "variant_note": "",
+      "cloze_en": "We use a fan when it is very hot.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -947,6 +1145,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -971,6 +1171,12 @@
       "mnemonic_vi": "",
       "image_keyword": "study desk",
       "variant_note": "",
+      "cloze_en": "I do my homework at my desk in my bedroom.",
+      "cloze_distractors": [
+        "river",
+        "bus",
+        "tree"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -984,6 +1190,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1008,6 +1216,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open window",
       "variant_note": "",
+      "cloze_en": "The shop is open from eight in the morning to nine at night.",
+      "cloze_distractors": [
+        "hungry",
+        "tall",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1021,6 +1235,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1047,6 +1263,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sofa",
       "variant_note": "",
+      "cloze_en": "Dad sleeps on the sofa in the living room after lunch.",
+      "cloze_distractors": [
+        "table",
+        "cup",
+        "window"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -1060,6 +1282,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1084,6 +1308,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tv off",
       "variant_note": "",
+      "cloze_en": "It is late. Turn off the TV and go to bed.",
+      "cloze_distractors": [
+        "turn on",
+        "try on",
+        "put on"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1099,6 +1329,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1123,6 +1355,12 @@
       "mnemonic_vi": "",
       "image_keyword": "photo on wall",
       "variant_note": "",
+      "cloze_en": "There is a family photo on the wall of the living room.",
+      "cloze_distractors": [
+        "sky",
+        "river",
+        "rice"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1136,6 +1374,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1160,6 +1400,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid carrying books",
       "variant_note": "",
+      "cloze_en": "Please bring your books to class tomorrow.",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "wash"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1173,6 +1419,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1197,6 +1445,12 @@
       "mnemonic_vi": "",
       "image_keyword": "brushing teeth",
       "variant_note": "",
+      "cloze_en": "I brush my teeth after every meal.",
+      "cloze_distractors": [
+        "sell",
+        "read",
+        "sing"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "chores",
@@ -1210,6 +1464,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1236,6 +1492,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clean room",
       "variant_note": "",
+      "cloze_en": "I wash my shirt, and now it is clean.",
+      "cloze_distractors": [
+        "dirty",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "chores",
@@ -1249,6 +1511,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1275,6 +1539,12 @@
       "mnemonic_vi": "",
       "image_keyword": "muddy shoes",
       "variant_note": "",
+      "cloze_en": "I play soccer in the rain, and now my shoes are dirty.",
+      "cloze_distractors": [
+        "clean",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "chores",
@@ -1288,6 +1558,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1312,6 +1584,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bag on floor",
       "variant_note": "",
+      "cloze_en": "Don't put your bag on the floor. Put it on the chair.",
+      "cloze_distractors": [
+        "sky",
+        "tree",
+        "river"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1325,6 +1603,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1351,6 +1631,12 @@
       "mnemonic_vi": "",
       "image_keyword": "ceiling light",
       "variant_note": "",
+      "cloze_en": "It's dark in my room. Please turn on the light.",
+      "cloze_distractors": [
+        "cake",
+        "book",
+        "cat"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -1364,6 +1650,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1390,6 +1678,12 @@
       "mnemonic_vi": "",
       "image_keyword": "finger on lips",
       "variant_note": "",
+      "cloze_en": "Please be quiet. The baby is sleeping.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "dirty"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1403,6 +1697,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1427,6 +1723,12 @@
       "mnemonic_vi": "",
       "image_keyword": "things in a box",
       "variant_note": "",
+      "cloze_en": "What is that thing on the table? — It is a new phone.",
+      "cloze_distractors": [
+        "weather",
+        "music",
+        "rain"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -1440,6 +1742,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1464,6 +1768,12 @@
       "mnemonic_vi": "",
       "image_keyword": "vegetable garden",
       "variant_note": "",
+      "cloze_en": "Grandma grows vegetables and flowers in her garden.",
+      "cloze_distractors": [
+        "bathroom",
+        "bank",
+        "bus"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1477,6 +1787,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1501,6 +1813,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father coming home",
       "variant_note": "",
+      "cloze_en": "Dad works all day and will come home at six this evening.",
+      "cloze_distractors": [
+        "get up",
+        "go to school",
+        "have breakfast"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1516,6 +1834,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1540,6 +1860,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shower head",
       "variant_note": "",
+      "cloze_en": "I take a shower every evening to wash my body.",
+      "cloze_distractors": [
+        "walk",
+        "test",
+        "picture"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1553,6 +1879,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1577,6 +1905,12 @@
       "mnemonic_vi": "",
       "image_keyword": "toilet sign",
       "variant_note": "Mỹ thường dùng: restroom, bathroom",
+      "cloze_en": "There is a toilet in the bathroom next to the shower.",
+      "cloze_distractors": [
+        "tree",
+        "cow",
+        "bus"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1590,6 +1924,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1616,6 +1952,12 @@
       "mnemonic_vi": "",
       "image_keyword": "television",
       "variant_note": "",
+      "cloze_en": "There is a good movie on television tonight.",
+      "cloze_distractors": [
+        "radio",
+        "letter",
+        "map"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -1629,6 +1971,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1653,6 +1997,12 @@
       "mnemonic_vi": "",
       "image_keyword": "living room",
       "variant_note": "",
+      "cloze_en": "We sit on the sofa in the living room and watch TV.",
+      "cloze_distractors": [
+        "bathroom",
+        "classroom",
+        "kitchen"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1666,6 +2016,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1690,6 +2042,12 @@
       "mnemonic_vi": "",
       "image_keyword": "electric fan",
       "variant_note": "",
+      "cloze_en": "In summer, the fan is on all day to keep us cool.",
+      "cloze_distractors": [
+        "TV",
+        "radio",
+        "light"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -1703,6 +2061,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1727,6 +2087,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat on top of shelf",
       "variant_note": "",
+      "cloze_en": "I climb to the top of the mountain and see the city below.",
+      "cloze_distractors": [
+        "bottom",
+        "kitchen",
+        "letter"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -1740,6 +2106,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1766,6 +2134,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child in bathtub",
       "variant_note": "",
+      "cloze_en": "My little sister plays with toys in the warm water of her bath.",
+      "cloze_distractors": [
+        "bed",
+        "bag",
+        "desk"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -1779,6 +2153,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1803,6 +2179,12 @@
       "mnemonic_vi": "",
       "image_keyword": "doll with dress",
       "variant_note": "",
+      "cloze_en": "Mai has a small doll with long hair and a pretty pink dress.",
+      "cloze_distractors": [
+        "bike",
+        "cup",
+        "book"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -1816,6 +2198,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1840,6 +2224,12 @@
       "mnemonic_vi": "",
       "image_keyword": "falling glass",
       "variant_note": "",
+      "cloze_en": "Be careful with the glass! If you drop it, it can break.",
+      "cloze_distractors": [
+        "buy",
+        "read",
+        "sing"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1853,6 +2243,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1879,6 +2271,12 @@
       "mnemonic_vi": "",
       "image_keyword": "filling bottle",
       "variant_note": "",
+      "cloze_en": "There is no water in the bottle. Please fill it with water.",
+      "cloze_distractors": [
+        "sell",
+        "read",
+        "sing"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "chores",
@@ -1892,6 +2290,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1916,6 +2316,12 @@
       "mnemonic_vi": "",
       "image_keyword": "boy in shower",
       "variant_note": "",
+      "cloze_en": "After soccer, I am very dirty, so I take a shower before dinner.",
+      "cloze_distractors": [
+        "do homework",
+        "play soccer",
+        "watch TV"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1931,6 +2337,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1955,6 +2363,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat under bed",
       "variant_note": "",
+      "cloze_en": "We play a game. I hide under the bed, and my brother looks for me.",
+      "cloze_distractors": [
+        "cook",
+        "swim",
+        "paint"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -1968,6 +2382,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -1992,6 +2408,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tidy room",
       "variant_note": "",
+      "cloze_en": "I keep my old toys in a box under the bed.",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "cook"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2005,6 +2427,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2031,6 +2455,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hand pushing door",
       "variant_note": "",
+      "cloze_en": "The car doesn't start, so we push it down the street.",
+      "cloze_distractors": [
+        "eat",
+        "read",
+        "drink"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2044,6 +2474,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2068,6 +2500,12 @@
       "mnemonic_vi": "",
       "image_keyword": "left and right arrows",
       "variant_note": "",
+      "cloze_en": "In Vietnam, cars drive on the right side of the street.",
+      "cloze_distractors": [
+        "sky",
+        "kitchen",
+        "word"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2081,6 +2519,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2105,6 +2545,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids in yard",
       "variant_note": "",
+      "cloze_en": "Our house has a big yard with grass where the kids play soccer.",
+      "cloze_distractors": [
+        "shelf",
+        "cup",
+        "bus"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -2118,6 +2564,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2142,6 +2590,12 @@
       "mnemonic_vi": "",
       "image_keyword": "upstairs",
       "variant_note": "",
+      "cloze_en": "My room is on the second floor, and my sister's room is above, on the third floor.",
+      "cloze_distractors": [
+        "below",
+        "yesterday",
+        "never"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2155,6 +2609,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2181,6 +2637,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid awake in bed",
       "variant_note": "",
+      "cloze_en": "It is two in the morning. I can't sleep, and I am awake in bed.",
+      "cloze_distractors": [
+        "closed",
+        "broken",
+        "expensive"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2194,6 +2656,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2218,6 +2682,12 @@
       "mnemonic_vi": "",
       "image_keyword": "downstairs",
       "variant_note": "",
+      "cloze_en": "We live on the third floor, and Mr. Nam lives below, on the second floor.",
+      "cloze_distractors": [
+        "above",
+        "yesterday",
+        "again"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2231,6 +2701,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2257,6 +2729,12 @@
       "mnemonic_vi": "",
       "image_keyword": "broken plate",
       "variant_note": "",
+      "cloze_en": "Be careful with that glass! It can break if you drop it.",
+      "cloze_distractors": [
+        "sing",
+        "read",
+        "swim"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2270,6 +2748,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2294,6 +2774,12 @@
       "mnemonic_vi": "",
       "image_keyword": "toothbrush",
       "variant_note": "",
+      "cloze_en": "I need a new brush to clean my teeth every morning.",
+      "cloze_distractors": [
+        "shoe",
+        "pencil",
+        "map"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -2307,6 +2793,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2331,6 +2819,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid cleaning room",
       "variant_note": "",
+      "cloze_en": "My room is very dirty, so today I clean the room with my mom.",
+      "cloze_distractors": [
+        "play soccer",
+        "go swimming",
+        "watch TV"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "chores",
@@ -2346,6 +2840,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2370,6 +2866,12 @@
       "mnemonic_vi": "",
       "image_keyword": "carrying box",
       "variant_note": "",
+      "cloze_en": "This bag is very heavy. Can you help me carry it to the car?",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "read"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2383,6 +2885,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2409,6 +2913,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat on couch",
       "variant_note": "",
+      "cloze_en": "We sit on the couch in the living room to watch TV.",
+      "cloze_distractors": [
+        "river",
+        "window",
+        "cup"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -2422,6 +2932,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2446,6 +2958,12 @@
       "mnemonic_vi": "",
       "image_keyword": "front door with shoes",
       "variant_note": "",
+      "cloze_en": "Please wait for me at the front door of the school, not the back door.",
+      "cloze_distractors": [
+        "hungry",
+        "sad",
+        "sweet"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2459,6 +2977,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2485,6 +3005,12 @@
       "mnemonic_vi": "",
       "image_keyword": "loud street",
       "variant_note": "",
+      "cloze_en": "There is a lot of noise from the street, so I close the window to sleep.",
+      "cloze_distractors": [
+        "milk",
+        "paper",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2498,6 +3024,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2522,6 +3050,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old radio",
       "variant_note": "",
+      "cloze_en": "Grandpa listens to music and the news on the radio every morning.",
+      "cloze_distractors": [
+        "map",
+        "cake",
+        "egg"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -2535,6 +3069,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2561,6 +3097,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bookshelf",
       "variant_note": "",
+      "cloze_en": "My books are on the shelf above my desk.",
+      "cloze_distractors": [
+        "river",
+        "cake",
+        "sky"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -2574,6 +3116,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2598,6 +3142,12 @@
       "mnemonic_vi": "",
       "image_keyword": "towel",
       "variant_note": "",
+      "cloze_en": "After my shower, I use a big towel to get dry.",
+      "cloze_distractors": [
+        "book",
+        "pencil",
+        "phone"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -2611,6 +3161,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2635,6 +3187,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two kids walking",
       "variant_note": "",
+      "cloze_en": "Lan walks in front, and her little brother walks behind.",
+      "cloze_distractors": [
+        "above",
+        "below",
+        "tomorrow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2648,6 +3206,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2672,6 +3232,12 @@
       "mnemonic_vi": "",
       "image_keyword": "keys in bag",
       "variant_note": "",
+      "cloze_en": "The keys are at the bottom of my bag, under all my books.",
+      "cloze_distractors": [
+        "top",
+        "sky",
+        "weather"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2685,6 +3251,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2711,6 +3279,12 @@
       "mnemonic_vi": "",
       "image_keyword": "broken tv",
       "variant_note": "",
+      "cloze_en": "My phone is broken, so I can't call you today.",
+      "cloze_distractors": [
+        "new",
+        "clean",
+        "pink"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "chores",
@@ -2724,6 +3298,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2750,6 +3326,12 @@
       "mnemonic_vi": "",
       "image_keyword": "closed sign",
       "variant_note": "",
+      "cloze_en": "The shop is closed on Sunday, so we can't buy food there.",
+      "cloze_distractors": [
+        "open",
+        "hungry",
+        "sweet"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "daily actions",
@@ -2763,6 +3345,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2787,6 +3371,12 @@
       "mnemonic_vi": "",
       "image_keyword": "washing dishes",
       "variant_note": "",
+      "cloze_en": "After dinner, I wash the dishes and put them on the shelf.",
+      "cloze_distractors": [
+        "do homework",
+        "play soccer",
+        "take a shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "chores",
@@ -2802,6 +3392,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2826,6 +3418,12 @@
       "mnemonic_vi": "",
       "image_keyword": "plant in corner",
       "variant_note": "",
+      "cloze_en": "There is a small plant in the corner of the room, next to the window.",
+      "cloze_distractors": [
+        "sky",
+        "sea",
+        "song"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2839,6 +3437,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2863,6 +3463,12 @@
       "mnemonic_vi": "",
       "image_keyword": "three rooms",
       "variant_note": "",
+      "cloze_en": "Nam has one big sister and one little brother. He is the middle child.",
+      "cloze_distractors": [
+        "first",
+        "gold",
+        "closed"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "positions",
@@ -2876,6 +3482,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2902,6 +3510,12 @@
       "mnemonic_vi": "",
       "image_keyword": "garbage bag",
       "variant_note": "",
+      "cloze_en": "Please take out the garbage. The bag is full and it has a bad smell.",
+      "cloze_distractors": [
+        "homework",
+        "music",
+        "weather"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -2915,6 +3529,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2939,6 +3555,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dining room",
       "variant_note": "",
+      "cloze_en": "We eat dinner together at the big table in the dining room.",
+      "cloze_distractors": [
+        "bathroom",
+        "classroom",
+        "bank"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -2952,6 +3574,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -2976,6 +3600,12 @@
       "mnemonic_vi": "",
       "image_keyword": "music cds",
       "variant_note": "",
+      "cloze_en": "Dad buys a new music CD and plays the songs in his car.",
+      "cloze_distractors": [
+        "cake",
+        "chair",
+        "shoe"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -2989,6 +3619,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3013,6 +3645,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dvd",
       "variant_note": "",
+      "cloze_en": "On Saturday night, we watch a movie on DVD at home.",
+      "cloze_distractors": [
+        "radio",
+        "letter",
+        "map"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3026,6 +3664,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3050,6 +3690,12 @@
       "mnemonic_vi": "",
       "image_keyword": "house hallway",
       "variant_note": "",
+      "cloze_en": "Leave your wet umbrella in the hall near the front door.",
+      "cloze_distractors": [
+        "bed",
+        "cup",
+        "sky"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "house and rooms",
@@ -3063,6 +3709,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3087,6 +3735,12 @@
       "mnemonic_vi": "",
       "image_keyword": "toolbox",
       "variant_note": "",
+      "cloze_en": "Dad uses a tool from his red box to open the broken door.",
+      "cloze_distractors": [
+        "cake",
+        "song",
+        "cloud"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3100,6 +3754,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3124,6 +3780,12 @@
       "mnemonic_vi": "",
       "image_keyword": "flowers in vase",
       "variant_note": "",
+      "cloze_en": "Mom puts the flowers in a vase with water on the table.",
+      "cloze_distractors": [
+        "bed",
+        "shoe",
+        "hat"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3137,6 +3799,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3161,6 +3825,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tidy bed",
       "variant_note": "",
+      "cloze_en": "After I get up, I make the bed so my room looks nice.",
+      "cloze_distractors": [
+        "go to bed",
+        "have dinner",
+        "watch TV"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "chores",
@@ -3176,6 +3846,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3200,6 +3872,12 @@
       "mnemonic_vi": "",
       "image_keyword": "washing car",
       "variant_note": "",
+      "cloze_en": "My car is very dirty. It needs a good wash.",
+      "cloze_distractors": [
+        "song",
+        "cake",
+        "game"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "chores",
@@ -3213,6 +3891,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3237,6 +3917,12 @@
       "mnemonic_vi": "",
       "image_keyword": "photo album",
       "variant_note": "",
+      "cloze_en": "Grandma keeps old family photos in a big album.",
+      "cloze_distractors": [
+        "bottle",
+        "soup",
+        "river"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3250,6 +3936,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3274,6 +3962,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bucket of water",
       "variant_note": "",
+      "cloze_en": "Fill the bucket with water and clean the floor.",
+      "cloze_distractors": [
+        "shelf",
+        "book",
+        "kite"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3287,6 +3981,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3313,6 +4009,12 @@
       "mnemonic_vi": "",
       "image_keyword": "apartment building",
       "variant_note": "",
+      "cloze_en": "My aunt lives in a small apartment in a tall building in the city.",
+      "cloze_distractors": [
+        "bus",
+        "cup",
+        "tree"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "furniture",
@@ -3326,6 +4028,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3350,6 +4054,12 @@
       "mnemonic_vi": "",
       "image_keyword": "washing machine",
       "variant_note": "",
+      "cloze_en": "Mom puts our dirty clothes in the washing machine.",
+      "cloze_distractors": [
+        "cake",
+        "horse",
+        "song"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3363,6 +4073,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"
@@ -3387,6 +4099,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hand saw and wood",
       "variant_note": "",
+      "cloze_en": "Grandpa cuts the tree with a saw.",
+      "cloze_distractors": [
+        "pen",
+        "cake",
+        "ribbon"
+      ],
       "commonness": 1,
       "basic_communication": false,
       "subgroup": "things at home",
@@ -3400,6 +4118,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#091c3657dc41"

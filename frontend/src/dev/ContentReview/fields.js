@@ -8,6 +8,8 @@ export const FIELDS = [
   { key: 'definition_en', label: 'Định nghĩa tiếng Anh', kind: 'text', ai: true },
   { key: 'example_en', label: 'Câu ví dụ', kind: 'text', ai: true },
   { key: 'example_vi', label: 'Dịch câu ví dụ', kind: 'text', ai: true },
+  { key: 'cloze_en', label: 'Câu điền từ Mức 4 (chỉ đúng 1 đáp án hợp, 6–20 từ)', kind: 'text', ai: true, group: 'cloze' },
+  { key: 'cloze_distractors', label: 'Đáp án nhiễu Mức 4 (đúng 3, cùng từ loại, mỗi dòng một từ)', kind: 'list', ai: true, group: 'cloze' },
   { key: 'collocations', label: 'Cụm đi kèm — mục phrase: cụm liên quan (mỗi dòng một cụm)', kind: 'list', ai: true },
   { key: 'word_family', label: 'Họ từ (mỗi dòng một từ)', kind: 'list', ai: true },
   { key: 'synonyms', label: 'Từ đồng nghĩa (mỗi dòng một từ)', kind: 'list', ai: true },

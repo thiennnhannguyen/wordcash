@@ -26,6 +26,12 @@
       "mnemonic_vi": "",
       "image_keyword": "big shirt",
       "variant_note": "",
+      "cloze_en": "My dad is very tall, so he needs a big bed.",
+      "cloze_distractors": [
+        "small",
+        "sweet",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -39,6 +45,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -65,6 +73,12 @@
       "mnemonic_vi": "",
       "image_keyword": "buying at shop",
       "variant_note": "",
+      "cloze_en": "I have money, so I go to the store to buy a new pen.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "money",
@@ -78,6 +92,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -102,6 +118,12 @@
       "mnemonic_vi": "",
       "image_keyword": "new shoes",
       "variant_note": "",
+      "cloze_en": "Look at my new shoes! I buy them today.",
+      "cloze_distractors": [
+        "old",
+        "hungry",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -115,6 +137,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -139,6 +163,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red envelope",
       "variant_note": "",
+      "cloze_en": "Tomatoes are red, and bananas are yellow.",
+      "cloze_distractors": [
+        "blue",
+        "gray",
+        "white"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -152,6 +182,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -176,6 +208,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue skirt",
       "variant_note": "",
+      "cloze_en": "On a sunny day, the sky is blue.",
+      "cloze_distractors": [
+        "green",
+        "pink",
+        "brown"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -189,6 +227,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -213,6 +253,12 @@
       "mnemonic_vi": "",
       "image_keyword": "price tag",
       "variant_note": "",
+      "cloze_en": "How much is this hat? — It is five dollars.",
+      "cloze_distractors": [
+        "What time",
+        "Thank you",
+        "Nice to meet you"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "money",
@@ -228,6 +274,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -252,6 +300,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pair of shoes",
       "variant_note": "",
+      "cloze_en": "I can't find my left shoe. The right one is under the bed.",
+      "cloze_distractors": [
+        "ear",
+        "cake",
+        "river"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -265,6 +319,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -293,6 +349,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small shop",
       "variant_note": "Mỹ thường dùng: store",
+      "cloze_en": "There is a small shop near my house. It sells bread and milk.",
+      "cloze_distractors": [
+        "tree",
+        "river",
+        "cloud"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "shops",
@@ -306,6 +368,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -330,6 +394,12 @@
       "mnemonic_vi": "",
       "image_keyword": "students in white shirts",
       "variant_note": "",
+      "cloze_en": "Students wear white shirts on Monday.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "read"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -343,6 +413,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -367,6 +439,12 @@
       "mnemonic_vi": "",
       "image_keyword": "black motorbike",
       "variant_note": "",
+      "cloze_en": "At night, the sky is black.",
+      "cloze_distractors": [
+        "yellow",
+        "pink",
+        "green"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -380,6 +458,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -406,6 +486,12 @@
       "mnemonic_vi": "",
       "image_keyword": "color palette",
       "variant_note": "",
+      "cloze_en": "What color is your new bag? — It is red.",
+      "cloze_distractors": [
+        "size",
+        "time",
+        "price"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -419,6 +505,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -443,6 +531,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green t-shirt",
       "variant_note": "",
+      "cloze_en": "In spring, the grass in the park is green.",
+      "cloze_distractors": [
+        "blue",
+        "pink",
+        "orange"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -456,6 +550,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -480,6 +576,12 @@
       "mnemonic_vi": "",
       "image_keyword": "coins and notes",
       "variant_note": "",
+      "cloze_en": "I don't have money, so I can't buy this book.",
+      "cloze_distractors": [
+        "homework",
+        "hair",
+        "music"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "money",
@@ -493,6 +595,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -517,6 +621,12 @@
       "mnemonic_vi": "",
       "image_keyword": "white shirt",
       "variant_note": "",
+      "cloze_en": "Dad wears a white shirt with buttons to work.",
+      "cloze_distractors": [
+        "cake",
+        "egg",
+        "dog"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -530,6 +640,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -556,6 +668,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small dress",
       "variant_note": "",
+      "cloze_en": "My sister is four years old, so she wears small shoes.",
+      "cloze_distractors": [
+        "big",
+        "hungry",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -569,6 +687,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -593,6 +713,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mother and child shopping",
       "variant_note": "",
+      "cloze_en": "I need new clothes, so Mom and I go shopping at the market.",
+      "cloze_distractors": [
+        "go to bed",
+        "take a shower",
+        "do homework"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "shops",
@@ -608,6 +734,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -634,6 +762,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shoe store",
       "variant_note": "",
+      "cloze_en": "This store sells shoes and bags.",
+      "cloze_distractors": [
+        "tree",
+        "cloud",
+        "river"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "shops",
@@ -647,6 +781,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -671,6 +807,12 @@
       "mnemonic_vi": "",
       "image_keyword": "white shirt",
       "variant_note": "",
+      "cloze_en": "In winter, the snow on the mountain is white and cold.",
+      "cloze_distractors": [
+        "black",
+        "red",
+        "orange"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -684,6 +826,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -710,6 +854,12 @@
       "mnemonic_vi": "",
       "image_keyword": "little bag",
       "variant_note": "",
+      "cloze_en": "My baby brother is three. He is a little boy.",
+      "cloze_distractors": [
+        "old",
+        "gray",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -723,6 +873,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -747,6 +899,12 @@
       "mnemonic_vi": "",
       "image_keyword": "yellow raincoat",
       "variant_note": "",
+      "cloze_en": "Bananas are yellow, and apples are red.",
+      "cloze_distractors": [
+        "blue",
+        "black",
+        "gray"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "colors",
@@ -760,6 +918,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -786,6 +946,12 @@
       "mnemonic_vi": "",
       "image_keyword": "new clothes",
       "variant_note": "",
+      "cloze_en": "We buy new clothes for Tet: shirts, pants and dresses.",
+      "cloze_distractors": [
+        "cake",
+        "rice",
+        "music"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -799,6 +965,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -823,6 +991,12 @@
       "mnemonic_vi": "",
       "image_keyword": "t-shirt",
       "variant_note": "",
+      "cloze_en": "It's hot today, so I wear a T-shirt to school.",
+      "cloze_distractors": [
+        "coat",
+        "jacket",
+        "egg"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -836,6 +1010,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -860,6 +1036,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shopping bag",
       "variant_note": "",
+      "cloze_en": "I put my books and pens in my school bag.",
+      "cloze_distractors": [
+        "cup",
+        "sky",
+        "kite"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -873,6 +1055,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -899,6 +1083,12 @@
       "mnemonic_vi": "",
       "image_keyword": "paying at counter",
       "variant_note": "",
+      "cloze_en": "This hat is five dollars. You can pay me now.",
+      "cloze_distractors": [
+        "sing",
+        "swim",
+        "wash"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -912,6 +1102,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -938,6 +1130,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wrapped gift",
       "variant_note": "",
+      "cloze_en": "It's Mom's birthday, so I buy a gift for her.",
+      "cloze_distractors": [
+        "test",
+        "homework",
+        "rain"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -951,6 +1149,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -975,6 +1175,12 @@
       "mnemonic_vi": "",
       "image_keyword": "putting on coat",
       "variant_note": "",
+      "cloze_en": "It's cold outside. Put on your coat.",
+      "cloze_distractors": [
+        "take off",
+        "have lunch",
+        "go to school"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -990,6 +1196,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1014,6 +1222,12 @@
       "mnemonic_vi": "",
       "image_keyword": "gray hair",
       "variant_note": "",
+      "cloze_en": "My grandpa is old, so he has gray hair.",
+      "cloze_distractors": [
+        "blue",
+        "green",
+        "pink"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1027,6 +1241,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1053,6 +1269,12 @@
       "mnemonic_vi": "",
       "image_keyword": "long skirt",
       "variant_note": "",
+      "cloze_en": "This skirt is too long. It goes down to the floor.",
+      "cloze_distractors": [
+        "short",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -1066,6 +1288,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1090,6 +1314,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pink dress",
       "variant_note": "",
+      "cloze_en": "Red and white together make pink.",
+      "cloze_distractors": [
+        "blue",
+        "black",
+        "green"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1103,6 +1333,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1130,6 +1362,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fruit seller",
       "variant_note": "",
+      "cloze_en": "My aunt wants to sell her old bike, and I want to buy it.",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "drink"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -1143,6 +1381,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1167,6 +1407,12 @@
       "mnemonic_vi": "",
       "image_keyword": "size labels",
       "variant_note": "",
+      "cloze_en": "These shoes are too small for me. What size are they?",
+      "cloze_distractors": [
+        "color",
+        "time",
+        "age"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1180,6 +1426,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1204,6 +1452,12 @@
       "mnemonic_vi": "",
       "image_keyword": "brown shoes",
       "variant_note": "",
+      "cloze_en": "Coffee is brown, and milk is white.",
+      "cloze_distractors": [
+        "blue",
+        "pink",
+        "green"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1217,6 +1471,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1241,6 +1497,12 @@
       "mnemonic_vi": "",
       "image_keyword": "party dress",
       "variant_note": "",
+      "cloze_en": "Lan wears a pretty pink dress to the party.",
+      "cloze_distractors": [
+        "car",
+        "cake",
+        "egg"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1254,6 +1516,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1278,6 +1542,12 @@
       "mnemonic_vi": "",
       "image_keyword": "heavy bag",
       "variant_note": "",
+      "cloze_en": "This box is very heavy, so I can't carry it.",
+      "cloze_distractors": [
+        "sweet",
+        "hungry",
+        "sad"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -1291,6 +1561,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1315,6 +1587,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue jeans",
       "variant_note": "",
+      "cloze_en": "I wear blue jeans on the weekend.",
+      "cloze_distractors": [
+        "soup",
+        "rain",
+        "music"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1328,6 +1606,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1352,6 +1632,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fitting room",
       "variant_note": "",
+      "cloze_en": "Can I try on this jacket to see if it is my size?",
+      "cloze_distractors": [
+        "wash the dishes",
+        "go to bed",
+        "turn left"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1367,6 +1653,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1393,6 +1681,12 @@
       "mnemonic_vi": "",
       "image_keyword": "large t-shirt",
       "variant_note": "",
+      "cloze_en": "My dad is very tall. He wears large shirts.",
+      "cloze_distractors": [
+        "small",
+        "sweet",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -1406,6 +1700,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1430,6 +1726,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pants",
       "variant_note": "",
+      "cloze_en": "These pants are too short for my long legs.",
+      "cloze_distractors": [
+        "hat",
+        "cake",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1443,6 +1745,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1467,6 +1771,12 @@
       "mnemonic_vi": "",
       "image_keyword": "price tag",
       "variant_note": "",
+      "cloze_en": "The price of this hat is ten dollars.",
+      "cloze_distractors": [
+        "color",
+        "size",
+        "age"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -1480,6 +1790,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1504,6 +1816,12 @@
       "mnemonic_vi": "",
       "image_keyword": "skirt",
       "variant_note": "",
+      "cloze_en": "Mai wears a short skirt and a T-shirt in summer.",
+      "cloze_distractors": [
+        "car",
+        "egg",
+        "cake"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1517,6 +1835,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1543,6 +1863,12 @@
       "mnemonic_vi": "",
       "image_keyword": "choosing colors",
       "variant_note": "",
+      "cloze_en": "There are three colors. Which one do you choose?",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -1556,6 +1882,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1580,6 +1908,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dollar bill",
       "variant_note": "",
+      "cloze_en": "I pay one dollar for this pen.",
+      "cloze_distractors": [
+        "hour",
+        "hat",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -1593,6 +1927,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1617,6 +1953,12 @@
       "mnemonic_vi": "",
       "image_keyword": "orange bus",
       "variant_note": "",
+      "cloze_en": "Red and yellow together make orange.",
+      "cloze_distractors": [
+        "blue",
+        "black",
+        "white"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1630,6 +1972,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1654,6 +1998,12 @@
       "mnemonic_vi": "",
       "image_keyword": "eyeglasses",
       "variant_note": "",
+      "cloze_en": "My grandma can't read without her glasses.",
+      "cloze_distractors": [
+        "hat",
+        "bag",
+        "cake"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1667,6 +2017,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1693,6 +2045,12 @@
       "mnemonic_vi": "",
       "image_keyword": "present with ribbon",
       "variant_note": "",
+      "cloze_en": "On my birthday, my friends give me a present.",
+      "cloze_distractors": [
+        "test",
+        "homework",
+        "rain"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -1706,6 +2064,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1730,6 +2090,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shoes at door",
       "variant_note": "",
+      "cloze_en": "Please take off your shoes before you come into the house.",
+      "cloze_distractors": [
+        "put on",
+        "have lunch",
+        "go to school"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -1745,6 +2111,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1771,6 +2139,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shopping cart",
       "variant_note": "",
+      "cloze_en": "My mom does the shopping at the market on Sunday.",
+      "cloze_distractors": [
+        "homework",
+        "music",
+        "weather"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "shops",
@@ -1784,6 +2158,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1808,6 +2184,12 @@
       "mnemonic_vi": "",
       "image_keyword": "expensive watch",
       "variant_note": "",
+      "cloze_en": "I can't buy this watch. It is very expensive.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "tired"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -1821,6 +2203,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1845,6 +2229,12 @@
       "mnemonic_vi": "",
       "image_keyword": "supermarket",
       "variant_note": "",
+      "cloze_en": "We buy milk and bread at the supermarket.",
+      "cloze_distractors": [
+        "hospital",
+        "school",
+        "river"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "shops",
@@ -1858,6 +2248,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1882,6 +2274,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue color",
       "variant_note": "",
+      "cloze_en": "Blue is the color of the sky on a sunny day.",
+      "cloze_distractors": [
+        "black",
+        "gray",
+        "yellow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1895,6 +2293,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1919,6 +2319,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday card",
       "variant_note": "",
+      "cloze_en": "I make a birthday card for my friend and write a message in it.",
+      "cloze_distractors": [
+        "egg",
+        "bus",
+        "song"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -1932,6 +2338,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1958,6 +2366,12 @@
       "mnemonic_vi": "",
       "image_keyword": "gold ring",
       "variant_note": "",
+      "cloze_en": "My aunt wears beautiful gold jewelry.",
+      "cloze_distractors": [
+        "hungry",
+        "sad",
+        "tired"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -1971,6 +2385,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -1995,6 +2411,12 @@
       "mnemonic_vi": "",
       "image_keyword": "gray color",
       "variant_note": "",
+      "cloze_en": "Gray is the color of a rainy sky.",
+      "cloze_distractors": [
+        "yellow",
+        "purple",
+        "orange"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2008,6 +2430,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2034,6 +2458,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sale sign",
       "variant_note": "",
+      "cloze_en": "There is a big sale, so the shoes are half price this week.",
+      "cloze_distractors": [
+        "test",
+        "song",
+        "party"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2047,6 +2477,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2073,6 +2505,12 @@
       "mnemonic_vi": "",
       "image_keyword": "piggy bank",
       "variant_note": "",
+      "cloze_en": "I save money to buy a new bike.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sing"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2086,6 +2524,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2110,6 +2550,12 @@
       "mnemonic_vi": "",
       "image_keyword": "high price tag",
       "variant_note": "",
+      "cloze_en": "I can't buy this bag. It is too expensive for me.",
+      "cloze_distractors": [
+        "on sale",
+        "Thank you",
+        "Good evening"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "money",
@@ -2125,6 +2571,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2149,6 +2597,12 @@
       "mnemonic_vi": "",
       "image_keyword": "black color",
       "variant_note": "",
+      "cloze_en": "Black is the color of the night sky.",
+      "cloze_distractors": [
+        "white",
+        "yellow",
+        "orange"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2162,6 +2616,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2188,6 +2644,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child coloring",
       "variant_note": "",
+      "cloze_en": "My little brother likes to color the flowers in his book red.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2201,6 +2663,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2225,6 +2689,12 @@
       "mnemonic_vi": "",
       "image_keyword": "light blue shirt",
       "variant_note": "",
+      "cloze_en": "I want a light blue shirt, not a dark one.",
+      "cloze_distractors": [
+        "hungry",
+        "sad",
+        "angry"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -2238,6 +2708,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2262,6 +2734,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waiter with notepad",
       "variant_note": "",
+      "cloze_en": "The waiter comes to our table to take our order.",
+      "cloze_distractors": [
+        "test",
+        "kite",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2275,6 +2753,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2299,6 +2779,12 @@
       "mnemonic_vi": "",
       "image_keyword": "buying books",
       "variant_note": "",
+      "cloze_en": "I spend all my money on books.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sing"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2312,6 +2798,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2336,6 +2824,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thick coat",
       "variant_note": "",
+      "cloze_en": "It's very cold in winter, so I need a thick coat.",
+      "cloze_distractors": [
+        "thin",
+        "hungry",
+        "wet"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -2349,6 +2843,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2373,6 +2869,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tight shoes",
       "variant_note": "",
+      "cloze_en": "These pants are too tight. Do you have a large size?",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2386,6 +2888,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2410,6 +2914,12 @@
       "mnemonic_vi": "",
       "image_keyword": "white color",
       "variant_note": "",
+      "cloze_en": "White is the color of snow and milk.",
+      "cloze_distractors": [
+        "black",
+        "blue",
+        "yellow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2423,6 +2933,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2447,6 +2959,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shirt button",
       "variant_note": "",
+      "cloze_en": "Please close the top button of your shirt.",
+      "cloze_distractors": [
+        "cake",
+        "river",
+        "cloud"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2460,6 +2978,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2484,6 +3004,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sale tag",
       "variant_note": "",
+      "cloze_en": "These jeans are on sale today. They are half price.",
+      "cloze_distractors": [
+        "too expensive",
+        "Thank you",
+        "Good evening"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2499,6 +3025,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2523,6 +3051,12 @@
       "mnemonic_vi": "",
       "image_keyword": "coins change",
       "variant_note": "",
+      "cloze_en": "The ice cream is two dollars. I give five dollars, so here is your change.",
+      "cloze_distractors": [
+        "weather",
+        "homework",
+        "music"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2536,6 +3070,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2560,6 +3096,12 @@
       "mnemonic_vi": "",
       "image_keyword": "exchanging shirt",
       "variant_note": "",
+      "cloze_en": "This shirt is too small. Can I change it for a large one?",
+      "cloze_distractors": [
+        "eat",
+        "sing",
+        "drink"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "sizes",
@@ -2573,6 +3115,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2597,6 +3141,12 @@
       "mnemonic_vi": "",
       "image_keyword": "phone in pocket",
       "variant_note": "",
+      "cloze_en": "I put my phone in the pocket of my jeans.",
+      "cloze_distractors": [
+        "sky",
+        "river",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2610,6 +3160,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2634,6 +3186,12 @@
       "mnemonic_vi": "",
       "image_keyword": "purple color",
       "variant_note": "",
+      "cloze_en": "Red and blue together make purple.",
+      "cloze_distractors": [
+        "yellow",
+        "white",
+        "gray"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2647,6 +3205,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2671,6 +3231,12 @@
       "mnemonic_vi": "",
       "image_keyword": "yellow color",
       "variant_note": "",
+      "cloze_en": "Yellow is the color of a banana.",
+      "cloze_distractors": [
+        "blue",
+        "black",
+        "purple"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "colors",
@@ -2684,6 +3250,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2708,6 +3276,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bookstore",
       "variant_note": "",
+      "cloze_en": "I buy books and pens at the bookstore near my school.",
+      "cloze_distractors": [
+        "hospital",
+        "river",
+        "zoo"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "shops",
@@ -2721,6 +3295,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2745,6 +3321,12 @@
       "mnemonic_vi": "",
       "image_keyword": "credit card",
       "variant_note": "",
+      "cloze_en": "I don't have money in my pocket, so I pay by credit card.",
+      "cloze_distractors": [
+        "bus",
+        "song",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2758,6 +3340,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2786,6 +3370,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pay envelope",
       "variant_note": "",
+      "cloze_en": "The pay at this job is good, so my dad is happy.",
+      "cloze_distractors": [
+        "color",
+        "song",
+        "rain"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "money",
@@ -2799,6 +3389,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2823,6 +3415,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kitchen apron",
       "variant_note": "",
+      "cloze_en": "Mom wears an apron in the kitchen to keep her clothes clean.",
+      "cloze_distractors": [
+        "hat",
+        "glasses",
+        "watch"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2836,6 +3434,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2860,6 +3460,12 @@
       "mnemonic_vi": "",
       "image_keyword": "paying for lunch",
       "variant_note": "",
+      "cloze_en": "Dad has money, so he will pay for our lunch.",
+      "cloze_distractors": [
+        "get up",
+        "look like",
+        "turn off"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "money",
@@ -2875,6 +3481,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2901,6 +3509,12 @@
       "mnemonic_vi": "",
       "image_keyword": "piece of cloth",
       "variant_note": "",
+      "cloze_en": "Grandma makes a bag from old cloth.",
+      "cloze_distractors": [
+        "water",
+        "rain",
+        "music"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2914,6 +3528,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2938,6 +3554,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red ribbon",
       "variant_note": "",
+      "cloze_en": "Mai has a red ribbon in her hair.",
+      "cloze_distractors": [
+        "shoe",
+        "bus",
+        "cake"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2951,6 +3573,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"
@@ -2975,6 +3599,12 @@
       "mnemonic_vi": "",
       "image_keyword": "jewelry box",
       "variant_note": "",
+      "cloze_en": "My aunt sells gold jewelry in a small shop.",
+      "cloze_distractors": [
+        "rain",
+        "homework",
+        "weather"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "clothes",
@@ -2988,6 +3618,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#cb745df3ea5e"

@@ -47,7 +47,7 @@ Kiểm tra từng mục trước mỗi lần deploy lên Railway, Render hoặc 
   SELECT count(*) FROM entries WHERE exam_tags @> '["DEV_SAMPLE"]'::jsonb;  -- phải bằng 0
   ```
   hoặc `python -m seeds.purge_dev_entries --dry-run` (phải in `'entries': 0`). Nếu khác 0: `python -m seeds.purge_dev_entries --yes` (xóa mục từ cùng tiến độ, nhật ký, liên kết khóa học, phiên học đang mở và trừ lại `mastered_count`).
-- [ ] **Không có tài khoản mẫu dev:** database production không có user nào có username bắt đầu bằng `dev_` (tài khoản do `seeds.seed_dev_accounts` tạo; script tự từ chối khi ENV khác development/e2e). Kiểm tra:
+- [ ] **Không có tài khoản mẫu dev:** database production không có user nào có username bắt đầu bằng `dev_` (tài khoản do `seeds.seed_dev_accounts` tạo: `dev_normal`, `dev_shaky`, `dev_new`, `dev_admin` — `dev_admin` có quyền admin nên càng phải xóa; script tự từ chối khi ENV khác development/e2e). Kiểm tra:
   ```sql
   SELECT count(*) FROM users WHERE username LIKE 'dev\_%' ESCAPE '\';  -- phải bằng 0 (`_` trong LIKE là ký tự đại diện nên phải thoát)
   ```

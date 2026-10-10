@@ -26,6 +26,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar day",
       "variant_note": "",
+      "cloze_en": "There are twenty-four hours in one day.",
+      "cloze_distractors": [
+        "week",
+        "month",
+        "year"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -39,6 +45,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -63,6 +71,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock showing noon",
       "variant_note": "",
+      "cloze_en": "It is twelve o'clock now, so it is time for lunch.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "tomorrow"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -76,6 +90,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -102,6 +118,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number one",
       "variant_note": "",
+      "cloze_en": "I have one brother and no sisters, so we are two children.",
+      "cloze_distractors": [
+        "three",
+        "five",
+        "four"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -115,6 +137,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -141,6 +165,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number six",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that three and three make six.",
+      "cloze_distractors": [
+        "five",
+        "eight",
+        "nine"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -154,6 +184,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -180,6 +212,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number ten",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that five and five make ten.",
+      "cloze_distractors": [
+        "nine",
+        "seven",
+        "eight"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -193,6 +231,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -217,6 +257,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid getting out of bed",
       "variant_note": "",
+      "cloze_en": "I get up at six every morning and brush my teeth.",
+      "cloze_distractors": [
+        "go to bed",
+        "take off",
+        "turn on"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "start and end",
@@ -232,6 +278,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -258,6 +306,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number two",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that one and one make two.",
+      "cloze_distractors": [
+        "three",
+        "four",
+        "five"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -271,6 +325,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -297,6 +353,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number five",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that two and three make five.",
+      "cloze_distractors": [
+        "six",
+        "four",
+        "seven"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -310,6 +372,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -336,6 +400,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number four",
       "variant_note": "",
+      "cloze_en": "Our dog runs fast on its four strong legs.",
+      "cloze_distractors": [
+        "two",
+        "six",
+        "three"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -349,6 +419,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -373,6 +445,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hourglass",
       "variant_note": "",
+      "cloze_en": "The movie is sixty minutes long, so it is one hour.",
+      "cloze_distractors": [
+        "day",
+        "week",
+        "year"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -386,6 +464,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -412,6 +492,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number nine",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that four and five make nine.",
+      "cloze_distractors": [
+        "eight",
+        "seven",
+        "ten"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -425,6 +511,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -449,6 +537,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock face",
       "variant_note": "",
+      "cloze_en": "Look at the clock. The time is eight o'clock, so we must go.",
+      "cloze_distractors": [
+        "weather",
+        "color",
+        "price"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -462,6 +556,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -489,6 +585,12 @@
       "mnemonic_vi": "",
       "image_keyword": "weekly calendar",
       "variant_note": "",
+      "cloze_en": "There are seven days in a week.",
+      "cloze_distractors": [
+        "day",
+        "year",
+        "hour"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -502,6 +604,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -528,6 +632,12 @@
       "mnemonic_vi": "",
       "image_keyword": "new year calendar",
       "variant_note": "",
+      "cloze_en": "There are twelve months in a year.",
+      "cloze_distractors": [
+        "week",
+        "day",
+        "hour"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -541,6 +651,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -567,6 +679,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number eight",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that four and four make eight.",
+      "cloze_distractors": [
+        "seven",
+        "nine",
+        "six"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -580,6 +698,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -606,6 +726,12 @@
       "mnemonic_vi": "",
       "image_keyword": "first place podium",
       "variant_note": "",
+      "cloze_en": "January is the first month of the year.",
+      "cloze_distractors": [
+        "second",
+        "middle",
+        "late"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "order and parts",
@@ -619,6 +745,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -643,6 +771,12 @@
       "mnemonic_vi": "",
       "image_keyword": "daily calendar",
       "variant_note": "",
+      "cloze_en": "I ride my bike to school every day, from Monday to Friday.",
+      "cloze_distractors": [
+        "last week",
+        "next year",
+        "dry season"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "how often",
@@ -658,6 +792,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -684,6 +820,12 @@
       "mnemonic_vi": "",
       "image_keyword": "monthly calendar",
       "variant_note": "",
+      "cloze_en": "A month has about thirty days.",
+      "cloze_distractors": [
+        "week",
+        "hour",
+        "minute"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -697,6 +839,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -721,6 +865,12 @@
       "mnemonic_vi": "",
       "image_keyword": "crossed out coffee cup",
       "variant_note": "",
+      "cloze_en": "My dad never drinks coffee at night because he can't sleep after it.",
+      "cloze_distractors": [
+        "always",
+        "often",
+        "usually"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "how often",
@@ -734,6 +884,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -760,6 +912,12 @@
       "mnemonic_vi": "",
       "image_keyword": "night sky with stars",
       "variant_note": "",
+      "cloze_en": "The sky is dark and full of stars. It is night now.",
+      "cloze_distractors": [
+        "morning",
+        "afternoon",
+        "lunch"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "parts of the day",
@@ -773,6 +931,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -797,6 +957,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing football",
       "variant_note": "",
+      "cloze_en": "We often play soccer after school, about four times a week.",
+      "cloze_distractors": [
+        "never",
+        "ago",
+        "yesterday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "how often",
@@ -810,6 +976,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -836,6 +1004,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number seven",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that three and four make seven.",
+      "cloze_distractors": [
+        "six",
+        "eight",
+        "five"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -849,6 +1023,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -875,6 +1051,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number three",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that one and two make three.",
+      "cloze_distractors": [
+        "four",
+        "five",
+        "six"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -888,6 +1070,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -912,6 +1096,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar with today circled",
       "variant_note": "",
+      "cloze_en": "Today is Monday, and tomorrow is Tuesday.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "soon"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -925,6 +1115,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -949,6 +1141,12 @@
       "mnemonic_vi": "",
       "image_keyword": "alarm clock",
       "variant_note": "",
+      "cloze_en": "My mom always wakes me up at six, every day of the week.",
+      "cloze_distractors": [
+        "never",
+        "ago",
+        "yesterday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "how often",
@@ -962,6 +1160,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -986,6 +1186,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar friday",
       "variant_note": "",
+      "cloze_en": "Friday comes after Thursday and before Saturday.",
+      "cloze_distractors": [
+        "Monday",
+        "Sunday",
+        "Tuesday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -999,6 +1205,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1023,6 +1231,12 @@
       "mnemonic_vi": "",
       "image_keyword": "stopwatch",
       "variant_note": "",
+      "cloze_en": "There are sixty seconds in one minute.",
+      "cloze_distractors": [
+        "hour",
+        "day",
+        "week"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -1036,6 +1250,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1060,6 +1276,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar monday",
       "variant_note": "",
+      "cloze_en": "Monday is the day after Sunday.",
+      "cloze_distractors": [
+        "Friday",
+        "Wednesday",
+        "Saturday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1073,6 +1295,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1097,6 +1321,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid looking at clock",
       "variant_note": "",
+      "cloze_en": "What time do you go to bed? — At ten o'clock.",
+      "cloze_distractors": [
+        "How much",
+        "How are you",
+        "Excuse me"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "clock time",
@@ -1112,6 +1342,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1136,6 +1368,12 @@
       "mnemonic_vi": "",
       "image_keyword": "numbers",
       "variant_note": "",
+      "cloze_en": "My phone number is 0912 345 678. Please call me.",
+      "cloze_distractors": [
+        "color",
+        "name",
+        "address"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -1149,6 +1387,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1173,6 +1413,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar sunday",
       "variant_note": "",
+      "cloze_en": "Sunday is the day after Saturday.",
+      "cloze_distractors": [
+        "Monday",
+        "Friday",
+        "Thursday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1186,6 +1432,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1212,6 +1460,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number twenty",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that ten and ten make twenty.",
+      "cloze_distractors": [
+        "thirty",
+        "eleven",
+        "fifteen"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -1225,6 +1479,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1249,6 +1505,12 @@
       "mnemonic_vi": "",
       "image_keyword": "evening living room",
       "variant_note": "",
+      "cloze_en": "In the evening, after dinner, we watch TV together.",
+      "cloze_distractors": [
+        "morning",
+        "afternoon",
+        "breakfast"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "parts of the day",
@@ -1262,6 +1524,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1286,6 +1550,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sunrise",
       "variant_note": "",
+      "cloze_en": "I get up at six in the morning and eat breakfast.",
+      "cloze_distractors": [
+        "evening",
+        "afternoon",
+        "night"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "parts of the day",
@@ -1299,6 +1569,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1323,6 +1595,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock at eight",
       "variant_note": "",
+      "cloze_en": "The movie starts at eight o'clock, so we leave home at seven.",
+      "cloze_distractors": [
+        "ago",
+        "yesterday",
+        "often"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -1336,6 +1614,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1360,6 +1640,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar tuesday",
       "variant_note": "",
+      "cloze_en": "Tuesday is the day that comes after Monday.",
+      "cloze_distractors": [
+        "Thursday",
+        "Saturday",
+        "Friday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1373,6 +1659,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1399,6 +1687,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two girls walking to school",
       "variant_note": "",
+      "cloze_en": "I usually walk to school, but today I take the bus.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "tomorrow"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "how often",
@@ -1412,6 +1706,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1436,6 +1732,12 @@
       "mnemonic_vi": "",
       "image_keyword": "weekend picnic",
       "variant_note": "",
+      "cloze_en": "Saturday and Sunday are the weekend, so there is no school.",
+      "cloze_distractors": [
+        "Monday",
+        "month",
+        "morning"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1449,6 +1751,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1473,6 +1777,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar saturday",
       "variant_note": "",
+      "cloze_en": "Saturday is the day before Sunday.",
+      "cloze_distractors": [
+        "Monday",
+        "Tuesday",
+        "Thursday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1486,6 +1796,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1510,6 +1822,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid going to bed",
       "variant_note": "",
+      "cloze_en": "I am very tired, so I go to bed at nine tonight.",
+      "cloze_distractors": [
+        "get up",
+        "go swimming",
+        "go shopping"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "start and end",
@@ -1525,6 +1843,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1549,6 +1869,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar thursday",
       "variant_note": "",
+      "cloze_en": "Thursday comes after Wednesday and before Friday.",
+      "cloze_distractors": [
+        "Monday",
+        "Tuesday",
+        "Sunday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1562,6 +1888,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1586,6 +1914,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar next day",
       "variant_note": "",
+      "cloze_en": "Today is Monday, so tomorrow is Tuesday.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "often"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1599,6 +1933,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1623,6 +1959,12 @@
       "mnemonic_vi": "",
       "image_keyword": "afternoon sun",
       "variant_note": "",
+      "cloze_en": "School ends at three in the afternoon, and then I go home.",
+      "cloze_distractors": [
+        "morning",
+        "night",
+        "evening"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "parts of the day",
@@ -1636,6 +1978,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1660,6 +2004,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar wednesday",
       "variant_note": "",
+      "cloze_en": "Wednesday is the day that comes after Tuesday.",
+      "cloze_distractors": [
+        "Saturday",
+        "Monday",
+        "Sunday"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1673,6 +2023,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1697,6 +2049,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar yesterday",
       "variant_note": "",
+      "cloze_en": "I was sick yesterday, but I am fine now.",
+      "cloze_distractors": [
+        "tomorrow",
+        "soon",
+        "tonight"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1710,6 +2068,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1734,6 +2094,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old photo",
       "variant_note": "",
+      "cloze_en": "We moved to this house two years ago.",
+      "cloze_distractors": [
+        "tomorrow",
+        "soon",
+        "often"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -1747,6 +2113,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1771,6 +2139,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock with sun",
       "variant_note": "",
+      "cloze_en": "I get up at 6 a.m. when the sun comes up.",
+      "cloze_distractors": [
+        "p.m.",
+        "ago",
+        "soon"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -1784,6 +2158,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1808,6 +2184,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar date",
       "variant_note": "",
+      "cloze_en": "What is the date today? — It is May 5.",
+      "cloze_distractors": [
+        "price",
+        "weather",
+        "color"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -1821,6 +2203,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1845,6 +2229,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cake cut in half",
       "variant_note": "",
+      "cloze_en": "Cut the cake into two parts: one half is for you, and one is for me.",
+      "cloze_distractors": [
+        "week",
+        "hour",
+        "minute"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "order and parts",
@@ -1858,6 +2248,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1882,6 +2274,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar july",
       "variant_note": "",
+      "cloze_en": "July comes after June and before August.",
+      "cloze_distractors": [
+        "April",
+        "March",
+        "January"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -1895,6 +2293,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1919,6 +2319,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock at half past",
       "variant_note": "",
+      "cloze_en": "Lunch is at half past twelve, so we eat at 12:30.",
+      "cloze_distractors": [
+        "every day",
+        "next year",
+        "on time"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -1934,6 +2340,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1958,6 +2366,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar june",
       "variant_note": "",
+      "cloze_en": "June is the month that comes after May.",
+      "cloze_distractors": [
+        "March",
+        "April",
+        "August"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -1971,6 +2385,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -1997,6 +2413,12 @@
       "mnemonic_vi": "",
       "image_keyword": "late bus",
       "variant_note": "",
+      "cloze_en": "Sorry, I am late. The bus didn't come on time.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2010,6 +2432,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2036,6 +2460,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dad working at night",
       "variant_note": "",
+      "cloze_en": "My dad works late on Friday, so he comes home at ten p.m.",
+      "cloze_distractors": [
+        "early",
+        "ago",
+        "yesterday"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2049,6 +2479,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2073,6 +2505,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock with moon",
       "variant_note": "",
+      "cloze_en": "The shop closes at 9 p.m., when it is dark outside.",
+      "cloze_distractors": [
+        "a.m.",
+        "ago",
+        "soon"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2086,6 +2524,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2110,6 +2550,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bus coming",
       "variant_note": "",
+      "cloze_en": "Hurry up! The bus is coming soon.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2123,6 +2569,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2147,6 +2595,12 @@
       "mnemonic_vi": "",
       "image_keyword": "steps one two",
       "variant_note": "",
+      "cloze_en": "First I do my homework, and then I watch TV.",
+      "cloze_distractors": [
+        "ago",
+        "yesterday",
+        "why"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "time words",
@@ -2160,6 +2614,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2184,6 +2640,12 @@
       "mnemonic_vi": "",
       "image_keyword": "repeat arrows",
       "variant_note": "",
+      "cloze_en": "I don't understand. Can you say it again, please?",
+      "cloze_distractors": [
+        "ago",
+        "yesterday",
+        "never"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "how often",
@@ -2197,6 +2659,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2221,6 +2685,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar april",
       "variant_note": "",
+      "cloze_en": "April comes after March and before May.",
+      "cloze_distractors": [
+        "June",
+        "July",
+        "October"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -2234,52 +2704,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#570564b1225f"
-    },
-    {
-      "content_key": "a1.numbers_time.begin.verb",
-      "headword": "begin",
-      "pos": "verb",
-      "entry_type": "word",
-      "ipa": "/bɪˈɡɪn/",
-      "ipa_unverified": false,
-      "meaning_vi": "khởi đầu, bắt đầu",
-      "definition_en": "to start doing something",
-      "example_en": "The lesson begins at eight o'clock.",
-      "example_vi": "Buổi học bắt đầu lúc tám giờ.",
-      "collocations": [
-        "begin to",
-        "begin with"
-      ],
-      "word_family": [
-        "beginning",
-        "beginner"
-      ],
-      "synonyms": [
-        "start"
-      ],
-      "mnemonic_vi": "",
-      "image_keyword": "lesson starting",
-      "variant_note": "",
-      "commonness": 4,
-      "basic_communication": false,
-      "subgroup": "start and end",
-      "rank_in_topic": 60,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.numbers_time.start.verb (bắt đầu)"
-      },
-      "status": "draft",
-      "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2304,6 +2730,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wall clock",
       "variant_note": "",
+      "cloze_en": "The clock on the kitchen wall says it is seven o'clock.",
+      "cloze_distractors": [
+        "window",
+        "map",
+        "door"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2317,6 +2749,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2341,6 +2775,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar last week",
       "variant_note": "",
+      "cloze_en": "We had a test last week, so there is no test this week.",
+      "cloze_distractors": [
+        "next year",
+        "on time",
+        "on sale"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -2356,6 +2796,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2380,6 +2822,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid arriving early",
       "variant_note": "",
+      "cloze_en": "I get to school early, at six thirty, before my friends come.",
+      "cloze_distractors": [
+        "late",
+        "ago",
+        "yesterday"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2393,6 +2841,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2419,6 +2869,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number fifty",
       "variant_note": "",
+      "cloze_en": "Twenty and thirty make fifty in our math lesson.",
+      "cloze_distractors": [
+        "forty",
+        "sixty",
+        "seventy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2432,6 +2888,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2458,6 +2916,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number forty",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that twenty and twenty make forty.",
+      "cloze_distractors": [
+        "thirty",
+        "fifty",
+        "sixty"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2471,6 +2935,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2497,6 +2963,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock hands moving",
       "variant_note": "",
+      "cloze_en": "I am busy now, so please call me later, after dinner.",
+      "cloze_distractors": [
+        "ago",
+        "yesterday",
+        "already"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2510,6 +2982,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2534,6 +3008,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar march",
       "variant_note": "",
+      "cloze_en": "March is the month that comes after February.",
+      "cloze_distractors": [
+        "May",
+        "July",
+        "October"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -2547,6 +3027,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2573,6 +3055,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number sixty",
       "variant_note": "",
+      "cloze_en": "There are sixty minutes in one hour.",
+      "cloze_distractors": [
+        "forty",
+        "eighty",
+        "twenty"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2586,6 +3074,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2612,6 +3102,12 @@
       "mnemonic_vi": "",
       "image_keyword": "starting line",
       "variant_note": "",
+      "cloze_en": "Let's start the game now. Everyone is ready.",
+      "cloze_distractors": [
+        "eat",
+        "sell",
+        "wash"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "start and end",
@@ -2621,14 +3117,12 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.numbers_time.begin.verb (khởi đầu, bắt đầu)"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2653,6 +3147,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday calendar",
       "variant_note": "",
+      "cloze_en": "Today is my brother's birthday, so we have a party tonight.",
+      "cloze_distractors": [
+        "kitchen",
+        "homework",
+        "weather"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -2666,6 +3166,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2690,6 +3192,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wrist watch",
       "variant_note": "",
+      "cloze_en": "I wear a watch on my arm to know the time.",
+      "cloze_distractors": [
+        "hat",
+        "shoe",
+        "cap"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -2703,6 +3211,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2727,6 +3237,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar august",
       "variant_note": "",
+      "cloze_en": "August is the month that comes after July.",
+      "cloze_distractors": [
+        "January",
+        "March",
+        "June"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -2740,6 +3256,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2766,6 +3284,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number eighty",
       "variant_note": "",
+      "cloze_en": "Forty and forty make eighty in our math lesson.",
+      "cloze_distractors": [
+        "sixty",
+        "ninety",
+        "seventy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2779,6 +3303,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2803,6 +3329,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar next year",
       "variant_note": "",
+      "cloze_en": "I am nine now, so I will be ten next year.",
+      "cloze_distractors": [
+        "last week",
+        "every day",
+        "on time"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -2818,6 +3350,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2844,6 +3378,12 @@
       "mnemonic_vi": "",
       "image_keyword": "football team",
       "variant_note": "",
+      "cloze_en": "Ten and one make eleven in our math lesson.",
+      "cloze_distractors": [
+        "twelve",
+        "thirteen",
+        "fifteen"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2857,6 +3397,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2883,6 +3425,12 @@
       "mnemonic_vi": "",
       "image_keyword": "finished homework",
       "variant_note": "",
+      "cloze_en": "I finish my homework before dinner, and then I watch TV.",
+      "cloze_distractors": [
+        "eat",
+        "sell",
+        "wash"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "start and end",
@@ -2896,6 +3444,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2922,6 +3472,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number ninety",
       "variant_note": "",
+      "cloze_en": "Fifty and forty make ninety in our math lesson.",
+      "cloze_distractors": [
+        "eighty",
+        "seventy",
+        "sixty"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -2935,6 +3491,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -2961,6 +3519,12 @@
       "mnemonic_vi": "",
       "image_keyword": "second place medal",
       "variant_note": "",
+      "cloze_en": "February is the second month of the year.",
+      "cloze_distractors": [
+        "first",
+        "middle",
+        "late"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "order and parts",
@@ -2974,6 +3538,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3000,6 +3566,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number thirty",
       "variant_note": "",
+      "cloze_en": "Twenty and ten make thirty in our math lesson.",
+      "cloze_distractors": [
+        "forty",
+        "fifty",
+        "sixty"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3013,6 +3585,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3039,6 +3613,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number twelve",
       "variant_note": "",
+      "cloze_en": "A year has twelve months, from January to December.",
+      "cloze_distractors": [
+        "ten",
+        "eleven",
+        "nine"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3052,6 +3632,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3078,6 +3660,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number fifteen",
       "variant_note": "",
+      "cloze_en": "Ten and five make fifteen in our math lesson.",
+      "cloze_distractors": [
+        "sixteen",
+        "thirteen",
+        "eleven"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3091,6 +3679,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3115,6 +3705,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar january",
       "variant_note": "",
+      "cloze_en": "January is the first month of the year.",
+      "cloze_distractors": [
+        "March",
+        "June",
+        "October"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -3128,6 +3724,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3152,6 +3750,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar october",
       "variant_note": "",
+      "cloze_en": "October is the month that comes after September.",
+      "cloze_distractors": [
+        "April",
+        "June",
+        "March"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -3165,6 +3769,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": true,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3191,6 +3797,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number seventy",
       "variant_note": "",
+      "cloze_en": "Forty and thirty make seventy in our math lesson.",
+      "cloze_distractors": [
+        "sixty",
+        "eighty",
+        "ninety"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3204,6 +3816,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3228,6 +3842,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clock and running student",
       "variant_note": "",
+      "cloze_en": "The class starts at eight, and I arrive at eight, so I am on time.",
+      "cloze_distractors": [
+        "last week",
+        "next year",
+        "every day"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "clock time",
@@ -3243,6 +3863,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3269,6 +3891,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number sixteen",
       "variant_note": "",
+      "cloze_en": "Ten and six make sixteen in our math lesson.",
+      "cloze_distractors": [
+        "fifteen",
+        "thirteen",
+        "twelve"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3282,6 +3910,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3308,6 +3938,12 @@
       "mnemonic_vi": "",
       "image_keyword": "evening table",
       "variant_note": "",
+      "cloze_en": "It is morning now, but tonight we watch a movie after dinner.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "already"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -3321,6 +3957,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3345,6 +3983,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar november",
       "variant_note": "",
+      "cloze_en": "November is the month that comes after October.",
+      "cloze_distractors": [
+        "January",
+        "May",
+        "July"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "months",
@@ -3358,6 +4002,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3384,6 +4030,12 @@
       "mnemonic_vi": "",
       "image_keyword": "number thirteen",
       "variant_note": "",
+      "cloze_en": "Ten and three make thirteen in our math lesson.",
+      "cloze_distractors": [
+        "twelve",
+        "fifteen",
+        "sixteen"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "numbers",
@@ -3397,6 +4049,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"
@@ -3421,6 +4075,12 @@
       "mnemonic_vi": "",
       "image_keyword": "next day calendar",
       "variant_note": "",
+      "cloze_en": "It is Friday, so tomorrow is Saturday and we have no school.",
+      "cloze_distractors": [
+        "today",
+        "Monday",
+        "homework"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "days and dates",
@@ -3434,6 +4094,8 @@
       "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
+      "review_method": "",
+      "review_sample": false,
       "review_note": "",
       "reject_reason": "",
       "ai_prompt": "enrich_v2#570564b1225f"

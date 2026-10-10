@@ -125,6 +125,28 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 - `synonyms`: 0–2, chỉ khi giúp người học (`big` → "large"); không thì để trống.
 - `image_keyword`: 1–4 từ tiếng Anh để tìm hoặc vẽ ảnh (`rice` → "bowl of rice").
 
+## 7b. Câu điền từ Mức 4 `cloze_en` và đáp án nhiễu `cloze_distractors`
+
+Câu hỏi Mức 4 ("điền vào câu") KHÔNG dùng câu ví dụ của thẻ học. `example_en` giữ tự nhiên cho thẻ học; `cloze_en` là câu
+riêng, viết sao cho **chỉ đúng một đáp án hợp**. Soạn ở bước `03b_cloze` (chế độ agent), duyệt cùng mục (trạng thái theo mục).
+Mục chưa có câu điền từ và đáp án nhiễu được duyệt thì câu Mức 4 lùi về Mức 3 (gõ từ).
+
+- `cloze_en`: một câu ở trình độ của cấp (A1: chỉ từ A1–A2), 6–20 từ, chứa **đúng một lần nguyên dạng** headword (chỗ trống
+  thay đúng chữ đó: danh từ số ít, động từ nguyên mẫu — "I want to ___", "Let's ___"). Có **manh mối rõ về nghĩa** để chỉ
+  từ này hợp: thêm chi tiết đặc trưng (công dụng, nơi chốn, hành động đi kèm, đối lập). Được dài hơn câu ví dụ.
+- `cloze_distractors`: đúng 3 từ, **cùng từ loại** với đáp án đúng (không đoán được bằng ngữ pháp), trong A1–A2, không
+  trùng nhau, không trùng đáp án, không có sẵn trong câu; KHÔNG là từ đồng nghĩa, biến thể Anh-Mỹ hay cùng họ từ.
+- **Tự kiểm khi soạn:** thay từng đáp án nhiễu vào chỗ trống, câu phải **sai rõ ràng về nghĩa**. Không chắc thì thay đáp án
+  nhiễu khác, hoặc thêm manh mối vào câu.
+
+| | Ví dụ |
+|---|---|
+| SAI | `boy`: "That ___ is very kind." — nhiễu girl, man, country (girl, man cũng đúng) |
+| ĐÚNG | `boy`: "My brother is a little ___. He is six and goes to school with his toys." — nhiễu chair, river, window |
+| SAI | `bus`: "I take the ___ to school." — nhiễu bike, train, taxi (đều đi học được) |
+| ĐÚNG | `bus`: "The big yellow school ___ stops here, and forty students get on." — nhiễu bed, cup, tree |
+| SAI | `big`: "Our house is ___." — nhiễu small, old, new (đều đúng) |
+
 <!-- ai-rules:start -->
 - ONE card = ONE main meaning, the meaning that matches the topic. Right: "orange" in Food → "quả cam". Wrong: "quả cam; màu cam".
 - meaning_vi: natural, short Vietnamese (max 6 words), the way Vietnamese people really say it; no machine translation,
@@ -154,6 +176,14 @@ Tùy chọn. Tối đa 20 từ, dựa trên âm hoặc hình ảnh dễ nhớ; k
 - word_family 0–3 useful words; synonyms 0–2 only when helpful; image_keyword 1–4 English words.
 - American English vocabulary, not only spelling: apartment (not flat), pants (not trousers), soccer (not football),
   cell phone (not mobile phone), vacation (not holiday), cookie (not biscuit), candy (not sweets), trash (not rubbish).
+- cloze_en (Level-4 fill-in-the-blank question, SEPARATE from example_en): 6–20 words at the target level, contains the
+  headword EXACTLY ONCE in its base form (singular noun, base verb), and gives a clear meaning clue so that ONLY the
+  headword fits. Wrong: "boy" → "That ___ is very kind." (girl, man also fit). Right: "boy" → "My brother is a little ___.
+  He is six and goes to school with his toys."
+- cloze_distractors: exactly 3 words, the SAME part of speech as the headword (no grammar give-away), A1–A2 only, all
+  different, never the headword, never already in the sentence, never a synonym, US/UK variant or same-family word.
+  Self-check each one: put it in the blank — the sentence must become CLEARLY wrong in meaning. If unsure, pick another
+  distractor or add a clue to the sentence. Wrong: "bus" → "I take the ___ to school." with bike, train, taxi.
 <!-- ai-rules:end -->
 
 ## 8. Danh sách kiểm tra cho người duyệt
@@ -168,7 +198,8 @@ Trả lời từng câu. Có câu "Không" thì sửa trực tiếp, nhờ AI vi
 6. `example_vi` có dịch tự nhiên và khớp nghĩa câu tiếng Anh không?
 7. Định nghĩa tiếng Anh có đơn giản, đúng sự thật (không sai, không rộng tới mức chỉ sang thứ khác), không dùng chính từ đó không?
 8. Mỗi cụm đi kèm có chứa từ và là cách nói thông dụng không? Với cụm từ cố định: cụm liên quan có ích, không lặp lại chính cụm?
-9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không?
+9. Ở câu hỏi mẫu mức 1–4, đáp án nhiễu có hợp lý, không có hai đáp án cùng đúng không? Câu điền từ (Mức 4): thay từng
+   đáp án nhiễu vào chỗ trống thì câu có sai rõ ràng về nghĩa không; câu có manh mối đủ rõ mà vẫn ở đúng trình độ không?
 10. Mọi cờ của mục đã được xử lý (đã sửa, hoặc đã xem và chấp nhận) chưa?
 
 Nhãn thông tin (`phrase`, `ai_suggested_headword`) không phải lỗi, chỉ nhắc người duyệt chú ý; chúng không tính vào số mục

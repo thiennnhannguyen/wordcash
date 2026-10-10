@@ -184,7 +184,11 @@ export default function DailyCheck() {
         </div>
       )}
 
-      <AnimatePresence>{feedback && <FeedbackSheet key={index} result={feedback} onContinue={next} />}</AnimatePresence>
+      <AnimatePresence>
+        {feedback && (
+          <FeedbackSheet key={index} result={feedback} onContinue={next} report={{ question: { kind: 'daily_check', question_id: question.id } }} />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

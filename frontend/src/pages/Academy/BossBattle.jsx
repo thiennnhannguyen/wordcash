@@ -27,7 +27,7 @@ import QuestionView from '../../components/academy/QuestionView'
 import TestActionBar from '../../components/academy/TestActionBar'
 import RewardsLayer from '../../components/academy/RewardsLayer'
 import useCountdown from '../../hooks/useCountdown'
-import { finishBoss, startBoss } from '../../services/academyApi'
+import { currentRunId, finishBoss, startBoss } from '../../services/academyApi'
 import { useToastStore } from '../../store/toastStore'
 import cx from '../../utils/cx'
 import { AcademyError } from './AcademyLesson'
@@ -236,6 +236,7 @@ function BattleStep({ session, onFinish, onExit }) {
       <TestActionBar
         dark
         verdict={verdict}
+        report={run.question && run.question.reportable !== false ? { question: { kind: 'study', session_id: currentRunId(), question_id: run.question.id } } : null}
         canSubmit={!!run.answer.trim()}
         pending={run.pending}
         onSubmit={run.submit}

@@ -66,7 +66,8 @@ async def dev_api(tmp_path, monkeypatch):
     monkeypatch.setattr(svc, "WORK_ROOT", tmp_path / "work")
     monkeypatch.setattr(svc, "ai_provider", lambda: "agent")
     topic = TopicFile(level="A1", topic_code="food", topic_title="Đồ ăn", entries=[
-        make_entry("rice", "cơm", "We eat rice for lunch every day.", rank_in_topic=1),
+        make_entry("rice", "cơm", "We eat rice for lunch every day.", rank_in_topic=1,
+                   cloze_en="In Vietnam, people cook white rice and eat it with fish.", cloze_distractors=["milk", "juice", "tea"]),
         make_entry("egg", "quả trứng", "My mom buys six eggs at the market.", rank_in_topic=2),
         make_entry("noodle", "mì", "I eat noodle soup in the morning.", rank_in_topic=3),
     ], units=[ContentUnit(content_key="a1.food.u1", position=1, title="Bữa sáng", entries=["a1.food.rice.noun"])])
@@ -89,6 +90,11 @@ async def test_list_get_edit_and_revalidate(dev_api):
     assert next(t for t in levels[0]["topics"] if t["code"] == "home")["total"] == 0  # chưa có file
     topic = (await c.get(f"{API}/dev/content/A1/food")).json()
     assert [e["headword"] for e in topic["entries"]] == ["rice", "egg", "noodle"] and "hard_words" in topic["flag_help"]
+    assert topic["sample_keys"] == []  # chưa có đợt chọn mẫu
+    from data_pipeline.lib import sample
+    sample.choose("A1", 2, seed=3, allow_missing_cloze=True, content_root=root, work_root=svc.WORK_ROOT)
+    keys = (await c.get(f"{API}/dev/content/A1/food")).json()["sample_keys"]
+    assert len(keys) == 2 and set(keys) <= {"a1.food.rice.noun", "a1.food.egg.noun", "a1.food.noodle.noun"}
     assert (await c.get(f"{API}/dev/content/A1/nope")).json()["error"]["code"] == "CONTENT_NOT_FOUND"
 
     res = await c.patch(f"{API}/dev/content/A1/food/entries/a1.food.egg.noun", json={"example_en": "We eat rice at home today."})
@@ -121,7 +127,15 @@ async def test_sample_questions_all_levels(dev_api):
     qs = (await c.get(f"{API}/dev/content/A1/food/entries/a1.food.rice.noun/questions")).json()
     assert [q["level"] for q in qs] == [1, 2, 3, 4]
     assert qs[0]["answer"] == "cơm" and "cơm" in qs[0]["options"] and len(qs[0]["options"]) == 3
-    assert qs[1]["answer"] == "rice" and qs[3]["sentence"].startswith("We eat ______")
+    # Mức 4: câu cloze riêng + đúng 3 đáp án nhiễu soạn sẵn (giống hệt câu người học sẽ thấy)
+    assert qs[1]["answer"] == "rice" and qs[3]["sentence"] == "In Vietnam, people cook white ______ and eat it with fish."
+    assert sorted(qs[3]["options"]) == ["juice", "milk", "rice", "tea"] and qs[3]["answer"] == "rice"
+
+
+async def test_sample_question_level_4_falls_back_without_cloze(dev_api):
+    c, _ = dev_api
+    qs = (await c.get(f"{API}/dev/content/A1/food/entries/a1.food.egg.noun/questions")).json()
+    assert [q["level"] for q in qs] == [1, 2, 3, 3]
 
 
 async def test_rewrite_field_with_ai(dev_api, monkeypatch):

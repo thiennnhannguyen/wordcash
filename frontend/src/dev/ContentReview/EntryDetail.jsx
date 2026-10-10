@@ -1,6 +1,7 @@
 /*
  * Khung chi tiết một mục trên trang duyệt: mọi trường sửa trực tiếp, loa đọc thử (Web Speech API, en-US), các cờ kèm giải thích,
- * câu hỏi mẫu mức 1–4, viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
+ * câu điền từ Mức 4 xem trước như người học thấy (ClozePreview, dựng từ ô đang sửa), câu hỏi mẫu mức 1–4,
+ * viết lại từng trường (chế độ agent: "Gửi yêu cầu viết lại" → nhãn "Đang chờ viết lại" → khi hàng đợi
  * đã xử lý thì bản cũ / bản mới hiện cạnh nhau ngay dưới trường để chọn), ghi chú duyệt. Thanh hành động: Duyệt (A), Từ chối (R, bắt buộc lý do),
  * Bỏ qua (S), Mục sau (J), Mục trước (K) — theo quy ước Gmail / Vim, Lưu (khi có thay đổi chưa lưu).
  */
@@ -14,12 +15,13 @@ import cx from '../../utils/cx'
 import { FIELDS, STATUS_LABEL, STATUS_TONE, changedFields, fromForm, toForm } from './fields'
 import RewriteModal, { VersionCompare } from './RewriteModal'
 import SampleQuestions from './SampleQuestions'
+import ClozePreview from './ClozePreview'
 
 const box = 'w-full rounded-btn border-thick border-line bg-surface px-3 py-2 text-[15px] text-ink shadow-hard outline-none focus:border-primary'
 
 export default function EntryDetail({
   entry, flagHelp, infoFlags = [], level, topic, busy, onSave, onApprove, onReject, onSkip, onPrev, onNext, saveRef,
-  queueMode = true, rewrites = [], onRewriteQueued, onResolveRewrite,
+  queueMode = true, rewrites = [], onRewriteQueued, onResolveRewrite, focusFields = [], onResolveReports,
 }) {
   const [form, setForm] = useState(() => toForm(entry))
   const [note, setNote] = useState(entry.review_note ?? '')
@@ -34,6 +36,14 @@ export default function EntryDetail({
   const dirty = Object.keys(changes).length > 0 || note !== (entry.review_note ?? '')
   const patch = () => ({ ...changes, ...(note !== (entry.review_note ?? '') ? { review_note: note } : {}) })
   if (saveRef) saveRef.current = { patch, dirty }
+
+  // Mở từ tab "Báo lỗi": cuộn tới dải báo lỗi (ngay trên câu điền từ) khi lỗi là "Đáp án gây nhầm", không thì tới trường đầu
+  const focusKey = focusFields.join(',')
+  useEffect(() => {
+    if (!focusKey) return
+    const target = focusKey.includes('cloze') ? 'report-banner' : `f-${focusKey.split(',')[0]}`
+    document.getElementById(target)?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [focusKey, entry.content_key])
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
   const current = fromForm(form)
@@ -84,15 +94,33 @@ export default function EntryDetail({
           ))}
         </ul>
       )}
+      {focusFields.length > 0 && (
+        <div id="report-banner" className="flex scroll-mt-4 flex-wrap items-center gap-3 rounded-btn border-thick border-danger bg-danger/10 px-3 py-2 text-[14px]" role="status">
+          <span className="min-w-0 flex-1">
+            <b>Mở từ Báo lỗi</b> — xem các trường tô đỏ, sửa rồi Lưu / Duyệt, xong bấm "Đã sửa xong" để đóng mọi báo cáo của mục.
+          </span>
+          {onResolveReports && (
+            <Button size="sm" variant="accent" icon={CheckCircle} disabled={busy || dirty} onClick={onResolveReports}>
+              Đã sửa xong
+            </Button>
+          )}
+        </div>
+      )}
       {entry.status === 'rejected' && entry.reject_reason && (
         <p className="rounded-btn border-2 border-line bg-danger/20 px-3 py-2 text-[14px]">Lý do từ chối: {entry.reject_reason}</p>
       )}
+
+      <div id="cloze-preview" className="scroll-mt-4">
+        <h3 className="mb-2 font-display text-[15px] font-bold uppercase tracking-wider text-ink">Câu điền từ — như người học thấy</h3>
+        <ClozePreview headword={entry.headword} sentence={current.cloze_en} distractors={current.cloze_distractors} />
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         {FIELDS.map((f) => {
           const pending = rewrites.find((r) => r.field === f.key)
           return (
-            <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list' || pending) && 'md:col-span-2')}>
+            <div key={f.key} className={cx('flex flex-col gap-1.5', (f.kind === 'text' || f.kind === 'list' || pending) && 'md:col-span-2',
+              focusFields.includes(f.key) && 'rounded-btn p-2 ring-4 ring-danger/60')} data-focus={focusFields.includes(f.key) || undefined}>
               <div className="flex items-center justify-between gap-2">
                 <label htmlFor={`f-${f.key}`} className="hud-label">
                   {f.label}
@@ -149,12 +177,17 @@ export default function EntryDetail({
           Ghi chú duyệt
         </label>
         <textarea id="review-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} className={box} />
-        {entry.reviewed_at && <p className="text-[13px] text-muted">Duyệt lần cuối: {new Date(entry.reviewed_at).toLocaleString('vi-VN')}</p>}
+        {entry.reviewed_at && (
+          <p className="text-[13px] text-muted">
+            Duyệt lần cuối: {new Date(entry.reviewed_at).toLocaleString('vi-VN')}
+            {entry.review_method === 'sample' ? ' · duyệt hàng loạt theo mẫu' : entry.review_method === 'manual' ? ' · duyệt tay' : ''}
+          </p>
+        )}
       </div>
 
       <div>
         <h3 className="mb-2 font-display text-[15px] font-bold uppercase tracking-wider text-ink">Câu hỏi mẫu</h3>
-        <SampleQuestions level={level} topic={topic} entryKey={entry.content_key} version={`${entry.example_en}|${entry.meaning_vi}`} />
+        <SampleQuestions level={level} topic={topic} entryKey={entry.content_key} version={`${entry.example_en}|${entry.meaning_vi}|${entry.cloze_en}|${entry.cloze_distractors?.join(',')}`} />
       </div>
 
       <div className="sticky bottom-0 -mx-1 flex flex-wrap gap-2 border-t-2 border-line bg-bg px-1 py-3">

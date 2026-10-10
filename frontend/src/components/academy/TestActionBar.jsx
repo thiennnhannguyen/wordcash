@@ -3,7 +3,7 @@
  *
  * Chưa nộp: nút "Kiểm tra". Đã nộp: thanh đổi màu theo kết quả server trả về (xanh chanh đúng, hồng sai)
  * kèm nút "Tiếp". Trong bài kiểm tra không hiện đáp án đúng giữa chừng; từ sai được liệt kê khi kết thúc.
- * `dark` dùng cho nền tím sẫm của Trận Boss.
+ * `dark` dùng cho nền tím sẫm của Trận Boss. `report`: tham chiếu câu vừa làm cho nút "Báo lỗi" (chỉ hiện sau khi nộp).
  */
 
 import { useEffect, useRef } from 'react'
@@ -12,8 +12,9 @@ import { ArrowRight, CheckFat, XCircle } from '@phosphor-icons/react'
 import Button from '../ui/Button'
 import { IconBadge } from '../ui/Icon'
 import cx from '../../utils/cx'
+import ReportButton from './ReportButton'
 
-export default function TestActionBar({ verdict, canSubmit, pending, onSubmit, onNext, hint, correctText = 'Chính xác!', wrongText = 'Chưa đúng', dark = false }) {
+export default function TestActionBar({ verdict, canSubmit, pending, onSubmit, onNext, hint, correctText = 'Chính xác!', wrongText = 'Chưa đúng', dark = false, report }) {
   const nextRef = useRef(null)
 
   // Chuyển focus vào nút "Tiếp" để bấm Enter là đi tiếp
@@ -47,9 +48,12 @@ export default function TestActionBar({ verdict, canSubmit, pending, onSubmit, o
           <span className={cx('hud-label hidden md:inline', dark && 'text-white/70')}>{hint}</span>
         )}
         {verdict ? (
-          <Button ref={nextRef} size="lg" variant={verdict.correct ? 'primary' : 'secondary'} iconRight={ArrowRight} className="shrink-0 md:min-w-52" onClick={onNext}>
-            Tiếp
-          </Button>
+          <div className="flex shrink-0 items-center gap-1 md:gap-3">
+            {report && <ReportButton target={report} />}
+            <Button ref={nextRef} size="lg" variant={verdict.correct ? 'primary' : 'secondary'} iconRight={ArrowRight} className="shrink-0 md:min-w-52" onClick={onNext}>
+              Tiếp
+            </Button>
+          </div>
         ) : (
           <Button size="lg" fullWidth className="md:w-auto md:min-w-64" disabled={!canSubmit || pending} onClick={onSubmit}>
             {pending ? 'Đang chấm…' : 'Kiểm tra'}

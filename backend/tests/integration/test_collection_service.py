@@ -123,8 +123,8 @@ async def test_new_user_pool_is_a1_only_until_boss_a1_won(world):
     regions = {m.id: m.region.value for m in await svc.load_catalog(db)}
     out = await svc.spin(db, user, "normal", 10, key(), NOW, rng=Rng(0.0, last=True))
     assert {r["mascot"]["id"] for r in out["results"]} == {A1_COMMON[-1]}
-    for _ in range(3):
-        out = await svc.spin(db, user, "normal", 10, key(), NOW, rng=random.Random())
+    for seed in range(3):  # hạt giống cố định: test không phụ thuộc may rủi
+        out = await svc.spin(db, user, "normal", 10, key(), NOW, rng=random.Random(seed))
         assert {regions[r["mascot"]["id"]] for r in out["results"]} == {"A1"}
     assert (await svc.get_rates(db, user, NOW))["unlocked_regions"] == ["A1"]
 
@@ -132,7 +132,7 @@ async def test_new_user_pool_is_a1_only_until_boss_a1_won(world):
     await roadmap_service.complete_level(db, user, st, await H.level(db, "A1"), NOW)  # thắng Boss A1 → mở A2
     rates = await svc.get_rates(db, user, NOW)
     assert rates["unlocked_regions"] == ["A1", "A2"] and rates["pool_size"]["common"] == len(A1_COMMON) + len(A2_COMMON)
-    await give(db, user, normal=1)
+    await give(db, user, normal=1, pity=0)  # pity về 0: lượt cuối không bị ép ra Sử Thi sau 40 lượt trước
     out = await svc.spin(db, user, "normal", 1, key(), NOW, rng=Rng(0.0, last=True))
     assert out["results"][0]["mascot"]["id"] == 28 and regions[28] == "A2"
 
