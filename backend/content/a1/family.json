@@ -24,6 +24,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday cake",
       "variant_note": "",
+      "cloze_en": "Today Mai is nine years old, so we give her a cake and say, \"Happy birthday!\"",
+      "cloze_distractors": [
+        "Excuse me",
+        "I'm hungry",
+        "Turn left"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "life events",
@@ -63,6 +69,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father and son faces",
       "variant_note": "",
+      "cloze_en": "Look at this photo. Does the baby look like his dad? They have the same eyes.",
+      "cloze_distractors": [
+        "pay for",
+        "turn off",
+        "try on"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -102,6 +114,12 @@
       "mnemonic_vi": "",
       "image_keyword": "eye",
       "variant_note": "",
+      "cloze_en": "I hurt my eye, so I can't see well with it today.",
+      "cloze_distractors": [
+        "leg",
+        "ear",
+        "nose"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "body",
@@ -139,6 +157,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family photo",
       "variant_note": "",
+      "cloze_en": "There are five people in my family: my parents, my two sisters and me.",
+      "cloze_distractors": [
+        "best friend",
+        "dry season",
+        "fried rice"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -178,6 +202,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two girls hugging",
       "variant_note": "",
+      "cloze_en": "Lan is my best friend. We sit together and tell each other everything.",
+      "cloze_distractors": [
+        "only child",
+        "bus stop",
+        "rainy season"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "people",
@@ -217,6 +247,12 @@
       "mnemonic_vi": "",
       "image_keyword": "man in blue shirt",
       "variant_note": "",
+      "cloze_en": "The man in the blue shirt is my uncle.",
+      "cloze_distractors": [
+        "woman",
+        "girl",
+        "kitchen"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -256,6 +292,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child growing taller",
       "variant_note": "",
+      "cloze_en": "When I grow up, I want to be a doctor.",
+      "cloze_distractors": [
+        "get on",
+        "take off",
+        "turn on"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "life events",
@@ -297,6 +339,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mother cooking",
       "variant_note": "",
+      "cloze_en": "My mom is a woman with long hair, and she cooks dinner for us.",
+      "cloze_distractors": [
+        "dad",
+        "uncle",
+        "grandpa"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -334,6 +382,12 @@
       "mnemonic_vi": "",
       "image_keyword": "one child with parents",
       "variant_note": "",
+      "cloze_en": "Minh has no brothers or sisters, so he is the only child in his family.",
+      "cloze_distractors": [
+        "best friend",
+        "bus stop",
+        "dry season"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "family members",
@@ -375,6 +429,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wedding couple",
       "variant_note": "",
+      "cloze_en": "My aunt and her boyfriend get married in spring, and the whole family has a big party.",
+      "cloze_distractors": [
+        "take a shower",
+        "turn left",
+        "clean the room"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "life events",
@@ -414,6 +474,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old man smiling",
       "variant_note": "",
+      "cloze_en": "My grandpa has white hair and is eighty. He is old but still very strong.",
+      "cloze_distractors": [
+        "young",
+        "new",
+        "cloudy"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -451,6 +517,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sleeping baby",
       "variant_note": "",
+      "cloze_en": "The baby is only two months old and sleeps a lot.",
+      "cloze_distractors": [
+        "grandpa",
+        "teacher",
+        "doctor"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -490,6 +562,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandmother holding baby",
       "variant_note": "",
+      "cloze_en": "When my parents are at work, Grandma can take care of my baby brother.",
+      "cloze_distractors": [
+        "pay for",
+        "turn off",
+        "try on"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "family members",
@@ -531,6 +609,12 @@
       "mnemonic_vi": "",
       "image_keyword": "young boy",
       "variant_note": "",
+      "cloze_en": "My brother is a little boy. He is six and plays with toy cars.",
+      "cloze_distractors": [
+        "girl",
+        "chair",
+        "window"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -568,6 +652,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl with long hair",
       "variant_note": "",
+      "cloze_en": "My sister is a little girl. She is five and loves her dolls.",
+      "cloze_distractors": [
+        "boy",
+        "table",
+        "river"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -609,6 +699,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father smiling",
       "variant_note": "",
+      "cloze_en": "My dad is a man with short hair, and he takes me to school by motorbike.",
+      "cloze_distractors": [
+        "mom",
+        "aunt",
+        "sister"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -646,6 +742,12 @@
       "mnemonic_vi": "",
       "image_keyword": "washing hands",
       "variant_note": "",
+      "cloze_en": "I write with my right hand and hold my bowl with the other one.",
+      "cloze_distractors": [
+        "ear",
+        "nose",
+        "leg"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "body",
@@ -685,6 +787,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small house",
       "variant_note": "",
+      "cloze_en": "We live in a small house in Hue with our grandparents.",
+      "cloze_distractors": [
+        "cook",
+        "sell",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "life events",
@@ -722,6 +830,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tall boy",
       "variant_note": "",
+      "cloze_en": "My brother is very tall. He can touch the top of the door.",
+      "cloze_distractors": [
+        "short",
+        "yellow",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -761,6 +875,12 @@
       "mnemonic_vi": "",
       "image_keyword": "people working",
       "variant_note": "",
+      "cloze_en": "My parents work at a big hospital, and they go there every day.",
+      "cloze_distractors": [
+        "rain",
+        "fly",
+        "grow"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "jobs",
@@ -803,6 +923,12 @@
       "mnemonic_vi": "",
       "image_keyword": "children at school",
       "variant_note": "",
+      "cloze_en": "Every child in our village goes to school at the age of six.",
+      "cloze_distractors": [
+        "grandpa",
+        "cow",
+        "tree"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -840,6 +966,12 @@
       "mnemonic_vi": "",
       "image_keyword": "woman at door",
       "variant_note": "",
+      "cloze_en": "The woman at the door is our new teacher, Mrs. Hoa.",
+      "cloze_distractors": [
+        "man",
+        "boy",
+        "window"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -877,6 +1009,12 @@
       "mnemonic_vi": "",
       "image_keyword": "young woman",
       "variant_note": "",
+      "cloze_en": "My aunt is only twenty, so she is still young.",
+      "cloze_distractors": [
+        "old",
+        "cloudy",
+        "broken"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -914,6 +1052,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family dinner table",
       "variant_note": "",
+      "cloze_en": "Our family eats dinner together every night: my parents, my sister and me.",
+      "cloze_distractors": [
+        "kitchen",
+        "garden",
+        "street"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -955,6 +1099,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father and child",
       "variant_note": "",
+      "cloze_en": "Her father is a tall man, and he is a teacher at my school.",
+      "cloze_distractors": [
+        "mother",
+        "sister",
+        "aunt"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -995,6 +1145,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friends playing badminton",
       "variant_note": "",
+      "cloze_en": "Nam is my friend. We play soccer together after school.",
+      "cloze_distractors": [
+        "book",
+        "bike",
+        "window"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -1034,6 +1190,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mother and child",
       "variant_note": "",
+      "cloze_en": "My mother is a woman who gets up early every morning to cook for us.",
+      "cloze_distractors": [
+        "father",
+        "brother",
+        "uncle"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1073,6 +1235,12 @@
       "mnemonic_vi": "",
       "image_keyword": "crowd at market",
       "variant_note": "",
+      "cloze_en": "Many people go to the market on Sunday to buy food.",
+      "cloze_distractors": [
+        "clothes",
+        "glasses",
+        "pants"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "people",
@@ -1110,6 +1278,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two sisters",
       "variant_note": "",
+      "cloze_en": "My sister is a girl two years older than me.",
+      "cloze_distractors": [
+        "brother",
+        "uncle",
+        "dad"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1147,6 +1321,12 @@
       "mnemonic_vi": "",
       "image_keyword": "boy drawing",
       "variant_note": "",
+      "cloze_en": "My little brother is a boy, and he likes to draw cars.",
+      "cloze_distractors": [
+        "sister",
+        "aunt",
+        "mom"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1184,6 +1364,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday cake",
       "variant_note": "",
+      "cloze_en": "My birthday is in May, and I get a cake and gifts.",
+      "cloze_distractors": [
+        "kitchen",
+        "homework",
+        "weather"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "life events",
@@ -1221,6 +1407,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two kids same height",
       "variant_note": "",
+      "cloze_en": "Lan and I are both ten years old, so we are the same age.",
+      "cloze_distractors": [
+        "color",
+        "name",
+        "address"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -1258,6 +1450,12 @@
       "mnemonic_vi": "",
       "image_keyword": "strong arm",
       "variant_note": "",
+      "cloze_en": "I hurt my arm, so I can't carry my school bag.",
+      "cloze_distractors": [
+        "ear",
+        "nose",
+        "eye"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1295,6 +1493,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dog ears",
       "variant_note": "",
+      "cloze_en": "Something is wrong with my ear, so I can't hear well.",
+      "cloze_distractors": [
+        "arm",
+        "leg",
+        "hair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1332,6 +1536,12 @@
       "mnemonic_vi": "",
       "image_keyword": "woman at bank",
       "variant_note": "",
+      "cloze_en": "My aunt has a new job in a bank, and she works there every day.",
+      "cloze_distractors": [
+        "banana",
+        "rain",
+        "smile"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "jobs",
@@ -1371,6 +1581,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing football",
       "variant_note": "",
+      "cloze_en": "My uncle has one kid, a little boy of five.",
+      "cloze_distractors": [
+        "grandpa",
+        "car",
+        "cloud"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1408,6 +1624,12 @@
       "mnemonic_vi": "",
       "image_keyword": "legs walking",
       "variant_note": "",
+      "cloze_en": "My leg hurts after the long walk, so I can't run today.",
+      "cloze_distractors": [
+        "ear",
+        "nose",
+        "hair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1445,6 +1667,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father and son",
       "variant_note": "",
+      "cloze_en": "My uncle has a son, and he is a boy of seven.",
+      "cloze_distractors": [
+        "daughter",
+        "wife",
+        "aunt"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1482,6 +1710,12 @@
       "mnemonic_vi": "",
       "image_keyword": "aunt cooking",
       "variant_note": "",
+      "cloze_en": "My aunt is my mom's sister, and she makes great cakes.",
+      "cloze_distractors": [
+        "uncle",
+        "grandpa",
+        "brother"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1519,6 +1753,12 @@
       "mnemonic_vi": "",
       "image_keyword": "human body outline",
       "variant_note": "",
+      "cloze_en": "Swimming is good for your body and keeps you strong.",
+      "cloze_distractors": [
+        "kitchen",
+        "homework",
+        "street"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1556,6 +1796,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cute puppy",
       "variant_note": "",
+      "cloze_en": "My cousin has a cute little dog with soft white hair.",
+      "cloze_distractors": [
+        "broken",
+        "cloudy",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -1593,6 +1839,12 @@
       "mnemonic_vi": "",
       "image_keyword": "smiling face",
       "variant_note": "",
+      "cloze_en": "Wash your face before you go to bed.",
+      "cloze_distractors": [
+        "chair",
+        "street",
+        "window"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1630,6 +1882,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl with long black hair",
       "variant_note": "",
+      "cloze_en": "My sister has long black hair, and she brushes it every morning.",
+      "cloze_distractors": [
+        "eye",
+        "nose",
+        "ear"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1667,6 +1925,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hat on head",
       "variant_note": "",
+      "cloze_en": "Put your hat on your head. It's sunny.",
+      "cloze_distractors": [
+        "leg",
+        "hand",
+        "arm"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1704,6 +1968,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid holding cheek",
       "variant_note": "",
+      "cloze_en": "My tooth starts to hurt when I eat ice cream.",
+      "cloze_distractors": [
+        "sing",
+        "swim",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "health",
@@ -1741,6 +2011,12 @@
       "mnemonic_vi": "",
       "image_keyword": "clown red nose",
       "variant_note": "",
+      "cloze_en": "I smell the flowers with my nose.",
+      "cloze_distractors": [
+        "ear",
+        "leg",
+        "hand"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1782,6 +2058,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sick kid in bed",
       "variant_note": "",
+      "cloze_en": "Nam is sick, so he stays in bed and sees a doctor today.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "health",
@@ -1819,6 +2101,12 @@
       "mnemonic_vi": "",
       "image_keyword": "married couple",
       "variant_note": "",
+      "cloze_en": "My uncle and his wife live in Da Nang with their two children.",
+      "cloze_distractors": [
+        "kitchen",
+        "bicycle",
+        "umbrella"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -1858,6 +2146,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mother at bus stop",
       "variant_note": "",
+      "cloze_en": "My mom goes to work by bus, and she comes home at six.",
+      "cloze_distractors": [
+        "bed",
+        "rice",
+        "sky"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "jobs",
@@ -1895,6 +2189,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open mouth at dentist",
       "variant_note": "",
+      "cloze_en": "The doctor says, \"Open your mouth, please. I want to see your teeth.\"",
+      "cloze_distractors": [
+        "ear",
+        "nose",
+        "hand"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -1932,6 +2232,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday party",
       "variant_note": "",
+      "cloze_en": "We have a big party for Grandma's birthday with cake and music.",
+      "cloze_distractors": [
+        "rain",
+        "homework",
+        "bridge"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "life events",
@@ -1969,6 +2275,12 @@
       "mnemonic_vi": "",
       "image_keyword": "short boy running",
       "variant_note": "",
+      "cloze_en": "I am short, so I need a chair to get the book on the top shelf.",
+      "cloze_distractors": [
+        "tall",
+        "expensive",
+        "yellow"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2008,6 +2320,12 @@
       "mnemonic_vi": "",
       "image_keyword": "smart student",
       "variant_note": "",
+      "cloze_en": "Minh is smart and gets the right answer to every math question.",
+      "cloze_distractors": [
+        "broken",
+        "cloudy",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2047,6 +2365,12 @@
       "mnemonic_vi": "",
       "image_keyword": "toothbrush and teeth",
       "variant_note": "",
+      "cloze_en": "My tooth hurts when I eat candy, so I don't eat it.",
+      "cloze_distractors": [
+        "ear",
+        "hair",
+        "leg"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "body",
@@ -2084,6 +2408,12 @@
       "mnemonic_vi": "",
       "image_keyword": "uncle with taxi",
       "variant_note": "",
+      "cloze_en": "My uncle is my dad's brother, and he drives a taxi in Hanoi.",
+      "cloze_distractors": [
+        "aunt",
+        "sister",
+        "grandma"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2121,6 +2451,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two cousins",
       "variant_note": "",
+      "cloze_en": "My cousin is my uncle's son, and we go to the same school.",
+      "cloze_distractors": [
+        "grandpa",
+        "grandma",
+        "wife"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2158,6 +2494,12 @@
       "mnemonic_vi": "",
       "image_keyword": "doctor with stethoscope",
       "variant_note": "",
+      "cloze_en": "I am sick, so my mom takes me to the doctor.",
+      "cloze_distractors": [
+        "singer",
+        "farmer",
+        "waiter"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "health",
@@ -2195,6 +2537,12 @@
       "mnemonic_vi": "",
       "image_keyword": "parents and child",
       "variant_note": "",
+      "cloze_en": "A parent is a mother or a father.",
+      "cloze_distractors": [
+        "cousin",
+        "neighbor",
+        "singer"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2234,6 +2582,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kind person helping",
       "variant_note": "",
+      "cloze_en": "Lan is a kind person who always helps others.",
+      "cloze_distractors": [
+        "kitchen",
+        "bottle",
+        "table"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "people",
@@ -2271,6 +2625,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl in ao dai",
       "variant_note": "",
+      "cloze_en": "My sister looks pretty in her new ao dai.",
+      "cloze_distractors": [
+        "broken",
+        "cloudy",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2311,6 +2671,12 @@
       "mnemonic_vi": "",
       "image_keyword": "singer with microphone",
       "variant_note": "",
+      "cloze_en": "A singer is a person who sings songs for people.",
+      "cloze_distractors": [
+        "farmer",
+        "driver",
+        "waiter"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "jobs",
@@ -2350,6 +2716,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandpa carrying bag",
       "variant_note": "",
+      "cloze_en": "My grandpa is strong. He can carry a big bag of rice.",
+      "cloze_distractors": [
+        "yellow",
+        "cloudy",
+        "broken"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2389,6 +2761,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandma telling stories",
       "variant_note": "",
+      "cloze_en": "My grandma is my dad's mother, and she tells us stories.",
+      "cloze_distractors": [
+        "grandpa",
+        "uncle",
+        "brother"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2428,6 +2806,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandpa watering plants",
       "variant_note": "",
+      "cloze_en": "My grandpa is my mom's father, and he waters the plants every morning.",
+      "cloze_distractors": [
+        "grandma",
+        "aunt",
+        "sister"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2467,6 +2851,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fruit and vegetables",
       "variant_note": "",
+      "cloze_en": "Eat fruit and vegetables every day to stay healthy and strong.",
+      "cloze_distractors": [
+        "sick",
+        "dirty",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "health",
@@ -2504,6 +2894,12 @@
       "mnemonic_vi": "",
       "image_keyword": "couple in shop",
       "variant_note": "",
+      "cloze_en": "My aunt and her husband have a small shop, and they work together.",
+      "cloze_distractors": [
+        "chair",
+        "cloud",
+        "apple"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2541,6 +2937,12 @@
       "mnemonic_vi": "",
       "image_keyword": "father and daughter",
       "variant_note": "",
+      "cloze_en": "Mr. Nam has one daughter, a little girl called Mai.",
+      "cloze_distractors": [
+        "son",
+        "wife",
+        "uncle"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2578,6 +2980,12 @@
       "mnemonic_vi": "",
       "image_keyword": "neighbor giving fruit",
       "variant_note": "",
+      "cloze_en": "Our neighbor lives in the house next to ours and often gives us fruit.",
+      "cloze_distractors": [
+        "kitchen",
+        "river",
+        "cloud"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "people",
@@ -2615,6 +3023,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family watching tv",
       "variant_note": "",
+      "cloze_en": "My family watches TV together every evening on the big sofa.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "tomorrow"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "people",
@@ -2656,6 +3070,12 @@
       "mnemonic_vi": "",
       "image_keyword": "beautiful smile",
       "variant_note": "",
+      "cloze_en": "The flowers in our garden are beautiful: red, pink and yellow.",
+      "cloze_distractors": [
+        "hungry",
+        "broken",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2695,6 +3115,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandfather on farm",
       "variant_note": "",
+      "cloze_en": "My grandfather is my dad's father. He was a farmer.",
+      "cloze_distractors": [
+        "grandmother",
+        "aunt",
+        "sister"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2734,6 +3160,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandmother at home",
       "variant_note": "",
+      "cloze_en": "My grandmother is my mom's mother, and she lives with us.",
+      "cloze_distractors": [
+        "grandfather",
+        "uncle",
+        "brother"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "family members",
@@ -2771,6 +3203,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friendly young man",
       "variant_note": "",
+      "cloze_en": "Nam is a nice guy. Everyone likes him.",
+      "cloze_distractors": [
+        "kitchen",
+        "window",
+        "bottle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "people",
@@ -2808,6 +3246,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid in bed on sunday",
       "variant_note": "",
+      "cloze_en": "On Sunday morning, I feel lazy and stay in bed until ten.",
+      "cloze_distractors": [
+        "expensive",
+        "yellow",
+        "broken"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2848,6 +3292,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandparents in countryside",
       "variant_note": "",
+      "cloze_en": "My grandparents have a quiet life on their farm.",
+      "cloze_distractors": [
+        "bottle",
+        "homework",
+        "pencil"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "life events",
@@ -2885,6 +3335,12 @@
       "mnemonic_vi": "",
       "image_keyword": "scarf around neck",
       "variant_note": "",
+      "cloze_en": "In winter, I put a warm scarf around my neck.",
+      "cloze_distractors": [
+        "leg",
+        "arm",
+        "tooth"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "body",
@@ -2922,6 +3378,12 @@
       "mnemonic_vi": "",
       "image_keyword": "giving clothes",
       "variant_note": "",
+      "cloze_en": "The family is poor, so they don't have money for food.",
+      "cloze_distractors": [
+        "rich",
+        "tall",
+        "yellow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2959,6 +3421,12 @@
       "mnemonic_vi": "",
       "image_keyword": "man giving money to school",
       "variant_note": "",
+      "cloze_en": "The man is rich: he has three big houses and many cars.",
+      "cloze_distractors": [
+        "poor",
+        "yellow",
+        "cloudy"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -2996,6 +3464,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tall thin boy",
       "variant_note": "",
+      "cloze_en": "My brother doesn't eat much, so he is very thin.",
+      "cloze_distractors": [
+        "rich",
+        "yellow",
+        "cloudy"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -3035,6 +3509,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child with father reading",
       "variant_note": "",
+      "cloze_en": "The little girl runs to her father and says, \"Daddy, I love you!\"",
+      "cloze_distractors": [
+        "mommy",
+        "grandma",
+        "aunt"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "family members",
@@ -3072,6 +3552,12 @@
       "mnemonic_vi": "",
       "image_keyword": "guests at dinner",
       "variant_note": "",
+      "cloze_en": "We have a guest for dinner tonight, so Mom cooks a lot of food.",
+      "cloze_distractors": [
+        "cloud",
+        "river",
+        "bottle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "people",
@@ -3111,6 +3597,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child asking mother",
       "variant_note": "",
+      "cloze_en": "The little boy runs to his mother and says, \"Mommy, I want some milk!\"",
+      "cloze_distractors": [
+        "daddy",
+        "grandpa",
+        "uncle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "family members",
@@ -3150,6 +3642,12 @@
       "mnemonic_vi": "",
       "image_keyword": "boy fixing bike",
       "variant_note": "",
+      "cloze_en": "The clever boy can fix his bike by himself.",
+      "cloze_distractors": [
+        "broken",
+        "cloudy",
+        "yellow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -3187,6 +3685,12 @@
       "mnemonic_vi": "",
       "image_keyword": "couple at home",
       "variant_note": "",
+      "cloze_en": "My aunt lives with her partner, and they plan to get married.",
+      "cloze_distractors": [
+        "bottle",
+        "window",
+        "umbrella"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "people",
@@ -3224,6 +3728,12 @@
       "mnemonic_vi": "",
       "image_keyword": "man in new shirt",
       "variant_note": "",
+      "cloze_en": "My uncle looks handsome in his new shirt.",
+      "cloze_distractors": [
+        "closed",
+        "cloudy",
+        "broken"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "describing people",
@@ -3261,6 +3771,12 @@
       "mnemonic_vi": "",
       "image_keyword": "young couple",
       "variant_note": "",
+      "cloze_en": "My cousin Lan has a boyfriend, a nice young man called Minh.",
+      "cloze_distractors": [
+        "girlfriend",
+        "grandpa",
+        "wife"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "people",
@@ -3300,6 +3816,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family celebrating",
       "variant_note": "",
+      "cloze_en": "We celebrate Mai's birthday with a cake and songs.",
+      "cloze_distractors": [
+        "wash",
+        "sell",
+        "break"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "life events",
@@ -3337,6 +3859,12 @@
       "mnemonic_vi": "",
       "image_keyword": "couple at cinema",
       "variant_note": "",
+      "cloze_en": "Nam has a girlfriend. She is a kind young woman called Hoa.",
+      "cloze_distractors": [
+        "boyfriend",
+        "husband",
+        "uncle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "people",
@@ -3376,6 +3904,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wedding party",
       "variant_note": "",
+      "cloze_en": "After the wedding, there is a big celebration with food and music.",
+      "cloze_distractors": [
+        "test",
+        "homework",
+        "pollution"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "life events",
@@ -3415,6 +3949,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandparents in countryside",
       "variant_note": "",
+      "cloze_en": "A grandparent is the father or mother of your parent.",
+      "cloze_distractors": [
+        "cousin",
+        "neighbor",
+        "uncle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "family members",
