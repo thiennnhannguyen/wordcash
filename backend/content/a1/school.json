@@ -24,6 +24,12 @@
       "mnemonic_vi": "",
       "image_keyword": "question mark",
       "variant_note": "",
+      "cloze_en": "Can I ask you a question? What is your name?",
+      "cloze_distractors": [
+        "picture",
+        "cake",
+        "chair"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "studying",
@@ -61,6 +67,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue pen",
       "variant_note": "",
+      "cloze_en": "I write my name with a blue pen.",
+      "cloze_distractors": [
+        "cup",
+        "shoe",
+        "egg"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "school things",
@@ -100,6 +112,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids running",
       "variant_note": "",
+      "cloze_en": "I am late for school, so I run very fast.",
+      "cloze_distractors": [
+        "sleep",
+        "sit",
+        "read"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -137,6 +155,12 @@
       "mnemonic_vi": "",
       "image_keyword": "eye looking",
       "variant_note": "",
+      "cloze_en": "I can see the sea from my window.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "cook"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -174,6 +198,12 @@
       "mnemonic_vi": "",
       "image_keyword": "ball",
       "variant_note": "",
+      "cloze_en": "We play soccer with a ball.",
+      "cloze_distractors": [
+        "book",
+        "cake",
+        "chair"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -211,6 +241,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid doing homework",
       "variant_note": "",
+      "cloze_en": "After school, I do homework and then watch TV.",
+      "cloze_distractors": [
+        "go to school",
+        "have breakfast",
+        "get up"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -250,6 +286,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open book",
       "variant_note": "",
+      "cloze_en": "I read a book about animals before bed.",
+      "cloze_distractors": [
+        "cup",
+        "shoe",
+        "bike"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "school things",
@@ -289,6 +331,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child drawing",
       "variant_note": "",
+      "cloze_en": "My little sister likes to draw cats with her pencils.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -328,6 +376,12 @@
       "mnemonic_vi": "",
       "image_keyword": "easy test",
       "variant_note": "",
+      "cloze_en": "This math question is very easy. Everyone knows the answer.",
+      "cloze_distractors": [
+        "difficult",
+        "hungry",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -365,6 +419,12 @@
       "mnemonic_vi": "",
       "image_keyword": "board game",
       "variant_note": "",
+      "cloze_en": "We play a word game in English class.",
+      "cloze_distractors": [
+        "soup",
+        "chair",
+        "bus"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -404,6 +464,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thinking kid",
       "variant_note": "",
+      "cloze_en": "Do you know the answer to this question?",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "thinking",
@@ -441,6 +507,12 @@
       "mnemonic_vi": "",
       "image_keyword": "looking at board",
       "variant_note": "",
+      "cloze_en": "Look at this photo. It's my family.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -478,6 +550,12 @@
       "mnemonic_vi": "",
       "image_keyword": "math numbers",
       "variant_note": "",
+      "cloze_en": "In math class, we learn that two and two is four.",
+      "cloze_distractors": [
+        "music",
+        "art",
+        "history"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -517,6 +595,12 @@
       "mnemonic_vi": "",
       "image_keyword": "children playing",
       "variant_note": "",
+      "cloze_en": "The children play soccer in the school yard.",
+      "cloze_distractors": [
+        "read",
+        "drink",
+        "cook"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -557,6 +641,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mother reading story",
       "variant_note": "",
+      "cloze_en": "My mom likes to read me a story every night.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -597,6 +687,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids singing",
       "variant_note": "",
+      "cloze_en": "At the party, we sing a happy song for our teacher.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -634,6 +730,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids walking to school",
       "variant_note": "",
+      "cloze_en": "From Monday to Friday, I go to school at seven in the morning.",
+      "cloze_distractors": [
+        "look like",
+        "take off",
+        "pay for"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -675,6 +777,12 @@
       "mnemonic_vi": "",
       "image_keyword": "music notes",
       "variant_note": "",
+      "cloze_en": "This is my favorite song. I sing it every day.",
+      "cloze_distractors": [
+        "chair",
+        "egg",
+        "desk"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -712,6 +820,12 @@
       "mnemonic_vi": "",
       "image_keyword": "word cards",
       "variant_note": "",
+      "cloze_en": "\"Cat\" is a short English word with three letters.",
+      "cloze_distractors": [
+        "cake",
+        "river",
+        "song"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -752,6 +866,12 @@
       "mnemonic_vi": "",
       "image_keyword": "class of students",
       "variant_note": "",
+      "cloze_en": "There are thirty students in my class.",
+      "cloze_distractors": [
+        "kitchen",
+        "bag",
+        "cup"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -791,6 +911,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid learning",
       "variant_note": "",
+      "cloze_en": "I want to learn how to swim this summer.",
+      "cloze_distractors": [
+        "eat",
+        "sell",
+        "drink"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -830,6 +956,12 @@
       "mnemonic_vi": "",
       "image_keyword": "movie screen",
       "variant_note": "",
+      "cloze_en": "We watch a funny movie at the cinema on Saturday night.",
+      "cloze_distractors": [
+        "song",
+        "book",
+        "radio"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -869,6 +1001,12 @@
       "mnemonic_vi": "",
       "image_keyword": "headphones",
       "variant_note": "",
+      "cloze_en": "My brother listens to music on his phone all day.",
+      "cloze_distractors": [
+        "food",
+        "rice",
+        "paper"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -910,6 +1048,12 @@
       "mnemonic_vi": "",
       "image_keyword": "group photo",
       "variant_note": "",
+      "cloze_en": "Smile! I want to take a photo of you with my phone.",
+      "cloze_distractors": [
+        "shower",
+        "test",
+        "walk"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -949,6 +1093,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sports balls",
       "variant_note": "",
+      "cloze_en": "Soccer is my favorite sport. I play it every day.",
+      "cloze_distractors": [
+        "fruit",
+        "color",
+        "food"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -988,6 +1138,12 @@
       "mnemonic_vi": "",
       "image_keyword": "student studying",
       "variant_note": "",
+      "cloze_en": "I have a math test tomorrow, so I study tonight.",
+      "cloze_distractors": [
+        "sing",
+        "swim",
+        "cook"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -1027,6 +1183,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thinking kid",
       "variant_note": "",
+      "cloze_en": "I think English is fun. What about you?",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "thinking",
@@ -1064,6 +1226,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids watching tv",
       "variant_note": "",
+      "cloze_en": "We watch cartoons on TV on Sunday morning.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "cook"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -1101,6 +1269,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl with headphones",
       "variant_note": "",
+      "cloze_en": "I listen to music on my phone on the bus.",
+      "cloze_distractors": [
+        "take a shower",
+        "go swimming",
+        "wash the dishes"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -1143,6 +1317,12 @@
       "mnemonic_vi": "",
       "image_keyword": "writing name",
       "variant_note": "",
+      "cloze_en": "Write your name at the top of the page with a pen.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -1182,6 +1362,12 @@
       "mnemonic_vi": "",
       "image_keyword": "students listening",
       "variant_note": "",
+      "cloze_en": "Please listen to the teacher. She is talking.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "swim"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "studying",
@@ -1219,6 +1405,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pencil",
       "variant_note": "",
+      "cloze_en": "I draw a cat with a pencil first, and then I color it.",
+      "cloze_distractors": [
+        "cup",
+        "egg",
+        "shoe"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "school things",
@@ -1256,6 +1448,12 @@
       "mnemonic_vi": "",
       "image_keyword": "school building",
       "variant_note": "",
+      "cloze_en": "Our school has thirty classrooms and a big library.",
+      "cloze_distractors": [
+        "bus",
+        "cup",
+        "tree"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -1293,6 +1491,12 @@
       "mnemonic_vi": "",
       "image_keyword": "soccer ball",
       "variant_note": "",
+      "cloze_en": "My brother watches soccer on TV every weekend. His team wins.",
+      "cloze_distractors": [
+        "soup",
+        "rice",
+        "bread"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "sports",
@@ -1332,6 +1536,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family picture",
       "variant_note": "",
+      "cloze_en": "There is a picture of my family on the wall.",
+      "cloze_distractors": [
+        "river",
+        "sky",
+        "cow"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -1371,6 +1581,12 @@
       "mnemonic_vi": "",
       "image_keyword": "students in class",
       "variant_note": "",
+      "cloze_en": "Every student in my class has a book and a pen.",
+      "cloze_distractors": [
+        "cow",
+        "tree",
+        "cake"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -1410,6 +1626,12 @@
       "mnemonic_vi": "",
       "image_keyword": "teacher at board",
       "variant_note": "",
+      "cloze_en": "Our English teacher helps us learn new words every day.",
+      "cloze_distractors": [
+        "cat",
+        "bus",
+        "cake"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -1447,6 +1669,12 @@
       "mnemonic_vi": "",
       "image_keyword": "computer",
       "variant_note": "",
+      "cloze_en": "My dad works on his computer and sends emails.",
+      "cloze_distractors": [
+        "chair",
+        "egg",
+        "sofa"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "school things",
@@ -1484,6 +1712,12 @@
       "mnemonic_vi": "",
       "image_keyword": "homework notebook",
       "variant_note": "",
+      "cloze_en": "Our teacher gives us a lot of homework to do at home.",
+      "cloze_distractors": [
+        "rain",
+        "money",
+        "ice"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "at school",
@@ -1521,6 +1755,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing soccer",
       "variant_note": "",
+      "cloze_en": "We play soccer in the field after school on Friday.",
+      "cloze_distractors": [
+        "wash the dishes",
+        "take a shower",
+        "go to bed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -1564,6 +1804,12 @@
       "mnemonic_vi": "",
       "image_keyword": "difficult puzzle",
       "variant_note": "",
+      "cloze_en": "This math question is very difficult. Nobody knows the answer.",
+      "cloze_distractors": [
+        "easy",
+        "hungry",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -1603,6 +1849,12 @@
       "mnemonic_vi": "",
       "image_keyword": "paint and brush",
       "variant_note": "",
+      "cloze_en": "We draw and paint flowers in art class.",
+      "cloze_distractors": [
+        "math",
+        "history",
+        "science"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -1642,6 +1894,12 @@
       "mnemonic_vi": "",
       "image_keyword": "trophy",
       "variant_note": "",
+      "cloze_en": "Our team plays very well, so we win the game.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -1681,6 +1939,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hard test",
       "variant_note": "",
+      "cloze_en": "The last question is really hard. I don't know the answer.",
+      "cloze_distractors": [
+        "easy",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -1718,6 +1982,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids jumping rope",
       "variant_note": "",
+      "cloze_en": "The frog can jump very high, from the ground to a big stone.",
+      "cloze_distractors": [
+        "read",
+        "write",
+        "sing"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -1755,6 +2025,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tv news",
       "variant_note": "",
+      "cloze_en": "My grandpa watches the news on TV every evening.",
+      "cloze_distractors": [
+        "rice",
+        "shoe",
+        "bread"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -1792,6 +2068,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open book page",
       "variant_note": "",
+      "cloze_en": "Please open your book to page ten.",
+      "cloze_distractors": [
+        "cup",
+        "egg",
+        "river"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -1829,6 +2111,12 @@
       "mnemonic_vi": "",
       "image_keyword": "team photo",
       "variant_note": "",
+      "cloze_en": "There are eleven players on our soccer team.",
+      "cloze_distractors": [
+        "cake",
+        "river",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -1868,6 +2156,12 @@
       "mnemonic_vi": "",
       "image_keyword": "test paper",
       "variant_note": "",
+      "cloze_en": "We have an English test next Monday, so we study a lot.",
+      "cloze_distractors": [
+        "party",
+        "picnic",
+        "vacation"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "at school",
@@ -1907,6 +2201,12 @@
       "mnemonic_vi": "",
       "image_keyword": "true or false",
       "variant_note": "",
+      "cloze_en": "Is it true that you have a new dog?",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -1944,6 +2244,12 @@
       "mnemonic_vi": "",
       "image_keyword": "open book on desk",
       "variant_note": "",
+      "cloze_en": "Open your book to page ten and read the first story.",
+      "cloze_distractors": [
+        "turn off",
+        "take off",
+        "get up"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -1985,6 +2291,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dancing kids",
       "variant_note": "",
+      "cloze_en": "Our class learns a new dance for the school party.",
+      "cloze_distractors": [
+        "soup",
+        "cake",
+        "chair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2024,6 +2336,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl dancing",
       "variant_note": "",
+      "cloze_en": "My sister loves to dance to fast music.",
+      "cloze_distractors": [
+        "eat",
+        "cook",
+        "read"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2061,6 +2379,12 @@
       "mnemonic_vi": "",
       "image_keyword": "drawing hobby",
       "variant_note": "",
+      "cloze_en": "My hobby is drawing animals. I do it every weekend.",
+      "cloze_distractors": [
+        "age",
+        "name",
+        "price"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2101,6 +2425,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child painting",
       "variant_note": "",
+      "cloze_en": "We paint pictures of the sea in art class.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2138,6 +2468,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sheet of paper",
       "variant_note": "",
+      "cloze_en": "Take a piece of paper and a pencil to write.",
+      "cloze_distractors": [
+        "soup",
+        "rice",
+        "ice"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -2177,6 +2513,12 @@
       "mnemonic_vi": "",
       "image_keyword": "piano",
       "variant_note": "",
+      "cloze_en": "Mai plays the piano very well.",
+      "cloze_distractors": [
+        "table",
+        "chair",
+        "window"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2214,6 +2556,12 @@
       "mnemonic_vi": "",
       "image_keyword": "story book",
       "variant_note": "",
+      "cloze_en": "Grandma tells us a funny story before bed.",
+      "cloze_distractors": [
+        "shoe",
+        "cup",
+        "chair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2253,6 +2601,12 @@
       "mnemonic_vi": "",
       "image_keyword": "teacher teaching",
       "variant_note": "",
+      "cloze_en": "Mrs. Lan is a teacher. She likes to teach us English.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2290,6 +2644,12 @@
       "mnemonic_vi": "",
       "image_keyword": "phone video",
       "variant_note": "",
+      "cloze_en": "We make a short video about our school with my phone.",
+      "cloze_distractors": [
+        "cake",
+        "soup",
+        "tree"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2327,6 +2687,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red cross mark",
       "variant_note": "",
+      "cloze_en": "Sorry, that answer is wrong. Two and two is four, not five.",
+      "cloze_distractors": [
+        "correct",
+        "hungry",
+        "sweet"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -2364,6 +2730,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friends waving",
       "variant_note": "",
+      "cloze_en": "Bye, Lan! See you tomorrow at school.",
+      "cloze_distractors": [
+        "Nice to meet you",
+        "How are you",
+        "Excuse me"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "at school",
@@ -2403,6 +2775,12 @@
       "mnemonic_vi": "",
       "image_keyword": "answer sheet",
       "variant_note": "",
+      "cloze_en": "I don't know the answer to this question.",
+      "cloze_distractors": [
+        "cake",
+        "river",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2440,6 +2818,12 @@
       "mnemonic_vi": "",
       "image_keyword": "student answering",
       "variant_note": "",
+      "cloze_en": "Please answer the question in English.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2479,6 +2863,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bored student",
       "variant_note": "",
+      "cloze_en": "This movie is long and boring. I want to go home.",
+      "cloze_distractors": [
+        "exciting",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -2518,6 +2908,12 @@
       "mnemonic_vi": "",
       "image_keyword": "guitar",
       "variant_note": "",
+      "cloze_en": "My cousin plays the guitar and sings at parties.",
+      "cloze_distractors": [
+        "table",
+        "cake",
+        "door"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2555,6 +2951,12 @@
       "mnemonic_vi": "",
       "image_keyword": "lesson at board",
       "variant_note": "",
+      "cloze_en": "Our English lesson starts at nine in Room 5.",
+      "cloze_distractors": [
+        "banana",
+        "horse",
+        "sky"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "at school",
@@ -2592,6 +2994,12 @@
       "mnemonic_vi": "",
       "image_keyword": "alphabet letters",
       "variant_note": "",
+      "cloze_en": "The first letter of the word \"apple\" is A.",
+      "cloze_distractors": [
+        "number",
+        "color",
+        "song"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2631,6 +3039,12 @@
       "mnemonic_vi": "",
       "image_keyword": "soccer player",
       "variant_note": "",
+      "cloze_en": "Nam is the best player on our soccer team.",
+      "cloze_distractors": [
+        "cake",
+        "river",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -2668,6 +3082,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tennis racket",
       "variant_note": "",
+      "cloze_en": "Tennis is a sport with a small ball for two or four players.",
+      "cloze_distractors": [
+        "soup",
+        "rice",
+        "music"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -2705,6 +3125,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cartoon",
       "variant_note": "",
+      "cloze_en": "My little brother loves to watch a cartoon about animals on TV.",
+      "cloze_distractors": [
+        "soup",
+        "shoe",
+        "chair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2746,6 +3172,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green check mark",
       "variant_note": "",
+      "cloze_en": "All your answers are correct. Well done!",
+      "cloze_distractors": [
+        "wrong",
+        "hungry",
+        "sweet"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
@@ -2783,6 +3215,12 @@
       "mnemonic_vi": "",
       "image_keyword": "example on board",
       "variant_note": "",
+      "cloze_en": "\"Dog\" is an example of an animal.",
+      "cloze_distractors": [
+        "color",
+        "price",
+        "page"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -2820,6 +3258,12 @@
       "mnemonic_vi": "",
       "image_keyword": "students taking test",
       "variant_note": "",
+      "cloze_en": "Study hard tonight. We take a test in math tomorrow.",
+      "cloze_distractors": [
+        "go to bed",
+        "take a shower",
+        "wash the dishes"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "at school",
@@ -2861,6 +3305,12 @@
       "mnemonic_vi": "",
       "image_keyword": "old map and book",
       "variant_note": "",
+      "cloze_en": "In history class, we learn about Vietnam a long time ago.",
+      "cloze_distractors": [
+        "math",
+        "music",
+        "art"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -2898,6 +3348,12 @@
       "mnemonic_vi": "",
       "image_keyword": "library shelves",
       "variant_note": "",
+      "cloze_en": "I read books in the quiet library near my school.",
+      "cloze_distractors": [
+        "river",
+        "zoo",
+        "farm"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "at school",
@@ -2937,6 +3393,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child reading",
       "variant_note": "",
+      "cloze_en": "Reading books is good for your English.",
+      "cloze_distractors": [
+        "swimming",
+        "shopping",
+        "fishing"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "hobbies",
@@ -2976,6 +3438,12 @@
       "mnemonic_vi": "",
       "image_keyword": "science lab",
       "variant_note": "",
+      "cloze_en": "In science class, we learn about plants and animals.",
+      "cloze_distractors": [
+        "math",
+        "music",
+        "art"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -3013,6 +3481,12 @@
       "mnemonic_vi": "",
       "image_keyword": "school subjects",
       "variant_note": "",
+      "cloze_en": "Math is my favorite subject at school.",
+      "cloze_distractors": [
+        "food",
+        "color",
+        "animal"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -3050,6 +3524,12 @@
       "mnemonic_vi": "",
       "image_keyword": "laptop with globe",
       "variant_note": "",
+      "cloze_en": "I send emails and watch videos on the internet.",
+      "cloze_distractors": [
+        "river",
+        "sky",
+        "cake"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -3087,6 +3567,12 @@
       "mnemonic_vi": "",
       "image_keyword": "speech bubbles",
       "variant_note": "",
+      "cloze_en": "English is a language. I can speak it a little.",
+      "cloze_distractors": [
+        "color",
+        "fruit",
+        "sport"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "subjects",
@@ -3124,6 +3610,12 @@
       "mnemonic_vi": "",
       "image_keyword": "notebook",
       "variant_note": "",
+      "cloze_en": "Write the new words in your notebook.",
+      "cloze_distractors": [
+        "cup",
+        "shoe",
+        "sky"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -3161,6 +3653,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids practicing",
       "variant_note": "",
+      "cloze_en": "I practice English with my friends every day.",
+      "cloze_distractors": [
+        "eat",
+        "drink",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -3198,6 +3696,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sentence on board",
       "variant_note": "",
+      "cloze_en": "\"I like cats.\" is a sentence with three words.",
+      "cloze_distractors": [
+        "animal",
+        "color",
+        "city"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "studying",
@@ -3235,6 +3739,12 @@
       "mnemonic_vi": "",
       "image_keyword": "student raising hand",
       "variant_note": "",
+      "cloze_en": "Raise your hand if you know the answer.",
+      "cloze_distractors": [
+        "take off",
+        "turn off",
+        "go to bed"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "at school",
@@ -3276,6 +3786,12 @@
       "mnemonic_vi": "",
       "image_keyword": "classmates",
       "variant_note": "",
+      "cloze_en": "Minh is my classmate. We are in the same class.",
+      "cloze_distractors": [
+        "cat",
+        "bus",
+        "tree"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "at school",
@@ -3315,6 +3831,12 @@
       "mnemonic_vi": "",
       "image_keyword": "classroom",
       "variant_note": "",
+      "cloze_en": "Our classroom has thirty desks and a TV for lessons.",
+      "cloze_distractors": [
+        "kitchen",
+        "garden",
+        "bathroom"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "at school",
@@ -3352,6 +3874,12 @@
       "mnemonic_vi": "",
       "image_keyword": "basketball hoop",
       "variant_note": "",
+      "cloze_en": "Tall students like to play basketball with a big orange ball.",
+      "cloze_distractors": [
+        "piano",
+        "guitar",
+        "computer"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "sports",
@@ -3389,6 +3917,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dictionary",
       "variant_note": "",
+      "cloze_en": "When I don't know a word, I look it up in my dictionary.",
+      "cloze_distractors": [
+        "shoe",
+        "cup",
+        "kite"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "school things",
@@ -3428,6 +3962,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid reading interesting book",
       "variant_note": "",
+      "cloze_en": "This book about animals is very interesting. I can't stop reading.",
+      "cloze_distractors": [
+        "boring",
+        "hungry",
+        "angry"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "right and wrong",
