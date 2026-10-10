@@ -97,6 +97,7 @@ def import_sheet(level: str, path: Path, *, apply: bool = False, root: Path | No
             continue
         if data["status"] != entry.status:
             data["reviewed_at"] = now or datetime.now(UTC)
+            data["review_method"] = "" if data["status"] == "draft" else "manual"
         staged[key] = data
     if result.errors or not apply:
         return result

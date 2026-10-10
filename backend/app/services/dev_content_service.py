@@ -4,7 +4,7 @@ Công cụ duyệt nội dung kho từ (CHỈ dev; router api/v1/routers/dev_con
 Đọc và ghi TRỰC TIẾP các file backend/content/<cấp>/<chủ-đề>.json (nguồn chính của nội dung, DB chỉ nạp từ đây):
 - ghi nguyên tử, định dạng ổn định (data_pipeline/lib/content.py); một khóa asyncio để hai lần lưu không đè nhau;
 - sau mỗi lần sửa chạy lại kiểm tra tự động của cả cấp (data_pipeline/lib/validate.py), chỉ ghi file thật sự đổi;
-- Duyệt / Từ chối ghi `reviewed_at` (giờ thật) và `review_note`; Từ chối bắt buộc có lý do;
+- Duyệt / Từ chối ghi `reviewed_at` (giờ thật), `review_note` và `review_method = "manual"`; Từ chối bắt buộc có lý do;
 - câu hỏi mẫu mức 1–4 sinh bằng services/question_builder.py với đáp án nhiễu lấy trong cùng chủ đề (như người học sẽ thấy;
   mức 2 dùng âm thanh giả để người duyệt xem được đáp án nhiễu);
 - Đợt chọn mẫu duyệt (data_pipeline/lib/sample.py): `sample_keys` = mục có `review_sample` để trang lọc "Mẫu duyệt";
@@ -119,6 +119,7 @@ async def update_entry(level: str, code: str, key: str, patch: dict) -> dict:
                 data["reject_reason"] = ""
             data["status"] = status
             data["reviewed_at"] = clock.real_now()
+            data["review_method"] = "" if status == "draft" else "manual"
         try:
             updated = ContentEntry.model_validate(data)
         except ValueError as e:
