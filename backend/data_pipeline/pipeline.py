@@ -9,6 +9,9 @@ Lệnh tổng của quy trình kho từ (chạy trong backend/):
 - `python -m data_pipeline.pipeline sample --level A1 --per-topic 15 [--seed N] [--force]`: đợt chọn mẫu duyệt (lib/sample.py):
   N mục ngẫu nhiên mỗi chủ đề + mọi mục bắt buộc xem (ai_suggested_headword, ipa_unverified, variant_note, còn cờ); ghi
   `review_sample` vào file nội dung; dừng nếu còn mục draft chưa có câu điền từ Mức 4; /dev/content lọc "Mẫu duyệt".
+- `python -m data_pipeline.pipeline approve-by-sample --level a1 --topic <mã> | --all [--dry-run]`: duyệt hàng loạt theo mẫu —
+  chủ đề có mọi mục mẫu đã approved / rejected và tỉ lệ rejected ≤ 5% thì mục draft còn lại thành approved
+  (`review_method = "sample"`); vượt ngưỡng thì dừng chủ đề đó ("cần duyệt toàn bộ"). In bảng tổng kết.
 """
 
 import argparse
@@ -86,6 +89,24 @@ def print_sample(data: dict) -> None:
     print("Mở /dev/content, bộ lọc \"Mẫu duyệt\".")
 
 
+APPROVE_RESULTS = {
+    "approved": "đạt → đã duyệt phần còn lại",
+    "need_full_review": "DỪNG: cần duyệt toàn bộ",
+    "sample_unfinished": "chưa duyệt xong mẫu",
+    "no_sample": "chưa có mẫu (chạy pipeline sample)",
+    "missing": "không có file chủ đề",
+}
+
+
+def print_approve(rows: list[dict], dry_run: bool) -> None:
+    print(f"== Duyệt theo mẫu (ngưỡng từ chối {config.SAMPLE_MAX_REJECT_RATE:.0%}){' — CHẠY THỬ, không ghi file' if dry_run else ''} ==")
+    print(f"{'chủ đề':<14}{'mẫu':>5}{'duyệt':>7}{'từ chối':>9}{'chưa xem':>10}{'tỉ lệ TC':>10}{'duyệt thêm':>12}{'giữ (còn cờ)':>14}  kết quả")
+    for r in rows:
+        print(f"{r['topic']:<14}{r['sample']:>5}{r['approved']:>7}{r['rejected']:>9}{r['draft']:>10}{r['reject_rate']:>10.1%}"
+              f"{r['approved_now']:>12}{r['held_flagged']:>14}  {APPROVE_RESULTS[r['result']]}")
+    print(f"Tổng duyệt thêm: {sum(r['approved_now'] for r in rows)} mục (review_method = \"sample\")")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -99,6 +120,12 @@ def main() -> None:
     sm.add_argument("--seed", type=int, default=None, help="hạt giống (mặc định ngẫu nhiên, được ghi lại trong file mẫu)")
     sm.add_argument("--force", action="store_true", help="chọn lại dù đã có mẫu")
     sm.add_argument("--allow-missing-cloze", action="store_true", help="không dừng khi còn mục chưa có câu điền từ")
+    ap = sub.add_parser("approve-by-sample", help="duyệt hàng loạt mục draft còn lại khi mẫu của chủ đề đạt")
+    ap.add_argument("--level", default="A1")
+    scope = ap.add_mutually_exclusive_group(required=True)
+    scope.add_argument("--topic", action="append", help="mã chủ đề (lặp lại được)")
+    scope.add_argument("--all", action="store_true", help="mọi chủ đề của cấp")
+    ap.add_argument("--dry-run", action="store_true", help="chỉ in kết quả, không ghi file")
     args = parser.parse_args()
     if args.command == "status":
         print_status(args.level.upper())
@@ -110,6 +137,10 @@ def main() -> None:
             sys.exit(f"Không chọn mẫu: {e}")
         print_sample(data)
         return
+    if args.command == "approve-by-sample":
+        rows = sample.approve_by_sample(args.level, None if args.all else args.topic, apply=not args.dry_run)
+        print_approve(rows, args.dry_run)
+        sys.exit(2 if any(r["result"] == "need_full_review" for r in rows) else 0)
     queued = sum(i["status"] == "queued" for i in rewrite.load_queue())
     est = {"items": queued, "requests": queued, "input_tokens": queued * 2500, "output_tokens": queued * 80,
            "cost_usd": round(queued * (2500 * config.PRICE_INPUT_PER_MTOK + 80 * config.PRICE_OUTPUT_PER_MTOK) / 1e6, 2)}

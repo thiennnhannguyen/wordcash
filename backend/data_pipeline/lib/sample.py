@@ -1,5 +1,5 @@
 """
-Đợt chọn mẫu duyệt.
+Đợt chọn mẫu duyệt và duyệt hàng loạt theo mẫu.
 
 Chọn mẫu (`choose`, lệnh `pipeline sample`):
 - Mỗi chủ đề: N mục ngẫu nhiên (hạt giống cố định, ghi lại được) CỘNG THÊM mọi mục bắt buộc phải xem (`must_review`):
@@ -11,6 +11,11 @@ Chọn mẫu (`choose`, lệnh `pipeline sample`):
   này. Kèm bản ghi work/review_sample_<cấp>.json: {level, seed, per_topic, created_at, keys, forced: {chủ đề: {key: [lý do]}}}.
   Đã có mẫu thì không chọn lại trừ khi `force` (tránh vô tình đổi mẫu giữa chừng).
 
+Duyệt hàng loạt theo mẫu (`approve_by_sample`, lệnh `pipeline approve-by-sample`), từng chủ đề:
+- chỉ chạy khi MỌI mục mẫu đã approved hoặc rejected (còn draft → bỏ qua, báo số mục chưa xem);
+- tỉ lệ rejected trong mẫu > `config.SAMPLE_MAX_REJECT_RATE` (5%) → DỪNG chủ đề, báo "cần duyệt toàn bộ";
+- đạt → mục draft còn lại (ngoài mẫu) chuyển approved, `review_method = "sample"`, `reviewed_at` = lúc chạy. Mục draft còn cờ
+  kiểm tra tự động KHÔNG được duyệt hàng loạt (để người duyệt xem tay). Mục duyệt tay giữ `review_method = "manual"`.
 """
 
 import random
@@ -105,3 +110,44 @@ def progress(level: str, content_root: Path | None = None, work_root: Path | Non
         rows.append({"topic": topic.topic_code, "total": len(status), **{st: status.count(st) for st in ("draft", "approved", "rejected")}})
     return {"level": s["level"], "seed": s["seed"], "per_topic": s["per_topic"], "created_at": s["created_at"], "topics": rows}
 
+
+def approve_by_sample(level: str, topics: list[str] | None = None, *, apply: bool = True, now: datetime | None = None,
+                      content_root: Path | None = None) -> list[dict]:
+    """Mỗi chủ đề một dòng: {topic, sample, approved, rejected, draft, reject_rate, result, approved_now, held_flagged}.
+    `result`: "approved" (đã duyệt phần còn lại), "need_full_review" (vượt ngưỡng từ chối), "sample_unfinished",
+    "no_sample", "missing". `topics=None` = mọi chủ đề của cấp. `apply=False` chỉ tính, không ghi file."""
+    level = level.upper()
+    now = now or datetime.now(UTC)
+    paths = {p.stem: p for p in content.level_files(level, content_root)}
+    rows = []
+    for code in topics or sorted(paths):
+        row = {"topic": code, "sample": 0, "approved": 0, "rejected": 0, "draft": 0, "reject_rate": 0.0, "approved_now": 0,
+               "held_flagged": 0}
+        if code not in paths:
+            rows.append({**row, "result": "missing"})
+            continue
+        topic = content.load_topic(paths[code])
+        smp = [e for e in topic.entries if e.review_sample]
+        row.update(sample=len(smp), **{st: sum(e.status == st for e in smp) for st in ("approved", "rejected", "draft")})
+        if not smp:
+            rows.append({**row, "result": "no_sample"})
+            continue
+        if row["draft"]:
+            rows.append({**row, "result": "sample_unfinished"})
+            continue
+        row["reject_rate"] = round(row["rejected"] / len(smp), 4)
+        if row["reject_rate"] > config.SAMPLE_MAX_REJECT_RATE:
+            rows.append({**row, "result": "need_full_review"})
+            continue
+        for e in topic.entries:
+            if e.review_sample or e.status != "draft":
+                continue
+            if problem_flags(e):
+                row["held_flagged"] += 1
+                continue
+            e.status, e.review_method, e.reviewed_at, e.reject_reason = "approved", "sample", now, ""
+            row["approved_now"] += 1
+        if apply and row["approved_now"]:
+            content.save_topic(topic, content_root)
+        rows.append({**row, "result": "approved"})
+    return rows

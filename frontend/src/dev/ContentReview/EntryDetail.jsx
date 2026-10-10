@@ -177,7 +177,12 @@ export default function EntryDetail({
           Ghi chú duyệt
         </label>
         <textarea id="review-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} className={box} />
-        {entry.reviewed_at && <p className="text-[13px] text-muted">Duyệt lần cuối: {new Date(entry.reviewed_at).toLocaleString('vi-VN')}</p>}
+        {entry.reviewed_at && (
+          <p className="text-[13px] text-muted">
+            Duyệt lần cuối: {new Date(entry.reviewed_at).toLocaleString('vi-VN')}
+            {entry.review_method === 'sample' ? ' · duyệt hàng loạt theo mẫu' : entry.review_method === 'manual' ? ' · duyệt tay' : ''}
+          </p>
+        )}
       </div>
 
       <div>

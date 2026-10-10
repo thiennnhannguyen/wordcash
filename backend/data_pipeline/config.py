@@ -68,8 +68,10 @@ AI_PROVIDERS = ("agent", "anthropic")
 ENRICH_BATCH_SIZE = 15  # 10–20 mục mỗi request
 CLOZE_BATCH_SIZE = 15  # bước 03_cloze: mục mỗi request (cùng chủ đề)
 
-# Đợt mẫu duyệt (lib/sample.py): số mục ngẫu nhiên mỗi chủ đề (cộng thêm mục bắt buộc phải xem)
+# Đợt mẫu duyệt (lib/sample.py): số mục ngẫu nhiên mỗi chủ đề (cộng thêm mục bắt buộc phải xem) và ngưỡng từ chối của
+# `approve-by-sample`: tỉ lệ rejected trong mẫu VƯỢT ngưỡng này thì chủ đề phải duyệt toàn bộ.
 SAMPLE_PER_TOPIC = 15
+SAMPLE_MAX_REJECT_RATE = 0.05
 CLASSIFY_BATCH_SIZE = 40
 AI_MAX_RETRIES = 3
 TOPIC_CONFIDENCE_MIN = 0.6  # thấp hơn → needs_topic_review

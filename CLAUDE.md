@@ -216,7 +216,7 @@ Phần bảng dưới là **frontend, giai đoạn thiết kế giao diện**. B
 - **Địa danh chỉ là trang trí giao diện**, tượng trưng cho chặng trên bản đồ. Từ vựng của chặng do CHỦ ĐỀ quyết định. Khóa nối nội dung là `topics.topic_code` (= mã chủ đề, tên file `content/<cấp>/<topic_code>.json`, phần giữa `content_key`), KHÔNG phải `landmark_key`; `landmark_key/name/image` chỉ để hiển thị, đổi địa danh không đổi entries, units hay tiến độ. Prompt bước 02/03/06 không nhắc địa danh; tên bài theo nội dung từ vựng. `vn_context_allowlist.txt` chỉ là từ được phép trong câu ví dụ, không bắt buộc, không gắn với chặng. Mã chủ đề A2 trong seed là TẠM: khi làm A2, chủ đề chọn theo nhóm từ vựng A2 của CEFR-J (cột gợi ý chủ đề), rồi mới gắn địa danh.
 - **Nội dung là code:** nguồn chính của nội dung đã duyệt là `backend/content/<cấp>/<mã-chủ-đề>.json`; DB CHỈ được nạp từ các file này (`python -m data_pipeline.07_load_to_db`), production không sửa nội dung trực tiếp.
 - **Không xóa entry đã có tiến độ, chỉ retire:** mục bị bỏ khỏi file thì loader đặt `retired_at`: không dạy mới, không vào Cửa Ải Hôm Nay và Đấu Trường (`Entry.teachable()`), vẫn ôn được trong ôn tập cá nhân, giữ mastered và `mastered_count`. Bài đã có người học thì không xóa.
-- **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05); chỉ mục `approved` được nạp.
+- **Nội dung AI luôn là `draft` cho tới khi người duyệt** (`/dev/content` hoặc bảng tính bước 05, `review_method = "manual"`; hoặc duyệt hàng loạt khi mẫu của chủ đề đạt, `pipeline approve-by-sample`, `review_method = "sample"`); chỉ mục `approved` được nạp.
 - Chuẩn en-US cả chính tả lẫn từ vựng (`data_pipeline/uk_us_vocab.tsv`: từ chỉ dùng ở Anh đổi sang từ Mỹ; từ người Mỹ vẫn dùng như autumn, shop giữ kèm `variant_note` "Mỹ thường dùng: …", cột `entries.variant_note`, migration `b41e7c2d9a10`, hiện dưới nghĩa trên thẻ học); IPA từ CMUdict (AI không ghi đè, từ thiếu thì `ipa_unverified`; từ đồng tự khác âm chọn theo từ loại). Chỉ dùng nguồn có trong `docs/data-sources.md`. Prompt AI trích từ `docs/content-style-guide.md`.
 - Chỉ các mục có `status = approved` mới được hiện cho người học.
 - Ba nhánh dùng chung mục từ: tiến độ gắn với mục từ, không gắn với nhánh.
@@ -343,7 +343,8 @@ python -m data_pipeline.04_validate --level A1                   # gắn cờ
 python -m data_pipeline.06_build_units --level A1 --emit         # chia bài (chỉ mục approved) + gói đặt tên bài (rồi --ingest)
 python -m data_pipeline.pipeline status                          # gói việc từng bước, tiến độ "x/10 chủ đề", hàng đợi viết lại
 python -m data_pipeline.pipeline rewrite --emit                  # hàng đợi "viết lại một trường" từ /dev/content (rồi --ingest)
-python -m data_pipeline.pipeline sample --level A1 --per-topic 10   # đợt chọn mẫu duyệt (sau 03b); /dev/content lọc "Mẫu duyệt"
+python -m data_pipeline.pipeline sample --level A1 --per-topic 15   # đợt chọn mẫu duyệt (sau 03b): 15 ngẫu nhiên + mục bắt buộc xem; review_sample trong file; /dev/content lọc "Mẫu duyệt"
+python -m data_pipeline.pipeline approve-by-sample --level a1 --all  # mẫu đã xem hết và từ chối ≤ 5% → draft còn lại thành approved (review_method "sample"); vượt ngưỡng thì dừng chủ đề
 python -m data_pipeline.07_load_to_db --level A1 --dry-run       # rồi bỏ --dry-run; production: backup trước + --yes
 python -m data_pipeline.check_content                            # CI: schema mọi content/**/*.json
 python -m seeds.refresh_dev_content                              # dev: thay lộ trình mẫu bằng kho thật, giữ vị trí học
