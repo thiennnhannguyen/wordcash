@@ -141,14 +141,33 @@ async def test_review_mode_uses_srs_due_dates(db_session, clock):
     assert stats["accuracy_7d"] == 1.0 and stats["modes"]["review"] == 2
 
 
-async def test_daily_new_word_limit(db_session, clock, monkeypatch):
-    monkeypatch.setattr(settings, "NEW_WORDS_DAILY_CAP", 2)
-    user, course, _ = await _setup(db_session)
-    await _answer_all(db_session, user, await _start(db_session, user, course, "learn", limit=5))
-    with pytest.raises(AppError) as exc:
+async def test_no_daily_new_word_limit_and_mastery_still_needs_three_days(db_session, clock):
+    """Bỏ hạn mức từ mới (10/10/2026): học 45 từ mới trong MỘT ngày vẫn được; nhưng "đã thuộc" vẫn cần đúng ở mức ≥ 3
+    vào đủ MASTERY_MIN_DAYS ngày khác nhau — học dồn một ngày không thành thuộc."""
+    from app.services import progress_service
+
+    words = [(f"word{i:02d}", f"nghĩa số {i}", f"This is word{i:02d} in a sentence.") for i in range(45)]
+    user, course, entries = await _setup(db_session, words)
+    learned = 0
+    for _ in range(3):  # 3 phiên × 15 từ mới, cùng một ngày
+        out = await _start(db_session, user, course, "learn", limit=15)
+        assert len(out["cards"]) == 15
+        await _answer_all(db_session, user, out)  # mỗi từ có một câu mức 3–4, trả lời đúng
+        learned += 15
+    assert learned == 45 > 40
+    with pytest.raises(AppError) as exc:  # hết từ mới (không phải chạm hạn mức)
         await _start(db_session, user, course, "learn")
-    assert exc.value.details["reason"] == "daily_limit"
-    assert (await course_service.course_stats(db_session, user, course.id))["modes"]["learn"] == 0
+    assert exc.value.details["reason"] == "empty"
+    stats = await course_service.course_stats(db_session, user, course.id)
+    assert stats["modes"]["learn"] == 0 and stats["by_status"]["mastered"] == 0 and "new_words_left_today" not in stats
+    progress = list(await db_session.scalars(select(UserEntryProgress).where(UserEntryProgress.user_id == user.id)))
+    assert len(progress) == 45 and all(p.status.value == "learning" for p in progress)
+
+    entry = entries[0]
+    for day in range(1, settings.MASTERY_MIN_DAYS):  # đúng mức 3 thêm ở các ngày khác nhau
+        clock(days=1)
+        outcome = await progress_service.record_answer(db_session, user, entry, 3, True, study_service._now(), source="course")
+        assert outcome.status.value == ("mastered" if day == settings.MASTERY_MIN_DAYS - 1 else "learning")
 
 
 async def test_hard_mode_starred_and_wrong(db_session, clock):

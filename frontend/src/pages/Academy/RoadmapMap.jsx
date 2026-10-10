@@ -307,7 +307,7 @@ function SideWidgets({ data, map }) {
         <div>
           <h2 className="font-heading text-lg font-extrabold leading-tight">Mục tiêu hôm nay</h2>
           <p className="text-caption text-muted">
-            {goalMessage({ learned: data.dailyGoal.learned, goal: data.dailyGoal.target, cap: data.dailyGoal.cap })}
+            {goalMessage({ learned: data.dailyGoal.learned, goal: data.dailyGoal.target })}
           </p>
         </div>
       </PaperCard>

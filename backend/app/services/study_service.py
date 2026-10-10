@@ -79,12 +79,8 @@ async def build_study_session(session: AsyncSession, user: User, course_id: uuid
         wanted = set(entry_ids)
         rows = [r for r in rows if r[1].id in wanted]
 
-    reason = "empty"
     if mode == StudyMode.LEARN:
-        left = await course_service.new_words_left_today(session, user, now)
-        chosen = [r for r in rows if _is_new(r[2])][: min(limit, left)]
-        if not chosen and left == 0 and any(_is_new(r[2]) for r in rows):
-            reason = "daily_limit"
+        chosen = [r for r in rows if _is_new(r[2])][:limit]
     elif mode == StudyMode.REVIEW:
         due = [r for r in rows if r[2] is not None and r[2].due_at is not None and r[2].due_at <= now]
         chosen = sorted(due, key=lambda r: r[2].due_at)[:limit]
@@ -95,7 +91,7 @@ async def build_study_session(session: AsyncSession, user: User, course_id: uuid
     else:
         chosen = rows
     if not chosen:
-        raise AppError("NOTHING_TO_STUDY", details={"mode": mode.value, "reason": reason})
+        raise AppError("NOTHING_TO_STUDY", details={"mode": mode.value, "reason": "empty"})
 
     # Cặp (từ, mức) cho từng câu
     pairs: list[tuple] = []

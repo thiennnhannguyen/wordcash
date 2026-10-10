@@ -40,7 +40,6 @@ def rules() -> dict:
         "boss_questions": settings.BOSS_QUESTIONS,
         "daily_check_min_words": settings.DAILY_CHECK_MIN_WORDS,
         "daily_check_max_words": settings.DAILY_CHECK_MAX_WORDS,
-        "new_words_daily_cap": settings.NEW_WORDS_DAILY_CAP,
     }
 
 

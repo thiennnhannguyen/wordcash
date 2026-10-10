@@ -80,7 +80,7 @@ Cache `PUBLIC_STATS_CACHE_SECONDS` (600) giây. Không chứa thông tin cá nh�
 - **Linh vật:**
   - `mascots_released`, `mascots_total`, `mascots_by_rarity`: số linh vật đã ra mắt / tổng ô, tổng và theo độ hiếm.
   - `featured_mascots`: tối đa 5 linh vật đã ra mắt nhận qua vòng quay, mỗi độ hiếm ít nhất một con.
-- **`rules`:** mốc rank, số ngày vùng đệm, số từ mỗi lượt quay, mốc streak cho lượt quay, pity, tỉ lệ hai loại lượt, mảnh khi trùng, giá đổi mảnh, số lượt tối đa của "Mở tất cả", ngưỡng qua bài / chặng / Boss, số câu Boss, số từ Cửa Ải, hạn mức từ mới mỗi ngày, cỡ bài thật trong DB (`unit_size`, `null` khi chưa có bài).
+- **`rules`:** mốc rank, số ngày vùng đệm, số từ mỗi lượt quay, mốc streak cho lượt quay, pity, tỉ lệ hai loại lượt, mảnh khi trùng, giá đổi mảnh, số lượt tối đa của "Mở tất cả", ngưỡng qua bài / chặng / Boss, số câu Boss, số từ Cửa Ải, cỡ bài thật trong DB (`unit_size`, `null` khi chưa có bài).
 
 ## Tài khoản mẫu (dev / e2e)
 

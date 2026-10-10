@@ -138,27 +138,21 @@ async def test_last_topic_opens_boss_and_win_opens_next_level(world):
     assert road["current"]["level_code"] == "A2"
 
 
-async def test_learn_respects_daily_new_word_limit(world, monkeypatch):
-    monkeypatch.setattr(settings, "NEW_WORDS_DAILY_CAP", 20)  # hạn mức nhỏ để chạm trong 2 bài
+async def test_learn_after_all_new_words_practices_seen_words(world):
+    """Học hết từ mới của bài thì phiên sau luyện lại các từ đã gặp (không có thẻ, reason all_learned)."""
     db, user = world
     t1 = (await H.topics(db, "A1"))[0]
-    u1, u2 = await H.units(db, t1)
+    u1, _ = await H.units(db, t1)
     first = await lesson_service.start_learn(db, user, u1.id, NOW)
-    assert len(first["cards"]) == 15
+    assert len(first["cards"]) == 15 and first["reason"] is None
     await H.answer(db, user, first)
-    await H.answer(db, user, await lesson_service.start_unit_test(db, user, u1.id, NOW))
-    second = await lesson_service.start_learn(db, user, u2.id, NOW)
-    assert len(second["cards"]) == 5  # hạn mức 20 từ mới / ngày
-    await H.answer(db, user, second)
-    # Hết quota: luyện lại đúng 5 từ đã gặp của bài 2, không đưa 10 từ chưa học vào
-    third = await lesson_service.start_learn(db, user, u2.id, NOW)
-    assert third["reason"] == "daily_limit" and third["cards"] == [] and third["total"] == 10
-    keys = await H.keys_of(db, third["id"])
-    assert len({k["entry_id"] for k in keys}) == 5
+    again = await lesson_service.start_learn(db, user, u1.id, NOW)
+    assert again["reason"] == "all_learned" and again["cards"] == [] and again["total"] == 30
+    assert len({k["entry_id"] for k in await H.keys_of(db, again["id"])}) == 15
 
 
 async def test_goal_does_not_block_five_minute_learner(world):
-    """Người chọn 5 phút (mục tiêu 10 từ) vẫn học trọn bài 15 từ, rồi trọn bài kế, trong cùng một ngày; chỉ hạn mức cứng chặn."""
+    """Người chọn 5 phút (mục tiêu 10 từ) vẫn học trọn bài 15 từ, rồi trọn bài kế, trong cùng một ngày; không có hạn mức."""
     db, user = world
     user.daily_minutes = 5
     await db.flush()
@@ -169,10 +163,11 @@ async def test_goal_does_not_block_five_minute_learner(world):
     await H.answer(db, user, first)
     await H.answer(db, user, await lesson_service.start_unit_test(db, user, u1.id, NOW))
     second = await lesson_service.start_learn(db, user, u2.id, NOW)
-    assert len(second["cards"]) == 15 and second.get("reason") != "daily_limit"
+    assert len(second["cards"]) == 15 and second["reason"] is None
     await H.answer(db, user, second)
     today = (await me_service.get_stats(db, user, NOW))["today"]
-    assert (today["new_words"], today["new_words_goal"], today["new_words_cap"]) == (30, 10, settings.NEW_WORDS_DAILY_CAP)
+    assert (today["new_words"], today["new_words_goal"]) == (30, 10) and "new_words_cap" not in today
+    assert today["new_words_nudge_at"] == 10 * settings.NEW_WORDS_NUDGE_FACTOR  # vượt mốc này frontend nhắc nhẹ
 
 
 async def test_parallel_first_requests_initialize_once_without_deadlock(test_engine):

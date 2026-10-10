@@ -114,7 +114,6 @@ class CourseStatsOut(BaseModel):
     due_count: int
     accuracy_7d: float | None  # 0–1; None khi 7 ngày qua chưa trả lời câu nào
     answers_7d: int
-    new_words_left_today: int
     modes: ModeCounts
 
 

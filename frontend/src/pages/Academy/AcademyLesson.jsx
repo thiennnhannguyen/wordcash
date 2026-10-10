@@ -1,17 +1,17 @@
 /*
  * Học một bài Học Viện bằng dữ liệu thật: /academy/lesson?unit=<id>.
  *
- * POST /academy/units/{id}/learn-sessions → thẻ học các từ mới (giới hạn từ mới mỗi ngày) → luyện đủ các mức, nộp từng câu
- * lên server chấm → màn hoàn thành (LessonDone) có nút "Làm kiểm tra cuối bài". Hết từ mới thì server trả phiên luyện lại cả bài.
- * Mục tiêu từ mới trong ngày chỉ để động viên: vừa vượt mục tiêu thì khen + gợi ý nghỉ (không chặn); chạm hạn mức cứng của
- * server thì báo "học đủ nhiều rồi" và mời ôn tập (utils/dailyGoal.js).
+ * POST /academy/units/{id}/learn-sessions → thẻ học mọi từ mới của bài (không giới hạn từ mới mỗi ngày) → luyện đủ các mức,
+ * nộp từng câu lên server chấm → màn hoàn thành (LessonDone) có nút "Làm kiểm tra cuối bài". Hết từ mới thì server trả phiên
+ * luyện lại cả bài. Mục tiêu từ mới trong ngày chỉ để động viên: vừa vượt mục tiêu thì khen + gợi ý nghỉ; học vượt mốc nhắc
+ * nhẹ của server thì một toast nhắc ôn, một lần trong ngày (utils/dailyGoal.js). Không chặn gì.
  * Giao diện dùng chung với Khóa học của tôi (components/academy/SessionSteps.jsx).
  */
 
 import { useState } from 'react'
 import useStartOnce from '../../hooks/useStartOnce'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { BookOpenText, MapTrifold } from '@phosphor-icons/react'
+import { MapTrifold } from '@phosphor-icons/react'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
 import MascotBlob from '../../components/collection/MascotBlob'
@@ -19,45 +19,36 @@ import RewardsLayer from '../../components/academy/RewardsLayer'
 import { CardsStep, QuestionsStep } from '../../components/academy/SessionSteps'
 import { getMeStats, getUnit, startLearn, submitAnswers } from '../../services/academyApi'
 import { useToastStore } from '../../store/toastStore'
-import { CAP_MESSAGE, GOAL_MESSAGE, crossedGoal } from '../../utils/dailyGoal'
+import { GOAL_MESSAGE, crossedGoal, nudgeOncePerDay } from '../../utils/dailyGoal'
 import LessonDone from './LessonDone'
 import LessonTopBar from './LessonTopBar'
 
 const REASON_TEXT = {
-  daily_limit: `${CAP_MESSAGE}. Phiên này luyện lại các từ bạn đã gặp của bài.`,
   all_learned: 'Bạn đã học hết từ mới của bài. Phiên này luyện lại để nhớ chắc hơn.',
 }
 
-export function AcademyError({ error, onBack, onReview }) {
-  const capped = error.code === 'NOTHING_TO_STUDY' && error.details?.reason === 'daily_limit'
-  const title = capped ? CAP_MESSAGE : error.code === 'UNIT_LOCKED' || error.code === 'TOPIC_LOCKED' ? 'Phần này chưa mở' : 'Chưa bắt đầu được'
+export function AcademyError({ error, onBack }) {
+  const title = error.code === 'UNIT_LOCKED' || error.code === 'TOPIC_LOCKED' ? 'Phần này chưa mở' : 'Chưa bắt đầu được'
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-bg px-4 text-center">
       <MascotBlob color="sky" shape="round" size={110} />
       <h1 className="text-h2">{title}</h1>
-      <p className="max-w-md text-muted">{capped ? 'Bạn đã chạm hạn mức từ mới của hôm nay. Ôn lại các từ đã học để nhớ lâu hơn nhé.' : error.message}</p>
-      <div className="flex flex-wrap justify-center gap-3">
-        {capped && onReview && (
-          <Button icon={BookOpenText} onClick={onReview}>
-            Ôn tập
-          </Button>
-        )}
-        <Button variant={capped && onReview ? 'secondary' : 'primary'} icon={MapTrifold} onClick={onBack}>
-          Về bản đồ
-        </Button>
-      </div>
+      <p className="max-w-md text-muted">{error.message}</p>
+      <Button icon={MapTrifold} onClick={onBack}>
+        Về bản đồ
+      </Button>
     </div>
   )
 }
 
-/** Sau phiên: vừa vượt mục tiêu ngày thì khen + gợi ý nghỉ; vừa chạm hạn mức thì báo (số liệu lấy lại từ server). */
+/** Sau phiên (số liệu lấy lại từ server): học vượt mốc nhắc nhẹ → toast nhắc ôn (một lần trong ngày); vừa vượt mục tiêu
+ * ngày → khen + gợi ý nghỉ. Không chặn gì. */
 function praiseIfGoalReached(before) {
-  if (!before) return
   getMeStats()
     .then(({ today }) => {
       const push = useToastStore.getState().push
-      if (crossedGoal(before.new_words, today.new_words, today.new_words_cap)) push({ variant: 'info', title: 'Học đủ hôm nay', message: `${CAP_MESSAGE}. Bạn vẫn ôn tập được.` })
-      else if (crossedGoal(before.new_words, today.new_words, today.new_words_goal)) push({ variant: 'success', title: 'Đạt mục tiêu!', message: GOAL_MESSAGE })
+      if (nudgeOncePerDay(today, push)) return
+      if (before && crossedGoal(before.new_words, today.new_words, today.new_words_goal)) push({ variant: 'success', title: 'Đạt mục tiêu!', message: GOAL_MESSAGE })
     })
     .catch(() => {})
 }
@@ -95,7 +86,7 @@ export default function AcademyLesson() {
   }, [unitId])
 
   const back = () => navigate(`/academy?level=${unit?.level.code ?? ''}`)
-  if (error) return <AcademyError error={error} onBack={() => navigate('/academy')} onReview={() => navigate('/academy/review')} />
+  if (error) return <AcademyError error={error} onBack={() => navigate('/academy')} />
   if (step === 'loading' || !session) return <div className="min-h-dvh bg-bg" aria-busy="true" />
 
   const lesson = { id: unit.id, level: unit.level.code, topic: unit.topic.title, number: unit.position }

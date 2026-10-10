@@ -95,7 +95,6 @@ class UnitDetailOut(BaseModel):
     topic: dict
     level: dict
     words: list[dict]
-    new_words_left_today: int
 
 
 class AcademySessionOut(BaseModel):

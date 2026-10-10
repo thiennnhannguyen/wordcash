@@ -2,10 +2,9 @@
 Học bài trong Học Viện: phiên học bài, kiểm tra cuối bài, bài tổng hợp chặng, luyện chặng yếu. Dùng lại question_builder
 và StudySession (services/session_engine.py); chấm ở server qua study_service.submit_answers.
 
-- Học bài (`unit_learn`): thẻ học các từ MỚI của bài (tối đa số từ mới còn lại trong ngày theo hạn mức cứng
-  NEW_WORDS_DAILY_CAP, tính chung với Khóa học; mục tiêu ngày chỉ để hiển thị, không chặn), rồi luyện: mỗi từ một câu
-  mức 1–2 và một câu mức 3–4, cả phiên trộn đủ 4 mức (mức 2 cần audio). Hết từ mới (đã học hết hoặc chạm hạn mức) thì luyện lại các từ ĐÃ gặp của bài, không có thẻ (chưa gặp từ nào và hết quota →
-  NOTHING_TO_STUDY, reason daily_limit). Không mở khóa gì.
+- Học bài (`unit_learn`): thẻ học MỌI từ mới của bài (không giới hạn số từ mới mỗi ngày; mục tiêu ngày chỉ để hiển thị),
+  rồi luyện: mỗi từ một câu mức 1–2 và một câu mức 3–4, cả phiên trộn đủ 4 mức (mức 2 cần audio). Đã học hết từ mới thì
+  luyện lại các từ ĐÃ gặp của bài, không có thẻ (reason all_learned). Không mở khóa gì.
 - Kiểm tra cuối bài (`unit_test`): UNIT_TEST_QUESTIONS câu (mỗi từ một câu; bài ít từ hơn thì hỏi hết), xoay vòng đủ mức.
   Không bắt buộc học bài trước (bài đã mở là làm được). Đạt ≥ UNIT_PASS_RATE → qua bài, mở bài kế / bài tổng hợp.
 - Bài tổng hợp chặng (`topic_test`): TOPIC_TEST_QUESTIONS câu trộn đều các bài; chỉ mở khi mọi bài của chặng đã qua.
@@ -102,7 +101,6 @@ async def get_unit(session: AsyncSession, user: User, unit_id: int, now: datetim
                   "landmark_name": topic.landmark_name},
         "level": {"id": level.id, "code": level.code, "name": level.name},
         "words": [{**course_service.entry_brief(e), "status": (p.status if p else EntryState.NEW)} for e, p, _ in rows],
-        "new_words_left_today": await course_service.new_words_left_today(session, user, now),
     }
 
 
@@ -113,17 +111,10 @@ async def start_learn(session: AsyncSession, user: User, unit_id: int, now: date
     rows = await unit_rows(session, user, [unit.id])
     if not rows:
         raise AppError("NOTHING_TO_STUDY", details={"reason": "empty"})
-    left = await course_service.new_words_left_today(session, user, now)
-    fresh = [e for e, p, _ in rows if p is None or p.status == EntryState.NEW]
-    learn = fresh[:left]
-    reason = None
-    if not learn:
-        reason = "daily_limit" if fresh else "all_learned"
-    # Hết quota từ mới: chỉ luyện lại các từ ĐÃ gặp (không lén đưa từ mới vào, vượt giới hạn ngày)
-    seen = [e for e, p, _ in rows if p is not None and p.status != EntryState.NEW]
-    words = learn or seen
-    if not words:
-        raise AppError("NOTHING_TO_STUDY", details={"reason": reason})
+    learn = [e for e, p, _ in rows if p is None or p.status == EntryState.NEW]
+    reason = None if learn else "all_learned"
+    # Hết từ mới: luyện lại các từ ĐÃ gặp của bài
+    words = learn or [e for e, p, _ in rows if p is not None and p.status != EntryState.NEW]
 
     # Mỗi từ: một câu dễ (1–2) và một câu khó (3–4); câu dễ trước để vừa học xong thẻ là làm được
     easy = [(e, session_engine.easy_level(e, rng)) for e in words]

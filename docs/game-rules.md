@@ -45,8 +45,9 @@ Chi tiết cài đặt, API, mã lỗi: `docs/academy.md`. Hằng số trong `ba
    nhất từng đạt (`max_spin_milestone`), nên mất từ rồi thuộc lại không được lượt mới.
 10. **Từ tự tạo** không tính rank, lượt quay, Cửa Ải hay Hộ chiếu. **Hộ chiếu** đếm mỗi chặng + Boss của các cấp đang có
     trong DB (hiện 22).
-11. **Từ mới mỗi ngày** (chốt 05/10/2026): mục tiêu ngày theo thời lượng (10/12/15/20 từ) chỉ để hiển thị, động viên; không chặn.
-    Hạn mức cứng 40 từ mới/ngày (`NEW_WORDS_DAILY_CAP`, chung Học Viện + Khóa học); chạm hạn mức thì chỉ luyện lại từ đã gặp và ôn tập.
+11. **Từ mới mỗi ngày** (chốt 05/10/2026, bỏ hạn mức 10/10/2026): **không giới hạn** số từ mới trong ngày (Học Viện và Khóa học).
+    Mục tiêu ngày theo thời lượng (10/12/15/20 từ) chỉ để hiển thị, động viên; học vượt 3 lần mục tiêu ngày (`NEW_WORDS_NUDGE_FACTOR`, `/me/stats` → `today.new_words_nudge_at`) thì frontend hiện một toast nhắc ôn duy nhất trong ngày: "Bạn học nhiều quá trời! Nhớ ôn lại vào những ngày tới để không quên nhé." (không chặn, không chuyển trang).
+    "Đã thuộc" vẫn cần đúng ở mức ≥ 3 vào ≥ 3 ngày khác nhau, nên học dồn một ngày không thành thuộc.
 12. **Luyện chặng yếu** là bài luyện: đáp án chỉ trả về theo từng câu sau khi nộp câu đó, không gửi kèm khi tạo phiên.
 13. **Ngoài phạm vi** giai đoạn này: nhánh IELTS/TOEIC (trả "Sắp ra mắt"), kiểm tra xếp lớp, Đấu Trường. (Vòng quay đã làm ở phần Bộ Sưu Tập bên dưới.)
 

@@ -43,7 +43,7 @@ async def test_roadmap_learn_and_test_flow(client, db_session, auth_user, clock_
     assert unit1["status"] == "unlocked" and unit2["status"] == "locked" and road["passport"]["total"] == 22
 
     detail = (await client.get(f"{API}/academy/units/{unit1['id']}", headers=h)).json()
-    assert len(detail["words"]) == 15 and detail["new_words_left_today"] == 40
+    assert len(detail["words"]) == 15 and "new_words_left_today" not in detail
     assert (await client.get(f"{API}/academy/units/{unit2['id']}", headers=h)).json()["error"]["code"] == "UNIT_LOCKED"
 
     learn = await client.post(f"{API}/academy/units/{unit1['id']}/learn-sessions", headers=h)

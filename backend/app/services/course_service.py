@@ -44,7 +44,6 @@ from app.schemas.course import (
     CustomEntryIn,
 )
 from app.services import course_import
-from app.services.progress_service import local_day
 
 
 def _now() -> datetime:
@@ -200,14 +199,6 @@ def _course_dict(course: UserCourse) -> dict:
     }
 
 
-async def new_words_left_today(session: AsyncSession, user: User, now: datetime) -> int:
-    today = local_day(user, now)
-    started = await session.scalar(
-        select(func.count()).select_from(UserEntryProgress).where(UserEntryProgress.user_id == user.id, UserEntryProgress.first_seen_day == today)
-    )
-    return max(settings.NEW_WORDS_DAILY_CAP - (started or 0), 0)
-
-
 async def course_stats(session: AsyncSession, user: User, course_id: uuid.UUID) -> dict:
     course = await get_course(session, user, course_id)
     now = _now()
@@ -240,16 +231,14 @@ async def course_stats(session: AsyncSession, user: User, course_id: uuid.UUID) 
             )
         )
     ).one()
-    left_today = await new_words_left_today(session, user, now)
     return {
         "word_count": total,
         "by_status": by_status,
         "due_count": due,
         "accuracy_7d": round(correct / answered, 3) if answered else None,
         "answers_7d": answered,
-        "new_words_left_today": left_today,
         "modes": {
-            "learn": min(by_status["new"], left_today),
+            "learn": by_status["new"],
             "review": due,
             "quick": total,
             "hard": hard,

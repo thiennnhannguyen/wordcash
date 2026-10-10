@@ -69,15 +69,13 @@ Mỗi lần nộp câu cuối, kết quả có `outcome` với `unlocked` (danh 
 
 ## Học bài và kiểm tra
 
-- **Học bài**: thẻ học các từ **mới** của bài, sau đó luyện mỗi từ một câu mức 1–2 và một câu mức 3–4.
-- **Mục tiêu và hạn mức từ mới** (tách riêng, đã chốt 05/10/2026):
+- **Học bài**: thẻ học **mọi** từ mới của bài, sau đó luyện mỗi từ một câu mức 1–2 và một câu mức 3–4. Học hết từ mới của bài
+  thì phiên sau luyện lại các từ đã gặp (không có thẻ, `reason: all_learned`).
+- **Từ mới mỗi ngày** (chốt 05/10/2026; bỏ hạn mức cứng 40 từ ngày 10/10/2026 — học bao nhiêu từ mới trong ngày cũng được):
   - *Mục tiêu ngày* (`DAILY_GOAL_BY_MINUTES`: 5 phút → 10, 10 → 12, 15 → 15, 20 → 20 từ) **chỉ để hiển thị và động viên**, không
     chặn. Người chọn 5 phút vẫn học trọn một bài 15–20 từ (và bài kế) trong ngày. Vừa vượt mục tiêu thì frontend khen và gợi ý nghỉ.
-  - *Hạn mức cứng* `NEW_WORDS_DAILY_CAP` = 40 từ mới/ngày, tính chung với Khóa học của tôi, theo ngày địa phương. Chỉ khi chạm hạn
-    mức thì học bài mới chuyển sang luyện lại từ đã gặp của bài (không có thẻ, không giới thiệu từ chưa gặp, `reason: daily_limit`);
-    chưa gặp từ nào → `NOTHING_TO_STUDY`. Frontend hiện "Hôm nay bạn học đủ nhiều rồi, mai học tiếp nhé" và mời ôn tập (ôn tập
-    không bị hạn mức chặn).
-  - `/me/stats` → `today.new_words`, `new_words_goal`, `new_words_cap`. Lời hiển thị chọn ở `frontend/src/utils/dailyGoal.js`.
+  - *Lời nhắc nhẹ*: học vượt 3 lần mục tiêu ngày (`NEW_WORDS_NUDGE_FACTOR`, `/me/stats` → `today.new_words_nudge_at`) thì frontend hiện một toast nhắc ôn duy nhất trong ngày: "Bạn học nhiều quá trời! Nhớ ôn lại vào những ngày tới để không quên nhé." (không chặn, không chuyển trang). "Đã nhắc hôm nay" nhớ theo ngày của server trong localStorage của trình duyệt.
+  - `/me/stats` → `today.new_words`, `new_words_goal`, `new_words_nudge_at`, `date`. Lời hiển thị chọn ở `frontend/src/utils/dailyGoal.js`.
 - **Kiểm tra cuối bài**: `UNIT_TEST_QUESTIONS` = 20 câu (bài ít từ thì hỏi hết), xoay vòng đủ mức. Không bắt buộc học trước.
 - **Bài tổng hợp chặng**: 20 câu trộn đều các bài; chỉ làm được khi mọi bài của chặng đã qua.
 - Kiểm tra và Boss chỉ trả đúng/sai từng câu (để hiện thanh tiến độ, máu Boss); **đáp án đúng chỉ trả về sau khi nộp hết**.
@@ -170,7 +168,7 @@ nhiều ngày; route `/api/v1/dev/*` (khóa đáp án, tới thẳng Boss) cũng
 | POST | `/daily-check/today/answers` | Nộp câu (một hoặc nhiều) | |
 | GET | `/review/due` | Số từ đến hạn, theo trạng thái, lịch 7 ngày, ôn gấp, sổ từ | |
 | POST | `/review/sessions` | Bắt đầu phiên ôn | ✓ |
-| GET | `/me/stats` | Số từ thuộc, rank (kèm lung lay, `shaky_seconds_left`), streak hiệu lực + tuần, lượt quay, hôm nay (từ mới, mục tiêu, hạn mức), vị trí, Hộ chiếu | |
+| GET | `/me/stats` | Số từ thuộc, rank (kèm lung lay, `shaky_seconds_left`), streak hiệu lực + tuần, lượt quay, hôm nay (từ mới, mục tiêu, mốc nhắc nhẹ), vị trí, Hộ chiếu | |
 | POST | `/dev/academy/fast-forward` | (dev/e2e) Tới thẳng Boss của một cấp | |
 | GET | `/dev/study-sessions/{id}/key`, `/dev/daily-check/key` | (dev/e2e) Khóa đáp án | |
 
@@ -186,7 +184,7 @@ nhiều ngày; route `/api/v1/dev/*` (khóa đáp án, tới thẳng Boss) cũng
 | `DAILY_CHECK_REQUIRED` | 409 | Cửa Ải hôm nay còn `pending` |
 | `DAILY_CHECK_DONE` | 409 | Gửi câu mới khi Cửa Ải đã xong |
 | `SESSION_FINISHED` | 409 | Gửi câu mới vào phiên đã nộp hết |
-| `NOTHING_TO_STUDY` | 409 | Không còn gì để học/ôn (`details.reason`, ví dụ `daily_limit`) |
+| `NOTHING_TO_STUDY` | 409 | Không còn gì để học/ôn (`details.reason`: `empty`) |
 
 ## Dữ liệu dev
 

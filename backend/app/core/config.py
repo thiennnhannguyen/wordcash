@@ -96,9 +96,9 @@ class Settings(BaseSettings):
     # "Đã thuộc": đúng ở mức ≥ MASTERY_MIN_LEVEL vào ≥ MASTERY_MIN_DAYS ngày khác nhau
     MASTERY_MIN_LEVEL: int = 3
     MASTERY_MIN_DAYS: int = 3
-    # Hạn mức CỨNG từ mới mỗi ngày (chung Học Viện + Khóa học). Vượt mức này thì học bài chỉ luyện lại từ đã gặp.
-    # Mục tiêu ngày (DAILY_GOAL_BY_MINUTES) chỉ để hiển thị, động viên; KHÔNG chặn.
-    NEW_WORDS_DAILY_CAP: int = 40
+    # Từ mới mỗi ngày KHÔNG giới hạn (bỏ hạn mức cứng 10/10/2026). Mục tiêu ngày (DAILY_GOAL_BY_MINUTES) chỉ để hiển thị.
+    # Học vượt NEW_WORDS_NUDGE_FACTOR lần mục tiêu ngày → frontend nhắc nhẹ một lần trong ngày (toast, không chặn).
+    NEW_WORDS_NUDGE_FACTOR: int = 3
 
     # Khóa học của tôi (giới hạn MVP)
     COURSE_MAX_ACTIVE: int = 50  # khóa đang học
