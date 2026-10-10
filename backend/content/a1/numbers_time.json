@@ -2593,58 +2593,6 @@
       "ai_prompt": "enrich_v2#570564b1225f"
     },
     {
-      "content_key": "a1.numbers_time.begin.verb",
-      "headword": "begin",
-      "pos": "verb",
-      "entry_type": "word",
-      "ipa": "/bɪˈɡɪn/",
-      "ipa_unverified": false,
-      "meaning_vi": "khởi đầu, bắt đầu",
-      "definition_en": "to start doing something",
-      "example_en": "The lesson begins at eight o'clock.",
-      "example_vi": "Buổi học bắt đầu lúc tám giờ.",
-      "collocations": [
-        "begin to",
-        "begin with"
-      ],
-      "word_family": [
-        "beginning",
-        "beginner"
-      ],
-      "synonyms": [
-        "start"
-      ],
-      "mnemonic_vi": "",
-      "image_keyword": "lesson starting",
-      "variant_note": "",
-      "cloze_en": "The lesson will begin at eight, so please come early.",
-      "cloze_distractors": [
-        "eat",
-        "swim",
-        "cook"
-      ],
-      "commonness": 4,
-      "basic_communication": false,
-      "subgroup": "start and end",
-      "rank_in_topic": 60,
-      "origin": "source",
-      "sources": [
-        "cefrj"
-      ],
-      "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.numbers_time.start.verb (bắt đầu)"
-      },
-      "status": "draft",
-      "reviewed_at": null,
-      "review_note": "",
-      "reject_reason": "",
-      "ai_prompt": "enrich_v2#570564b1225f"
-    },
-    {
       "content_key": "a1.numbers_time.clock.noun",
       "headword": "clock",
       "pos": "noun",
@@ -3035,12 +2983,8 @@
         "cefrj"
       ],
       "origin_flags": [],
-      "flags": [
-        "duplicate_meaning_in_level"
-      ],
-      "flag_details": {
-        "duplicate_meaning_in_level": "a1.numbers_time.begin.verb (khởi đầu, bắt đầu)"
-      },
+      "flags": [],
+      "flag_details": {},
       "status": "draft",
       "reviewed_at": null,
       "review_note": "",

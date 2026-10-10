@@ -2,3 +2,4 @@
 # "duplicate_meaning" (hoặc lý do ghi sau " | "). Mục giữ lại ghi từ bỏ đi vào synonyms. Chữ thường, một từ / cụm mỗi dòng.
 burger  # giữ hamburger (có trong nguồn), burger ghi vào synonyms
 biscuit | us_meaning_differs  # Anh-Mỹ: bánh mì mềm, dễ nhầm; giữ cookie
+begin  # giữ start (thông dụng hơn), begin đã có trong synonyms của start
