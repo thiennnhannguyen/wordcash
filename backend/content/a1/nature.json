@@ -26,6 +26,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cat sleeping in sun",
       "variant_note": "",
+      "cloze_en": "My cat sleeps on my bed and likes to eat fish.",
+      "cloze_distractors": [
+        "cow",
+        "tree",
+        "desk"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -65,6 +71,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dog at gate",
       "variant_note": "",
+      "cloze_en": "My dog likes to run in the park and play with a ball.",
+      "cloze_distractors": [
+        "fish",
+        "tree",
+        "chair"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -104,6 +116,12 @@
       "mnemonic_vi": "",
       "image_keyword": "blue sea",
       "variant_note": "",
+      "cloze_en": "The sea in Nha Trang is very blue, and we swim in it.",
+      "cloze_distractors": [
+        "sky",
+        "mountain",
+        "kitchen"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -141,6 +159,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandpa fishing",
       "variant_note": "",
+      "cloze_en": "Grandpa and I go fishing at the river. We get three fish.",
+      "cloze_distractors": [
+        "go to bed",
+        "do homework",
+        "take a test"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -180,6 +204,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bird in tree",
       "variant_note": "",
+      "cloze_en": "A small bird sings in the tree and flies away.",
+      "cloze_distractors": [
+        "cow",
+        "pig",
+        "fish"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -217,6 +247,12 @@
       "mnemonic_vi": "",
       "image_keyword": "city park",
       "variant_note": "",
+      "cloze_en": "There are trees, flowers and a small lake in the park.",
+      "cloze_distractors": [
+        "bus",
+        "kitchen",
+        "bag"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -257,6 +293,12 @@
       "mnemonic_vi": "",
       "image_keyword": "child swimming",
       "variant_note": "",
+      "cloze_en": "Fish can swim in the water.",
+      "cloze_distractors": [
+        "sing",
+        "read",
+        "write"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -294,6 +336,12 @@
       "mnemonic_vi": "",
       "image_keyword": "big tree in yard",
       "variant_note": "",
+      "cloze_en": "There is a big tree with green leaves in our yard.",
+      "cloze_distractors": [
+        "car",
+        "cat",
+        "desk"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "plants",
@@ -331,6 +379,12 @@
       "mnemonic_vi": "",
       "image_keyword": "group of animals",
       "variant_note": "",
+      "cloze_en": "A tiger is a big animal with four legs.",
+      "cloze_distractors": [
+        "food",
+        "flower",
+        "color"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -368,6 +422,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bunch of flowers",
       "variant_note": "",
+      "cloze_en": "This red flower in the garden has a nice smell.",
+      "cloze_distractors": [
+        "stone",
+        "desk",
+        "car"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "plants",
@@ -405,6 +465,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cows in field",
       "variant_note": "",
+      "cloze_en": "The cow eats grass in the field and gives us milk.",
+      "cloze_distractors": [
+        "cat",
+        "bird",
+        "fish"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -442,6 +508,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids at pool",
       "variant_note": "",
+      "cloze_en": "It is very hot, so we go swimming in the sea.",
+      "cloze_distractors": [
+        "go to bed",
+        "do homework",
+        "go shopping"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -481,6 +553,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid with pet",
       "variant_note": "",
+      "cloze_en": "My pet is a small dog. I give him food every day.",
+      "cloze_distractors": [
+        "teacher",
+        "house",
+        "bike"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -518,6 +596,12 @@
       "mnemonic_vi": "",
       "image_keyword": "pig on farm",
       "variant_note": "",
+      "cloze_en": "My grandma has a pink pig on her farm.",
+      "cloze_distractors": [
+        "kite",
+        "cake",
+        "car"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -555,6 +639,12 @@
       "mnemonic_vi": "",
       "image_keyword": "zoo entrance",
       "variant_note": "",
+      "cloze_en": "At the zoo, we see lions, tigers and monkeys.",
+      "cloze_distractors": [
+        "bank",
+        "kitchen",
+        "library"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -594,6 +684,12 @@
       "mnemonic_vi": "",
       "image_keyword": "small farm",
       "variant_note": "",
+      "cloze_en": "My uncle has a farm with cows, pigs and chickens.",
+      "cloze_distractors": [
+        "library",
+        "office",
+        "bus"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -633,6 +729,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tomatoes on roof",
       "variant_note": "",
+      "cloze_en": "We grow tomatoes and vegetables in our garden.",
+      "cloze_distractors": [
+        "sing",
+        "read",
+        "drink"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "plants",
@@ -670,6 +772,12 @@
       "mnemonic_vi": "",
       "image_keyword": "lion",
       "variant_note": "",
+      "cloze_en": "At the zoo, the lion is a big yellow animal with long hair on its head.",
+      "cloze_distractors": [
+        "frog",
+        "bird",
+        "rabbit"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -707,6 +815,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids on beach",
       "variant_note": "",
+      "cloze_en": "In summer, we swim in the sea and play on the beach.",
+      "cloze_distractors": [
+        "desk",
+        "shelf",
+        "page"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -744,6 +858,12 @@
       "mnemonic_vi": "",
       "image_keyword": "walking around lake",
       "variant_note": "",
+      "cloze_en": "After dinner, we take a walk around the lake.",
+      "cloze_distractors": [
+        "go to bed",
+        "do homework",
+        "take a shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -783,6 +903,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green grass",
       "variant_note": "",
+      "cloze_en": "Cows and sheep eat green grass in the field.",
+      "cloze_distractors": [
+        "stone",
+        "fire",
+        "ice"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "plants",
@@ -820,6 +946,12 @@
       "mnemonic_vi": "",
       "image_keyword": "horse",
       "variant_note": "",
+      "cloze_en": "I ride a horse on the farm. It runs very fast.",
+      "cloze_distractors": [
+        "fish",
+        "chair",
+        "frog"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -857,6 +989,12 @@
       "mnemonic_vi": "",
       "image_keyword": "river",
       "variant_note": "",
+      "cloze_en": "We take a boat across the river to the other side.",
+      "cloze_distractors": [
+        "sky",
+        "desk",
+        "cake"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -894,6 +1032,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tiger",
       "variant_note": "",
+      "cloze_en": "The tiger is a big, strong animal with orange and black colors.",
+      "cloze_distractors": [
+        "rabbit",
+        "bee",
+        "frog"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -933,6 +1077,12 @@
       "mnemonic_vi": "",
       "image_keyword": "farmer in rice field",
       "variant_note": "",
+      "cloze_en": "The farmer grows rice in the field all day.",
+      "cloze_distractors": [
+        "doctor",
+        "singer",
+        "waiter"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -970,6 +1120,12 @@
       "mnemonic_vi": "",
       "image_keyword": "monkey",
       "variant_note": "",
+      "cloze_en": "The monkey climbs the tree and eats a banana.",
+      "cloze_distractors": [
+        "cow",
+        "fish",
+        "pig"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1007,6 +1163,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family at beach",
       "variant_note": "",
+      "cloze_en": "It's very hot, so let's go to the beach and swim in the sea.",
+      "cloze_distractors": [
+        "go to bed",
+        "do homework",
+        "go to school"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1046,6 +1208,12 @@
       "mnemonic_vi": "",
       "image_keyword": "picnic blanket",
       "variant_note": "",
+      "cloze_en": "We bring food and sit on the grass for a picnic by the river.",
+      "cloze_distractors": [
+        "test",
+        "lesson",
+        "shower"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1083,6 +1251,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rabbit",
       "variant_note": "",
+      "cloze_en": "My pet rabbit has long ears and eats green vegetables.",
+      "cloze_distractors": [
+        "fish",
+        "bird",
+        "frog"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -1120,6 +1294,12 @@
       "mnemonic_vi": "",
       "image_keyword": "mountain",
       "variant_note": "",
+      "cloze_en": "This mountain is very high, and it is cold at the top.",
+      "cloze_distractors": [
+        "river",
+        "kitchen",
+        "cup"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1160,6 +1340,12 @@
       "mnemonic_vi": "",
       "image_keyword": "swimming pool",
       "variant_note": "",
+      "cloze_en": "I love swimming in the sea every summer.",
+      "cloze_distractors": [
+        "reading",
+        "shopping",
+        "homework"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1197,6 +1383,12 @@
       "mnemonic_vi": "",
       "image_keyword": "bee on flower",
       "variant_note": "",
+      "cloze_en": "A bee flies to the yellow flower to get food.",
+      "cloze_distractors": [
+        "cow",
+        "fish",
+        "dog"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1234,6 +1426,12 @@
       "mnemonic_vi": "",
       "image_keyword": "brown bear",
       "variant_note": "",
+      "cloze_en": "The big brown bear sleeps all winter in the mountains.",
+      "cloze_distractors": [
+        "bee",
+        "butterfly",
+        "mouse"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1273,6 +1471,12 @@
       "mnemonic_vi": "",
       "image_keyword": "summer camp tents",
       "variant_note": "",
+      "cloze_en": "At our summer camp near the lake, we sleep outside and make a fire.",
+      "cloze_distractors": [
+        "test",
+        "bank",
+        "office"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1310,6 +1514,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tents in mountains",
       "variant_note": "",
+      "cloze_en": "Our class will go camping in the mountains and sleep outside.",
+      "cloze_distractors": [
+        "go to school",
+        "do homework",
+        "go shopping"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1349,6 +1559,12 @@
       "mnemonic_vi": "",
       "image_keyword": "campfire",
       "variant_note": "",
+      "cloze_en": "It's cold at night, so we sit around the fire and sing songs.",
+      "cloze_distractors": [
+        "ice",
+        "snow",
+        "rain"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1386,6 +1602,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green frog",
       "variant_note": "",
+      "cloze_en": "A small green frog jumps into the river.",
+      "cloze_distractors": [
+        "cow",
+        "horse",
+        "tiger"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1425,6 +1647,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kite high in sky",
       "variant_note": "",
+      "cloze_en": "This mountain is very high, so it takes all day to climb.",
+      "cloze_distractors": [
+        "hungry",
+        "angry",
+        "sad"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1462,6 +1690,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green hill",
       "variant_note": "",
+      "cloze_en": "Our school is on a small hill, so we walk up every morning.",
+      "cloze_distractors": [
+        "river",
+        "cup",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1499,6 +1733,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids flying kites",
       "variant_note": "",
+      "cloze_en": "On windy days, children fly a kite in the field.",
+      "cloze_distractors": [
+        "cake",
+        "chair",
+        "book"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1538,6 +1778,12 @@
       "mnemonic_vi": "",
       "image_keyword": "yellow leaves",
       "variant_note": "",
+      "cloze_en": "In autumn, this leaf on the tree is yellow, not green.",
+      "cloze_distractors": [
+        "stone",
+        "cat",
+        "fire"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "plants",
@@ -1575,6 +1821,12 @@
       "mnemonic_vi": "",
       "image_keyword": "feeding cat",
       "variant_note": "",
+      "cloze_en": "Our cat is hungry. Can you feed the cat before school?",
+      "cloze_distractors": [
+        "wash the dishes",
+        "make the bed",
+        "take a shower"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -1614,6 +1866,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rice fields",
       "variant_note": "",
+      "cloze_en": "The farmer grows rice in the green field.",
+      "cloze_distractors": [
+        "kitchen",
+        "sky",
+        "box"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1653,6 +1911,12 @@
       "mnemonic_vi": "",
       "image_keyword": "little mouse",
       "variant_note": "",
+      "cloze_en": "A little mouse runs under the table, and the cat runs after it.",
+      "cloze_distractors": [
+        "cow",
+        "horse",
+        "tiger"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -1690,6 +1954,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sheep on hill",
       "variant_note": "",
+      "cloze_en": "The sheep eats grass on the hill.",
+      "cloze_distractors": [
+        "fish",
+        "bird",
+        "snake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -1727,6 +1997,12 @@
       "mnemonic_vi": "",
       "image_keyword": "green snake",
       "variant_note": "",
+      "cloze_en": "A snake is a long animal with no legs.",
+      "cloze_distractors": [
+        "horse",
+        "dog",
+        "cow"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1766,6 +2042,12 @@
       "mnemonic_vi": "",
       "image_keyword": "stones by river",
       "variant_note": "",
+      "cloze_en": "This stone is very hard and heavy.",
+      "cloze_distractors": [
+        "cake",
+        "rabbit",
+        "flower"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1803,6 +2085,12 @@
       "mnemonic_vi": "",
       "image_keyword": "wet ground",
       "variant_note": "",
+      "cloze_en": "After the rain, the ground in the garden is wet.",
+      "cloze_distractors": [
+        "book",
+        "song",
+        "sky"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1840,6 +2128,12 @@
       "mnemonic_vi": "",
       "image_keyword": "islands in bay",
       "variant_note": "",
+      "cloze_en": "An island has water all around it.",
+      "cloze_distractors": [
+        "desk",
+        "bus",
+        "cake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -1877,6 +2171,12 @@
       "mnemonic_vi": "",
       "image_keyword": "planting tree",
       "variant_note": "",
+      "cloze_en": "Every student will plant a tree at school, and it will grow big.",
+      "cloze_distractors": [
+        "do homework",
+        "take a shower",
+        "go to bed"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "plants",
@@ -1918,6 +2218,12 @@
       "mnemonic_vi": "",
       "image_keyword": "fishing rod",
       "variant_note": "",
+      "cloze_en": "Grandpa loves fishing at the river. He gets many fish.",
+      "cloze_distractors": [
+        "shopping",
+        "reading",
+        "homework"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -1955,6 +2261,12 @@
       "mnemonic_vi": "",
       "image_keyword": "butterfly",
       "variant_note": "",
+      "cloze_en": "A beautiful butterfly flies from flower to flower in the garden.",
+      "cloze_distractors": [
+        "cow",
+        "pig",
+        "snake"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "wild animals",
@@ -1992,6 +2304,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rat",
       "variant_note": "",
+      "cloze_en": "A big rat lives under the old house and eats our rice.",
+      "cloze_distractors": [
+        "cow",
+        "horse",
+        "tiger"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -2031,6 +2349,12 @@
       "mnemonic_vi": "",
       "image_keyword": "chicken feed",
       "variant_note": "",
+      "cloze_en": "Grandma gives the chickens their feed every morning.",
+      "cloze_distractors": [
+        "homework",
+        "music",
+        "weather"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "pets and farm animals",
@@ -2068,6 +2392,12 @@
       "mnemonic_vi": "",
       "image_keyword": "dog digging hole",
       "variant_note": "",
+      "cloze_en": "There is a big hole in the street, so be careful.",
+      "cloze_distractors": [
+        "song",
+        "cake",
+        "cloud"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -2105,6 +2435,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red roses",
       "variant_note": "",
+      "cloze_en": "My dad gives my mom a red rose.",
+      "cloze_distractors": [
+        "stone",
+        "rat",
+        "frog"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "plants",
@@ -2144,6 +2480,12 @@
       "mnemonic_vi": "",
       "image_keyword": "lake swim",
       "variant_note": "",
+      "cloze_en": "It's hot. Let's go for a swim in the lake.",
+      "cloze_distractors": [
+        "test",
+        "page",
+        "song"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -2181,6 +2523,12 @@
       "mnemonic_vi": "",
       "image_keyword": "climbing mountain",
       "variant_note": "",
+      "cloze_en": "We want to climb a mountain and see the city from the top.",
+      "cloze_distractors": [
+        "go swimming",
+        "take a shower",
+        "wash the dishes"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -2222,6 +2570,12 @@
       "mnemonic_vi": "",
       "image_keyword": "climbing path",
       "variant_note": "",
+      "cloze_en": "It's a long climb to the top of the mountain.",
+      "cloze_distractors": [
+        "song",
+        "cake",
+        "color"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "outdoor fun",
@@ -2261,6 +2615,12 @@
       "mnemonic_vi": "",
       "image_keyword": "polluted river",
       "variant_note": "",
+      "cloze_en": "Pollution in the river is bad for the fish.",
+      "cloze_distractors": [
+        "music",
+        "homework",
+        "luck"
+      ],
       "commonness": 2,
       "basic_communication": false,
       "subgroup": "landscape",
@@ -2298,6 +2658,12 @@
       "mnemonic_vi": "",
       "image_keyword": "white lilies",
       "variant_note": "",
+      "cloze_en": "The lily in the vase is a big white flower.",
+      "cloze_distractors": [
+        "rat",
+        "stone",
+        "frog"
+      ],
       "commonness": 1,
       "basic_communication": false,
       "subgroup": "plants",
