@@ -184,7 +184,8 @@ function toCheckQuestion(q) {
 function toFeedback(r) {
   return {
     correct: r.correct,
-    correctAnswer: r.correct_answer,
+    correctAnswer: r.correct_answer, // Cửa Ải chỉ có Mức 3–4: đáp án là từ
+    word: r.entry?.headword,
     ipa: r.entry?.ipa,
     meaning: r.entry?.meaning_vi,
     example: r.entry?.example,
@@ -225,7 +226,7 @@ export async function finishDailyCheck({ streak }) {
     streakAfter: result.streak,
     spinReward: (result.rewards?.spins ?? []).filter((s) => s.reason === 'streak').length,
     masteredDelta: -result.mastered_lost,
-    wrongWords: wrong.map((a) => ({ word: a.correct_answer, meaning: a.entry?.meaning_vi })),
+    wrongWords: wrong.map((a) => ({ word: a.entry?.headword ?? a.correct_answer, meaning: a.entry?.meaning_vi })),
     rankShaky: result.rank?.shaky
       ? { rank: result.rank.current, daysLeft: daysLeft(stats.rank.shaky_seconds_left), wordsToRecover: stats.rank.words_to_recover }
       : null,

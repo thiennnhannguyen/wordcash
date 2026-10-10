@@ -15,6 +15,7 @@ import FeedbackSheet from './FeedbackSheet'
 import QuestionView from './QuestionView'
 import WordCard from './WordCard'
 import ReportButton from './ReportButton'
+import { studyFeedback } from '../../utils/feedback'
 import { speak } from '../../utils/speech'
 
 const SWIPE_THRESHOLD = 80
@@ -153,7 +154,7 @@ export function QuestionsStep({ session, top, submit, onDone, onAnswered, note }
       else
         setFeedback({
           res,
-          result: { correct: r.correct, correctAnswer: r.entry?.headword ?? r.correct_answer, meaning: r.entry?.meaning_vi, ipa: r.entry?.ipa, example: r.entry?.example },
+          result: studyFeedback(r, question),
         })
     } catch (err) {
       setError(err.message)
