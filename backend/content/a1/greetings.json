@@ -26,6 +26,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two friends waving",
       "variant_note": "",
+      "cloze_en": "In the morning, Lan sees her friends at the school gate and says, \"Hi!\"",
+      "cloze_distractors": [
+        "Good night",
+        "Good afternoon",
+        "welcome"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -63,6 +69,12 @@
       "mnemonic_vi": "",
       "image_keyword": "shaking head",
       "variant_note": "",
+      "cloze_en": "Do you want more rice? — No, thanks. I am full now.",
+      "cloze_distractors": [
+        "yes",
+        "always",
+        "soon"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -102,6 +114,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thumbs up",
       "variant_note": "",
+      "cloze_en": "My bike is old, but it still works well, so it is OK for going to school.",
+      "cloze_distractors": [
+        "broken",
+        "hungry",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -141,6 +159,12 @@
       "mnemonic_vi": "",
       "image_keyword": "student raising hand",
       "variant_note": "",
+      "cloze_en": "I do not know the answer, so I ask my teacher a question.",
+      "cloze_distractors": [
+        "sleep",
+        "drink",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "talking",
@@ -180,6 +204,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waving goodbye",
       "variant_note": "",
+      "cloze_en": "When Minh leaves the party, he waves and says bye to everyone.",
+      "cloze_distractors": [
+        "apple",
+        "kitchen",
+        "rain"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -217,6 +247,12 @@
       "mnemonic_vi": "",
       "image_keyword": "person asking for directions",
       "variant_note": "",
+      "cloze_en": "I can't find the bank, so I stop a man and say, \"Excuse me, where is it?\"",
+      "cloze_distractors": [
+        "Happy birthday",
+        "See you later",
+        "I'm hungry"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -256,6 +292,12 @@
       "mnemonic_vi": "",
       "image_keyword": "question mark",
       "variant_note": "",
+      "cloze_en": "How do you go to school every day? — I go by bus.",
+      "cloze_distractors": [
+        "when",
+        "where",
+        "why"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "question words",
@@ -293,6 +335,12 @@
       "mnemonic_vi": "Why đọc như \"quai\" — hỏi \"tại sao\" khi thấy lạ quái.",
       "image_keyword": "thinking face",
       "variant_note": "",
+      "cloze_en": "Why are you late for class? — Because my bike is broken.",
+      "cloze_distractors": [
+        "when",
+        "how",
+        "where"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "question words",
@@ -330,6 +378,12 @@
       "mnemonic_vi": "",
       "image_keyword": "nodding head",
       "variant_note": "",
+      "cloze_en": "Do you like pho? — Yes, I do. I eat it every week.",
+      "cloze_distractors": [
+        "no",
+        "never",
+        "soon"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -369,6 +423,12 @@
       "mnemonic_vi": "",
       "image_keyword": "smiling person",
       "variant_note": "",
+      "cloze_en": "How are you today? — I'm fine, thank you. And you?",
+      "cloze_distractors": [
+        "expensive",
+        "closed",
+        "broken"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -408,6 +468,12 @@
       "mnemonic_vi": "",
       "image_keyword": "helping hand",
       "variant_note": "",
+      "cloze_en": "My math homework is very hard. Can you help me with it, please?",
+      "cloze_distractors": [
+        "sell",
+        "eat",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "talking",
@@ -447,6 +513,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two friends meeting",
       "variant_note": "",
+      "cloze_en": "On Sunday, I meet my friends at the park and we play soccer together.",
+      "cloze_distractors": [
+        "cook",
+        "sell",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "introductions",
@@ -484,6 +556,12 @@
       "mnemonic_vi": "",
       "image_keyword": "name tag",
       "variant_note": "",
+      "cloze_en": "Hi, my name is Lan. I am ten years old.",
+      "cloze_distractors": [
+        "kitchen",
+        "bottle",
+        "rain"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "introductions",
@@ -521,6 +599,12 @@
       "mnemonic_vi": "",
       "image_keyword": "calendar and clock",
       "variant_note": "",
+      "cloze_en": "When is your birthday? — It is in June.",
+      "cloze_distractors": [
+        "why",
+        "how",
+        "where"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "question words",
@@ -558,6 +642,12 @@
       "mnemonic_vi": "",
       "image_keyword": "waving hello",
       "variant_note": "",
+      "cloze_en": "Please say hello to your grandma for me when you visit her.",
+      "cloze_distractors": [
+        "apple",
+        "homework",
+        "rain"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -595,6 +685,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sorry face",
       "variant_note": "",
+      "cloze_en": "Nam is sorry because he broke his sister's toy.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "expensive"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -632,6 +728,12 @@
       "mnemonic_vi": "",
       "image_keyword": "gift and smile",
       "variant_note": "",
+      "cloze_en": "Mai gives me a nice gift, and I say, \"Thank you very much!\"",
+      "cloze_distractors": [
+        "Turn left",
+        "I'm hungry",
+        "Go straight"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -674,6 +776,12 @@
       "mnemonic_vi": "",
       "image_keyword": "student thanking teacher",
       "variant_note": "",
+      "cloze_en": "After the lesson, I thank my teacher for her help.",
+      "cloze_distractors": [
+        "sell",
+        "wash",
+        "cut"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -711,6 +819,12 @@
       "mnemonic_vi": "",
       "image_keyword": "map with question mark",
       "variant_note": "",
+      "cloze_en": "Where do you live? — I live in Hanoi, near the lake.",
+      "cloze_distractors": [
+        "when",
+        "why",
+        "how"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "question words",
@@ -748,6 +862,12 @@
       "mnemonic_vi": "",
       "image_keyword": "polite request",
       "variant_note": "",
+      "cloze_en": "Can I have some water, please? I am very thirsty.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -787,6 +907,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thank you card",
       "variant_note": "",
+      "cloze_en": "Many thanks for your help with my homework, Minh!",
+      "cloze_distractors": [
+        "rain",
+        "apple",
+        "kitchen"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -824,6 +950,12 @@
       "mnemonic_vi": "",
       "image_keyword": "morning sun greeting",
       "variant_note": "",
+      "cloze_en": "At seven in the morning, the students stand up and say to their teacher, \"Good morning, Miss Lan!\"",
+      "cloze_distractors": [
+        "Good night",
+        "Good afternoon",
+        "welcome"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -863,6 +995,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thumbs up",
       "variant_note": "",
+      "cloze_en": "Let's go to the market now. — OK, I'm ready.",
+      "cloze_distractors": [
+        "yesterday",
+        "never",
+        "ago"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -902,6 +1040,12 @@
       "mnemonic_vi": "",
       "image_keyword": "confident person",
       "variant_note": "",
+      "cloze_en": "Are you sure the shop is open today? — Yes, I saw it this morning.",
+      "cloze_distractors": [
+        "hungry",
+        "yellow",
+        "tall"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -939,6 +1083,12 @@
       "mnemonic_vi": "",
       "image_keyword": "late student explaining",
       "variant_note": "",
+      "cloze_en": "He has a good excuse for being late: his bike is broken.",
+      "cloze_distractors": [
+        "banana",
+        "kitchen",
+        "cloud"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -976,6 +1126,12 @@
       "mnemonic_vi": "",
       "image_keyword": "welcome sign at door",
       "variant_note": "",
+      "cloze_en": "In the evening, guests come to our new house, and my mom says, \"Welcome to our home!\"",
+      "cloze_distractors": [
+        "Good night",
+        "Good afternoon",
+        "Good morning"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -1015,6 +1171,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friend checking on friend",
       "variant_note": "",
+      "cloze_en": "Your bike is on the ground! Are you all right? Do you need a doctor?",
+      "cloze_distractors": [
+        "expensive",
+        "yellow",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "yes and no",
@@ -1052,6 +1214,12 @@
       "mnemonic_vi": "",
       "image_keyword": "moon and bed",
       "variant_note": "",
+      "cloze_en": "At ten p.m., I go to bed and say, \"Good night, Mom!\"",
+      "cloze_distractors": [
+        "Good morning",
+        "Good afternoon",
+        "welcome"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -1089,6 +1257,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two friends talking",
       "variant_note": "",
+      "cloze_en": "When I meet Mai, I ask, \"How are you?\" and she says, \"I'm fine, thanks.\"",
+      "cloze_distractors": [
+        "What time",
+        "How much",
+        "Turn left"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greeting words",
@@ -1128,6 +1302,12 @@
       "mnemonic_vi": "",
       "image_keyword": "afternoon sun greeting",
       "variant_note": "",
+      "cloze_en": "It is three p.m. Nam comes into the office and says, \"Good afternoon, Mr. Long.\"",
+      "cloze_distractors": [
+        "Good night",
+        "Good morning",
+        "welcome"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "greetings",
@@ -1165,6 +1345,12 @@
       "mnemonic_vi": "",
       "image_keyword": "hand behind ear",
       "variant_note": "",
+      "cloze_en": "I can't hear you because of the noise. Pardon? Can you say that again?",
+      "cloze_distractors": [
+        "kitchen",
+        "bottle",
+        "banana"
+      ],
       "commonness": 3,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -1204,6 +1390,12 @@
       "mnemonic_vi": "",
       "image_keyword": "rainy cloud over person",
       "variant_note": "",
+      "cloze_en": "It rains all day and I lose my bag. Today is a bad day.",
+      "cloze_distractors": [
+        "wonderful",
+        "tall",
+        "yellow"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -1246,6 +1438,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sad face",
       "variant_note": "",
+      "cloze_en": "Lan is sad and cries because her cat is lost.",
+      "cloze_distractors": [
+        "happy",
+        "tall",
+        "expensive"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -1283,6 +1481,12 @@
       "mnemonic_vi": "",
       "image_keyword": "speech bubble",
       "variant_note": "",
+      "cloze_en": "When you meet someone new, you say, \"Nice to meet you.\"",
+      "cloze_distractors": [
+        "eat",
+        "wash",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "talking",
@@ -1322,6 +1526,12 @@
       "mnemonic_vi": "",
       "image_keyword": "happy kid",
       "variant_note": "",
+      "cloze_en": "I feel sick, so I stay at home and sleep.",
+      "cloze_distractors": [
+        "sell",
+        "cook",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -1362,6 +1572,12 @@
       "mnemonic_vi": "",
       "image_keyword": "thumbs up",
       "variant_note": "",
+      "cloze_en": "Nam always helps me with my homework. He is a good friend.",
+      "cloze_distractors": [
+        "bad",
+        "yellow",
+        "cloudy"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -1401,6 +1617,12 @@
       "mnemonic_vi": "",
       "image_keyword": "heart and star",
       "variant_note": "",
+      "cloze_en": "I like my new school very much because the teachers are kind.",
+      "cloze_distractors": [
+        "wash",
+        "sell",
+        "drop"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "likes",
@@ -1440,6 +1662,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family hug",
       "variant_note": "",
+      "cloze_en": "I love my grandparents very much, and I visit them every week.",
+      "cloze_distractors": [
+        "sell",
+        "cut",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "likes",
@@ -1481,6 +1709,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friendly neighbor",
       "variant_note": "",
+      "cloze_en": "Our new neighbor is very nice. She often helps my mom with the shopping.",
+      "cloze_distractors": [
+        "lazy",
+        "cloudy",
+        "broken"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -1518,6 +1752,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friends waving goodbye",
       "variant_note": "",
+      "cloze_en": "School ends, and I wave to my friend: \"Bye, Minh! See you later!\"",
+      "cloze_distractors": [
+        "Nice to meet you",
+        "How are you",
+        "What time"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "greeting words",
@@ -1559,6 +1799,12 @@
       "mnemonic_vi": "",
       "image_keyword": "two people talking",
       "variant_note": "",
+      "cloze_en": "After dinner, I talk with my mom about my day at school.",
+      "cloze_distractors": [
+        "wash",
+        "cook",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "talking",
@@ -1596,6 +1842,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandpa telling story",
       "variant_note": "",
+      "cloze_en": "Grandpa, can you tell me a story before I go to sleep?",
+      "cloze_distractors": [
+        "drink",
+        "wash",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "talking",
@@ -1633,6 +1885,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid looking at bike",
       "variant_note": "",
+      "cloze_en": "My bike is old, so I want a new one for my birthday.",
+      "cloze_distractors": [
+        "sleep",
+        "swim",
+        "wash"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "likes",
@@ -1670,6 +1928,12 @@
       "mnemonic_vi": "",
       "image_keyword": "happy beach day",
       "variant_note": "",
+      "cloze_en": "We swim and play all day at the beach. We have a great time!",
+      "cloze_distractors": [
+        "sad",
+        "broken",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -1712,6 +1976,12 @@
       "mnemonic_vi": "",
       "image_keyword": "smiling children",
       "variant_note": "",
+      "cloze_en": "The children laugh and dance. They are very happy on the first day of Tet.",
+      "cloze_distractors": [
+        "sad",
+        "angry",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -1749,6 +2019,12 @@
       "mnemonic_vi": "",
       "image_keyword": "phone on table",
       "variant_note": "",
+      "cloze_en": "I call my mom on my phone every day after school.",
+      "cloze_distractors": [
+        "banana",
+        "chair",
+        "cloud"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -1788,6 +2064,12 @@
       "mnemonic_vi": "",
       "image_keyword": "girl speaking",
       "variant_note": "",
+      "cloze_en": "My little sister can speak English with her teacher.",
+      "cloze_distractors": [
+        "eat",
+        "cook",
+        "sell"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "talking",
@@ -1825,6 +2107,12 @@
       "mnemonic_vi": "",
       "image_keyword": "tired student yawning",
       "variant_note": "",
+      "cloze_en": "I run for an hour and now I am tired. I need to sit down.",
+      "cloze_distractors": [
+        "expensive",
+        "yellow",
+        "closed"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -1862,6 +2150,12 @@
       "mnemonic_vi": "",
       "image_keyword": "heart over bowl",
       "variant_note": "",
+      "cloze_en": "I eat pho every day. It is my favorite food.",
+      "cloze_distractors": [
+        "tall",
+        "broken",
+        "angry"
+      ],
       "commonness": 5,
       "basic_communication": false,
       "subgroup": "likes",
@@ -1899,6 +2193,12 @@
       "mnemonic_vi": "",
       "image_keyword": "man with name tag",
       "variant_note": "",
+      "cloze_en": "Mr. Nam is our new teacher. He is a man with short hair.",
+      "cloze_distractors": [
+        "Mrs.",
+        "Miss",
+        "kitchen"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "titles",
@@ -1936,6 +2236,12 @@
       "mnemonic_vi": "",
       "image_keyword": "handshake",
       "variant_note": "",
+      "cloze_en": "Hi, I'm Lan. This is my first day here. Nice to meet you!",
+      "cloze_distractors": [
+        "See you later",
+        "Happy birthday",
+        "Turn left"
+      ],
       "commonness": 5,
       "basic_communication": true,
       "subgroup": "introductions",
@@ -1977,6 +2283,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids playing game",
       "variant_note": "",
+      "cloze_en": "Our English class is really fun. We play games and sing songs.",
+      "cloze_distractors": [
+        "boring",
+        "broken",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2014,6 +2326,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kids in park",
       "variant_note": "",
+      "cloze_en": "We laugh, play games and swim together. We have a lot of fun.",
+      "cloze_distractors": [
+        "sugar",
+        "garbage",
+        "paper"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2051,6 +2369,12 @@
       "mnemonic_vi": "",
       "image_keyword": "woman at fruit stall",
       "variant_note": "",
+      "cloze_en": "Mrs. Mai and her husband sell fruit at the market.",
+      "cloze_distractors": [
+        "Mr.",
+        "Miss",
+        "bottle"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "titles",
@@ -2091,6 +2415,12 @@
       "mnemonic_vi": "",
       "image_keyword": "gold medal",
       "variant_note": "",
+      "cloze_en": "Mai gets ten out of ten on every test. She is the best student in our class.",
+      "cloze_distractors": [
+        "lazy",
+        "broken",
+        "cloudy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2128,6 +2458,12 @@
       "mnemonic_vi": "",
       "image_keyword": "phone ringing",
       "variant_note": "",
+      "cloze_en": "My phone rings. It is a call from my aunt in Da Nang.",
+      "cloze_distractors": [
+        "cake",
+        "chair",
+        "shoe"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -2167,6 +2503,12 @@
       "mnemonic_vi": "",
       "image_keyword": "smiling friends",
       "variant_note": "",
+      "cloze_en": "I am glad you can come to my party. Thank you!",
+      "cloze_distractors": [
+        "dirty",
+        "broken",
+        "yellow"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -2206,6 +2548,12 @@
       "mnemonic_vi": "",
       "image_keyword": "red heart",
       "variant_note": "",
+      "cloze_en": "Grandma is always kind to us. She gives us a lot of love.",
+      "cloze_distractors": [
+        "garbage",
+        "pollution",
+        "rain"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "likes",
@@ -2245,6 +2593,12 @@
       "mnemonic_vi": "",
       "image_keyword": "grandma resting",
       "variant_note": "",
+      "cloze_en": "Grandma is not well today, so she stays in bed and sees a doctor.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2282,6 +2636,12 @@
       "mnemonic_vi": "",
       "image_keyword": "boy singing",
       "variant_note": "",
+      "cloze_en": "Minh sings very well, so the teacher asks him to sing at the party.",
+      "cloze_distractors": [
+        "badly",
+        "yesterday",
+        "ago"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2322,6 +2682,12 @@
       "mnemonic_vi": "",
       "image_keyword": "angry face",
       "variant_note": "",
+      "cloze_en": "I break my mom's favorite cup, and she is very angry with me.",
+      "cloze_distractors": [
+        "happy",
+        "tall",
+        "cloudy"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -2359,6 +2725,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid apologizing",
       "variant_note": "",
+      "cloze_en": "I don't have your book today. I'm sorry, I will bring it tomorrow.",
+      "cloze_distractors": [
+        "You're welcome",
+        "Happy birthday",
+        "Nice to meet you"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -2398,6 +2770,12 @@
       "mnemonic_vi": "",
       "image_keyword": "email on laptop",
       "variant_note": "",
+      "cloze_en": "I write an email to my teacher on the computer.",
+      "cloze_distractors": [
+        "banana",
+        "chair",
+        "river"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -2437,6 +2815,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family eating together",
       "variant_note": "",
+      "cloze_en": "We enjoy the food at Grandma's house because she cooks very well.",
+      "cloze_distractors": [
+        "break",
+        "sell",
+        "close"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "likes",
@@ -2476,6 +2860,12 @@
       "mnemonic_vi": "",
       "image_keyword": "laughing face",
       "variant_note": "",
+      "cloze_en": "My uncle tells very funny stories, and we laugh a lot.",
+      "cloze_distractors": [
+        "sad",
+        "broken",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2515,6 +2905,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friends laughing",
       "variant_note": "",
+      "cloze_en": "The movie is so funny that we laugh a lot.",
+      "cloze_distractors": [
+        "sleep",
+        "sell",
+        "wash"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2554,6 +2950,12 @@
       "mnemonic_vi": "",
       "image_keyword": "question cloud",
       "variant_note": "",
+      "cloze_en": "Look at the dark clouds. Maybe it will rain this afternoon.",
+      "cloze_distractors": [
+        "yesterday",
+        "ago",
+        "never"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "yes and no",
@@ -2593,6 +2995,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid on the phone",
       "variant_note": "",
+      "cloze_en": "I phone my grandparents every Sunday to talk with them.",
+      "cloze_distractors": [
+        "eat",
+        "wash",
+        "cut"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -2630,6 +3038,12 @@
       "mnemonic_vi": "",
       "image_keyword": "baby smiling",
       "variant_note": "",
+      "cloze_en": "My baby sister is happy and has a big smile on her face.",
+      "cloze_distractors": [
+        "tree",
+        "bus",
+        "chair"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2669,6 +3083,12 @@
       "mnemonic_vi": "",
       "image_keyword": "boy hiding from dog",
       "variant_note": "",
+      "cloze_en": "My little brother runs away from dogs because he is afraid of them.",
+      "cloze_distractors": [
+        "tall",
+        "yellow",
+        "expensive"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -2709,6 +3129,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid stretching in morning",
       "variant_note": "",
+      "cloze_en": "I was sick yesterday, but today I feel better and go to school.",
+      "cloze_distractors": [
+        "expensive",
+        "yellow",
+        "broken"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2746,6 +3172,12 @@
       "mnemonic_vi": "",
       "image_keyword": "envelope with address",
       "variant_note": "",
+      "cloze_en": "Please write your home address on the card so I can send you a gift.",
+      "cloze_distractors": [
+        "weather",
+        "homework",
+        "breakfast"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "introductions",
@@ -2786,6 +3218,12 @@
       "mnemonic_vi": "",
       "image_keyword": "excited kid jumping",
       "variant_note": "",
+      "cloze_en": "Tomorrow we go to the beach! I am so excited that I can't sleep.",
+      "cloze_distractors": [
+        "lazy",
+        "expensive",
+        "broken"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -2823,6 +3261,12 @@
       "mnemonic_vi": "",
       "image_keyword": "evening party greeting",
       "variant_note": "",
+      "cloze_en": "At seven p.m., the guests arrive and my dad says, \"Good evening, everyone!\"",
+      "cloze_distractors": [
+        "See you tomorrow",
+        "Turn right",
+        "I'm hungry"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "greeting words",
@@ -2864,6 +3308,12 @@
       "mnemonic_vi": "",
       "image_keyword": "faces with feelings",
       "variant_note": "",
+      "cloze_en": "Happy, sad and angry: each one is a feeling we have.",
+      "cloze_distractors": [
+        "kitchen",
+        "banana",
+        "bus"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "feelings",
@@ -2901,6 +3351,12 @@
       "mnemonic_vi": "",
       "image_keyword": "message on phone",
       "variant_note": "",
+      "cloze_en": "I send a message to Lan on my phone after school.",
+      "cloze_distractors": [
+        "banana",
+        "chair",
+        "river"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -2941,6 +3397,12 @@
       "mnemonic_vi": "",
       "image_keyword": "football match crowd",
       "variant_note": "",
+      "cloze_en": "The soccer game is very exciting. We can't wait to see the end.",
+      "cloze_distractors": [
+        "hungry",
+        "broken",
+        "yellow"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -2980,6 +3442,12 @@
       "mnemonic_vi": "",
       "image_keyword": "introducing a friend",
       "variant_note": "",
+      "cloze_en": "Let me introduce my friend Nam to you. He is in my class.",
+      "cloze_distractors": [
+        "eat",
+        "wash",
+        "sell"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "introductions",
@@ -3019,6 +3487,12 @@
       "mnemonic_vi": "",
       "image_keyword": "family dinner",
       "variant_note": "",
+      "cloze_en": "We have a wonderful dinner with all our family at Tet.",
+      "cloze_distractors": [
+        "broken",
+        "angry",
+        "closed"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -3058,6 +3532,12 @@
       "mnemonic_vi": "",
       "image_keyword": "name form",
       "variant_note": "",
+      "cloze_en": "My first name is Lan, and my last name is Nguyen.",
+      "cloze_distractors": [
+        "address",
+        "weather",
+        "homework"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "introductions",
@@ -3099,6 +3579,12 @@
       "mnemonic_vi": "",
       "image_keyword": "cell phone",
       "variant_note": "",
+      "cloze_en": "My dad calls me on his cell phone when he is at work.",
+      "cloze_distractors": [
+        "banana",
+        "sofa",
+        "cloud"
+      ],
       "commonness": 4,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -3136,6 +3622,12 @@
       "mnemonic_vi": "",
       "image_keyword": "polite boy and man",
       "variant_note": "",
+      "cloze_en": "A man drops his bag, and I say, \"Excuse me, sir. Is this your bag?\"",
+      "cloze_distractors": [
+        "Miss",
+        "Mrs.",
+        "kitchen"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "titles",
@@ -3175,6 +3667,12 @@
       "mnemonic_vi": "",
       "image_keyword": "sunrise",
       "variant_note": "",
+      "cloze_en": "Grandpa is sick, but we have hope that he will get well soon.",
+      "cloze_distractors": [
+        "garbage",
+        "sugar",
+        "pollution"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "likes",
@@ -3214,6 +3712,12 @@
       "mnemonic_vi": "",
       "image_keyword": "four leaf clover",
       "variant_note": "",
+      "cloze_en": "You have a test tomorrow? Good luck!",
+      "cloze_distractors": [
+        "noise",
+        "rice",
+        "garbage"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "reactions",
@@ -3251,6 +3755,12 @@
       "mnemonic_vi": "",
       "image_keyword": "friends smiling",
       "variant_note": "",
+      "cloze_en": "Thank you for your help, Lan! — You're welcome, Nam.",
+      "cloze_distractors": [
+        "Happy birthday",
+        "I'm hungry",
+        "Turn left"
+      ],
       "commonness": 4,
       "basic_communication": true,
       "subgroup": "polite words",
@@ -3292,6 +3802,12 @@
       "mnemonic_vi": "",
       "image_keyword": "letters in mailbox",
       "variant_note": "",
+      "cloze_en": "The mail comes at ten every morning, and I check for letters.",
+      "cloze_distractors": [
+        "banana",
+        "rain",
+        "bridge"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -3329,6 +3845,12 @@
       "mnemonic_vi": "",
       "image_keyword": "young teacher",
       "variant_note": "",
+      "cloze_en": "Miss Lan is our young music teacher, and she is not married.",
+      "cloze_distractors": [
+        "Mrs.",
+        "Mr.",
+        "bottle"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "titles",
@@ -3366,6 +3888,12 @@
       "mnemonic_vi": "",
       "image_keyword": "kid looking at photo",
       "variant_note": "",
+      "cloze_en": "My best friend moves to Da Nang, and I miss her a lot.",
+      "cloze_distractors": [
+        "cook",
+        "wash",
+        "sell"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "likes",
@@ -3403,6 +3931,12 @@
       "mnemonic_vi": "",
       "image_keyword": "ringing bell",
       "variant_note": "",
+      "cloze_en": "When the phone starts to ring, my mom answers it.",
+      "cloze_distractors": [
+        "eat",
+        "swim",
+        "read"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "phone and messages",
@@ -3440,6 +3974,12 @@
       "mnemonic_vi": "",
       "image_keyword": "birthday candles",
       "variant_note": "",
+      "cloze_en": "My birthday wish is to visit Ha Long Bay with my family.",
+      "cloze_distractors": [
+        "chair",
+        "rice",
+        "garbage"
+      ],
       "commonness": 3,
       "basic_communication": false,
       "subgroup": "likes",
